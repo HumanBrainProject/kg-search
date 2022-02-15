@@ -35,7 +35,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,7 +69,7 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
 
         p.setAllIdentifiers(createList(projectSource.getIdentifier()));
         p.setId(projectSource.getIdentifier());
-        p.setIdentifier(createList(projectSource.getIdentifier(), String.format("Project/%s", projectSource.getIdentifier())));
+        p.setIdentifier(createList(projectSource.getIdentifier(), String.format("Project/%s", projectSource.getIdentifier())).stream().distinct().collect(Collectors.toList()));
         p.setFirstRelease(value(projectSource.getFirstReleaseAt()));
         p.setDescription(value(projectSource.getDescription()));
         p.setLastRelease(value(projectSource.getLastReleaseAt()));

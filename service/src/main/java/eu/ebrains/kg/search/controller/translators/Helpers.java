@@ -23,7 +23,9 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FileRepository;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
@@ -40,6 +42,53 @@ import java.util.stream.Collectors;
 public class Helpers {
     private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
     private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
+
+    public static String createEmbargoMessage(String type, FileRepository fileRepository, DataStage stage){
+        if(fileRepository!=null && fileRepository.getIri()!=null) {
+            final String message = String.format("This %s is temporarily under embargo. It will become available for download after the embargo period.", type);
+            if (stage == DataStage.IN_PROGRESS) {
+                final String url = translateInternalFileRepoToUrl(fileRepository);
+                if(url!=null){
+                    return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
+                }
+            }
+            return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileRepository.getIri());
+        }
+        return null;
+    }
+
+
+    public static boolean isCscsContainer(FileRepository repository){
+        if(repository!=null && repository.getIri()!=null){
+            return repository.getIri().startsWith("https://object.cscs.ch");
+        }
+        return false;
+    }
+
+    public static boolean isDataProxyBucket(FileRepository repository){
+        return repository != null && isDataProxyBucket(repository.getIri());
+    }
+
+    public static boolean isDataProxyBucket(String repositoryIri){
+        if(repositoryIri!=null){
+            return repositoryIri.startsWith("https://data-proxy.ebrains.eu");
+        }
+        return false;
+    }
+
+    public static String translateInternalFileRepoToUrl(FileRepository repository){
+        if(repository!=null && repository.getIri()!=null) {
+            if (isDataProxyBucket(repository)) {
+                String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/buckets/", "");
+                return String.format("https://data-proxy.ebrains.eu/%s", id);
+            }
+            else if(isCscsContainer(repository)){
+                return String.format("https://kg.ebrains.eu/files/cscs/list?url=%s", repository.getIri());
+            }
+        }
+        return null;
+    }
+
 
     public static String abbreviateGivenName(String givenName) {
         if (givenName != null) {
@@ -94,13 +143,15 @@ public class Helpers {
         Version v;
         while ((v = getByPreviousVersion(previousVersion, unsortedVersions)) != null) {
             if (versions.contains(v)) {
-                logger.error(String.format("Circular dependency detected in versions: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                logger.error(String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                versions.sort(Comparator.comparing(Version::getNaturalSortValue));
                 return unsortedVersions;
             }
             versions.add(v);
             previousVersion = v.getVersionIdentifier();
             if (previousVersion == null) {
-                logger.error(String.format("Circular dependency detected in versions: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                logger.error(String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                versions.sort(Comparator.comparing(Version::getNaturalSortValue));
                 return unsortedVersions;
             }
         }

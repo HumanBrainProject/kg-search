@@ -494,6 +494,14 @@
           ]
         },
         {
+          "propertyName": "query:softwareHomepage",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/homepage",
+            "https://openminds.ebrains.eu/vocab/URL"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
           "propertyName": "query:softwareDeveloper",
           "path": "https://openminds.ebrains.eu/vocab/developer",
           "ensureOrder": true,

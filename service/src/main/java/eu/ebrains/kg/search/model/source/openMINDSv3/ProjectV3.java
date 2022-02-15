@@ -40,6 +40,7 @@ public class ProjectV3 extends SourceInstanceV3 {
     private List<ExtendedFullNameRefForResearchProductVersion> datasets;
     private List<ExtendedFullNameRefForResearchProductVersion> models;
     private List<ExtendedFullNameRefForResearchProductVersion> software;
+    private List<ExtendedFullNameRefForResearchProductVersion> metaDataModels;
 
     @Getter
     @Setter

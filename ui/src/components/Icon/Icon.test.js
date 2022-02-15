@@ -23,51 +23,12 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import Icon from "./Icon";
 
-Enzyme.configure({ adapter: new Adapter() });
+test("Icon component renders initially", () => {
+  const component = renderer.create(
+    <Icon />
+  );
 
-test('Icon component renders initially', () => {
-    const component = renderer.create(
-        <Icon />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
-});
-
-test('Icon test className"', () => {
-    const component = shallow(
-        <Icon className="test" />
-    );
-    expect(component.hasClass("test"));
-});
-  
-test('Icon test without props', () => {
-    const component = shallow(
-        <Icon />
-    );
-    expect(component.find("svg").exists()).toEqual(true);
-});
-
-test('Icon test url', () => {
-    const component = shallow(
-        <Icon url="url"/>
-    );
-    expect(component.find("img").prop("src")).toEqual("url");
-});
-
-test('Icon test title', () => {
-    const component = shallow(
-        <Icon url="url" title="title"/>
-    );
-    expect(component.find("img").prop("alt")).toEqual("title");
-});
-
-test('Icon test inline', () => {
-    const component = shallow(
-        <Icon inline="inline"/>
-    );
-    expect(component.find("div").html()).toContain("inline");
+  expect(component.toJSON()).toMatchSnapshot();
 });

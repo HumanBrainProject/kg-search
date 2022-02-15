@@ -31,7 +31,7 @@ export class Item extends React.PureComponent {
       e.stopPropagation();
       onClick(item);
     }
-  }
+  };
 
   handleKeyDown = e => {
     const { item, onClick } = this.props;
@@ -39,14 +39,14 @@ export class Item extends React.PureComponent {
       e.stopPropagation();
       onClick(item);
     }
-  }
+  };
 
   setFocus = () => {
     const { hasFocus } = this.props;
     if (hasFocus) {
       this.ref.focus();
     }
-  }
+  };
 
   componentDidMount() {
     this.setFocus();

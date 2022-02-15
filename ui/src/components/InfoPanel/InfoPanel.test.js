@@ -23,32 +23,13 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import InfoPanel from "./InfoPanel";
 
-Enzyme.configure({ adapter: new Adapter() });
 
-test('InfoPanel component renders initially', () => {
-    const component = renderer.create(
-        <InfoPanel text="some text" onClose={() => {}} />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
-});
+test("InfoPanel component renders initially", () => {
+  const component = renderer.create(
+    <InfoPanel text="some text" onClose={() => {}} />
+  );
 
-test('InfoPanel test text', () => {
-    const component = shallow(
-        <InfoPanel text="some text" onClose={() => {}} />
-    );
-    expect(component.find("span").html()).toContain("some text");
-});
-
-test('InfoPanel test cancel button click', () => {
-    const fn = jest.fn();
-    const component = shallow(
-        <InfoPanel text="some text" onClose={fn} />
-    );
-    component.find('button').simulate('click');
-    expect(fn.mock.calls.length).toBe(1);
+  expect(component.toJSON()).toMatchSnapshot();
 });

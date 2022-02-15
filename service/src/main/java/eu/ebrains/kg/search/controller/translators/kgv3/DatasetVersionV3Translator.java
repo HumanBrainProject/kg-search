@@ -24,12 +24,12 @@
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
 import eu.ebrains.kg.search.controller.translators.Helpers;
+import eu.ebrains.kg.search.controller.translators.kgv3.commons.Accessibility;
+import eu.ebrains.kg.search.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -39,6 +39,7 @@ import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.bcel.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -63,12 +64,6 @@ import java.util.stream.Stream;
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    public static final String OPENMINDS_ROOT = "https://openminds.ebrains.eu/";
-    public static final String OPENMINDS_INSTANCES = OPENMINDS_ROOT + "instances";
-
-    private final static List<String> VERSION_INNOVATION_DEFAULTS = Arrays.asList("this is the first version of this research product.", "this is the only version of this dataset.");
 
     public static class Result extends ResultsOfKGv3<DatasetVersionV3> {
     }
@@ -95,32 +90,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     @Override
     public List<String> semanticTypes() {
-        return Collections.singletonList(OPENMINDS_ROOT + "core/DatasetVersion");
+        return Collections.singletonList(Constants.OPENMINDS_ROOT + "core/DatasetVersion");
     }
 
-
-    private enum Accessibility {
-        FREE_ACCESS(OPENMINDS_INSTANCES + "/productAccessibility/freeAccess"),
-        CONTROLLED_ACCESS(OPENMINDS_INSTANCES + "/productAccessibility/controlledAccess"),
-        RESTRICTED_ACCESS(OPENMINDS_INSTANCES + "/productAccessibility/restrictedAccess"),
-        UNDER_EMBARGO(OPENMINDS_INSTANCES + "/productAccessibility/underEmbargo");
-
-        private final String identifier;
-
-        Accessibility(String identifier) {
-            this.identifier = identifier;
-        }
-
-        public static Accessibility fromPayload(DatasetVersionV3 datasetVersion) {
-            if (datasetVersion != null && datasetVersion.getAccessibility() != null && datasetVersion.getAccessibility().getIdentifier() != null) {
-                return Arrays.stream(Accessibility.values()).filter(a -> datasetVersion.getAccessibility().getIdentifier().contains(a.identifier)).findFirst().orElse(null);
-            }
-            return null;
-        }
-
-    }
-
-    private boolean isExternalLink(DatasetVersionV3.FileRepository repository) {
+    private boolean isExternalLink(FileRepository repository) {
         return repository != null && repository.getIri() != null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
     }
 
@@ -165,12 +138,26 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         d.setId(datasetVersion.getUUID());
         d.setExperimentalApproach(ref(datasetVersion.getExperimentalApproach()));
+        if(!CollectionUtils.isEmpty(datasetVersion.getExperimentalApproach())){
+            final List<String> experimentalApproachesForFilter = datasetVersion.getExperimentalApproach().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(experimentalApproachesForFilter)){
+                d.setModalityForFilter(value(experimentalApproachesForFilter));
+            }
+        }
         d.setBehavioralProtocols(ref(datasetVersion.getBehavioralProtocol()));
         d.setPreparation(ref(datasetVersion.getPreparationDesign()));
         d.setTechnique(ref(datasetVersion.getTechnique()));
+        if(!CollectionUtils.isEmpty(datasetVersion.getTechnique())){
+            final List<String> techniquesForFilter = datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(techniquesForFilter)){
+                d.setMethodsForFilter(value(techniquesForFilter));
+            }
+
+        }
+
 
         d.setAllIdentifiers(datasetVersion.getIdentifier());
-        d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()));
+        d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = dataset == null ? null : dataset.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
@@ -191,7 +178,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         } else if (dataset != null) {
             d.setDescription(value(dataset.getDescription()));
         }
-        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && !VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(datasetVersion.getVersionInnovation()).toLowerCase())) {
+        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && !Constants.VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(datasetVersion.getVersionInnovation()).toLowerCase())) {
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
@@ -307,22 +294,22 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         if (datasetVersion.getEthicsAssessment() != null) {
             String ethicsAssessment = null;
-            if (datasetVersion.getEthicsAssessment().contains(OPENMINDS_INSTANCES + "/ethicsAssessment/notRequired")) {
+            if (datasetVersion.getEthicsAssessment().contains(Constants.OPENMINDS_INSTANCES + "/ethicsAssessment/notRequired")) {
                 ethicsAssessment = "not-required";
-            } else if (datasetVersion.getEthicsAssessment().contains(OPENMINDS_INSTANCES + "/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains(OPENMINDS_INSTANCES + "/ethicsAssessment/EUCompliantSensitive")) {
+            } else if (datasetVersion.getEthicsAssessment().contains(Constants.OPENMINDS_INSTANCES + "/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains(Constants.OPENMINDS_INSTANCES + "/ethicsAssessment/EUCompliantSensitive")) {
                 ethicsAssessment = "EU-compliant";
             }
             d.setEthicsAssessment(value(ethicsAssessment));
         }
 
 
-        final List<DatasetVersionV3.File> specialFiles = datasetVersion.getSpecialFiles();
+        final List<File> specialFiles = datasetVersion.getSpecialFiles();
         //If the container is restricted (and the files are private), we can't take any files into account for data descriptors although they might be registered as such. Otherwise, we would end up in a inaccessible resource
-        final List<DatasetVersionV3.File> dataDescriptors = privateFiles ? Collections.emptyList() : specialFiles.stream().filter(s -> s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
+        final List<File> dataDescriptors = privateFiles ? Collections.emptyList() : specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
         if (!dataDescriptors.isEmpty()) {
             TargetExternalReference reference;
             if (dataDescriptors.size() > 1) {
-                logger.error(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
+                logger.error(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
                 reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
             } else {
                 if (datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())) {
@@ -347,7 +334,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
-        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).map(f -> {
+        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).map(f -> {
             DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
             o.setUrl(value(f.getIri()));
             o.setValue(o.getValue());
@@ -361,12 +348,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setPreviewObjects(previewObjects);
         }
 
-        d.setContentTypeForFilter(value(datasetVersion.getContentTypes()));
+        List<String> brainRegionStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", Constants.OPENMINDS_ROOT+"sands/ParcellationEntityVersion", Constants.OPENMINDS_ROOT+"sands/ParcellationEntity", Constants.OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
 
-        List<String> brainRegionStudyTargets = Arrays.asList(OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", OPENMINDS_ROOT+"sands/ParcellationEntityVersion", OPENMINDS_ROOT+"sands/ParcellationEntity", OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
-
-        final Map<Boolean, List<DatasetVersionV3.StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainRegionStudyTargets::contains)));
-        d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE)));
+        final Map<Boolean, List<StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainRegionStudyTargets::contains)));
+        d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE), false));
         if(!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))){
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
@@ -375,9 +360,19 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
+
+        List<TargetExternalReference> serviceLinks = new ArrayList<>();
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-            d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
         }
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
+            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(serviceLinks)){
+            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
+            d.setViewer(serviceLinks);
+        }
+        d.setContentTypes(value(datasetVersion.getContentTypes()));
 
         final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject()!=null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
         final List<TargetInternalReference> speciesFromTS = d.getTissueSamples()!=null ? d.getTissueSamples().stream().filter(ts -> ts.getChildren() != null).map(ts -> ts.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
@@ -398,25 +393,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return (childValue == null && parentValue == null) || (childValue != null && childValue.equals(parentValue));
     }
 
-    private TargetInternalReference refAnatomical(DatasetVersionV3.AnatomicalLocation a){
-        if(StringUtils.isNotBlank(a.getBrainAtlas())){
-            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(),  a.getBrainAtlas()));
-        }
-        else if(a.getBrainAtlasVersion() != null){
-            //String name = String.format("%s %s", StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName(), a.getBrainAtlasVersion().getVersionIdentifier());
-            //TODO Currently, the names of the brain atlas versions also contain the version number -> this is expected to be fixed in openMINDS at some point. Once this is done, we need to change the logic here, so we reflect the version identifier instead.
-            String name = StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName();
-            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(), name));
-        }
-        else{
-            return ref(a);
-        }
-    }
-
 
     private <T extends DatasetVersion.AbstractTissueSampleOrTissueSampleCollection> T fillIndividualTissueSampleInformation(T tissueSample, DatasetVersionV3.TissueSampleOrTissueSampleCollection t, DatasetVersion.AbstractTissueSampleOrTissueSampleCollection parent) {
         String type = "Tissue sample";
-        if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains(OPENMINDS_ROOT + "core/TissueSampleCollection")){
+        if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains(Constants.OPENMINDS_ROOT + "core/TissueSampleCollection")){
             type = "Tissue sample collection";
         }
         tissueSample.setLabel(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier() != null ? String.format("%s %s", type, t.getInternalIdentifier()) : type));
@@ -486,7 +466,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
         String type = "Subject";
-        if(s.getSubjectType()!=null && s.getSubjectType().contains(OPENMINDS_ROOT + "core/SubjectGroup")){
+        if(s.getSubjectType()!=null && s.getSubjectType().contains(Constants.OPENMINDS_ROOT + "core/SubjectGroup")){
             type = "Subject group";
         }
         subj.setLabel(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier() != null ? String.format("%s %s", type, s.getInternalIdentifier()) : type));

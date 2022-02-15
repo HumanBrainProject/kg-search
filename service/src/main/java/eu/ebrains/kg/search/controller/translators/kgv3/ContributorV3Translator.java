@@ -106,13 +106,15 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         List<String> identifiers = IdUtils.getIdentifiersWithPrefix("Contributor", personOrOrganization.getIdentifier());
         identifiers.add(uuid);
         c.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
-        c.setTitle(value(Helpers.getFullName(personOrOrganization.getFullName(), personOrOrganization.getFamilyName(), personOrOrganization.getGivenName())));
+        c.setTitle(value(personOrOrganization.getFullName() != null ? personOrOrganization.getFullName() : personOrOrganization.getGivenName()==null ? personOrOrganization.getFamilyName() : String.format("%s, %s", personOrOrganization.getFamilyName(), personOrOrganization.getGivenName())));
         if (CollectionUtils.isEmpty(personOrOrganization.getCustodianOfDataset()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfSoftware()) &&
+                        CollectionUtils.isEmpty(personOrOrganization.getCustodianOfMetaDataModel())&&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfModel()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getDatasetContributions()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getModelContributions()) &&
-                        CollectionUtils.isEmpty(personOrOrganization.getSoftwareContributions())
+                        CollectionUtils.isEmpty(personOrOrganization.getSoftwareContributions()) &&
+                    CollectionUtils.isEmpty(personOrOrganization.getMetaDataModelContributions())
         ) {
             //No contributions to anything - we don't index it...
             return null;
@@ -121,10 +123,12 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setCustodianOfDataset(getReferences(personOrOrganization.getCustodianOfDataset()));
         c.setCustodianOfModel(getReferences(personOrOrganization.getCustodianOfModel()));
         c.setCustodianOfSoftware(getReferences(personOrOrganization.getCustodianOfSoftware()));
+        c.setCustodianOfMetaDataModels(getReferences(personOrOrganization.getCustodianOfMetaDataModel()));
 
         c.setDatasetContributions(getReferences(personOrOrganization.getDatasetContributions()));
         c.setModelContributions(getReferences(personOrOrganization.getModelContributions()));
         c.setSoftwareContributions(getReferences(personOrOrganization.getSoftwareContributions()));
+        c.setMetaDataModelContributions(getReferences(personOrOrganization.getMetaDataModelContributions()));
 
         return c;
     }
@@ -135,10 +139,13 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
             return null;
         }
         final List<TargetInternalReference> result = references.stream().map(r -> {
-            //Add all children elements
-            final List<TargetInternalReference> refs = refVersion(r.getResearchProductVersions());
-            if (r.getResearchProductVersions().size() > 1) {
-                refs.add(ref((FullNameRefForResearchProductVersion) r));
+            //Add all children elements if it has a research product version
+            List<TargetInternalReference> refs;
+            if(!CollectionUtils.isEmpty(r.getResearchProductVersions())) {
+                refs = refVersion(r.getResearchProductVersions(), true);
+            }
+            else{
+                refs = Collections.singletonList(ref(r));
             }
             return refs;
         }).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList());

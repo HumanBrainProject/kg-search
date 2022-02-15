@@ -79,7 +79,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         d.setId(datasetV1.getIdentifier());
         d.setAllIdentifiers(createList(datasetV1.getIdentifier()));
         List<String> identifiers = createList(datasetV1.getIdentifier(), String.format("Dataset/%s", datasetV1.getIdentifier()));
-        d.setIdentifier(identifiers);
+        d.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         String containerUrl = datasetV1.getContainerUrl();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
         if (!datasetV1.isUseHDG() && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && StringUtils.isNotBlank(containerUrl) && CollectionUtils.isEmpty(datasetV1.getExternalDatalink()) && CollectionUtils.isEmpty(files)) {
@@ -92,6 +92,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             d.setEditorId(value(datasetV1.getEditorId()));
         }
         d.setMethods(value(emptyToNull(datasetV1.getMethods())));
+        d.setMethodsForFilter(value(emptyToNull(datasetV1.getMethods())));
         d.setDescription(value(datasetV1.getDescription()));
 
         SourceExternalReference license = firstItemOrNull(datasetV1.getLicense());
@@ -179,6 +180,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                     .collect(Collectors.toList()));
         }
         d.setTitle(value(datasetV1.getTitle()));
+        d.setModality(value(emptyToNull(datasetV1.getModalityForFilter())));
         d.setModalityForFilter(value(emptyToNull(datasetV1.getModalityForFilter())));
 
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {

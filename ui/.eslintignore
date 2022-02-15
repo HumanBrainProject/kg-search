@@ -1,8 +1,0 @@
-lib
-dist
-build
-node_modules
-*.test.js
-example
-public
-webpack.config.*

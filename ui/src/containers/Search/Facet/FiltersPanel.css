@@ -80,6 +80,7 @@
   
   .kgs-filters.collapsible .kgs-filters__body.collapse.in {
     max-height: 1500px;
+    overflow: unset;
   }
   
 @media (min-width: 992px) {

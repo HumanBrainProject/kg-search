@@ -37,7 +37,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,22 +73,22 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
         ModelVersion m = new ModelVersion();
         m.setId(modelV2.getIdentifier());
         List<String> identifiers = createList(modelV2.getIdentifier(), String.format("Model/%s", modelV2.getIdentifier()));
-        m.setIdentifier(identifiers);
+        m.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         m.setAllIdentifiers(createList(modelV2.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
-            m.setEditorId(modelV2.getEditorId());
+            m.setEditorId(value(modelV2.getEditorId()));
         }
         if (hasEmbargoStatus(modelV2, EMBARGOED)) {
             if (dataStage == DataStage.RELEASED) {
-                m.setEmbargo("This model is temporarily under embargo. The data will become available for download after the embargo period.");
+                m.setEmbargo(value("This model is temporarily under embargo. The data will become available for download after the embargo period."));
             } else {
                 SourceExternalReference fileBundle = firstItemOrNull(modelV2.getFileBundle());
                 if (fileBundle != null) {
                     String fileUrl = fileBundle.getUrl();
                     if (StringUtils.isNotBlank(fileUrl) && fileUrl.startsWith("https://object.cscs.ch")) {
-                        m.setEmbargo(String.format("This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileUrl));
+                        m.setEmbargo(value(String.format("This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileUrl)));
                     } else {
-                        m.setEmbargo("This model is temporarily under embargo. The data will become available for download after the embargo period.");
+                        m.setEmbargo(value("This model is temporarily under embargo. The data will become available for download after the embargo period."));
                     }
                 }
             }
@@ -117,23 +116,23 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                         }
                     }).collect(Collectors.toList()));
         }
-        m.setModelFormat(emptyToNull(modelV2.getModelFormat()));
-        m.setDescription(modelV2.getDescription());
+        m.setModelFormat(emptyRef(modelV2.getModelFormat()));
+        m.setDescription(value(modelV2.getDescription()));
 
         SourceExternalReference license = firstItemOrNull(modelV2.getLicense());
         if (license != null) {
-            m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
+            m.setLicenseInfo(Collections.singletonList(new TargetExternalReference(license.getUrl(), license.getName())));
         }
 
         if (!CollectionUtils.isEmpty(modelV2.getCustodian())) {
-            m.setOwners(modelV2.getCustodian().stream()
+            m.setCustodians(modelV2.getCustodian().stream()
                     .map(o -> new TargetInternalReference(
                             liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
                             o.getName()
                     )).collect(Collectors.toList()));
         }
 
-        m.setAbstractionLevel(emptyToNull(modelV2.getAbstractionLevel()));
+        m.setAbstractionLevel(emptyRef(modelV2.getAbstractionLevel()));
 
         if (!CollectionUtils.isEmpty(modelV2.getMainContact())) {
             m.setMainContact(modelV2.getMainContact().stream()
@@ -142,7 +141,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                             mc.getName()
                     )).collect(Collectors.toList()));
         }
-        m.setBrainStructures(emptyToNull(modelV2.getBrainStructure()));
+        //m.setBrainStructures(value(modelV2.getBrainStructure()));
 
         if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
             m.setUsedDataset(modelV2.getUsedDataset().stream()
@@ -153,7 +152,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
         }
         m.setVersion(modelV2.getVersion());
         if (!CollectionUtils.isEmpty(modelV2.getPublications())) {
-            m.setPublications(emptyToNull(modelV2.getPublications().stream()
+            m.setPublications(value(modelV2.getPublications().stream()
                     .filter(p -> StringUtils.isNotBlank(p.getDoi()))
                     .map(p -> {
                         if (StringUtils.isNotBlank(p.getCitation())) {
@@ -164,9 +163,9 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                         }
                     }).collect(Collectors.toList())));
         }
-        m.setStudyTarget(emptyToNull(modelV2.getStudyTarget()));
-        m.setModelScope(emptyToNull(modelV2.getModelScope()));
-        m.setTitle(modelV2.getTitle());
+        m.setStudyTargets(emptyRef(modelV2.getStudyTarget()));
+        m.setModelScope(emptyRef(modelV2.getModelScope()));
+        m.setTitle(value(modelV2.getTitle()));
         if (!CollectionUtils.isEmpty(modelV2.getContributors())) {
             m.setContributors(modelV2.getContributors().stream()
                     .map(c -> new TargetInternalReference(
@@ -174,9 +173,9 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                             c.getName()
                     )).collect(Collectors.toList()));
         }
-        m.setCellularTarget(emptyToNull(modelV2.getCellularTarget()));
-        m.setFirstRelease(modelV2.getFirstReleaseAt());
-        m.setLastRelease(modelV2.getLastReleaseAt());
+        m.setCellularTarget(value(modelV2.getCellularTarget()));
+        m.setFirstRelease(value(modelV2.getFirstReleaseAt()));
+        m.setLastRelease(value(modelV2.getLastReleaseAt()));
         m.setSearchable(true);
         return m;
     }

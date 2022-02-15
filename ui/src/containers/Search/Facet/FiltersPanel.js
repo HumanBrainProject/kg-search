@@ -40,7 +40,7 @@ class FiltersPanelBase extends React.Component {
 
   toggleFilters = () => {
     this.setState(state => ({ collapsed: !state.collapsed }));
-  }
+  };
 
   render() {
     const { show, facets, onChange, onViewChange, onReset } = this.props;

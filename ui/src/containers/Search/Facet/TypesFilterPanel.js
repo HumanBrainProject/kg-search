@@ -36,14 +36,14 @@ const TypeFilterBase = ({ type: { label, count, active }, onClick }) => (
 
 class TypeFilter extends React.Component {
 
-    onClick = () => this.props.onClick(this.props.type.type);
+  onClick = () => this.props.onClick(this.props.type.type);
 
-    render() {
-      return ( <TypeFilterBase type = { this.props.type }
-        onClick = { this.onClick }
-      />
-      );
-    }
+  render() {
+    return ( <TypeFilterBase type = { this.props.type }
+      onClick = { this.onClick }
+    />
+    );
+  }
 }
 
 const TypesFilterPanelBase = ({ types, onClick }) => (

@@ -50,14 +50,22 @@ public class ElasticSearchController {
         this.esServiceClient = esServiceClient;
     }
 
-    public boolean documentExists(String reference, DataStage stage){
-        String index = ESHelper.getIndexesForDocument(stage);
-        return esServiceClient.documentExists(index, reference);
+
+    public Set<String> existingDocuments(List<String> references, DataStage stage){
+        return esServiceClient.existingDocuments(ESHelper.getIndexesForDocument(stage), references);
     }
 
-    public void recreateSearchIndex(Map<String, Object> mapping, Class<?> type, DataStage dataStage) {
-        String index = ESHelper.getIndex(dataStage, type);
-        logger.info(String.format("Creating index %s for %s", index, MetaModelUtils.getNameForClass(type)));
+    public void reindexTemporaryToRealIndex(Class<?> type, DataStage dataStage, boolean autorelease){
+        String source =  autorelease ? ESHelper.getAutoReleasedIndex(dataStage, type, true) : ESHelper.getSearchableIndex(dataStage, type, true);
+        String target = autorelease ? ESHelper.getAutoReleasedIndex(dataStage, type, false) :ESHelper.getSearchableIndex(dataStage, type, false);
+        esServiceClient.reindex(source, target);
+        //We remove the temporary index after it has been reindexed.
+        esServiceClient.deleteIndex(source);
+    }
+
+    public void recreateSearchIndex(Map<String, Object> mapping, Class<?> type, DataStage dataStage, boolean temporary) {
+        String index = ESHelper.getSearchableIndex(dataStage, type, temporary);
+        logger.info(String.format("Creating index Was %s for %s", index, MetaModelUtils.getNameForClass(type)));
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -83,8 +91,8 @@ public class ElasticSearchController {
         logger.info(String.format("Successfully created identifier index %s", index));
     }
 
-    public void recreateAutoReleasedIndex(DataStage stage, Map<String, Object> mapping, Class<?> type) {
-        String index = ESHelper.getAutoReleasedIndex(stage, type);
+    public void recreateAutoReleasedIndex(DataStage stage, Map<String, Object> mapping, Class<?> type, boolean temporary) {
+        String index = ESHelper.getAutoReleasedIndex(stage, type, temporary);
         logger.info(String.format("Creating index %s for %s", index, MetaModelUtils.getNameForClass(type)));
         try {
             esServiceClient.deleteIndex(index);
@@ -153,28 +161,28 @@ public class ElasticSearchController {
         }
     }
 
-    public void updateSearchIndex(List<? extends TargetInstance> instances, Class<?> type, DataStage dataStage) {
-        updateIndex(ESHelper.getIndex(dataStage, type), instances);
+    public void updateSearchIndex(List<? extends TargetInstance> instances, Class<?> type, DataStage dataStage, boolean temporary) {
+        updateIndex(ESHelper.getSearchableIndex(dataStage, type, temporary), instances);
     }
 
     public void updateIdentifiersIndex(List<? extends TargetInstance> instances, DataStage dataStage) {
         updateIndex(ESHelper.getIdentifierIndex(dataStage), instances);
     }
 
-    public void updateAutoReleasedIndex(List<? extends TargetInstance> instances, DataStage dataStage, Class<?> type) {
-        updateIndex(ESHelper.getAutoReleasedIndex(dataStage, type), instances);
+    public void updateAutoReleasedIndex(List<? extends TargetInstance> instances, DataStage dataStage, Class<?> type, boolean temporary) {
+        updateIndex(ESHelper.getAutoReleasedIndex(dataStage, type, temporary), instances);
     }
 
-    public void removeDeprecatedDocumentsFromSearchIndex( Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
-        removeDeprecatedDocuments(ESHelper.getIndex(dataStage, type), type, idsToKeep);
+    public void removeDeprecatedDocumentsFromSearchIndex( Class<?> type, DataStage dataStage, Set<String> idsToKeep, boolean temporary) {
+        removeDeprecatedDocuments(ESHelper.getSearchableIndex(dataStage, type, temporary), type, idsToKeep);
     }
 
     public void removeDeprecatedDocumentsFromIdentifiersIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
         removeDeprecatedDocuments(ESHelper.getIdentifierIndex(dataStage), type, idsToKeep);
     }
 
-    public void removeDeprecatedDocumentsFromAutoReleasedIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
-        removeDeprecatedDocuments(ESHelper.getAutoReleasedIndex(dataStage, type), type, idsToKeep);
+    public void removeDeprecatedDocumentsFromAutoReleasedIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep, boolean temporary) {
+        removeDeprecatedDocuments(ESHelper.getAutoReleasedIndex(dataStage, type, temporary), type, idsToKeep);
     }
 
 

@@ -48,6 +48,10 @@
     padding-bottom: 0;
 }
 
+.kgs-field__table .table tbody th p {
+    white-space: break-spaces;
+}
+
 .kgs-field__table .table th:first-child {
     white-space:nowrap;
 }
@@ -85,6 +89,10 @@
     border-top: 0;
     padding-bottom: 0.20rem;
     padding-top: 0.20rem;
+}
+
+.kgs-field__table .table>:not(:first-child) {
+    border-top: 1px solid var(--border-color-6);
 }
 
 .kgs-field__table .table tbody td {

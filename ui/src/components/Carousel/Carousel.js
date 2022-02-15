@@ -100,7 +100,7 @@ export class Carousel extends React.Component {
         typeof onClose === "function" && onClose();
       }
     }
-  }
+  };
 
   onClose = e => {
     if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {

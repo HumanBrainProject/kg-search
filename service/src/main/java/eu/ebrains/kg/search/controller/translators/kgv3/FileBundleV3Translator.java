@@ -23,19 +23,21 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
-import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileBundleV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.FileBundle;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileBundleV3Translator extends TranslatorV3<FileBundleV3, FileBundle, FileBundleV3Translator.Result> {
     public static class Result extends ResultsOfKGv3<FileBundleV3> {
@@ -71,9 +73,9 @@ public class FileBundleV3Translator extends TranslatorV3<FileBundleV3, FileBundl
         fb.setId(IdUtils.getUUID(fileBundle.getId()));
         fb.setTitle(value(fileBundle.getName()));
         fb.setAllIdentifiers(fileBundle.getIdentifier());
-        fb.setIdentifier(IdUtils.getUUID(fileBundle.getIdentifier()));
-        if (fileBundle.getDataLocation() != null && StringUtils.isNotBlank(fileBundle.getDataLocation().getUrl())) {
-            fb.setDataLocation(new TargetExternalReference(fileBundle.getDataLocation().getUrl(), fileBundle.getDataLocation().getLabel()));
+        fb.setIdentifier(IdUtils.getUUID(fileBundle.getIdentifier()).stream().distinct().collect(Collectors.toList()));
+        if(!CollectionUtils.isEmpty(fileBundle.getServiceLinks())){
+            fb.setViewer(fileBundle.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open in %s", s.getService()))).collect(Collectors.toList()));
         }
         return fb;
     }

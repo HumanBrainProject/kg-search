@@ -90,8 +90,19 @@
 .kgs-field__highlights{
     font-size:var(--font-size-smaller);
 }
+
 .kgs-field__highlights .field-label {
-    font-size:var(--font-size-smaller);
+    font-size:var(--font-size-smaller) !important;
+    transform: translateY(-3px);
+}
+
+.kgs-field__highlights .field-value {
+    vertical-align: top;
+    font-size:var(--font-size-smaller) !important;
+}
+ 
+.kgs-field__highlights .field-value > p {
+    margin-bottom: 3px;
 }
 
 /**********************************************************************************************************************/

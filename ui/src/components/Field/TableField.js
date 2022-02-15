@@ -169,7 +169,7 @@ class TableField extends React.Component {
       group: group,
       type: type
     }));
-  }
+  };
 
   render() {
     const {show} = this.props;

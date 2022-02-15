@@ -42,7 +42,7 @@ export class PaginatedList extends React.PureComponent {
       }
     }
     onViewChange(nextSize);
-  }
+  };
 
   render() {
     const { items, ItemComponent, itemUniqKeyAttribute, onItemClick, defaultSize, currentSize, others } = this.props;

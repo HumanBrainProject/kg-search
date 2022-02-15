@@ -61,7 +61,7 @@ export const clearFiles = () => {
 
 export const loadFiles = (filesUrl, searchAfter, groupingType, fileFormat, reset) => {
   if (!filesUrl) {
-    throw "action loadFileFormats got a null url";
+    throw new Error("action loadFileFormats got a null url");
   }
   return dispatch => {
     dispatch(loadFilesRequest(searchAfter, groupingType, fileFormat, reset));
@@ -131,7 +131,7 @@ export const loadGroupingTypesFailure = error => {
 
 export const loadGroupingTypes = url => {
   if (!url) {
-    throw "action loadGroupingTypes got a null url";
+    throw new Error("action loadGroupingTypes got a null url");
   }
   return dispatch => {
     dispatch(loadGroupingTypesRequest());
@@ -189,7 +189,7 @@ export const loadFileFormatsFailure = error => {
 
 export const loadFileFormats = url => {
   if (!url) {
-    throw "action loadFileFormats got a null url";
+    throw new Error("action loadFileFormats got a null url");
   }
   return dispatch => {
     dispatch(loadFileFormatsRequest());

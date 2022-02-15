@@ -32,8 +32,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const SignInComponent = ({ className, Tag, isAuthenticated, group, groups, login, logout, onGroupChange }) => {
   if(isAuthenticated) {
     return (
-      <Tag className={`${className} dropdown dropleft`}>
-        <a className="dropdown-toggle kgs-sign__in kgs_signed__in" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <Tag className={`${className} dropdown`}>
+        <a className="dropdown-toggle kgs-sign__in kgs_signed__in" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <FontAwesomeIcon icon="user" size="2x" />
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">

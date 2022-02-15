@@ -23,23 +23,12 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import ShareButtons from "./ShareButtons";
 
-Enzyme.configure({ adapter: new Adapter() });
+test("ShareButtons component renders initially", () => {
+  const component = renderer.create(
+    <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
+  );
 
-test('ShareButtons component renders initially', () => {
-    const component = renderer.create(
-        <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
-});
-
-test('ShareButtons test className"', () => {
-    const component = shallow(
-        <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
-    );
-    expect(component.hasClass("className"));
+  expect(component.toJSON()).toMatchSnapshot();
 });

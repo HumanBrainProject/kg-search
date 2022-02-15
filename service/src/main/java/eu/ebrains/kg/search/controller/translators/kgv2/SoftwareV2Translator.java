@@ -33,7 +33,6 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -72,7 +71,7 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
         s.setAllIdentifiers(createList(softwareV2.getIdentifier()));
         s.setId(softwareV2.getIdentifier());
         List<String> identifiers = createList(softwareV2.getIdentifier(), String.format("Software/%s", softwareV2.getIdentifier()));
-        s.setIdentifier(identifiers);
+        s.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         if (!CollectionUtils.isEmpty(softwareV2.getVersions())) {
             softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());
         }

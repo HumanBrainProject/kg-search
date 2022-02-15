@@ -1,4 +1,4 @@
-FROM node:13.8.0-alpine3.10 as build-stage
+FROM node:16.13.2-alpine3.15 as build-stage
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH

@@ -36,12 +36,11 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 import static eu.ebrains.kg.search.controller.translators.kgv2.TranslatorOfKGV2Commons.*;
 
 public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1Translator.Result> {
@@ -74,7 +73,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
 
         s.setAllIdentifiers(createList(sample.getIdentifier()));
         s.setId(sample.getIdentifier());
-        s.setIdentifier(createList(sample.getIdentifier(), String.format("Sample/%s", sample.getIdentifier())));
+        s.setIdentifier(createList(sample.getIdentifier(), String.format("Sample/%s", sample.getIdentifier())).stream().distinct().collect(Collectors.toList()));
         String title = sample.getTitle();
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());

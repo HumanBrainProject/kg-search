@@ -37,8 +37,6 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,22 +76,18 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         m.setId(IdUtils.getUUID(model.getId()));
 
         m.setAllIdentifiers(model.getIdentifier());
-        m.setIdentifier(IdUtils.getUUID(model.getIdentifier()));
-        m.setDescription(model.getDescription());
-        m.setTitle(model.getTitle());
+        m.setIdentifier(IdUtils.getUUID(model.getIdentifier()).stream().distinct().collect(Collectors.toList()));
+        m.setDescription(value(model.getDescription()));
+        m.setTitle(value(model.getTitle()));
         String homepage = model.getHomepage();
         if (StringUtils.isNotBlank(homepage)) {
             m.setHomepage(new TargetExternalReference(homepage, homepage));
         }
         if (!CollectionUtils.isEmpty(model.getStudyTarget())) {
-            m.setStudyTarget(model.getStudyTarget());
+            m.setStudyTarget(ref(model.getStudyTarget()));
         }
-        if (!CollectionUtils.isEmpty(model.getModelScope())) {
-            m.setScope(model.getModelScope());
-        }
-        if (!CollectionUtils.isEmpty(model.getAbstractionLevel())) {
-            m.setAbstractionLevel(model.getAbstractionLevel());
-        }
+        m.setScope(ref(model.getModelScope()));
+        m.setAbstractionLevel(ref(model.getAbstractionLevel()));
         if (!CollectionUtils.isEmpty(model.getDeveloper())) {
             m.setContributors(model.getDeveloper().stream()
                     .map(a -> new TargetInternalReference(
@@ -102,7 +96,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
                     )).collect(Collectors.toList()));
         }
         if (!CollectionUtils.isEmpty(model.getCustodian())) {
-            m.setOwners(model.getCustodian().stream()
+            m.setCustodians(model.getCustodian().stream()
                     .map(a -> new TargetInternalReference(
                             IdUtils.getUUID(a.getId()),
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
@@ -112,18 +106,23 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         String citation = model.getHowToCite();
         String doi = model.getDoi();
         if (StringUtils.isNotBlank(doi)) {
-            m.setDoi(doi);
+            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
+            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
+            m.setDoi(value(doiWithoutPrefix));
             if (StringUtils.isNotBlank(citation)) {
-                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-                m.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
+                m.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
+            } else {
+                m.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
             }
+        } else if (StringUtils.isNotBlank(citation)) {
+            m.setCitation(value(citation));
         }
+
         if (!CollectionUtils.isEmpty(model.getVersions())) {
             List<Version> sortedVersions = Helpers.sort(model.getVersions());                                         //v.getFullName()
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             m.setVersions(references);
         }
-
         return m;
     }
 }

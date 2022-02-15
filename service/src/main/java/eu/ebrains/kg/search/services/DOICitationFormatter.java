@@ -18,8 +18,6 @@ public class DOICitationFormatter {
     private final WebClient webClient = WebClient.builder().clientConnector(new ReactorClientHttpConnector(
             HttpClient.create().followRedirect(true)
     )).build();
-    ;
-
 
     @Cacheable(value = "doiCitation", unless = "#result == null", key = "#doi.concat('-').concat(#style)")
     public String getDOICitation(String doi, String style) {
@@ -42,12 +40,10 @@ public class DOICitationFormatter {
 
     private String getDOICitationViaDataciteAPI(String doi, String style) {
         String doiOnly = doi.replace("https://doi.org/", "");
-        return webClient.get().uri(String.format("https://api.datacite.org/dois/%s?style=style", doiOnly)).header("Accept", "text/x-bibliography").retrieve().bodyToMono(String.class).block();
+        return webClient.get().uri(String.format("https://api.datacite.org/dois/%s?style=style", doiOnly)).header("Accept", String.format("text/x-bibliography; style=%s", style)).retrieve().bodyToMono(String.class).block();
     }
 
-
     private String doGetDOICitation(String doi, String style) {
-
         String value = null;
         if (isEbrainsDOI(doi)) {
             //Workaround to fix the datacite issues about citation formatting
@@ -67,7 +63,7 @@ public class DOICitationFormatter {
             }
         }
         return value != null ? value.trim() : null;
-
     }
 
 }
+

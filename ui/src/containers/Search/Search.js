@@ -145,7 +145,7 @@ class SearchBase extends React.Component {
       }
       return acc;
     }, []);
-  }
+  };
 
   updateLocation = (previousProps) => {
     const { queryString, selectedType, facets, facetValues, sort, page, group, defaultGroup, location } = this.props;
@@ -180,7 +180,7 @@ class SearchBase extends React.Component {
       const url = getLocationFromQuery(query, location);
       history.push(url);
     }
-  }
+  };
 
   updateScrolling = () => {
     const { isActive } = this.props;
@@ -191,7 +191,7 @@ class SearchBase extends React.Component {
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
     }
-  }
+  };
 
   getUrlParmeters = () => {
     const { location } = this.props;
@@ -209,7 +209,7 @@ class SearchBase extends React.Component {
       }
       return acc;
     }, {});
-  }
+  };
 
   search() {
     const {

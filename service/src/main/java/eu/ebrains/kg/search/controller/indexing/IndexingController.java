@@ -38,7 +38,7 @@ import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -99,7 +99,7 @@ public class IndexingController {
     }
 
 
-    public <v1Input, v2Input, v3Input, Target extends TargetInstance> List<ErrorReportResult.ErrorReportResultBySourceType> populateIndex(TranslatorModel<v1Input, v2Input, v3Input, Target> translatorModel, DataStage dataStage) {
+    public <v1Input, v2Input, v3Input, Target extends TargetInstance> List<ErrorReportResult.ErrorReportResultBySourceType> populateIndex(TranslatorModel<v1Input, v2Input, v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
         List<ErrorReportResult.ErrorReportResultBySourceType> errorReportBySourceType = new ArrayList<>();
         Set<String> handledIdentifiers = new HashSet<>();
         Set<String> searchableIds = new HashSet<>();
@@ -115,7 +115,7 @@ public class IndexingController {
                 } else {
                     return instance;
                 }
-            }, translatorModel.isAutoRelease());
+            }, translatorModel.isAutoRelease(), temporary);
             if (!updateResultV3.errors.isEmpty()) {
                 ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
                 e.setSourceType(translatorModel.getV3translator().getSourceType().getSimpleName());
@@ -137,7 +137,7 @@ public class IndexingController {
                 else {
                     return instance;
                 }
-            }, translatorModel.isAutoRelease());
+            }, translatorModel.isAutoRelease(), temporary);
             if(!updateResultV2.errors.isEmpty()) {
                 ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
                 e.setSourceType(translatorModel.getV2translator().getSourceType().getSimpleName());
@@ -149,7 +149,7 @@ public class IndexingController {
             nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
         }
         if (indexDataFromOldKG && translatorModel.getV1translator() != null) {
-            final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease());
+            final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease(), temporary);
             handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
             searchableIds.addAll(updateResultV1.searchableIds);
             nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
@@ -161,10 +161,10 @@ public class IndexingController {
             }
         }
         if(translatorModel.isAutoRelease()){
-            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds);
+            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds, temporary);
         }
         else {
-            elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(translatorModel.getTargetClass(), dataStage, searchableIds);
+            elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(translatorModel.getTargetClass(), dataStage, searchableIds, temporary);
             elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds);
         }
         return errorReportBySourceType;
@@ -177,18 +177,20 @@ public class IndexingController {
         private final ErrorReport errors = new ErrorReport();
     }
 
-    private <Target extends TargetInstance> void clearNonResolvableReferences(Target instance, DataStage dataStage){
+    private <Target extends TargetInstance> void clearNonResolvableReferences(List<Target> instances, DataStage dataStage){
         List<TargetInternalReference> references = new ArrayList<>();
-        collectAllTargetInternalReferences(instance, references);
+        instances.forEach(i -> collectAllTargetInternalReferences(i, references));
+        final List<String> refs = references.stream().map(TargetInternalReference::getReference).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        final Set<String> existingRefs = elasticSearchController.existingDocuments(refs, dataStage);
         references.forEach(r -> {
-            if(r.getReference()!=null && !elasticSearchController.documentExists(r.getReference(), dataStage)){
-                logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference in %s", r.getReference(), dataStage, instance.getId()));
+            if(r.getReference()!=null && !existingRefs.contains(r.getReference())){
+                logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference", r.getReference(), dataStage));
                 r.setReference(null);
             }
         });
     }
 
-    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<?, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease) {
+    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<?, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
         translator.getQueryIds().forEach(queryId -> {
             boolean hasMore = true;
@@ -202,8 +204,9 @@ public class IndexingController {
                 if (instances != null) {
                     List<Target> searchableInstances = new ArrayList<>();
                     List<Target> nonSearchableInstances = new ArrayList<>();
-                    instances.stream().filter(instance -> !excludedIds.contains(instance.getId())).forEach(instance -> {
-                        clearNonResolvableReferences(instance, dataStage);
+                    final List<Target> processableInstances = instances.stream().filter(instance -> !excludedIds.contains(instance.getId())).collect(Collectors.toList());
+                    clearNonResolvableReferences(processableInstances, dataStage);
+                    processableInstances.forEach(instance -> {
                         Target handledInstance = instanceHandler!=null ? instanceHandler.apply(instance) : instance;
                         updateResult.handledIdentifiers.add(handledInstance.getId());
                         updateResult.handledIdentifiers.addAll(handledInstance.getIdentifier());
@@ -216,11 +219,11 @@ public class IndexingController {
                         }
                     });
                     if (!CollectionUtils.isEmpty(searchableInstances)) {
-                        elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
+                        elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage, temporary);
                     }
                     if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
                         if(autorelease){
-                            elasticSearchController.updateAutoReleasedIndex(nonSearchableInstances, dataStage, type);
+                            elasticSearchController.updateAutoReleasedIndex(nonSearchableInstances, dataStage, type, temporary);
                         }
                         else {
                             elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
@@ -241,16 +244,23 @@ public class IndexingController {
         elasticSearchController.recreateIdentifiersIndex(mappingResult, dataStage);
     }
 
-    public void recreateSearchIndex(DataStage dataStage, Class<? extends TargetInstance> clazz) {
-        Map<String, Object> mapping = mappingController.generateMapping(clazz);
-        Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateSearchIndex(mappingResult, clazz, dataStage);
+
+    public void reindexTemporaryToReal(DataStage dataStage, Class<? extends TargetInstance> clazz, boolean autorelease){
+        recreateIndex(dataStage, clazz, autorelease, false);
+        elasticSearchController.reindexTemporaryToRealIndex(clazz, dataStage, autorelease);
     }
 
-    public void recreateAutoReleasedIndex(DataStage stage, Class<?> clazz) {
+    public void recreateIndex(DataStage dataStage, Class<? extends TargetInstance> clazz, boolean autorelease, boolean temporary){
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateAutoReleasedIndex(stage, mappingResult, clazz);
+        if(autorelease){
+            elasticSearchController.recreateAutoReleasedIndex(dataStage, mappingResult, clazz, temporary);
+        }
+        else {
+            elasticSearchController.recreateSearchIndex(mappingResult, clazz, dataStage, temporary);
+        }
     }
+
+
 
 }

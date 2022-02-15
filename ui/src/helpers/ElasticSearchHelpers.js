@@ -390,7 +390,7 @@ export class ElasticSearchHelpers {
       });
     }
     return queryFieldsByType;
-  }
+  };
 
   static getQueryFields = (queryFieldsByType, selectedType) => {
     if (!queryFieldsByType) {
@@ -420,7 +420,7 @@ export class ElasticSearchHelpers {
       return Object.keys(highlightFields).length?highlightFields:null;
     }
     return null;
-  }
+  };
 
   static buildRequest(searchState) {
 

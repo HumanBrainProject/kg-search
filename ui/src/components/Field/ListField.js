@@ -95,21 +95,38 @@ const ListFieldBase = (renderUserInteractions = true) => {
   class ListField extends React.Component {
     constructor(props) {
       super(props);
+      this.state = {
+        sizeStop: 0,
+        items: [],
+        hasShowMoreToggle: false,
+        showMoreLabel: false
+      };
+    }
+
+    setItemsState = () => {
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
       const showMoreEnabled = this.props.mapping.layout === "summary" || !renderUserInteractions;
       const showMoreToggle = this.hasShowMoreToggle && showMoreEnabled;
-      this.state = {
+      this.setState({
         sizeStop: sizeStop,
         items: showMoreEnabled?getFilteredItems(sizeStop, this.maxSizeStop, this.props):this.getItems(),
         hasShowMoreToggle: showMoreToggle,
         showMoreLabel: getShowMoreLabel(sizeStop, this.props)
-      };
+      });
+    };
+
+    componentDidMount() {
+      this.setItemsState();
     }
 
+    componentDidUpdate(prevProps) {
+      if(JSON.stringify(prevProps.items) !== JSON.stringify(this.props.items)) {
+        this.setItemsState();
+      }
+    }
 
     getItems = () => {
       const {items, mapping, group, type} = this.props;
-
       if (!Array.isArray(items)) {
         return [];
       }
@@ -157,7 +174,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
           showMoreLabel: getShowMoreLabel(nextSizeStop, props)
         };
       });
-    }
+    };
 
     render() {
       const {show, mapping} = this.props;

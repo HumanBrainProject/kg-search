@@ -33,6 +33,7 @@ import eu.ebrains.kg.search.utils.TranslationException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
@@ -77,7 +78,7 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
         s.setId(uuid);
 
         s.setAllIdentifiers(subject.getIdentifier());
-        s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Subject", subject.getIdentifier()));
+        s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Subject", subject.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
 //        s.setDatasetExists(emptyToNull(subject.getDatasetExists()));

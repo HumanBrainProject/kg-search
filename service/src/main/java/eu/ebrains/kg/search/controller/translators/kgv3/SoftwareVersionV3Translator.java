@@ -86,7 +86,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
         s.setAllIdentifiers(softwareVersion.getIdentifier());
-        s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()));
+        s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
 
         List<Version> versions = software == null ? null:software.getVersions();
         if (!CollectionUtils.isEmpty(versions) && versions.size()>1) {
@@ -95,8 +95,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(software.getId()), "All versions"));
             s.setVersions(references);
-            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
-            s.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(softwareVersion.getId()));
+            s.setSearchable(sortedVersions.get(sortedVersions.size()-1).getId().equals(softwareVersion.getId()));
         } else {
             s.setSearchable(true);
         }
@@ -220,6 +219,9 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         if(softwareVersion.getHomepage()!=null){
             s.setHomepage(new TargetExternalReference(softwareVersion.getHomepage(), softwareVersion.getHomepage()));
         }
+        else if(software!=null && software.getHomepage()!=null){
+            s.setHomepage(new TargetExternalReference(software.getHomepage(), software.getHomepage()));
+        }
 
         if(softwareVersion.getRepository()!=null){
             s.setSourceCode(new TargetExternalReference(softwareVersion.getRepository(), softwareVersion.getRepository()));
@@ -255,12 +257,12 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getInputFormat())){
-            s.setInputFormat(softwareVersion.getInputFormat().stream().map(this::translateFileFormat).collect(Collectors.toList()));
+            s.setInputFormat(softwareVersion.getInputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
             s.setInputFormatsForFilter(softwareVersion.getInputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())){
-            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(this::translateFileFormat).collect(Collectors.toList()));
+            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
             s.setOutputFormatsForFilter(softwareVersion.getOutputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 

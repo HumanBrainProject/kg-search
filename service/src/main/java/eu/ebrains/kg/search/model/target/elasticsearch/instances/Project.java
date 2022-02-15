@@ -72,6 +72,9 @@ public class Project implements TargetInstance {
     @FieldInfo(label = "Software", layout = "Software", labelHidden = true)
     private List<TargetInternalReference> software;
 
+    @FieldInfo(label = "(Meta)Data models", layout = "(Meta)Data models", labelHidden = true)
+    private List<TargetInternalReference> metaDataModels;
+
     @FieldInfo(label = "Related publications", markdown = true, labelHidden = true, layout = "Publications")
     private List<Value<String>> publications;
 

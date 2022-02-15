@@ -23,11 +23,16 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class ModelV3 extends SourceInstanceV3 {
     private String title;
     private String description;
@@ -35,90 +40,9 @@ public class ModelV3 extends SourceInstanceV3 {
     private String howToCite;
     private List<PersonOrOrganizationRef> developer;
     private List<PersonOrOrganizationRef> custodian;
-    private List<String> studyTarget;
-    private List<String> modelScope;
-    private List<String> abstractionLevel;
+    private List<FullNameRef> studyTarget;
+    private FullNameRef modelScope;
+    private FullNameRef abstractionLevel;
     private String homepage;
     private List<Version> versions;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
-
-    public String getHowToCite() {
-        return howToCite;
-    }
-
-    public void setHowToCite(String howToCite) {
-        this.howToCite = howToCite;
-    }
-
-    public List<PersonOrOrganizationRef> getDeveloper() { return developer; }
-
-    public void setDeveloper(List<PersonOrOrganizationRef> developer) { this.developer = developer; }
-
-    public List<PersonOrOrganizationRef> getCustodian() { return custodian; }
-
-    public void setCustodian(List<PersonOrOrganizationRef> custodian) { this.custodian = custodian; }
-
-    public List<String> getStudyTarget() {
-        return studyTarget;
-    }
-
-    public void setStudyTarget(List<String> studyTarget) {
-        this.studyTarget = studyTarget;
-    }
-
-    public List<String> getModelScope() {
-        return modelScope;
-    }
-
-    public void setModelScope(List<String> modelScope) {
-        this.modelScope = modelScope;
-    }
-
-    public List<String> getAbstractionLevel() {
-        return abstractionLevel;
-    }
-
-    public void setAbstractionLevel(List<String> abstractionLevel) {
-        this.abstractionLevel = abstractionLevel;
-    }
-
-    public String getHomepage() {
-        return homepage;
-    }
-
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
-    }
-
-    public List<Version> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(List<Version> versions) {
-        this.versions = versions;
-    }
-
 }

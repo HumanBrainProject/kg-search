@@ -23,54 +23,19 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import Notice from "./Notice";
 
-Enzyme.configure({ adapter: new Adapter() });
+test("Notice component renders initially", () => {
+  const component = renderer.create(
+    <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
+  );
 
-test('Notice component renders initially', () => {
-    const component = renderer.create(
-        <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
+  expect(component.toJSON()).toMatchSnapshot();
 });
 
-test('Notice test show false"', () => {
-    const component = renderer.create(
-        <Notice className="className" show={false} text="some text" agreeLabel="agree label" onAgree={() => {}} />
-    );
-    expect(component.toJSON()).toBe(null);
+test("Notice test show false\"", () => {
+  const component = renderer.create(
+    <Notice className="className" show={false} text="some text" agreeLabel="agree label" onAgree={() => {}} />
+  );
+  expect(component.toJSON()).toBe(null);
 });
-  
-test('Notice test className"', () => {
-    const component = shallow(
-        <Notice className="className" show={false} text="some text" agreeLabel="agree label" onAgree={() => {}} />
-    );
-    expect(component.hasClass("className"));
-});
-  
-test('Notice test text', () => {
-    const component = shallow(
-        <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
-    );
-    expect(component.find("span").html()).toContain("some text");
-});
-
-test('Notice test button click', () => {
-    const fn = jest.fn();
-    const component = shallow(
-        <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={fn} />
-    );
-    component.find('button').simulate('click');
-    expect(fn.mock.calls.length).toBe(1);
-});
-
-test('Notice test button label', () => {
-    const component = shallow(
-        <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
-    );
-    expect(component.find("button").text()).toEqual("agree label");
-});
-

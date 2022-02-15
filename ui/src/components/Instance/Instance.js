@@ -67,7 +67,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
 
   return (
     <div className={`kgs-instance ${isOutdated?"kgs-outdated":""}`} data-type={type}>
-      <Header header={header} group={group} path={path} fetch={fetch} NavigationComponent={NavigationComponent} searchPage={searchPage} onVersionChange={onVersionChange} />
+      <Header header={header} NavigationComponent={NavigationComponent} onVersionChange={onVersionChange} />
       {isOutdated && allVersions ? (
         <div className="kgs-outdated-alert" >
           <div className="alert alert-secondary" role="alert">

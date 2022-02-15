@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FileRepository;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
@@ -41,8 +42,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @MetaInfo(name = "Model", order = 5, searchable=true)
 public class ModelVersion implements TargetInstance, VersionedInstance {
+
+
+
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -56,58 +62,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
-    @FieldInfo(layout = "header")
-    private Value<String> editorId;
-
-    @FieldInfo(label = "Name", sort = true, boost = 20)
-    private Value<String> title;
-
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
-    private Value<String> description;
-
-    @FieldInfo(label = "Version", layout = "summary")
-    private Value<String> version;
-
-    @FieldInfo(label = "Model Versions")
-    private TargetInternalReference model;
-
-    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
-    private List<TargetInternalReference> contributors;
-
-    @FieldInfo(label = "Custodian", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
-    private List<TargetInternalReference> owners;
-
-    @FieldInfo(label = "Main contact", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
-    private List<TargetInternalReference> mainContact;
-
-    @FieldInfo(label = "Files", markdown = true)
-    private Value<String> embargo;
-
-    @JsonProperty("allfiles") //TODO: capitalize
-    @FieldInfo(label = "Download model", termsOfUse = true, icon="download")
-    private List<TargetExternalReference> allFiles;
-
-    @FieldInfo(label = "Publications", markdown = true, labelHidden = true, layout = "Publications")
-    private List<Value<String>> publications;
-
-    @FieldInfo(label = "Brain structure", layout = "summary", facet = FieldInfo.Facet.LIST)
-    private List<Value<String>> brainStructures;
-
-    @FieldInfo(label = "(Sub)cellular target", layout = "summary")
-    private List<Value<String>> cellularTarget;
-
-    @FieldInfo(label = "Study target", layout = "summary")
-    private List<Value<String>> studyTarget;
-
-    @FieldInfo(label = "Model scope", layout = "summary", facet = FieldInfo.Facet.LIST)
-    private List<Value<String>> modelScope;
-
-    @FieldInfo(label = "Abstraction level", layout = "summary", separator = "; ", facet = FieldInfo.Facet.LIST)
-    private List<Value<String>> abstractionLevel;
-
-    @FieldInfo(label = "Model format", layout = "summary", separator = "; ")
-    private List<Value<String>> modelFormat;
-
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
@@ -116,15 +70,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @FieldInfo(label = "Used datasets", layout = "Used datasets", labelHidden = true)
-    private List<TargetInternalReference> usedDataset;
+    private String version;
 
-    @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
-    private List<TargetInternalReference> producedDataset;
-
-    @JsonProperty("license_info")
-    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
-    private TargetExternalReference licenseInfo;
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private TargetInternalReference allVersionRef;
 
     private List<TargetInternalReference> versions;
 
@@ -136,248 +85,110 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
         return isSearchable;
     }
 
-    public void setSearchable(boolean searchable) {
-        isSearchable = searchable;
-    }
 
-    @Override
-    public String getId() { return id; }
+    //Global
 
-    public void setId(String id) { this.id = id; }
+    @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
+    private Value<String> title;
 
-    public void setType(String type) {
-        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
-    }
+    /**
+     * @deprecated not needed in openMINDS anymore since the id is consistent across systems
+     */
+    @FieldInfo(layout = "header")
+    @Deprecated
+    private Value<String> editorId;
 
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
+    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    private List<TargetInternalReference> contributors;
 
-    public void setEditorId(String editorId) {
-        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
-    }
+    //Overview
+    @FieldInfo(label = "DOI", hint = "This is the model DOI you must cite if you reuse this model in a way that leads to a publication")
+    private Value<String> doi;
 
-    public TargetInternalReference getModel() { return model; }
+    @JsonProperty("license_info")
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
+    private List<TargetExternalReference> licenseInfo;
 
-    public void setModel(TargetInternalReference model) { this.model = model; }
 
-    public void setEmbargo(String embargo) {
-        setEmbargo(StringUtils.isBlank(embargo) ? null : new Value<>(embargo));
-    }
+    @FieldInfo(label = "Project", boost = 10, order = 3)
+    private List<TargetInternalReference> projects;
 
-    public void setDescription(String description) {
-        setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
-    }
+    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    private List<TargetInternalReference> custodians;
 
-    @Override
-    public void setVersion(String version) {
-        setVersion(StringUtils.isBlank(version) ? null : new Value<>(version));
-    }
+    @FieldInfo(label = "Homepage")
+    private TargetExternalReference homepage;
 
-    public void setTitle(String title) {
-        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
-    }
+    @FieldInfo(label = "Main contact", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
+    private List<TargetInternalReference> mainContact;
 
-    public ISODateValue getFirstRelease() {
-        return firstRelease;
-    }
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
+    private Value<String> description;
 
-    public void setFirstRelease(ISODateValue firstRelease) {
-        this.firstRelease = firstRelease;
-    }
+    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
+    private Value<String> newInThisVersion;
 
-    public void setFirstRelease(Date firstRelease) {
-        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
-    }
+    @FieldInfo(label = "Studied brain region", layout = "summary")
+    private List<TargetInternalReference> studiedBrainRegion;
 
-    public ISODateValue getLastRelease() {
-        return lastRelease;
-    }
+    @FieldInfo(label = "Study targets", layout = "summary")
+    private List<TargetInternalReference> studyTargets;
 
-    public void setLastRelease(ISODateValue lastRelease) {
-        this.lastRelease = lastRelease;
-    }
+    @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
+    private Value<String> accessibility;
 
-    public void setLastRelease(Date lastRelease) {
-        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
-    }
+    @FieldInfo(label = "Cite model", markdown = true, layout = "How to cite", labelHidden = true)
+    private Value<String> citation;
 
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
+    @FieldInfo(layout = "Get model", isFilePreview=true)
+    private TargetExternalReference embeddedModelSource;
 
-    public Value<String> getEditorId() {
-        return editorId;
-    }
+    @FieldInfo(layout = "Get model")
+    private TargetExternalReference externalDownload;
 
-    public void setEditorId(Value<String> editorId) {
-        this.editorId = editorId;
-    }
+    @FieldInfo(layout = "Get model", termsOfUse = true)
+    private TargetExternalReference internalDownload;
 
-    public Value<String> getEmbargo() {
-        return embargo;
-    }
+    @FieldInfo(layout = "Get model", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    private String filesAsyncUrl;
 
-    public void setEmbargo(Value<String> embargo) {
-        this.embargo = embargo;
-    }
+    @FieldInfo(layout = "Get model")
+    private Value<String> embargo;
 
-    public List<TargetInternalReference> getProducedDataset() {
-        return producedDataset;
-    }
+    @JsonProperty("allfiles") //TODO: capitalize
+    @FieldInfo(label = "Get model", termsOfUse = true, icon="download")
+    private List<TargetExternalReference> allFiles;
 
-    public void setProducedDataset(List<TargetInternalReference> producedDataset) {
-        this.producedDataset = producedDataset;
-    }
+    //Publications
+    @FieldInfo(layout = "Publications", markdown = true, labelHidden = true)
+    private List<Value<String>> publications;
 
-    public List<TargetExternalReference> getAllFiles() {
-        return allFiles;
-    }
+    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    private List<Value<String>> keywords;
 
-    public void setAllFiles(List<TargetExternalReference> allFiles) {
-        this.allFiles = allFiles;
-    }
+    @FieldInfo(label = "Brain structure", layout = "summary", facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> brainStructures;
 
-    public List<Value<String>> getModelFormat() {
-        return modelFormat;
-    }
+    @FieldInfo(label = "(Sub)cellular target", layout = "summary")
+    private List<Value<String>> cellularTarget;
 
-    public void setModelFormat(List<String> modelFormat) {
-        this.modelFormat = modelFormat == null ? null : modelFormat.stream().filter(StringUtils::isNotBlank).map(Value::new).collect(Collectors.toList());
-    }
+    @FieldInfo(label = "Model scope", layout = "summary", facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> modelScope;
 
-    public Value<String> getDescription() {
-        return description;
-    }
+    @FieldInfo(label = "Abstraction level", layout = "summary", separator = "; ", facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> abstractionLevel;
 
-    public void setDescription(Value<String> description) {
-        this.description = description;
-    }
+    @FieldInfo(label = "Model format", layout = "summary", separator = "; ")
+    private List<TargetInternalReference> modelFormat;
 
-    public TargetExternalReference getLicenseInfo() {
-        return licenseInfo;
-    }
+    @FieldInfo(label = "Used datasets", layout = "Used datasets", labelHidden = true)
+    private List<TargetInternalReference> usedDataset;
 
-    public void setLicenseInfo(TargetExternalReference licenseInfo) {
-        this.licenseInfo = licenseInfo;
-    }
+    @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
+    private List<TargetInternalReference> producedDataset;
 
-    public List<TargetInternalReference> getOwners() {
-        return owners;
-    }
 
-    public void setOwners(List<TargetInternalReference> owners) {
-        this.owners = owners;
-    }
 
-    public List<Value<String>> getAbstractionLevel() {
-        return abstractionLevel;
-    }
 
-    public void setAbstractionLevel(List<String> abstractionLevel) {
-        this.abstractionLevel = abstractionLevel == null ? null : abstractionLevel.stream().map(Value::new).collect(Collectors.toList());
-    }
 
-    public List<TargetInternalReference> getMainContact() {
-        return mainContact;
-    }
-
-    public void setMainContact(List<TargetInternalReference> mainContact) {
-        this.mainContact = mainContact;
-    }
-
-    public List<Value<String>> getBrainStructures() {
-        return brainStructures;
-    }
-
-    public void setBrainStructures(List<String> brainStructures) {
-        this.brainStructures = brainStructures == null ? null : brainStructures.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public List<TargetInternalReference> getUsedDataset() {
-        return usedDataset;
-    }
-
-    public void setUsedDataset(List<TargetInternalReference> usedDataset) {
-        this.usedDataset = usedDataset;
-    }
-
-    public Value<String> getVersion() {
-        return version;
-    }
-
-    public void setVersion(Value<String> version) {
-        this.version = version;
-    }
-
-    public List<Value<String>> getPublications() {
-        return publications;
-    }
-
-    public void setPublications(List<String> publications) {
-        this.publications = publications == null ? null : publications.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public List<Value<String>> getStudyTarget() {
-        return studyTarget;
-    }
-
-    public void setStudyTarget(List<String> studyTarget) {
-        this.studyTarget = studyTarget == null ? null : studyTarget.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public List<Value<String>> getModelScope() {
-        return modelScope;
-    }
-
-    public void setModelScope(List<String> modelScope) {
-        this.modelScope = modelScope == null ? null : modelScope.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public Value<String> getTitle() {
-        return title;
-    }
-
-    public void setTitle(Value<String> title) {
-        this.title = title;
-    }
-
-    public List<TargetInternalReference> getContributors() {
-        return contributors;
-    }
-
-    public void setContributors(List<TargetInternalReference> contributors) {
-        this.contributors = contributors;
-    }
-
-    public List<Value<String>> getCellularTarget() {
-        return cellularTarget;
-    }
-
-    public void setCellularTarget(List<String> cellularTarget) {
-        this.cellularTarget = cellularTarget == null ? null : cellularTarget.stream().filter(StringUtils::isNotBlank).map(Value::new).collect(Collectors.toList());
-    }
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    public void setType(Value<String> type) {
-        this.type = type;
-    }
-
-    public List<TargetInternalReference> getVersions() { return versions; }
-
-    @Override
-    public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
-
-    @Override
-    public List<String> getAllIdentifiers() {
-        return allIdentifiers;
-    }
-
-    public void setAllIdentifiers(List<String> allIdentifiers) {
-        this.allIdentifiers = allIdentifiers;
-    }
 }

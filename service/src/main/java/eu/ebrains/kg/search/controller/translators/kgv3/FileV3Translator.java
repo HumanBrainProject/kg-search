@@ -23,12 +23,11 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
-import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
-import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -81,9 +80,12 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         File f = new File();
         f.setId(IdUtils.getUUID(file.getId()));
         f.setAllIdentifiers(file.getIdentifier());
-        f.setIdentifier(IdUtils.getUUID(file.getIdentifier()));
+        f.setIdentifier(IdUtils.getUUID(file.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         f.setFileRepository(IdUtils.getUUID(fileRepository));
         f.setTitle(value(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName()));
+        if(!CollectionUtils.isEmpty(file.getServiceLinks())){
+            f.setViewer(file.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open %s in %s", s.getLabel(), s.getService()))).collect(Collectors.toList()));
+        }
         String iri = file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri();
         if (StringUtils.isNotBlank(iri)) {
             f.setIri(new TargetExternalReference(iri, iri));
@@ -94,7 +96,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         }
         if(file.getFormat()!=null){
             f.setFormat(ref(file.getFormat()));
-            f.setInputTypeForSoftware(ref(file.getFormat().getInputFormatForSoftware()));
+            f.setInputTypeForSoftware(refVersion(file.getFormat().getInputFormatForSoftware(), true));
         }
         Map<String, File.GroupingType> groupingTypes = new HashMap<>();
         file.getFileBundles().forEach(fileBundle -> {
@@ -104,7 +106,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
             if (!groupingTypes.containsKey(groupingTypeName)) {
                 File.GroupingType groupingType = new File.GroupingType();
                 groupingType.setName(groupingTypeName);
-                groupingType.setFileBundles(List.of(fb));
+                groupingType.setFileBundles(new ArrayList<>(Collections.singletonList(fb)));
                 groupingTypes.put(groupingTypeName, groupingType);
             } else {
                 File.GroupingType groupingType = groupingTypes.get(groupingTypeName);

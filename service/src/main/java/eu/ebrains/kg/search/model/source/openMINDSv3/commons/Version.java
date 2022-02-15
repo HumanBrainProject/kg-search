@@ -22,10 +22,13 @@
  */
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +39,11 @@ public class Version {
     private String versionIdentifier;
     private String versionInnovation;
     private String isNewVersionOf;
+    private List<String> isAlternativeVersionOf;
+
+    @JsonIgnore
+    public String getNaturalSortValue(){
+        return String.format("%s %s", StringUtils.defaultString(getFullName()), StringUtils.defaultString(getVersionIdentifier(), ""));
+    }
+
 }

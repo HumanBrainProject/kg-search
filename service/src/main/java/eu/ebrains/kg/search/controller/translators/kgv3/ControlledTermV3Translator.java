@@ -46,6 +46,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
             "ActionStatusType",
             "AgeCategory",
             "AnatomicalAxesOrientation",
+            "AtlasType",
             "BiologicalOrder",
             "BiologicalSex",
             "BreedingType",
@@ -68,6 +69,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
             "MetaDataModelType",
             "ModelAbstractionLevel",
             "ModelScope",
+            "MolecularEntity",
             "OperatingDevice",
             "OperatingSystem",
             "Organ",
@@ -84,6 +86,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
             "StimulationApproach",
             "StimulusType",
             "Strain",
+            "SubjectAttribute",
             "Technique",
             "TermSuggestion",
             "Terminology",
@@ -135,7 +138,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
         t.setId(IdUtils.getUUID(controlledTerm.getId()));
 
         t.setAllIdentifiers(controlledTerm.getIdentifier());
-        t.setIdentifier(IdUtils.getUUID(controlledTerm.getIdentifier()));
+        t.setIdentifier(IdUtils.getUUID(controlledTerm.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(StringUtils.isBlank(controlledTerm.getName()) ? null : new Value<>(controlledTerm.getName()));
         if(StringUtils.isBlank(controlledTerm.getDefinition()) &&
                 StringUtils.isBlank(controlledTerm.getDescription()) &&
