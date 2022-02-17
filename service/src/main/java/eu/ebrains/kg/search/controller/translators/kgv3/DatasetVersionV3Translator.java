@@ -124,11 +124,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                         if (isExternalLink(datasetVersion.getFileRepository())) {
                             d.setExternalDatalink(Collections.singletonList(new TargetExternalReference(datasetVersion.getFileRepository().getIri(), datasetVersion.getFileRepository().getIri())));
                         } else {
-//                            if(datasetVersion.getFileRepository().getFirstFile()==null){
-//                                //Although the dataset version is supposed to be accessible, it is not indexed (yet). We're forwarding to data proxy
-//                                d.setDataProxyLink(new TargetExternalReference(String.format("https://data-proxy.ebrains.eu/datasets/%s", d.getId()), "Browse files"));
-//                            }
-//                            else {
+                            if(datasetVersion.getFileRepository().getFirstFile()==null){
+                                //Although the dataset version is supposed to be accessible, it is not indexed (yet). We're forwarding to data proxy
+                                d.setDataProxyLink(new TargetExternalReference(String.format("https://data-proxy.ebrains.eu/datasets/%s", d.getId()), "Browse files"));
+                            }
+                            else {
                                 String endpoint;
                                 if (liveMode) {
                                     endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
@@ -136,7 +136,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                                     endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
                                 }
                                 d.setFilesAsyncUrl(endpoint);
-//                            }
+                            }
                         }
                     }
             }
