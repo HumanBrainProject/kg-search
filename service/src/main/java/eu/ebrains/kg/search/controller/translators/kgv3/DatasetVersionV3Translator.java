@@ -99,6 +99,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
+        d.setId(datasetVersion.getUUID());
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);
         String containerUrl = datasetVersion.getFileRepository() != null ? datasetVersion.getFileRepository().getIri() : null;
@@ -123,20 +124,25 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                         if (isExternalLink(datasetVersion.getFileRepository())) {
                             d.setExternalDatalink(Collections.singletonList(new TargetExternalReference(datasetVersion.getFileRepository().getIri(), datasetVersion.getFileRepository().getIri())));
                         } else {
-                            String endpoint;
-                            if (liveMode) {
-                                endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
-                            } else {
-                                endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                            if(datasetVersion.getFileRepository().getFirstFile()==null){
+                                //Although the dataset version is supposed to be accessible, it is not indexed (yet). We're forwarding to data proxy
+                                d.setDataProxyLink(new TargetExternalReference(String.format("https://data-proxy.ebrains.eu/datasets/%s", d.getId()), "Browse files"));
                             }
-                            d.setFilesAsyncUrl(endpoint);
+                            else {
+                                String endpoint;
+                                if (liveMode) {
+                                    endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                                } else {
+                                    endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                                }
+                                d.setFilesAsyncUrl(endpoint);
+                            }
                         }
                     }
             }
             d.setDataAccessibility(value(datasetVersion.getAccessibility().getName()));
         }
 
-        d.setId(datasetVersion.getUUID());
         d.setExperimentalApproach(ref(datasetVersion.getExperimentalApproach()));
         if(!CollectionUtils.isEmpty(datasetVersion.getExperimentalApproach())){
             final List<String> experimentalApproachesForFilter = datasetVersion.getExperimentalApproach().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());

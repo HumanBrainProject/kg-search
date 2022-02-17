@@ -976,15 +976,14 @@
           "ensureOrder": true,
           "structure": [
             {
-            "propertyName": "query:id",
-            "path": "@id"
+              "propertyName": "query:id",
+              "path": "@id"
             },
             {
               "propertyName": "query:age",
               "path": "https://openminds.ebrains.eu/vocab/age",
               "singleValue": "FIRST",
               "structure": [
-
                 {
                   "propertyName": "query:value",
                   "path": "https://openminds.ebrains.eu/vocab/value"
@@ -1821,6 +1820,17 @@
         {
           "propertyName": "query:fullName",
           "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:firstFile",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
+              "reverse": true
+            },
+            "@id"
+          ],
+          "singleValue": "FIRST"
         }
       ]
     },

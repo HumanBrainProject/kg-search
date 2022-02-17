@@ -223,6 +223,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
     private String filesAsyncUrl;
 
+    @FieldInfo(layout = "Get data", termsOfUse = true)
+    private TargetExternalReference dataProxyLink;
+
     @JsonProperty("external_datalink")
     @FieldInfo(layout = "Get data", label = "Data download")
     private List<TargetExternalReference> externalDatalink;
