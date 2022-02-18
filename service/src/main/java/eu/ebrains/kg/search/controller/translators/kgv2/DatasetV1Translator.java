@@ -272,11 +272,14 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
     private Value<String> translateAccessibility(Value<String> oldValue) {
         if (oldValue != null && oldValue.getValue() != null) {
             final String value = oldValue.getValue();
-            switch (value.toLowerCase()) {
+            final String lowerCaseValue = value.toLowerCase();
+            switch (lowerCaseValue) {
                 case "free":
                     return value("free access");
                 case "embargoed":
                     return value("under embargo");
+                default:
+                    return value(lowerCaseValue);
             }
         }
         return oldValue;
