@@ -128,7 +128,7 @@ public class IndexingController {
         }
         boolean indexDataFromOldKG = dataStage == DataStage.RELEASED || !translatorModel.isOnlyV3ForInProgress();
         if (indexDataFromOldKG && translatorModel.getV2translator() != null) {
-            final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, instance -> {
+            final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSizeV2(), dataStage, handledIdentifiers, instance -> {
                 if(translatorModel.getMerger()!=null){
                     final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
                     final List<Target> fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
@@ -149,7 +149,7 @@ public class IndexingController {
             nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
         }
         if (indexDataFromOldKG && translatorModel.getV1translator() != null) {
-            final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease(), temporary);
+            final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSizeV2(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease(), temporary);
             handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
             searchableIds.addAll(updateResultV1.searchableIds);
             nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
@@ -184,7 +184,7 @@ public class IndexingController {
         final Set<String> existingRefs = elasticSearchController.existingDocuments(refs, dataStage);
         references.forEach(r -> {
             if(r.getReference()!=null && !existingRefs.contains(r.getReference())){
-                logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference", r.getReference(), dataStage));
+//                logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference", r.getReference(), dataStage));
                 r.setReference(null);
             }
         });
