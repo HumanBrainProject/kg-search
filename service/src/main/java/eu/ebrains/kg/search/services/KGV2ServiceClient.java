@@ -43,7 +43,7 @@ public class KGV2ServiceClient extends KGServiceClient {
     private final String kgCoreEndpoint;
 
 
-    public KGV2ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
+    public KGV2ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint:@null}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
         super(serviceAccountWebClient, userWebClient);
         this.kgQueryEndpoint = kgQueryEndpoint;
         this.kgCoreEndpoint = kgCoreEndpoint;
@@ -70,18 +70,27 @@ public class KGV2ServiceClient extends KGServiceClient {
     }
 
     public <T> T executeQuery(String query, DataStage dataStage, Class<T> clazz) {
+        if(kgQueryEndpoint==null){
+            return null;
+        }
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
         return executeCallForIndexing(clazz, url);
     }
 
     public <T> T executeQuery(String query, DataStage dataStage, Class<T> clazz, int from, int size) {
+        if(kgQueryEndpoint==null){
+            return null;
+        }
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/search/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
         return executeCallForIndexing(clazz, url);
     }
 
     public <T> T executeQueryForInstance(String query, String id, DataStage dataStage, Class<T> clazz, boolean asServiceAccount) {
+        if(kgQueryEndpoint==null){
+            return null;
+        }
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED : DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/search/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
         try {

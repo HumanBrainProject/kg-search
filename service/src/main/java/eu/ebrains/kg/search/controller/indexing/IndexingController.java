@@ -45,6 +45,7 @@ import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -67,13 +68,16 @@ public class IndexingController {
     private final KGv2 kgV2;
     private final KGv3 kgV3;
 
+    private final boolean skipKGv2;
 
-    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
+
+    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2) {
         this.mappingController = mappingController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
         this.kgV2 = kgV2;
         this.kgV3 = kgV3;
+        this.skipKGv2 = skipKGv2;
         this.doiCitationFormatter = doiCitationFormatter;
     }
 
@@ -106,7 +110,7 @@ public class IndexingController {
         Set<String> nonSearchableIds = new HashSet<>();
         if(translatorModel.getV3translator()!=null) {
             final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.<String>emptySet(), instance -> {
-                if (translatorModel.getMerger() != null) {
+                if (!skipKGv2 && translatorModel.getMerger() != null) {
                     final Translator<v2Input, Target, ? extends ResultsOfKGv2<v2Input>> v2translator = translatorModel.getV2translator();
                     final List<Target> fromV2 = v2translator != null ? getRelatedInstance(kgV2, v2translator, instance, dataStage) : null;
                     final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
@@ -126,38 +130,39 @@ public class IndexingController {
             searchableIds.addAll(updateResultV3.searchableIds);
             nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
         }
-        boolean indexDataFromOldKG = dataStage == DataStage.RELEASED || !translatorModel.isOnlyV3ForInProgress();
-        if (indexDataFromOldKG && translatorModel.getV2translator() != null) {
-            final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSizeV2(), dataStage, handledIdentifiers, instance -> {
-                if(translatorModel.getMerger()!=null){
-                    final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
-                    final List<Target> fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
-                    return translatorModel.getMerger().merge(fromV1, Collections.singletonList(instance), null);
+        if(!skipKGv2) {
+            boolean indexDataFromOldKG = dataStage == DataStage.RELEASED || !translatorModel.isOnlyV3ForInProgress();
+            if (indexDataFromOldKG && translatorModel.getV2translator() != null) {
+                final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSizeV2(), dataStage, handledIdentifiers, instance -> {
+                    if (translatorModel.getMerger() != null) {
+                        final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
+                        final List<Target> fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
+                        return translatorModel.getMerger().merge(fromV1, Collections.singletonList(instance), null);
+                    } else {
+                        return instance;
+                    }
+                }, translatorModel.isAutoRelease(), temporary);
+                if (!updateResultV2.errors.isEmpty()) {
+                    ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
+                    e.setSourceType(translatorModel.getV2translator().getSourceType().getSimpleName());
+                    e.setErrors(updateResultV2.errors);
+                    errorReportBySourceType.add(e);
                 }
-                else {
-                    return instance;
-                }
-            }, translatorModel.isAutoRelease(), temporary);
-            if(!updateResultV2.errors.isEmpty()) {
-                ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
-                e.setSourceType(translatorModel.getV2translator().getSourceType().getSimpleName());
-                e.setErrors(updateResultV2.errors);
-                errorReportBySourceType.add(e);
+                handledIdentifiers.addAll(updateResultV2.handledIdentifiers);
+                searchableIds.addAll(updateResultV2.searchableIds);
+                nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
             }
-            handledIdentifiers.addAll(updateResultV2.handledIdentifiers);
-            searchableIds.addAll(updateResultV2.searchableIds);
-            nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
-        }
-        if (indexDataFromOldKG && translatorModel.getV1translator() != null) {
-            final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSizeV2(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease(), temporary);
-            handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
-            searchableIds.addAll(updateResultV1.searchableIds);
-            nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
-            if(!updateResultV1.errors.isEmpty()) {
-                ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
-                e.setSourceType(translatorModel.getV1translator().getSourceType().getSimpleName());
-                e.setErrors(updateResultV1.errors);
-                errorReportBySourceType.add(e);
+            if (indexDataFromOldKG && translatorModel.getV1translator() != null) {
+                final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSizeV2(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease(), temporary);
+                handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
+                searchableIds.addAll(updateResultV1.searchableIds);
+                nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
+                if (!updateResultV1.errors.isEmpty()) {
+                    ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
+                    e.setSourceType(translatorModel.getV1translator().getSourceType().getSimpleName());
+                    e.setErrors(updateResultV1.errors);
+                    errorReportBySourceType.add(e);
+                }
             }
         }
         if(translatorModel.isAutoRelease()){
