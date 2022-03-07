@@ -10,7 +10,7 @@
     "producedDataset": null,
     "allfiles": [
       {
-        "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/human_cells/cell1303_03_model_448.zip?delay=120.33&vinit=-86&dt=.025&amp=0.55&tstop=1500&dur=1000?bluenaas=true",
+        "url": "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/human_cells/cell1303_03_model_448.zip?delay=120.33&vinit=-86&dt=.025&amp=0.55&tstop=1500&dur=1000?bluenaas=true",
         "value": "download all related data as ZIP"
       }
     ],

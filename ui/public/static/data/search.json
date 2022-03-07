@@ -3668,7 +3668,7 @@
             "_score": 1,
             "_source": {
                 "zip": {
-                    "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000038_Prelim_passiveRecording_pub",
+                    "url": "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000038_Prelim_passiveRecording_pub",
                     "value": "Download all related data as ZIP"
                 },
                 "subjects": null,
@@ -6609,7 +6609,7 @@
             "_score": 1,
             "_source": {
                 "zip": {
-                    "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00012_SQLITEProteomicDatabase_pub",
+                    "url": "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00012_SQLITEProteomicDatabase_pub",
                     "value": "Download all related data as ZIP"
                 },
                 "subjects": [{
@@ -6867,7 +6867,7 @@
             "_score": 1,
             "_source": {
                 "zip": {
-                    "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00013_CatalogueOfSynapticRules_pub",
+                    "url": "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00013_CatalogueOfSynapticRules_pub",
                     "value": "Download all related data as ZIP"
                 },
                 "subjects": null,
@@ -6974,7 +6974,7 @@
             "_score": 1,
             "_source": {
                 "zip": {
-                    "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d0000012_VITASLAM_pub",
+                    "url": "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d0000012_VITASLAM_pub",
                     "value": "Download all related data as ZIP"
                 },
                 "subjects": null,

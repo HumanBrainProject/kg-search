@@ -8,7 +8,7 @@
   "found": true,
   "_source": {
     "zip": {
-      "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub?prefix=Deep-Learning",
+      "url": "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub?prefix=Deep-Learning",
       "value": "Download all related data as ZIP"
     },
     "subjects": [

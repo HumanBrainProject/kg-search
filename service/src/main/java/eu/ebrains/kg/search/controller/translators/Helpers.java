@@ -52,7 +52,7 @@ public class Helpers {
                     return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
                 }
             }
-            return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileRepository.getIri());
+            return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://data.kg.ebrains.eu/files/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileRepository.getIri());
         }
         return null;
     }
@@ -83,7 +83,7 @@ public class Helpers {
                 return String.format("https://data-proxy.ebrains.eu/%s", id);
             }
             else if(isCscsContainer(repository)){
-                return String.format("https://kg.ebrains.eu/files/cscs/list?url=%s", repository.getIri());
+                return String.format("https://data.kg.ebrains.eu/files/list?url=%s", repository.getIri());
             }
         }
         return null;

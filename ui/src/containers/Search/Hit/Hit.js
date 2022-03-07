@@ -283,7 +283,7 @@ export const Hit = connect(
     // };
 
     // source.zip = {
-    //   url: "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-00169?prefix=482/R601/",
+    //   url: "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-00169?prefix=482/R601/",
     //   detail: "###HBP Knowledge Graph Data Platform Citation Requirements",
     //   value: "download all related data as ZIP"
     // };
