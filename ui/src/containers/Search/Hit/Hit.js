@@ -224,69 +224,12 @@ export const Hit = connect(
     const group = state.groups.group;
 
     const getPreview = () => {
-      const previews = getPreviews(source, { children: mapping.fields });
+      const previews = getPreviews(source);
       if(previews.length && previews[0].staticImageUrl) {
         return previews[0].staticImageUrl;
       }
       return null;
     };
-
-    // source.allfiles = Array.from(Array(10).keys());
-    // mapping.ribbon = {
-    //   framed: {
-    //     dataField: "allfiles",
-    //     aggregation: "count",
-    //     suffix: {
-    //       singular: "file",
-    //       plural: "files"
-    //     }
-    //   }
-    // };
-
-    // source.protocol = [
-    //   {
-    //     "value": "anesthesia"
-    //   },
-    //   {
-    //     "value": "cortex"
-    //   },
-    //   {
-    //     "value": "electrical stimulation"
-    //   },
-    //   {
-    //     "value": "epidural EEG"
-    //   },
-    //   {
-    //     "value": "perturbational complexity index"
-    //   },
-    //   {
-    //     "value": "wakefulness"
-    //   }
-    // ];
-
-    // source.methods = [
-    //   {
-    //     "value": "GAT-1 (DAB) staining"
-    //   },
-    //   {
-    //     "value": "measurement of cellullar/subcellular density"
-    //   }
-    // ];
-
-    // source.owners = {
-    //   "reference": "Contributor/baec0381f1f9af275705aeecf62f691c",
-    //   "value": "Evans, Alan C."
-    // };
-
-    // source.citation = {
-    //   "value": "Alessandro, A., &amp; Storm, J. (2019). <i>PCI-like measure in rodents</i> [Data set]. Human Brain Project Neuroinformatics Platform.  [DOI: 10.25493/S0DM-BK5]\n[DOI: 10.25493/S0DM-BK5]: https://doi.org/10.25493%2FS0DM-BK5"
-    // };
-
-    // source.zip = {
-    //   url: "https://data.kg.ebrains.eu/zip?container=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-00169?prefix=482/R601/",
-    //   detail: "###HBP Knowledge Graph Data Platform Citation Requirements",
-    //   value: "download all related data as ZIP"
-    // };
 
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     return {
