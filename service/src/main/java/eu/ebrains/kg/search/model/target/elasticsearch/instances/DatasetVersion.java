@@ -315,15 +315,14 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @Getter
     @Setter
     public static class PreviewObject implements Comparable<PreviewObject>{
-        private Value<String> url;
-        private Value<String> value;
-        private Value<Boolean> isAnimated;
-        private Value<String> previewUrl;
-        private Value<String> thumbnailUrl;
+        private String imageUrl;
+        private String videoUrl;
+        private String description;
+        private String link;
 
         @Override
         public int compareTo(PreviewObject previewObject) {
-            return Comparator.comparing(PreviewObject::getValue).compare(this, previewObject);
+            return Comparator.comparing(PreviewObject::getDescription).compare(this, previewObject);
         }
     }
 
