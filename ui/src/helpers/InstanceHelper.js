@@ -131,17 +131,58 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
   return Object.values(groups);
 };
 
+const getPlaceholder = (imageUrl, videoUrl, link) => {
+  if (imageUrl) {
+    return imageUrl;
+  }
+  if (videoUrl) {
+    return "video static";
+  }
+  if (link) {
+    return "link static";
+  }
+  return null;
+};
+
 
 export const getPreviews = data => {
   if (Array.isArray(data.previewObjects)) {
-    return data.previewObjects.map(item => ({
-      staticImageUrl: item?.previewUrl?.value,
-      previewUrl: {
-        url: item?.previewUrl?.value,
-        isAnimated: item?.isAnimated?.value
-      },
-      label: item?.value
-    }));
+    // data.previewObjects = [
+    //   {
+    //     "imageUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000034_PVRatExtraction_pub/Nutil_Quantifier_analysis/25205/Atlas_dir/1301_4204_6046_Ext_00006a_PVRat_25205_Samp1__s005_nl.png",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "imageUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000034_PVRatExtraction_pub/Nutil_Quantifier_analysis/25205/Atlas_dir/1301_4204_6046_Ext_00006a_PVRat_25205_Samp1__s005_nl.png",
+    //     "videoUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000050_CMOS_probe_foraging_rats_pub/AK_47.1/2019_07_04-11_51/Analysis/Videos/Raw_spikes_visualization_cropped_1920x845.mp4",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "videoUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000050_CMOS_probe_foraging_rats_pub/AK_47.1/2019_07_04-11_51/Analysis/Videos/Raw_spikes_visualization_cropped_1920x845.mp4",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "imageUrl": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-explorer/master/docs/images/siibra-explorer-square.jpeg",
+    //     "link": "This is a link **to the service**",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "link": "This is a link **to the service**",
+    //     "description": "Hello world"
+    //   }
+    // ];
+    return data.previewObjects.map(item => {
+      const staticImageUrl = getPlaceholder(item.imageUrl, item.videoUrl, item.link);
+      return {
+        staticImageUrl: staticImageUrl,
+        previewUrl: {
+          url: item.videoUrl ?? staticImageUrl,
+          isAnimated: !!item.videoUrl
+        },
+        label: item?.description,
+        link: item?.link
+      };
+    });
   }
   if (Array.isArray(data.filesOld)) {
     return data.filesOld.map(item => ({

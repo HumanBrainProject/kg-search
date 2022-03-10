@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -22,37 +23,35 @@
  */
 
 import React, { useRef } from "react";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const ImageCarousel = ({className, width, images, onClick}) => {
+const converter = new showdown.Converter({ extensions: [xssFilter] });
 
+export const ImageCarousel = ({ className, width, images, onClick }) => {
   const labelRef = useRef();
-
-  const onClickItem = index => {
-    typeof onClick === "function" && !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
-  };
 
   if (!images || !images.length) {
     return null;
   }
 
+  const onClickItem = index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
+
   return (
-    <div className={`kgs-image_carousel ${className?className:""}`}>
+    <div className={`kgs-image_carousel ${className ? className : ""}`}>
       <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={onClickItem} >
-        {images.map(({src, label, hasTarget, isTargetAnimated}) => (
+        {images.map(({ src, label, isTargetAnimated, link }) => (
           <div key={src}>
-            <img src={src} alt={label?label:""}/>
-            {label && (
-              <p className="legend" ref={labelRef}>{label}</p>
-            )}
-            {typeof onClick === "function" && hasTarget && (
-              <div className={`kgs-image_carousel-icon ${isTargetAnimated?"is-animated":""}`}>
-                <FontAwesomeIcon icon={isTargetAnimated?"play":"search"} size="4x" />
-              </div>
-            )}
+            <img src={src} alt={label ? label : ""} />
+            <div className={`kgs-image_carousel-icon ${isTargetAnimated ? "is-animated" : ""}`}>
+              <FontAwesomeIcon icon={isTargetAnimated ? "play" : "search"} size="4x" />
+            </div>
+            {label && <p className="legend" ref={labelRef}>{label}</p>}
+            {link && <span dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></span>}
           </div>
         ))}
       </Carousel>

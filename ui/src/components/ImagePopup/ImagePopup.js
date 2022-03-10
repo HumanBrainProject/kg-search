@@ -22,10 +22,14 @@
  */
 
 import React, { useState, useEffect, useRef } from "react";
-import "./ImagePopup.css";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./ImagePopup.css";
 
-export const ImagePopup = ({ className, src, label, onClick }) => {
+const converter = new showdown.Converter({ extensions: [xssFilter] });
+
+export const ImagePopup = ({ className, src, label, link, onClick }) => {
   const [srcState, setSrc] = useState();
   const [error, setError] = useState(false);
 
@@ -74,9 +78,8 @@ export const ImagePopup = ({ className, src, label, onClick }) => {
                   :
                   <img src={srcState} alt={label ? label: ""}/>
                 }
-                {label && (
-                  <p className="kgs-image_popup-label">{label}</p>
-                )}
+                {label && <p className="kgs-image_popup-label">{label}</p>}
+                {link && <span className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></span>}
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>

@@ -58,11 +58,12 @@ export const logout = () => {
   };
 };
 
-export const showImage = (url, label) => {
+export const showImage = (url, label, link) => {
   return {
     type: types.SHOW_IMAGE,
     url: url,
-    label: label
+    label: label,
+    link: link
   };
 };
 

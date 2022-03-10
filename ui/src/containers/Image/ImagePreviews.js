@@ -27,15 +27,15 @@ import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
 
 export const ImagePreviews = connect(
   (state, props) => {
-    const images = props.images && props.images.length && props.images
-      .map(image => ({
-        src: image && image.staticImageUrl && (typeof image.staticImageUrl === "string"?image.staticImageUrl:image.staticImageUrl.url),
-        label: image && image.label,
-        target: image && image.previewUrl && (typeof image.previewUrl === "string"?image.previewUrl:image.previewUrl.url),
-        hasTarget: !!image && !!image.previewUrl && (typeof image.previewUrl === "string" || typeof image.previewUrl.url === "string"),
-        isTargetAnimated: !!image && !!image.previewUrl && !!image.previewUrl.isAnimated
-      }))
-      .filter(image => image.src);
+    const images = props.images && props.images.map(image => {
+      return {
+        src: image.staticImageUrl,
+        label: image.label,
+        target: image?.previewUrl?.url,
+        isTargetAnimated: image?.previewUrl?.isAnimated,
+        link: image.link
+      };
+    }).filter(img => img.src);
     return {
       className: props.className,
       width: props.width,
@@ -43,7 +43,7 @@ export const ImagePreviews = connect(
     };
   },
   dispatch => ({
-    onClick: image => image && image.target && typeof image.target === "string" && dispatch(actions.showImage(image.target, image.label))
+    onClick: image => dispatch(actions.showImage(image.target, image.label, image.link))
   })
 )(ImageCarousel);
 

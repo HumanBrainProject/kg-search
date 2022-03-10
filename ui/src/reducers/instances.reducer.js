@@ -116,7 +116,7 @@ const clearInstanceError = state => {
 const showImage = (state, action) => {
   return {
     ...state,
-    image: typeof action.url === "string"?{url: action.url, label: action.label}:null
+    image: typeof action.url === "string"?{url: action.url, label: action.label, link: action.link}:null
   };
 };
 
