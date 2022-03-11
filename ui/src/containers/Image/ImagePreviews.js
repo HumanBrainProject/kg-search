@@ -28,8 +28,9 @@ import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
 export const ImagePreviews = connect(
   (state, props) => {
     const images = props.images && props.images.map(image => {
+      const isVideoWithoutBackground  = image?.previewUrl?.isAnimated && !image.staticImageUrl;
       return {
-        src: image.staticImageUrl,
+        src: isVideoWithoutBackground ? "/static/img/black-background.png" : image.staticImageUrl,
         label: image.label,
         target: image?.previewUrl?.url,
         isTargetAnimated: image?.previewUrl?.isAnimated,
