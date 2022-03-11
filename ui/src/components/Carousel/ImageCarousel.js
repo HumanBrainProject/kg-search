@@ -44,7 +44,7 @@ export const ImageCarousel = ({ className, width, images, onClick }) => {
         {images.map(({ src, label, isTargetAnimated }) => (
           <div key={src}>
             <img src={src} alt={label ? label : ""} />
-            {isTargetAnimated && <div className={`kgs-image_carousel-icon ${isTargetAnimated ? "is-animated" : ""}`}>
+            {isTargetAnimated && <div className="kgs-image_carousel-icon is-animated">
               <FontAwesomeIcon icon="play" size="3x" />
             </div>}
             {label && (
