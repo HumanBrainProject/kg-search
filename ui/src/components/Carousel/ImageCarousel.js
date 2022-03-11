@@ -23,14 +23,11 @@
  */
 
 import React, { useRef } from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
 
-const converter = new showdown.Converter({ extensions: [xssFilter] });
 
 export const ImageCarousel = ({ className, width, images, onClick }) => {
   const labelRef = useRef();
@@ -44,14 +41,16 @@ export const ImageCarousel = ({ className, width, images, onClick }) => {
   return (
     <div className={`kgs-image_carousel ${className ? className : ""}`}>
       <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={onClickItem} >
-        {images.map(({ src, label, isTargetAnimated, link }) => (
+        {images.map(({ src, label, isTargetAnimated }) => (
           <div key={src}>
             <img src={src} alt={label ? label : ""} />
-            <div className={`kgs-image_carousel-icon ${isTargetAnimated ? "is-animated" : ""}`}>
-              <FontAwesomeIcon icon={isTargetAnimated ? "play" : "search"} size="4x" />
-            </div>
-            {label && <p className="legend" ref={labelRef}>{label}</p>}
-            {link && <span dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></span>}
+            {isTargetAnimated && <div className="kgs-image_carousel-icon is-animated">
+              <FontAwesomeIcon icon="play" size="3x" />
+            </div>}
+            {label && (
+              <div className="kgs-image_carousel-label-wrapper">
+                <p className="kgs-image_carousel-label" ref={labelRef}>{label}</p>
+              </div>)}
           </div>
         ))}
       </Carousel>

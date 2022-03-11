@@ -27,7 +27,6 @@ import { ImagePopup as Component } from "../../components/ImagePopup/ImagePopup"
 
 export const ImagePopup = connect(
   (state, props) => {
-    console.log(state.instances.image);
     return {
       className: props.className,
       src: state.instances?.image?.url,
