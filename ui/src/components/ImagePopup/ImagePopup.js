@@ -82,7 +82,7 @@ export const ImagePopup = ({ className, src, label, link, onClick }) => {
                   <div className="kgs-image_popup-label-wrapper">
                     <p className="kgs-image_popup-label">{label}</p>
                   </div>)}
-                {link && <span className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></span>}
+                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></div>}
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>

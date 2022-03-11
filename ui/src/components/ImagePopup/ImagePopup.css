@@ -61,7 +61,6 @@
 .kgs-image_popup-content .kgs-image_popup-label-wrapper {
   transition: all .35s ease-in-out;
   position: absolute;
-  bottom: 30px;
   left: 50%;
   width: auto;
   max-width: 90%;
@@ -73,7 +72,7 @@
   font-size: var(--font-size-smaller);
   text-align: center;
   opacity: .25;
-  transform: translate(-50%, -60%);
+  transform: translate(-50%, -100%);
 }
 
 .kgs-image_popup-content .kgs-image_popup-label {

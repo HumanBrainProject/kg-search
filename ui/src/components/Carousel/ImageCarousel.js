@@ -41,13 +41,16 @@ export const ImageCarousel = ({ className, width, images, onClick }) => {
   return (
     <div className={`kgs-image_carousel ${className ? className : ""}`}>
       <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={onClickItem} >
-        {images.map(({ src, label, isTargetAnimated}) => (
+        {images.map(({ src, label, isTargetAnimated }) => (
           <div key={src}>
             <img src={src} alt={label ? label : ""} />
             {isTargetAnimated && <div className={`kgs-image_carousel-icon ${isTargetAnimated ? "is-animated" : ""}`}>
               <FontAwesomeIcon icon="play" size="3x" />
             </div>}
-            {label && <p className="legend" ref={labelRef}>{label}</p>}
+            {label && (
+              <div className="kgs-image_carousel-label-wrapper">
+                <p className="kgs-image_carousel-label" ref={labelRef}>{label}</p>
+              </div>)}
           </div>
         ))}
       </Carousel>
