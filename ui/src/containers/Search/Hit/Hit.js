@@ -225,8 +225,11 @@ export const Hit = connect(
 
     const getPreview = () => {
       const previews = getPreviews(source);
-      if(previews.length && previews[0].staticImageUrl) {
-        return previews[0].staticImageUrl;
+      if(previews.length) {
+        const preview = previews.find(p => p.staticImageUrl);
+        if(preview) {
+          return preview.staticImageUrl;
+        }
       }
       return null;
     };
