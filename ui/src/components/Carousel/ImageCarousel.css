@@ -34,10 +34,6 @@
     cursor: pointer;
 }
   
-.kgs-image_carousel .carousel .slide img  {
-    min-height: 300px;
-}
-  
 .kgs-image_carousel .carousel .thumb {
     border-color: var(--background-color-2);
     min-height: 80px;
