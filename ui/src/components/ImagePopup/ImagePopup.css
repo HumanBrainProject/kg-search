@@ -54,6 +54,10 @@
   background-color: var(--background-color-2);
 }
 
+.kgs-image_popup-content .kgs-image_popup-link {
+  text-align: center;
+}
+
 .kgs-image_popup-content .kgs-image_popup-label {
   transition: all .35s ease-in-out;
   position: absolute;
@@ -72,7 +76,7 @@
   overflow-wrap: break-word;
   word-break: normal;
   white-space: pre-wrap;
-  transform: translateX(-50%);
+  transform: translate(-50%, -60%);
   text-overflow: ellipsis;
 }
 

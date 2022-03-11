@@ -39,7 +39,7 @@ export const getTitle = (data, id) => {
     if (data._source?.title?.value) {
       return `${data._source.title.value}`;
     }
-    if (data._source?.type?.value ) {
+    if (data._source?.type?.value) {
       return `${data._source.type.value} ${data._id}`;
     }
   }
@@ -101,7 +101,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       && !["id", "identifier", "title", "first_release", "last_release", "previewObjects"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary")?null: mapping.layout;
+      const groupName = (!mapping.layout || mapping.layout === "summary") ? null : mapping.layout;
       const field = getField(group, type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);
@@ -133,15 +133,113 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
 
 
 export const getPreviews = data => {
+  // data.filesOld = [
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/DataDescriptor_All-atom Molecular Dynamics Simulation of Human M2 muscarinic acetylcholine receptor in complex with an agonist and antagonist.pdf",
+  //     "value": "DataDescriptor_All-atom Molecular Dynamics Simulation of Human M2 muscarinic acetylcholine receptor in complex with an agonist and antagonist.pdf",
+  //     "fileSize": "321 KB",
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2_receptor.gif",
+  //     "value": "M2_receptor.gif",
+  //     "fileSize": "1 MB",
+  //     "staticImageUrl": {
+  //       "isAnimated": false,
+  //       "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2_receptor.jpg"
+  //     },
+  //     "previewUrl": {
+  //       "isAnimated": true,
+  //       "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2_receptor.gif"
+  //     },
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000048_ScatteredLightImaging_pub/Vervet_crossingfibers_Thumbnail.jpg",
+  //     "value": "Vervet_crossingfibers_Thumbnail.jpg",
+  //     "fileSize": "66 KB",
+  //     "staticImageUrl": {
+  //       "isAnimated": false,
+  //       "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000048_ScatteredLightImaging_pub/Vervet_crossingfibers_Thumbnail.jpg"
+  //     },
+  //     "previewUrl": {
+  //       "isAnimated": false,
+  //       "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000048_ScatteredLightImaging_pub/Vervet_crossingfibers_Thumbnail.jpg"
+  //     },
+  //     "thumbnailUrl": {
+  //       "isAnimated": false,
+  //       "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000048_ScatteredLightImaging_pub/Vervet_crossingfibers_Thumbnail.jpg"
+  //     },
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2_receptor.jpg",
+  //     "value": "M2_receptor.jpg",
+  //     "fileSize": "29 KB",
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2+agonist_simulation_first_frame.pdb",
+  //     "value": "M2+agonist_simulation_first_frame.pdb",
+  //     "fileSize": "9 MB",
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2+agonist_simulation.xtc",
+  //     "value": "M2+agonist_simulation.xtc",
+  //     "fileSize": "2 GB",
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2+antagonist_simulation_first_frame.pdb",
+  //     "value": "M2+antagonist_simulation_first_frame.pdb",
+  //     "fileSize": "9 MB",
+  //     "format": null
+  //   },
+  //   {
+  //     "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2+antagonist_simulation.xtc",
+  //     "value": "M2+antagonist_simulation.xtc",
+  //     "fileSize": "2 GB",
+  //     "format": null
+  //   }
+  // ];
+  // data.previewObjects = null;
   if (Array.isArray(data.previewObjects)) {
-    return data.previewObjects.map(item => ({
-      staticImageUrl: item?.previewUrl?.value,
-      previewUrl: {
-        url: item?.previewUrl?.value,
-        isAnimated: item?.isAnimated?.value
-      },
-      label: item?.value
-    }));
+    // data.previewObjects = [
+    //   {
+    //     "imageUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000034_PVRatExtraction_pub/Nutil_Quantifier_analysis/25205/Atlas_dir/1301_4204_6046_Ext_00006a_PVRat_25205_Samp1__s005_nl.png",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "imageUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000034_PVRatExtraction_pub/Nutil_Quantifier_analysis/25205/Atlas_dir/1301_4204_6046_Ext_00006a_PVRat_25205_Samp1__s005_nl.png",
+    //     "videoUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000050_CMOS_probe_foraging_rats_pub/AK_47.1/2019_07_04-11_51/Analysis/Videos/Raw_spikes_visualization_cropped_1920x845.mp4",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "videoUrl": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000050_CMOS_probe_foraging_rats_pub/AK_47.1/2019_07_04-11_51/Analysis/Videos/Raw_spikes_visualization_cropped_1920x845.mp4",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "imageUrl": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-explorer/master/docs/images/siibra-explorer-square.jpeg",
+    //     "link": "This is a link **to the service**",
+    //     "description": "Hello world"
+    //   },
+    //   {
+    //     "link": "This is a link **to the service**",
+    //     "description": "Hello world"
+    //   }
+    // ];
+    return data.previewObjects.map(item => {
+      return {
+        staticImageUrl: item.imageUrl,
+        previewUrl: {
+          url: item.videoUrl ?? item.imageUrl,
+          isAnimated: !!item.videoUrl
+        },
+        label: item?.description,
+        link: item?.link
+      };
+    });
   }
   if (Array.isArray(data.filesOld)) {
     return data.filesOld.map(item => ({
@@ -171,11 +269,11 @@ export const mapStateToProps = (state, props) => {
 
   const source = data && data._source;
   const type = source?.type?.value;
-  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
+  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type]) ?? {};
   const group = state.groups.group;
-  const version = source && source.version?source.version:"Current";
-  const versions = (source && Array.isArray(source.versions)?source.versions:[]).map(v => ({
-    label: v.value?v.value:"Current",
+  const version = source && source.version ? source.version : "Current";
+  const versions = (source && Array.isArray(source.versions) ? source.versions : []).map(v => ({
+    label: v.value ? v.value : "Current",
     value: v.reference
   }));
   const latestVersion = versions && versions.length && version && versions[0];
@@ -187,8 +285,8 @@ export const mapStateToProps = (state, props) => {
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
-      group: (group !== state.groups.defaultGroup)?group:null,
-      groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
+      group: (group !== state.groups.defaultGroup) ? group : null,
+      groupLabel: (group !== state.groups.defaultGroup) ? getGroupLabel(state.groups.groups, group) : null,
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getHeaderFields(group, type, source, mapping),

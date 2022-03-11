@@ -101,6 +101,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     @Getter
     @Setter
     public static class FileFormat extends FullNameRef{
+        @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
         private List<String> fileExtension;
         private String relatedMediaType;
     }
