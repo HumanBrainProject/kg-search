@@ -134,7 +134,7 @@ public class TargetFile {
 
         public FileImage(boolean isAnimated, String url) {
             this.isAnimated = isAnimated;
-            this.url = url;
+            this.url = url != null ? url.replace("https://kg.ebrains.eu/search/preview/", "https://data.kg.ebrains.eu/preview/") : null;
         }
 
         private boolean isAnimated;
