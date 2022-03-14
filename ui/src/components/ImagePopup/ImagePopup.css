@@ -45,13 +45,23 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: auto;
   height: auto;
+  max-height: 100%;
+  width: 90%;
+  max-width: 90%;
   min-height: 58px;
   padding: 20px;
   border: 1px solid var(--border-color-3);
   border-radius: 4px;
   background-color: var(--background-color-2);
+}
+
+.kgs-image_popup-content video,
+.kgs-image_popup-content img {
+  display: block;
+  margin: auto;
+  width: 80%;
+  max-height: 90vh;
 }
 
 .kgs-image_popup-content .kgs-image_popup-link {

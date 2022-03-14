@@ -353,13 +353,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
 
         final List<File> previewFiles = specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).collect(Collectors.toList());
-        final List<File> previewImages = previewFiles.stream().filter(f -> imageExtensions.stream().anyMatch(i -> f.getIri().endsWith(i))).collect(Collectors.toList());
+        final List<File> previewImages = previewFiles.stream().filter(f -> imageExtensions.stream().anyMatch(i -> f.getIri().toLowerCase().endsWith(i))).collect(Collectors.toList());
         final Map<String, File> previewImagesByFileNameWithoutExtension = previewImages.stream().collect(Collectors.toMap(this::stripFileExtension, v -> v));
 
 
-        List<DatasetVersion.PreviewObject> previews = new ArrayList<>();
-
-        previews.addAll(previewFiles.stream().filter(f -> videoExtensions.stream().anyMatch(e -> f.getIri().endsWith(e))).map(f -> {
+        List<DatasetVersion.PreviewObject> previews = previewFiles.stream().filter(f -> videoExtensions.stream().anyMatch(e -> f.getIri().toLowerCase().endsWith(e))).map(f -> {
             DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
             o.setVideoUrl(f.getIri());
             final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(f));
@@ -371,7 +369,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 o.setDescription(f.getContentDescription());
             }
             return o;
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toList());
 
 
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
