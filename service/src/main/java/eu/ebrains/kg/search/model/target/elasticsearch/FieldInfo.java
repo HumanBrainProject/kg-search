@@ -47,6 +47,7 @@ public @interface FieldInfo {
     boolean isHierarchicalFiles() default false;
     boolean groupBy() default false;
     boolean isTable() default false;
+    boolean isGroupedLinks() default false;
     boolean isDirectDownload() default false;
     Type type() default Type.UNDEFINED;
     String layout() default "";

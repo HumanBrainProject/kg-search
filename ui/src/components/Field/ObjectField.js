@@ -55,6 +55,12 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
   );
 
   const ObjectField = ({show, data, mapping, group, type}) => {
+
+    if (mapping.label === "View data") {
+      // eslint-disable-next-line no-debugger
+      debugger;
+    }
+
     if (!show || !mapping || !mapping.visible) {
       return null;
     }

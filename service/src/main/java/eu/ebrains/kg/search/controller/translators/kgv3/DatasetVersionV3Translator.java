@@ -374,19 +374,34 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
             //Service links for file bundles
-            previews.addAll(Stream.concat(datasetVersion.getServiceLinks().stream(), datasetVersion.getServiceLinksFromFiles().stream()).map(s -> {
-                DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
-                o.setLink(s.displayLabel()); //TODO create markdown
-                if(s.getFile()!=null){
-                    final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(s.getFile()));
+            previews.addAll(Stream.concat(datasetVersion.getServiceLinks().stream(), datasetVersion.getServiceLinksFromFiles().stream()).map(l -> {
+                if(l.getFile()!=null){
+                    final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(l.getFile()));
                     if (staticPreviewImage != null) {
-                        o.setImageUrl(staticPreviewImage.getIri());
+                        DatasetVersion.PreviewObject previewObject = new DatasetVersion.PreviewObject();
+                        if(l.getUrl() != null) {
+                            previewObject.setLink(new TargetExternalReference(l.getUrl(), l.displayLabel()));
+                        }
+                        if(l.getLabel() != null) {
+                            previewObject.setDescription(l.getLabel());
+                        }
+                        previewObject.setImageUrl(staticPreviewImage.getIri());
                         previewImages.remove(staticPreviewImage);
+                        return previewObject;
                     }
-                    //TODO fall back to service icon (once available)
                 }
-                return o;
-            }).collect(Collectors.toList()));
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toList()));
+
+            Map<String, List<TargetExternalReference>> viewData = new HashMap<>();
+            Stream.concat(datasetVersion.getServiceLinks().stream(), datasetVersion.getServiceLinksFromFiles().stream()).forEach(s -> {
+                if(!viewData.containsKey(s.getService())) {
+                    viewData.put(s.getService(), new ArrayList<>());
+                }
+                List<TargetExternalReference> targetExternalReferences = viewData.get(s.getService());
+                targetExternalReferences.add(new TargetExternalReference(s.getUrl(), s.getLabel()));
+            });
+            d.setViewData(viewData);
         }
 
         previews.addAll(previewImages.stream().map(i -> {

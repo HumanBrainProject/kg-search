@@ -199,6 +199,9 @@ public class LabelsController {
             if (info.isDirectDownload() != defaultFieldInfo.isDirectDownload()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isDirectDownload", info.isDirectDownload());
             }
+            if (info.isGroupedLinks() != defaultFieldInfo.isGroupedLinks()) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isGroupedLinks", info.isGroupedLinks());
+            }
             if (info.isAsync() != defaultFieldInfo.isAsync()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isAsync", info.isAsync());
             }
