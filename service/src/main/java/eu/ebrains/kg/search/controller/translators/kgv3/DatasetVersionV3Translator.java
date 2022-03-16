@@ -428,18 +428,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
-//
-//        List<TargetExternalReference> serviceLinks = new ArrayList<>();
-//        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-//            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
-//        }
-//        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
-//            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
-//        }
-//        if(!CollectionUtils.isEmpty(serviceLinks)){
-//            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
-//            d.setViewer(serviceLinks);
-//        }
+
+        List<TargetExternalReference> serviceLinks = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
+            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
+            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(serviceLinks)){
+            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
+            d.setViewer(serviceLinks);
+        }
         d.setContentTypes(value(datasetVersion.getContentTypes()));
 
         final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject()!=null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
@@ -447,14 +447,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         List<TargetInternalReference> species = Stream.concat(speciesFromSG.stream(), speciesFromTS.stream()).distinct().collect(Collectors.toList());
         d.setSpeciesFilter(value(species.stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).collect(Collectors.toList())));
         return d;
-    }
-
-    private String stripFileExtension(File file){
-        return stripFileExtension(file.getIri());
-    }
-
-    private String stripFileExtension(String fileName){
-        return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
     private static <U, T> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent) {
