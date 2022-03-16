@@ -619,4 +619,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         return result;
     }
+
+    private String stripFileExtension(File file){
+        return stripFileExtension(file.getIri());
+    }
+
+    private String stripFileExtension(String fileName){
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
 }
