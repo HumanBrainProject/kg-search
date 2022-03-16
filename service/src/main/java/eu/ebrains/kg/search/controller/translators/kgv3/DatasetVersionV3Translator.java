@@ -348,59 +348,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
-        List<String> videoExtensions = Arrays.asList(".mp4");
-        List<String> imageExtensions = Arrays.asList(".gif", ".jpg", ".jpeg", ".png");
-
-
-        final List<File> previewFiles = specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).collect(Collectors.toList());
-        final List<File> previewImages = previewFiles.stream().filter(f -> imageExtensions.stream().anyMatch(i -> f.getIri().toLowerCase().endsWith(i))).collect(Collectors.toList());
-        final Map<String, File> previewImagesByFileNameWithoutExtension = previewImages.stream().collect(Collectors.toMap(this::stripFileExtension, v -> v));
-
-
-        List<DatasetVersion.PreviewObject> previews = previewFiles.stream().filter(f -> videoExtensions.stream().anyMatch(e -> f.getIri().toLowerCase().endsWith(e))).map(f -> {
-            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
-            o.setVideoUrl(f.getIri());
-            final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(f));
-            if (staticPreviewImage != null) {
-                o.setImageUrl(staticPreviewImage.getIri());
-                previewImages.remove(staticPreviewImage);
-            }
-            if(StringUtils.isNotBlank(f.getContentDescription())) {
-                o.setDescription(f.getContentDescription());
-            }
-            return o;
-        }).collect(Collectors.toList());
-
-
-        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-            //Service links for file bundles
-            previews.addAll(Stream.concat(datasetVersion.getServiceLinks().stream(), datasetVersion.getServiceLinksFromFiles().stream()).map(s -> {
-                DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
-                o.setLink(s.displayLabel()); //TODO create markdown
-                if(s.getFile()!=null){
-                    final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(s.getFile()));
-                    if (staticPreviewImage != null) {
-                        o.setImageUrl(staticPreviewImage.getIri());
-                        previewImages.remove(staticPreviewImage);
-                    }
-                    //TODO fall back to service icon (once available)
-                }
-                return o;
-            }).collect(Collectors.toList()));
-        }
-
-        previews.addAll(previewImages.stream().map(i -> {
-            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
-            o.setImageUrl(i.getIri());
-            if(StringUtils.isNotBlank(i.getContentDescription())) {
-                o.setDescription(i.getContentDescription());
-            }
-            return o;
-        }).collect(Collectors.toList()));
-
-        //TODO Sorting
-        d.setPreviewObjects(previews);
-
         List<String> brainRegionStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", Constants.OPENMINDS_ROOT+"sands/ParcellationEntityVersion", Constants.OPENMINDS_ROOT+"sands/ParcellationEntity", Constants.OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
 
         final Map<Boolean, List<StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainRegionStudyTargets::contains)));
@@ -413,18 +360,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
-//
-//        List<TargetExternalReference> serviceLinks = new ArrayList<>();
-//        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-//            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
-//        }
-//        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
-//            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
-//        }
-//        if(!CollectionUtils.isEmpty(serviceLinks)){
-//            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
-//            d.setViewer(serviceLinks);
-//        }
+
+        List<TargetExternalReference> serviceLinks = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
+            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
+            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(serviceLinks)){
+            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
+            d.setViewer(serviceLinks);
+        }
         d.setContentTypes(value(datasetVersion.getContentTypes()));
 
         final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject()!=null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
@@ -432,14 +379,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         List<TargetInternalReference> species = Stream.concat(speciesFromSG.stream(), speciesFromTS.stream()).distinct().collect(Collectors.toList());
         d.setSpeciesFilter(value(species.stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).collect(Collectors.toList())));
         return d;
-    }
-
-    private String stripFileExtension(File file){
-        return stripFileExtension(file.getIri());
-    }
-
-    private String stripFileExtension(String fileName){
-        return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
     private static <U, T> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent) {
