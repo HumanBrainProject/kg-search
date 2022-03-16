@@ -60,7 +60,7 @@
 .kgs-image_popup-content img {
   display: block;
   margin: auto;
-  width: 80%;
+  max-width: 80%;
   max-height: 90vh;
 }
 
