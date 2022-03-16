@@ -29,12 +29,15 @@ export const Select = ({className, label, value, list, onChange}) => {
   if (!Array.isArray(list) || list.length <= 1) {
     return null;
   }
+
+  const handleOnChange = e => onChange(e.target.value || null);
+
   return (
     <div className={`kgs-select ${className?className:""}`}>
       {label && (
         <div>{label}</div>
       )}
-      <select onChange={e => onChange(e.target.value || null)} value={value || ""}>
+      <select onChange={handleOnChange} value={value || ""}>
         {list.map(e => <option value={e.value} key={`${e.value?e.value:e.label}`}>{e.label}{}</option>)}
       </select>
     </div>

@@ -24,26 +24,8 @@
 import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { Select } from "../../components/Select/Select";
 import "./FileFilter.css";
-
-const FileFilterItem = ({filter, selected, onClick}) => {
-
-  const handleOnClick = () => selected?onClick(null):onClick(filter);
-
-  return(
-    <button className={`${selected?"selected":""}`} onClick={handleOnClick}>{filter}</button>
-  );
-};
-
-
-const FileFilterFilterComponent = ({ list, current, title, onSelect }) => (
-  <div className="kgs-fileFilter">
-    <div className="kgs-fileFilter__title">{title}:</div>
-    <ul className="kgs-fileFilter__list">
-      {list.map(filter => <li key={filter}><FileFilterItem filter={filter} selected={filter === current} onClick={onSelect}/></li>)}
-    </ul>
-  </div>
-);
 
 
 const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, isFileFiltersInitialized, isFileFiltersLoading, filesError, fileFiltersError, fileFilter, fetch, onSelect }) => {
@@ -85,8 +67,15 @@ const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, is
     return null;
   }
 
+  const list = fileFilters.reduce((acc, value) => {
+    acc.push({label: value, value: value});
+    return acc;
+  }, [{label: "none", value: ""}]);
+
+  const handleChange = value => onSelect(value?value:null);
+
   return (
-    <FileFilterFilterComponent list={fileFilters} current={fileFilter} title={title} onSelect={onSelect} />
+    <div><Select className="kgs-fileFilter" label={title} value={fileFilter} list={list} onChange={handleChange} /></div>
   );
 
 };

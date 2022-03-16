@@ -52,14 +52,8 @@
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-    transition: box-shadow 0.2s ease-in;
     -moz-appearance: none;
     -webkit-appearance: none;
-}
-
-.kgs-select select:hover,
-.kgs-select select:focus {
-    box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 
 .kgs-select:after {
