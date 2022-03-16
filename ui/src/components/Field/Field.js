@@ -62,27 +62,6 @@ const FieldBase = (renderUserInteractions = true) => {
       data = data[0];
     }
 
-    if (name === "viewData") {
-      data = {
-        "LocaliZoom": [
-          {
-            "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_Mouse_CCFv3_2017_25um&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000007_MuscarinicAcetylcholineReceptor-Mouse_Immunohistochemistry_pub/data-processed/G06/G06_M2_anchored_US_lz.json&pyramids=imgsvc-36523acb-0ec2-45df-a9e2-7dfb63516ea6",
-            "value": "tissue sample collection (subject G06)"
-          },
-          {
-            "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_Mouse_CCFv3_2017_25um&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000007_MuscarinicAcetylcholineReceptor-Mouse_Immunohistochemistry_pub/data-processed/G06/G06_M2_anchored_US_lz.json&pyramids=imgsvc-36523acb-0ec2-45df-a9e2-7dfb63516ea6",
-            "value": "tissue sample collection (subject G07)"
-          }
-        ],
-        "SiibraExplorer": [
-          {
-            "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_Mouse_CCFv3_2017_25um&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000007_MuscarinicAcetylcholineReceptor-Mouse_Immunohistochemistry_pub/data-processed/G06/G06_M2_anchored_US_lz.json&pyramids=imgsvc-36523acb-0ec2-45df-a9e2-7dfb63516ea6",
-            "value": "sibra explorer"
-          }
-        ]
-      };
-    }
-
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
@@ -131,7 +110,8 @@ const FieldBase = (renderUserInteractions = true) => {
         return acc;
       }, {})}:mapping,
       group: group,
-      type: type
+      type: type,
+      enforceList: isMultipleGroupedLinks
     };
     const tableProps = {
       show: isTable && !isHierarchicalFiles,

@@ -27,7 +27,7 @@ import "./ObjectField.css";
 
 const ObjectFieldBase = (renderUserInteractions = true) => {
 
-  const DefaultList = ({className, children}) => {
+  const DefaultList = ({ className, children }) => {
     return (
       <ul className={className}>
         {children}
@@ -35,45 +35,39 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     );
   };
 
-  const CustomList = ({className, children}) => (
+  const CustomList = ({ className, children }) => (
     <span className={className}>
       {children}
     </span>
   );
 
-  const DefaultListItem = ({children}) => (
+  const DefaultListItem = ({ children }) => (
     <li>
       {children}
     </li>
   );
 
-  const CustomListItem = ({isFirst, separator, children}) => (
+  const CustomListItem = ({ isFirst, separator, children }) => (
     <span>
-      {isFirst?null:separator}
+      {isFirst ? null : separator}
       {children}
     </span>
   );
 
-  const ObjectField = ({show, data, mapping, group, type}) => {
-
-    if (mapping.label === "View data") {
-      // eslint-disable-next-line no-debugger
-      debugger;
-    }
-
+  const ObjectField = ({ show, data, mapping, group, type, enforceList }) => {
     if (!show || !mapping || !mapping.visible) {
       return null;
     }
 
-    const List = mapping.separator?CustomList:DefaultList;
-    const ListItem = mapping.separator?CustomListItem:DefaultListItem;
-    const FieldComponent = renderUserInteractions?Field:PrintViewField;
+    const List = mapping.separator ? CustomList : DefaultList;
+    const ListItem = mapping.separator ? CustomListItem : DefaultListItem;
+    const FieldComponent = renderUserInteractions ? Field : PrintViewField;
 
     const fields = Object.entries(mapping.children)
       .filter(([name, mapping]) =>
         mapping
-              && (mapping.showIfEmpty || (data && data[name]))
-              && mapping.visible
+        && (mapping.showIfEmpty || (data && data[name]))
+        && mapping.visible
       )
       .map(([name, mapping]) => ({
         name: name,
@@ -83,9 +77,9 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
       }));
 
     return (
-      <List className="kgs-field__object">
+      <List className={`kgs-field__object ${enforceList ? "kgs-field__object_enforce_list" : ""}`}>
         {
-          fields.map(({name, data, mapping, group}, idx) => (
+          fields.map(({ name, data, mapping, group }, idx) => (
             <ListItem key={name} separator={mapping.separator} isFirst={!idx}>
               <FieldComponent name={name} data={data} mapping={mapping} group={group} type={type} />
             </ListItem>
