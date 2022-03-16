@@ -201,6 +201,20 @@
         {
           "propertyName": "query:label",
           "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:file",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
+              "typeFilter": [
+                {
+                  "@id": "https://openminds.ebrains.eu/core/File"
+                }
+              ]
+            },
+            "https://openminds.ebrains.eu/vocab/IRI"
+          ]
         }
       ]
     },
@@ -1859,6 +1873,10 @@
         {
           "propertyName": "query:iri",
           "path": "https://openminds.ebrains.eu/vocab/IRI"
+        },
+        {
+          "propertyName": "query:contentDescription",
+          "path": "https://openminds.ebrains.eu/vocab/contentDescription"
         },
         {
           "propertyName": "query:formats",

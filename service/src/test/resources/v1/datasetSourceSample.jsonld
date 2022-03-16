@@ -1303,25 +1303,25 @@
          "https://schema.hbp.eu/search/absolute_path": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000001_jubrain-cytoatlas-Area-TE-1.0_pub/5.1/Area-TE-1.0_l_N10_nlin2MNI152ASYM2009C_5.1_publicP_f5231652a1e4874e2b5aefb147324d99.nii.gz",
          "https://schema.hbp.eu/search/human_readable_size": "66 KB",
          "https://schema.hbp.eu/search/static_image_url": [
-           "https://kg.ebrains.eu/search/preview/staticImage/db2cbc84-811e-5fa5-a280-b7c900995e94.png"
+           "https://data.kg.ebrains.eu/preview/staticImage/db2cbc84-811e-5fa5-a280-b7c900995e94.png"
          ],
          "https://schema.hbp.eu/search/is_preview_animated": [
            true
          ],
          "https://schema.hbp.eu/search/name": "Area-TE-1.0_l_N10_nlin2MNI152ASYM2009C_5.1_publicP_f5231652a1e4874e2b5aefb147324d99.nii.gz",
          "https://schema.hbp.eu/search/preview_url": [
-           "https://kg.ebrains.eu/search/preview/db2cbc84-811e-5fa5-a280-b7c900995e94.mp4"
+           "https://data.kg.ebrains.eu/preview/db2cbc84-811e-5fa5-a280-b7c900995e94.mp4"
          ],
          "https://schema.hbp.eu/search/private_access": null,
          "https://schema.hbp.eu/search/thumbnail_url": [
-           "https://kg.ebrains.eu/search/preview/thumbnails/db2cbc84-811e-5fa5-a280-b7c900995e94.png"
+           "https://data.kg.ebrains.eu/preview/thumbnails/db2cbc84-811e-5fa5-a280-b7c900995e94.png"
          ]
        },
        {
          "https://schema.hbp.eu/search/absolute_path": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/ArchiFmri/sub_001/func/sub_001_task-social_bold.nii.gz",
          "https://schema.hbp.eu/search/human_readable_size": "46 MB",
          "https://schema.hbp.eu/search/static_image_url": [
-           "https://kg.ebrains.eu/search/preview/staticImage/7d4559cf-9eaf-5ff2-9320-ded29dfe009c.png"
+           "https://data.kg.ebrains.eu/preview/staticImage/7d4559cf-9eaf-5ff2-9320-ded29dfe009c.png"
          ],
          "https://schema.hbp.eu/search/is_preview_animated": [
            true

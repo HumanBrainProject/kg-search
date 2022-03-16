@@ -39,7 +39,6 @@ import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.bcel.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -347,20 +346,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));
         } else if (datasetVersion.getFullDocumentationDOI() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
-        }
-
-        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).map(f -> {
-            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
-            o.setUrl(value(f.getIri()));
-            o.setValue(o.getValue());
-            o.setPreviewUrl(value(f.getIri()));
-            o.setThumbnailUrl(value(f.getIri()));
-            //TODO make this more reliable
-            o.setIsAnimated(value(f.getIri().endsWith(".mp4")));
-            return o;
-        }).collect(Collectors.toList());
-        if (!previewObjects.isEmpty()) {
-            d.setPreviewObjects(previewObjects);
         }
 
         List<String> brainRegionStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", Constants.OPENMINDS_ROOT+"sands/ParcellationEntityVersion", Constants.OPENMINDS_ROOT+"sands/ParcellationEntity", Constants.OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");

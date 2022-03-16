@@ -22,10 +22,14 @@
  */
 
 import React, { useState, useEffect, useRef } from "react";
-import "./ImagePopup.css";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./ImagePopup.css";
 
-export const ImagePopup = ({ className, src, label, onClick }) => {
+const converter = new showdown.Converter({ extensions: [xssFilter] });
+
+export const ImagePopup = ({ className, src, label, link, onClick }) => {
   const [srcState, setSrc] = useState();
   const [error, setError] = useState(false);
 
@@ -62,25 +66,27 @@ export const ImagePopup = ({ className, src, label, onClick }) => {
           {
             error ?
               <div className="kgs-image_popup-error">
-                <FontAwesomeIcon icon="ban"/>
+                <FontAwesomeIcon icon="ban" />
                 <span>{`failed to fetch image "${label}" ...`}</span>
               </div>
               :
               <React.Fragment>
-                {(typeof srcState === "string" && srcState.endsWith(".mp4"))?
+                {(typeof srcState === "string" && srcState.endsWith(".mp4")) ?
                   <video alt={label ? label : ""} width="750" height="250" autoPlay loop>
                     <source src={srcState} type="video/mp4" />
                   </video>
                   :
-                  <img src={srcState} alt={label ? label: ""}/>
+                  <img src={srcState} alt={label ? label : ""} />
                 }
                 {label && (
-                  <p className="kgs-image_popup-label">{label}</p>
-                )}
+                  <div className="kgs-image_popup-label-wrapper">
+                    <p className="kgs-image_popup-label">{label}</p>
+                  </div>)}
+                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></div>}
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>
-            <FontAwesomeIcon icon="times"/>
+            <FontAwesomeIcon icon="times" />
           </div>
         </div>
       )}

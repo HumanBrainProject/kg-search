@@ -12,4 +12,5 @@ public class File {
     private String iri;
     private List<String> formats;
     private String name;
+    private String contentDescription;
 }

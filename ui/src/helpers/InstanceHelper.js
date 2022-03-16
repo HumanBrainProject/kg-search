@@ -39,7 +39,7 @@ export const getTitle = (data, id) => {
     if (data._source?.title?.value) {
       return `${data._source.title.value}`;
     }
-    if (data._source?.type?.value ) {
+    if (data._source?.type?.value) {
       return `${data._source.type.value} ${data._id}`;
     }
   }
@@ -101,7 +101,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       && !["id", "identifier", "title", "first_release", "last_release", "previewObjects"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary")?null: mapping.layout;
+      const groupName = (!mapping.layout || mapping.layout === "summary") ? null : mapping.layout;
       const field = getField(group, type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);
@@ -134,14 +134,17 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
 
 export const getPreviews = data => {
   if (Array.isArray(data.previewObjects)) {
-    return data.previewObjects.map(item => ({
-      staticImageUrl: item?.previewUrl?.value,
-      previewUrl: {
-        url: item?.previewUrl?.value,
-        isAnimated: item?.isAnimated?.value
-      },
-      label: item?.value
-    }));
+    return data.previewObjects.map(item => {
+      return {
+        staticImageUrl: item.imageUrl,
+        previewUrl: {
+          url: item.videoUrl ?? item.imageUrl,
+          isAnimated: !!item.videoUrl
+        },
+        label: item?.description,
+        link: item?.link
+      };
+    });
   }
   if (Array.isArray(data.filesOld)) {
     return data.filesOld.map(item => ({
@@ -171,11 +174,11 @@ export const mapStateToProps = (state, props) => {
 
   const source = data && data._source;
   const type = source?.type?.value;
-  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
+  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type]) ?? {};
   const group = state.groups.group;
-  const version = source && source.version?source.version:"Current";
-  const versions = (source && Array.isArray(source.versions)?source.versions:[]).map(v => ({
-    label: v.value?v.value:"Current",
+  const version = source && source.version ? source.version : "Current";
+  const versions = (source && Array.isArray(source.versions) ? source.versions : []).map(v => ({
+    label: v.value ? v.value : "Current",
     value: v.reference
   }));
   const latestVersion = versions && versions.length && version && versions[0];
@@ -187,8 +190,8 @@ export const mapStateToProps = (state, props) => {
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
-      group: (group !== state.groups.defaultGroup)?group:null,
-      groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
+      group: (group !== state.groups.defaultGroup) ? group : null,
+      groupLabel: (group !== state.groups.defaultGroup) ? getGroupLabel(state.groups.groups, group) : null,
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getHeaderFields(group, type, source, mapping),
