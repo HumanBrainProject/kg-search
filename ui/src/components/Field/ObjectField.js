@@ -54,7 +54,7 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ObjectField = ({ show, data, mapping, group, type, enforceList }) => {
+  const ObjectField = ({ show, data, mapping, group, type }) => {
     if (!show || !mapping || !mapping.visible) {
       return null;
     }
@@ -77,7 +77,7 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
       }));
 
     return (
-      <List className={`kgs-field__object ${enforceList ? "kgs-field__object_enforce_list" : ""}`}>
+      <List className={`kgs-field__object ${mapping.enforceList ? "kgs-field__object_enforce_list" : ""}`}>
         {
           fields.map(({ name, data, mapping, group }, idx) => (
             <ListItem key={name} separator={mapping.separator} isFirst={!idx}>

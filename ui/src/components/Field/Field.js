@@ -105,13 +105,12 @@ const FieldBase = (renderUserInteractions = true) => {
     const objectProps = {
       show: (!isList && !!mapping.children) || isMultipleGroupedLinks,
       data: isMultipleGroupedLinks ? data : data?.children,
-      mapping: isMultipleGroupedLinks?{...mapping, visible: true, children: Object.keys(data).reduce((acc, service) => {
-        acc[service] = {label: service, visible: true};
+      mapping: isMultipleGroupedLinks?{...mapping, visible: true, enforceList: isMultipleGroupedLinks, children: Object.keys(data).reduce((acc, service) => {
+        acc[service] = {label: service, visible: true, enforceShowMore: true};
         return acc;
       }, {})}:mapping,
       group: group,
       type: type,
-      enforceList: isMultipleGroupedLinks
     };
     const tableProps = {
       show: isTable && !isHierarchicalFiles,
