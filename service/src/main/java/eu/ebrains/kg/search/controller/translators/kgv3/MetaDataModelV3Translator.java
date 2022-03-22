@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.MetaDataModelV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.MetaDataModel;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -116,7 +117,7 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
             if (StringUtils.isNotBlank(citation)) {
                 m.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
             } else {
-                m.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
+                m.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
             }
         } else if (StringUtils.isNotBlank(citation)) {
             m.setCitation(value(citation));

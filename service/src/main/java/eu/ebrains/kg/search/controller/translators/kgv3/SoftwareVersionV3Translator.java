@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SoftwareVersionV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
@@ -131,7 +132,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             if (StringUtils.isNotBlank(citation)) {
                 s.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
             } else {
-                s.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
+                s.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
             }
         } else if (StringUtils.isNotBlank(citation)) {
             s.setCitation(value(citation));
@@ -185,7 +186,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getPublications())){
-            s.setPublications(softwareVersion.getPublications().stream().map(p -> Helpers.getFormattedDOI(doiCitationFormatter, p)).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            s.setPublications(softwareVersion.getPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getApplicationCategory())){

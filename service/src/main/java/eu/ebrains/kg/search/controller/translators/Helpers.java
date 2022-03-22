@@ -26,6 +26,7 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FileRepository;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
@@ -176,23 +177,26 @@ public class Helpers {
         return new Stats(pageSize, info);
     }
 
-    public static String getFormattedDOI(DOICitationFormatter doiCitationFormatter, String doi) {
-        if (StringUtils.isNotBlank(doi)) {
-            String absoluteDOI = doi.contains("http") && doi.contains("doi.org") ? doi : String.format("https://doi.org/%s", doi);
-            final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI);
-            final String[] split = absoluteDOI.split("doi\\.org/");
-            String simpleDOI;
-            if (split.length == 2) {
-                simpleDOI = split[1];
-            } else {
-                simpleDOI = doi;
-            }
-            String doiLink = String.format("[DOI: %s]\n[DOI: %s]: %s", simpleDOI, simpleDOI, absoluteDOI);
-
-            if (doiCitation != null) {
-                return String.format("%s\n%s", doiCitation, doiLink);
-            } else {
-                return doiLink;
+    public static String getFormattedDigitalIdentifier(DOICitationFormatter doiCitationFormatter, String digitalIdentifier, RelatedPublication.PublicationType resolvedType) {
+        if (StringUtils.isNotBlank(digitalIdentifier)) {
+            if (resolvedType == RelatedPublication.PublicationType.DOI) {
+                String absoluteDOI = digitalIdentifier.contains("http") && digitalIdentifier.contains("doi.org") ? digitalIdentifier : String.format("https://doi.org/%s", digitalIdentifier);
+                final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI);
+                final String[] split = absoluteDOI.split("doi\\.org/");
+                String simpleDOI;
+                if (split.length == 2) {
+                    simpleDOI = split[1];
+                } else {
+                    simpleDOI = digitalIdentifier;
+                }
+                String doiLink = String.format("[DOI: %s]\n[DOI: %s]: %s", simpleDOI, simpleDOI, absoluteDOI);
+                if (doiCitation != null) {
+                    return String.format("%s\n%s", doiCitation, doiLink);
+                } else {
+                    return doiLink;
+                }
+            } else if (resolvedType == RelatedPublication.PublicationType.HANDLE) {
+                return String.format("[HANDLE: %s]\n[HANDLE: %s]: %s", digitalIdentifier, digitalIdentifier, digitalIdentifier);
             }
         }
         return null;

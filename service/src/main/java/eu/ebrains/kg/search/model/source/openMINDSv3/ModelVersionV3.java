@@ -49,7 +49,7 @@ public class ModelVersionV3 extends SourceInstanceV3 {
     private String version;
     private String versionInnovation;
     private Date releaseDate;
-    private List<String> relatedPublications;
+    private List<RelatedPublication> relatedPublications;
     private List<ExternalRef> license;
     private Copyright copyright;
     private List<FullNameRef> projects;

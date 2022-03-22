@@ -222,7 +222,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (StringUtils.isNotBlank(citation)) {
                 d.setCitation(value(citation));
             } else {
-                d.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
+                d.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
             }
         } else if (StringUtils.isNotBlank(citation)) {
             d.setCitation(value(citation));
@@ -251,7 +251,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         if (!CollectionUtils.isEmpty(datasetVersion.getRelatedPublications())) {
-            d.setPublications(datasetVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDOI(doiCitationFormatter, p)).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            d.setPublications(datasetVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if (!CollectionUtils.isEmpty(datasetVersion.getKeyword())) {
