@@ -138,7 +138,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
         if (!hasEmbargoStatus(sample, EMBARGOED) && !StringUtils.isBlank(containerUrl) && !CollectionUtils.isEmpty(sample.getFiles())) {
             if (containerUrl.startsWith("https://object.cscs.ch")) {
                 s.setAllFiles(new TargetExternalReference(
-                        String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
+                        String.format("https://data.kg.ebrains.eu/zip?container=%s", containerUrl),
                         "download all related data as ZIP"
                 ));
             } else {
@@ -153,7 +153,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->
                             new TargetFile(
-                                    f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
+                                    f.getPrivateAccess() ? String.format("%s?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
                                     f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
                                     f.getHumanReadableSize(),
                                     null,

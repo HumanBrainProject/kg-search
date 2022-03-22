@@ -40,7 +40,7 @@ public class DOICitationFormatter {
 
     private String getDOICitationViaDataciteAPI(String doi, String style) {
         String doiOnly = doi.replace("https://doi.org/", "");
-        return webClient.get().uri(String.format("https://api.datacite.org/dois/%s?style=style", doiOnly)).header("Accept", String.format("text/x-bibliography; style=%s", style)).retrieve().bodyToMono(String.class).block();
+        return webClient.get().uri(String.format("https://api.datacite.org/dois/%s?style=%s", doiOnly, style)).header("Accept", "text/x-bibliography").retrieve().bodyToMono(String.class).block();
     }
 
     private String doGetDOICitation(String doi, String style) {

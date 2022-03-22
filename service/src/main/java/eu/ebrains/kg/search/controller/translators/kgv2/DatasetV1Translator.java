@@ -84,7 +84,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
         if (!datasetV1.isUseHDG() && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && StringUtils.isNotBlank(containerUrl) && CollectionUtils.isEmpty(datasetV1.getExternalDatalink()) && CollectionUtils.isEmpty(files)) {
             d.setDownloadAsZip(new TargetExternalReference(
-                    String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl), // TODO: Get rid of empty and containerUrlAsZip condition
+                    String.format("https://data.kg.ebrains.eu/zip?container=%s", containerUrl), // TODO: Get rid of empty and containerUrlAsZip condition
                     "Download all related data as ZIP"
             ));
         }
@@ -134,7 +134,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                         .map(f ->
                                 new TargetFile(
-                                        f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
+                                        f.getPrivateAccess() ? String.format("%s?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
                                         f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
                                         f.getHumanReadableSize(),
                                         getFileImage(f.getStaticImageUrl(), false),
@@ -247,9 +247,9 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         if (dataStage == DataStage.IN_PROGRESS && !datasetV1.isUseHDG()) {
             if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
-                    d.setEmbargoRestrictedAccess(value(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl)));
+                    d.setEmbargoRestrictedAccess(value(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://data.kg.ebrains.eu/files/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl)));
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                    d.setEmbargoRestrictedAccess(value(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl)));
+                    d.setEmbargoRestrictedAccess(value(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://data.kg.ebrains.eu/files/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl)));
                 }
             } else {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
@@ -268,11 +268,14 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
     private Value<String> translateAccessibility(Value<String> oldValue) {
         if (oldValue != null && oldValue.getValue() != null) {
             final String value = oldValue.getValue();
-            switch (value.toLowerCase()) {
+            final String lowerCaseValue = value.toLowerCase();
+            switch (lowerCaseValue) {
                 case "free":
                     return value("free access");
                 case "embargoed":
                     return value("under embargo");
+                default:
+                    return value(lowerCaseValue);
             }
         }
         return oldValue;

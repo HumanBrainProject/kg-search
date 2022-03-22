@@ -99,7 +99,7 @@ export const getTreeByFolder = (files, urlFieldPath) => {
   const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
   const tree = {
     name: commonPath[commonPath.length-1],
-    url: `/proxy/export?container=${url}`,
+    url: `https://data.kg.ebrains.eu/zip?container=${url}`,
     isRootNode: true,
     type: "folder",
     paths: {},

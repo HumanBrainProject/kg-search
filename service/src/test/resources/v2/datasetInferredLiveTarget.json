@@ -214,7 +214,7 @@
     }
   ],
   "embargoRestrictedAccess": {
-    "value": "This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub\" target=\"_blank\"> you should be able to access the data here</a>"
+    "value": "This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://data.kg.ebrains.eu/files/list?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub\" target=\"_blank\"> you should be able to access the data here</a>"
   },
   "description": {
     "value": "The 3-D point coordinate data represent the spatial distribution of mouse brain subcortical projections from different parts of the frontal cortex to the caudoputamen, thalamus, superior colliculus and pontine nuclei. The point data are derived from segmented images series programmatically downloaded from the Allen Brain Atlas Data Portal. The data are suited for 3-D visualization and comparison the spatial arrangement of frontal corticostriatal, corticothalamic, corticocollicular, and corticopontine projections. \n"
@@ -240,87 +240,87 @@
   ],
   "files": [
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre_CustomRegions_All.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre_CustomRegions_All.csv",
       "value": "ACCESS PROTECTED: 287599685_ACAd_Cre_CustomRegions_All.csv",
       "fileSize": "552 bytes"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre_RefAtlasRegions.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre_RefAtlasRegions.csv",
       "value": "ACCESS PROTECTED: 287599685_ACAd_Cre_RefAtlasRegions.csv",
       "fileSize": "123 KB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre.json",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre.json",
       "value": "ACCESS PROTECTED: 287599685_ACAd_Cre.json",
       "fileSize": "32 MB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre_CustomRegions_All.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre_CustomRegions_All.csv",
       "value": "ACCESS PROTECTED: 297946935_MOs_Cre_CustomRegions_All.csv",
       "fileSize": "568 bytes"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre_RefAtlasRegions.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre_RefAtlasRegions.csv",
       "value": "ACCESS PROTECTED: 297946935_MOs_Cre_RefAtlasRegions.csv",
       "fileSize": "121 KB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre.json",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre.json",
       "value": "ACCESS PROTECTED: 297946935_MOs_Cre.json",
       "fileSize": "7 MB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre_CustomRegions_All.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre_CustomRegions_All.csv",
       "value": "ACCESS PROTECTED: 303615412_MOp_Cre_CustomRegions_All.csv",
       "fileSize": "549 bytes"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre_RefAtlasRegions.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre_RefAtlasRegions.csv",
       "value": "ACCESS PROTECTED: 303615412_MOp_Cre_RefAtlasRegions.csv",
       "fileSize": "120 KB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre.json",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre.json",
       "value": "ACCESS PROTECTED: 303615412_MOp_Cre.json",
       "fileSize": "6 MB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre_CustomRegions_All.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre_CustomRegions_All.csv",
       "value": "ACCESS PROTECTED: 591612976_MOp_Cre_CustomRegions_All.csv",
       "fileSize": "538 bytes"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre_RefAtlasRegions.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre_RefAtlasRegions.csv",
       "value": "ACCESS PROTECTED: 591612976_MOp_Cre_RefAtlasRegions.csv",
       "fileSize": "121 KB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre.json",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre.json",
       "value": "ACCESS PROTECTED: 591612976_MOp_Cre.json",
       "fileSize": "32 MB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre_CustomRegions_All.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre_CustomRegions_All.csv",
       "value": "ACCESS PROTECTED: 606785720_MOs_Cre_CustomRegions_All.csv",
       "fileSize": "568 bytes"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre_RefAtlasRegions.csv",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre_RefAtlasRegions.csv",
       "value": "ACCESS PROTECTED: 606785720_MOs_Cre_RefAtlasRegions.csv",
       "fileSize": "123 KB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre.json",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre.json",
       "value": "ACCESS PROTECTED: 606785720_MOs_Cre.json",
       "fileSize": "104 MB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/DataDescriptor_Cre_FrontalCortex.pdf",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/DataDescriptor_Cre_FrontalCortex.pdf",
       "value": "ACCESS PROTECTED: DataDescriptor_Cre_FrontalCortex.pdf",
       "fileSize": "182 KB"
     },
     {
-      "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/Licence (CCBY-NC-SA).pdf",
+      "url": "https://data.kg.ebrains.eu/files?url=https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/Licence (CCBY-NC-SA).pdf",
       "value": "ACCESS PROTECTED: Licence (CCBY-NC-SA).pdf",
       "fileSize": "140 KB"
     }

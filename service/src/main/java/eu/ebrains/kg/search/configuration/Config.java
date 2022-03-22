@@ -31,8 +31,7 @@ import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
@@ -77,5 +76,11 @@ public class Config {
                 .components(new Components()).schemaRequirement("Authorization", userToken)
                 .security(Collections.singletonList(userWithoutClientReq));
     }
+
+    @Bean
+    public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
+    }
+
 
 }

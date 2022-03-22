@@ -42,8 +42,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<Source>> {
-    public static final String fileProxy = ""; //TODO: Should that be changed ?
-//    public static final String fileProxy = "https://kg.ebrains.eu";
+    public static final String fileProxy = "https://data.kg.ebrains.eu/files";
 
     public abstract Target translate(Source source, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException;
 

@@ -201,6 +201,20 @@
         {
           "propertyName": "query:label",
           "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:file",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
+              "typeFilter": [
+                {
+                  "@id": "https://openminds.ebrains.eu/core/File"
+                }
+              ]
+            },
+            "https://openminds.ebrains.eu/vocab/IRI"
+          ]
         }
       ]
     },
@@ -976,15 +990,14 @@
           "ensureOrder": true,
           "structure": [
             {
-            "propertyName": "query:id",
-            "path": "@id"
+              "propertyName": "query:id",
+              "path": "@id"
             },
             {
               "propertyName": "query:age",
               "path": "https://openminds.ebrains.eu/vocab/age",
               "singleValue": "FIRST",
               "structure": [
-
                 {
                   "propertyName": "query:value",
                   "path": "https://openminds.ebrains.eu/vocab/value"
@@ -1821,6 +1834,17 @@
         {
           "propertyName": "query:fullName",
           "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:firstFile",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
+              "reverse": true
+            },
+            "@id"
+          ],
+          "singleValue": "FIRST"
         }
       ]
     },
@@ -1849,6 +1873,10 @@
         {
           "propertyName": "query:iri",
           "path": "https://openminds.ebrains.eu/vocab/IRI"
+        },
+        {
+          "propertyName": "query:contentDescription",
+          "path": "https://openminds.ebrains.eu/vocab/contentDescription"
         },
         {
           "propertyName": "query:formats",

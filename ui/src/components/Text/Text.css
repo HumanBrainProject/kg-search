@@ -57,3 +57,7 @@
 .field-markdown li+li {
     margin-top: 0.3rem;
 }
+
+.field-markdown img {
+    max-width: 100%;
+}

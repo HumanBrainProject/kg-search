@@ -49,7 +49,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     public final static String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
 
     public static String createEmbargoInProgressMessage(String containerUrl){
-        String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replaceAll("api/buckets/", "") : String.format("https://kg.ebrains.eu/files/cscs/list?url=%s", containerUrl);
+        String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replaceAll("api/buckets/", "") : String.format("https://data.kg.ebrains.eu/files/list?url=%s", containerUrl);
         return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", endpoint);
     }
 
@@ -220,6 +220,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
     private String filesAsyncUrl;
 
+    @FieldInfo(layout = "Get data", termsOfUse = true)
+    private TargetExternalReference dataProxyLink;
+
     @JsonProperty("external_datalink")
     @FieldInfo(layout = "Get data", label = "Data download")
     private List<TargetExternalReference> externalDatalink;
@@ -309,15 +312,14 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @Getter
     @Setter
     public static class PreviewObject implements Comparable<PreviewObject>{
-        private Value<String> url;
-        private Value<String> value;
-        private Value<Boolean> isAnimated;
-        private Value<String> previewUrl;
-        private Value<String> thumbnailUrl;
+        private String imageUrl;
+        private String videoUrl;
+        private String description;
+        private String link;
 
         @Override
         public int compareTo(PreviewObject previewObject) {
-            return Comparator.comparing(PreviewObject::getValue).compare(this, previewObject);
+            return Comparator.comparing(PreviewObject::getDescription).compare(this, previewObject);
         }
     }
 

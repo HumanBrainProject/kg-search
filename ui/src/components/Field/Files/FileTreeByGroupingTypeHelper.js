@@ -78,7 +78,7 @@ export const getTreeByGroupingType = (files, nameFieldPath, urlFieldPath, groupi
   });
   const tree = {
     name: groupingType,
-    //url: `/proxy/export?container=${groupingType}`,
+    //url: `https://data.kg.ebrains.eu/zip?container=${groupingType}`,
     type: "folder",
     toggled: true,
     active: true

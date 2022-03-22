@@ -21,48 +21,29 @@
  *
  */
 
- .kgs-fileFilter .kgs-fileFilter__title {
-  font-weight: bold;
-  font-size: var(--font-size);
-  color: var(--color-8);
+ .kgs-fileFilter {
+  width: auto;
+  margin-bottom: 10px;
 }
 
-.kgs-fileFilter ul.kgs-fileFilter__list {
-  list-style-type: none;
-  border: 1px solid var(--default-border-color);
-  border-radius: 5px;
-  padding: 6px;
+.kgs-fileFilter > div {
+  min-width: 68px;
+  font-size: 1rem;
+  margin-right: 5px;
 }
 
-.kgs-fileFilter ul.kgs-fileFilter__list li {
-  display: inline-block;
-  margin: 4px;
-}
-
-.kgs-fileFilter ul.kgs-fileFilter__list button {
-  margin: 0;
-  padding: 7px 12px;
-  border: 1px solid transparent;
-  border-radius: 50rem!important;
-  background: var(--button-default-background-color);
-  font-size: 0.75rem;
-  font-weight: bold;
-  color: #4d555b;
-}
-
-.kgs-fileFilter ul.kgs-fileFilter__list button.hover {
-  border-color: var(--link-highlight-color);
-}
-
-.kgs-fileFilter ul.kgs-fileFilter__list button.selected {
-  color: var(--link-highlight-color);
-}
-
-.kgs-fileFilter ul.kgs-fileFilter__list button .badge {
-  padding: 9px 16px;
-  background: var(--button-default-background-color);
-}
-
-.kgs-fileFilter ul.kgs-fileFilter__list button .badge.selected {
-  background-color: red; 
+ .kgs-fileFilter select {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  padding: 9px 35px 9px 9px;
 }

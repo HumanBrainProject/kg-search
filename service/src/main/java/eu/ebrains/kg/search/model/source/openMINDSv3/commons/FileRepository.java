@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class FileRepository extends FullNameRef{
     private String iri;
+    private String firstFile;
 }
 

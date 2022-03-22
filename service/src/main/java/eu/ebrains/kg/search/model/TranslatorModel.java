@@ -93,4 +93,9 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
         //TODO handle the "big" source models by restraining the bulk size
         return 1000;
     }
+
+    public int getBulkSizeV2() {
+        //TODO handle the "big" source models by restraining the bulk size
+        return 200;
+    }
 }

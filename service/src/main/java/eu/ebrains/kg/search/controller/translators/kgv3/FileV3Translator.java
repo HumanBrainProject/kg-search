@@ -86,7 +86,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         if(!CollectionUtils.isEmpty(file.getServiceLinks())){
             f.setViewer(file.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open %s in %s", s.getLabel(), s.getService()))).collect(Collectors.toList()));
         }
-        String iri = file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri();
+        String iri = file.isPrivateAccess() ? String.format("%s?url=%s", Translator.fileProxy, file.getIri()) : file.getIri();
         if (StringUtils.isNotBlank(iri)) {
             f.setIri(new TargetExternalReference(iri, iri));
         }

@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -22,37 +23,34 @@
  */
 
 import React, { useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const ImageCarousel = ({className, width, images, onClick}) => {
 
+export const ImageCarousel = ({ className, width, images, onClick }) => {
   const labelRef = useRef();
-
-  const onClickItem = index => {
-    typeof onClick === "function" && !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
-  };
 
   if (!images || !images.length) {
     return null;
   }
 
+  const onClickItem = index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
+
   return (
-    <div className={`kgs-image_carousel ${className?className:""}`}>
+    <div className={`kgs-image_carousel ${className ? className : ""}`}>
       <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={onClickItem} >
-        {images.map(({src, label, hasTarget, isTargetAnimated}) => (
+        {images.map(({ src, label, isTargetAnimated }) => (
           <div key={src}>
-            <img src={src} alt={label?label:""}/>
+            <img src={src} alt={label ? label : ""} />
+            {isTargetAnimated && <div className="kgs-image_carousel-icon is-animated">
+              <FontAwesomeIcon icon="play" size="3x" />
+            </div>}
             {label && (
-              <p className="legend" ref={labelRef}>{label}</p>
-            )}
-            {typeof onClick === "function" && hasTarget && (
-              <div className={`kgs-image_carousel-icon ${isTargetAnimated?"is-animated":""}`}>
-                <FontAwesomeIcon icon={isTargetAnimated?"play":"search"} size="4x" />
-              </div>
-            )}
+              <div className="kgs-image_carousel-label-wrapper">
+                <p className="kgs-image_carousel-label" ref={labelRef}>{label}</p>
+              </div>)}
           </div>
         ))}
       </Carousel>

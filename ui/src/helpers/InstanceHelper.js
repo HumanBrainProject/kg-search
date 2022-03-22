@@ -39,7 +39,7 @@ export const getTitle = (data, id) => {
     if (data._source?.title?.value) {
       return `${data._source.title.value}`;
     }
-    if (data._source?.type?.value ) {
+    if (data._source?.type?.value) {
       return `${data._source.type.value} ${data._id}`;
     }
   }
@@ -98,10 +98,10 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       && mapping.visible
       && (mapping.showIfEmpty || (data && data[name]))
       && mapping.layout !== "header"
-      && !["id", "identifier", "title", "first_release", "last_release"].includes(name)
+      && !["id", "identifier", "title", "first_release", "last_release", "previewObjects"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary")?null: mapping.layout;
+      const groupName = (!mapping.layout || mapping.layout === "summary") ? null : mapping.layout;
       const field = getField(group, type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);
@@ -118,7 +118,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
     }, {});
 
   if (overviewFields.length) {
-    const previews = getPreviews(data, { children: typeMapping.fields });
+    const previews = getPreviews(data);
     return [
       {
         name: "Overview",
@@ -132,69 +132,26 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
 };
 
 
-export const getPreviews = (data, mapping) => {
-  if (Array.isArray(data)) {
-    const previews = [];
-    data.forEach((elt, idx) => previews.push(...getPreviews(elt, mapping, idx)));
-    return previews;
-  } else if (data && mapping.children) {
-    const previews = [];
-    Object.entries(mapping.children)
-      .filter(([name, mapping]) =>
-        mapping
-        && (mapping.showIfEmpty || (data && data[name]))
-        && mapping.visible
-      )
-      .map(([name, mapping]) => ({
-        data: data && data[name],
-        mapping: mapping
-      }))
-      .forEach(({ data, mapping }, idx) => previews.push(...getPreviews(data, mapping, idx)));
-    return previews;
-  } else if (data && data.staticImageUrl && (typeof data.staticImageUrl === "string" || typeof data.staticImageUrl.url === "string")) {
-    return [{
-      staticImageUrl: data.staticImageUrl && (typeof data.staticImageUrl === "string" ? data.staticImageUrl : data.staticImageUrl.url),
-      previewUrl: data.previewUrl,
-      label: data.value ? data.value : null
-    }];
-    /*
-    } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
-      const cats = [
-        "https://cdn2.thecatapi.com/images/2pb.gif",
-        "http://lorempixel.com/output/cats-q-c-640-480-1.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-2.jpg",
-        "https://cdn2.thecatapi.com/images/18f.gif",
-        "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
-        "https://cdn2.thecatapi.com/images/dbt.gif",
-        "https://cdn2.thecatapi.com/images/d5k.gif",
-        "http://lorempixel.com/output/cats-q-c-640-480-4.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-5.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-6.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-7.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-8.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-9.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-10.jpg"
-      ];
-      const dogs = [
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-06.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-05.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-03.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-07.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-02.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-04.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-061-e1340955308953.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-08.jpg"
-      ];
-      return [{
-        staticImageUrl: dogs[idx % (dogs.length -1)],
-        previewUrl: (Math.round(Math.random() * 10) % 2)?{
-          url: cats[idx % (cats.length -1)],
-          isAnimated: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
-        }:undefined,
-        label: data.value?data.value:null
-      }];
-    */
+export const getPreviews = data => {
+  if (Array.isArray(data.previewObjects)) {
+    return data.previewObjects.map(item => {
+      return {
+        staticImageUrl: item.imageUrl,
+        previewUrl: {
+          url: item.videoUrl ?? item.imageUrl,
+          isAnimated: !!item.videoUrl
+        },
+        label: item?.description,
+        link: item?.link
+      };
+    });
+  }
+  if (Array.isArray(data.filesOld)) {
+    return data.filesOld.map(item => ({
+      staticImageUrl: item?.staticImageUrl?.url,
+      previewUrl: item.previewUrl,
+      label: item?.value
+    }));
   }
   return [];
 };
@@ -217,11 +174,11 @@ export const mapStateToProps = (state, props) => {
 
   const source = data && data._source;
   const type = source?.type?.value;
-  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
+  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type]) ?? {};
   const group = state.groups.group;
-  const version = source && source.version?source.version:"Current";
-  const versions = (source && Array.isArray(source.versions)?source.versions:[]).map(v => ({
-    label: v.value?v.value:"Current",
+  const version = source && source.version ? source.version : "Current";
+  const versions = (source && Array.isArray(source.versions) ? source.versions : []).map(v => ({
+    label: v.value ? v.value : "Current",
     value: v.reference
   }));
   const latestVersion = versions && versions.length && version && versions[0];
@@ -233,8 +190,8 @@ export const mapStateToProps = (state, props) => {
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
-      group: (group !== state.groups.defaultGroup)?group:null,
-      groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
+      group: (group !== state.groups.defaultGroup) ? group : null,
+      groupLabel: (group !== state.groups.defaultGroup) ? getGroupLabel(state.groups.groups, group) : null,
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getHeaderFields(group, type, source, mapping),

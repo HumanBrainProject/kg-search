@@ -86,7 +86,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                 if (fileBundle != null) {
                     String fileUrl = fileBundle.getUrl();
                     if (StringUtils.isNotBlank(fileUrl) && fileUrl.startsWith("https://object.cscs.ch")) {
-                        m.setEmbargo(value(String.format("This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileUrl)));
+                        m.setEmbargo(value(String.format("This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://data.kg.ebrains.eu/files/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileUrl)));
                     } else {
                         m.setEmbargo(value("This model is temporarily under embargo. The data will become available for download after the embargo period."));
                     }
@@ -105,7 +105,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                     .map(fb -> {
                         if (fb.getUrl().startsWith("https://object.cscs.ch")) {
                             return new TargetExternalReference(
-                                    String.format("https://kg.ebrains.eu/proxy/export?container=%s", fb.getUrl()),
+                                    String.format("https://data.kg.ebrains.eu/zip?container=%s", fb.getUrl()),
                                     "download all related data as ZIP" // TODO: Capitalize the value
                             );
                         } else {

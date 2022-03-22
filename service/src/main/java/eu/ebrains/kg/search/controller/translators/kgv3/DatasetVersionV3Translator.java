@@ -39,7 +39,6 @@ import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.bcel.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -99,6 +98,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
+        d.setId(datasetVersion.getUUID());
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);
         String containerUrl = datasetVersion.getFileRepository() != null ? datasetVersion.getFileRepository().getIri() : null;
@@ -123,20 +123,25 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                         if (isExternalLink(datasetVersion.getFileRepository())) {
                             d.setExternalDatalink(Collections.singletonList(new TargetExternalReference(datasetVersion.getFileRepository().getIri(), datasetVersion.getFileRepository().getIri())));
                         } else {
-                            String endpoint;
-                            if (liveMode) {
-                                endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
-                            } else {
-                                endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                            if(datasetVersion.getFileRepository().getFirstFile()==null){
+                                //Although the dataset version is supposed to be accessible, it is not indexed (yet). We're forwarding to data proxy
+                                d.setDataProxyLink(new TargetExternalReference(String.format("https://data-proxy.ebrains.eu/datasets/%s", d.getId()), "Browse files"));
                             }
-                            d.setFilesAsyncUrl(endpoint);
+                            else {
+                                String endpoint;
+                                if (liveMode) {
+                                    endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                                } else {
+                                    endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                                }
+                                d.setFilesAsyncUrl(endpoint);
+                            }
                         }
                     }
             }
             d.setDataAccessibility(value(datasetVersion.getAccessibility().getName()));
         }
 
-        d.setId(datasetVersion.getUUID());
         d.setExperimentalApproach(ref(datasetVersion.getExperimentalApproach()));
         if(!CollectionUtils.isEmpty(datasetVersion.getExperimentalApproach())){
             final List<String> experimentalApproachesForFilter = datasetVersion.getExperimentalApproach().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
@@ -332,20 +337,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));
         } else if (datasetVersion.getFullDocumentationDOI() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
-        }
-
-        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).map(f -> {
-            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
-            o.setUrl(value(f.getIri()));
-            o.setValue(o.getValue());
-            o.setPreviewUrl(value(f.getIri()));
-            o.setThumbnailUrl(value(f.getIri()));
-            //TODO make this more reliable
-            o.setIsAnimated(value(f.getIri().endsWith(".mp4")));
-            return o;
-        }).collect(Collectors.toList());
-        if (!previewObjects.isEmpty()) {
-            d.setPreviewObjects(previewObjects);
         }
 
         List<String> brainRegionStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", Constants.OPENMINDS_ROOT+"sands/ParcellationEntityVersion", Constants.OPENMINDS_ROOT+"sands/ParcellationEntity", Constants.OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
