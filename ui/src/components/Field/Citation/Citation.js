@@ -49,7 +49,7 @@ const Citation = ({show, data}) => {
     setIsLoading(true);
     setError(null);
     const _citation = await API.axios.get(API.endpoints.citation(doi, citationStyle));
-    const result = _citation && _citation.data?_citation.data:null;
+    const result = _citation?.data;
     if (result) {
       setIsLoading(false);
       setError(null);
