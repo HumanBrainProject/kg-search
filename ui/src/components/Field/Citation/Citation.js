@@ -23,9 +23,13 @@
 
 import React, {useState, useEffect} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
 import Select from "../../Select/Select";
 import "./Citation.css";
 import API from "../../../services/API";
+
+const converter = new showdown.Converter({ extensions: [xssFilter] });
 
 const CITATION_STYLES = [
   {label: "european-journal-of-neuroscience", value: "european-journal-of-neuroscience"},
@@ -53,7 +57,8 @@ const Citation = ({show, data}) => {
     if (result) {
       setIsLoading(false);
       setError(null);
-      setCitation(result);
+      const citationWithDoi = `${result}\n<a href='https://doi.org/${doi}'>DOI: ${doi}</a>`;
+      setCitation(citationWithDoi);
     } else {
       setIsLoading(false);
       setCitation(null);
@@ -79,7 +84,7 @@ const Citation = ({show, data}) => {
           <span className="sr-only">Retrieving citation...</span>
         </div>:
         <div className="kgs-citation">
-          <pre>{citation}<a href={`https://doi.org/${doi}`}>DOI: {doi}</a></pre>
+          <pre dangerouslySetInnerHTML={{ __html: converter.makeHtml(citation) }}></pre>
         </div>}
     </div>
   );
