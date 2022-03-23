@@ -147,7 +147,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         String doi = firstItemOrNull(datasetV1.getDoi());
         if (StringUtils.isNotBlank(doi)) {
             d.setCitation(value(doi));
-            d.setDoi(value(firstItemOrNull(datasetV1.getDoi())));
+            d.setDoi(value(doi));
         }
 
 
