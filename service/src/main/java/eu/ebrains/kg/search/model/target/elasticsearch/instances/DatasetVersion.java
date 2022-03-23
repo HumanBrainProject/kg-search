@@ -113,6 +113,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
 
     //Overview
+    @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
+    private Value<String> doi;
+
     //HDG terms of use are going to be a license too
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)

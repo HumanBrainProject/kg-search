@@ -123,11 +123,19 @@
     },
     {
       "propertyName": "query:relatedPublications",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/relatedPublication",
-        "https://openminds.ebrains.eu/vocab/identifier"
-      ],
-      "ensureOrder": true
+      "path": "https://openminds.ebrains.eu/vocab/relatedPublication",
+      "ensureOrder": true,
+      "structure": [
+        {
+          "propertyName": "query:identifier",
+          "path": "https://openminds.ebrains.eu/vocab/identifier",
+          "required":  true
+        },
+        {
+          "propertyName": "query:type",
+          "path": "@type"
+        }
+      ]
     },
     {
       "propertyName": "query:license",

@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.BehavioralProtocolV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.BehavioralProtocol;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
@@ -77,7 +78,7 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
        b.setTitle(value(behavioralProtocolV3.getName()));
        b.setDescription(value(behavioralProtocolV3.getDescription()));
        if(behavioralProtocolV3.getDescribedInDOI()!=null){
-           b.setDescribedIn(value(Helpers.getFormattedDOI(doiCitationFormatter, behavioralProtocolV3.getDescribedInDOI())));
+           b.setDescribedIn(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, behavioralProtocolV3.getDescribedInDOI(), RelatedPublication.PublicationType.DOI)));
        }
        else if(behavioralProtocolV3.getDescribedInFile()!=null && behavioralProtocolV3.getDescribedInFile().getName()!=null && behavioralProtocolV3.getDescribedInFile().getIri()!=null){
            b.setDescribedInLink(new TargetExternalReference(behavioralProtocolV3.getDescribedInFile().getIri(), behavioralProtocolV3.getDescribedInFile().getName()));

@@ -82,12 +82,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         p.setTitle(value(project.getTitle()));
         if(!CollectionUtils.isEmpty(project.getPublications())) {
             p.setPublications(value(project.getPublications().stream()
-                    .map(publication -> {
-                        if (StringUtils.isNotBlank(publication)) {
-                            return Helpers.getFormattedDOI(doiCitationFormatter, publication);
-                        }
-                        return null;
-                    }).filter(Objects::nonNull).collect(Collectors.toList())));
+                    .map(rp -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, rp.getIdentifier(), rp.resolvedType())).filter(Objects::nonNull).collect(Collectors.toList())));
         }
         return p;
     }

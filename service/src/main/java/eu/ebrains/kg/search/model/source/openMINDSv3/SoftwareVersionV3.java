@@ -47,7 +47,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private List<PersonOrOrganizationRef> custodian;
     private String description;
     private String versionInnovation;
-    private List<String> publications;
+    private List<RelatedPublication> publications;
     private List<FullNameRef> applicationCategory;
     private List<FullNameRef> operatingSystem;
     private List<FullNameRef> device;

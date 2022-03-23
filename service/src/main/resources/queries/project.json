@@ -346,15 +346,18 @@
             }
           ]
         },
+        "https://openminds.ebrains.eu/vocab/relatedPublication"
+      ],
+      "structure": [
         {
-          "@id": "https://openminds.ebrains.eu/vocab/relatedPublication",
-          "typeFilter": [
-            {
-              "@id": "https://openminds.ebrains.eu/core/DOI"
-            }
-          ]
+          "propertyName": "query:identifier",
+          "path": "https://openminds.ebrains.eu/vocab/identifier",
+          "required": true
         },
-        "https://openminds.ebrains.eu/vocab/identifier"
+        {
+          "propertyName": "query:type",
+          "path": "@type"
+        }
       ]
     },
     {

@@ -29,10 +29,7 @@ import eu.ebrains.kg.search.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ModelVersionV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.StudyTarget;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -174,7 +171,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             if (StringUtils.isNotBlank(citation)) {
                 m.setCitation(value(citation));
             } else {
-                m.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
+                m.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
             }
         } else if (StringUtils.isNotBlank(citation)) {
             m.setCitation(value(citation));
@@ -201,7 +198,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         }
 
         if (!CollectionUtils.isEmpty(modelVersion.getRelatedPublications())) {
-            m.setPublications(modelVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDOI(doiCitationFormatter, p)).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            m.setPublications(modelVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if (!CollectionUtils.isEmpty(modelVersion.getKeyword())) {
