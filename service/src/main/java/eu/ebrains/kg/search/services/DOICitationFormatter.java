@@ -19,14 +19,14 @@ public class DOICitationFormatter {
             HttpClient.create().followRedirect(true)
     )).build();
 
-    @Cacheable(value = "doiCitation", unless = "#result == null")
-    public String getDOICitation(String doi) {
-        return doGetDOICitation(doi);
+    @Cacheable(value = "doiCitation", unless = "#result == null", key = "#doi.concat('-').concat(#style)")
+    public String getDOICitation(String doi, String style) {
+        return doGetDOICitation(doi, style);
     }
 
-    @CachePut(value = "doiCitation", unless = "#result == null")
-    public String refreshDOICitation(String doi) {
-        return doGetDOICitation(doi);
+    @CachePut(value = "doiCitation", unless = "#result == null", key = "#doi.concat('-').concat(#style)")
+    public String refreshDOICitation(String doi, String style) {
+        return doGetDOICitation(doi, style);
     }
 
     @CacheEvict(value = "doiCitation", allEntries = true)
@@ -43,9 +43,7 @@ public class DOICitationFormatter {
         return webClient.get().uri(String.format("https://api.datacite.org/dois/%s?style=%s", doiOnly, style)).header("Accept", "text/x-bibliography").retrieve().bodyToMono(String.class).block();
     }
 
-
-    private String doGetDOICitation(String doi) {
-        String style="european-journal-of-neuroscience";
+    private String doGetDOICitation(String doi, String style) {
         String value = null;
         if (isEbrainsDOI(doi)) {
             //Workaround to fix the datacite issues about citation formatting

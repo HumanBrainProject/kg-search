@@ -213,19 +213,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-        String citation = datasetVersion.getHowToCite();
         String doi = datasetVersion.getDoi();
         if (StringUtils.isNotBlank(doi)) {
             final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
+            d.setCitation(value(doiWithoutPrefix));
             //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
             d.setDoi(value(doiWithoutPrefix));
-            if (StringUtils.isNotBlank(citation)) {
-                d.setCitation(value(citation));
-            } else {
-                d.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
-            }
-        } else if (StringUtils.isNotBlank(citation)) {
-            d.setCitation(value(citation));
         }
         d.setLicenseInfo(link(datasetVersion.getLicense()));
 

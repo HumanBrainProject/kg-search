@@ -32,6 +32,7 @@ import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 import FilePreview from "../FilePreview/FilePreview";
+import Citation from "./Citation/Citation";
 
 const filesUrlRegex = /^(.+\/files)$/;
 const liveFilesUrlRegex = /^(.+\/files)\/live$/;
@@ -64,6 +65,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
+    const isCitation = mapping.isCitation;
     const asyncFilesUrl = mapping.isAsync?data:null;
     const asyncFileFormatsUrl = getFileUrlFrom(asyncFilesUrl, "formats");
     const asyncGroupingTypesUrl = getFileUrlFrom(asyncFilesUrl, "groupingTypes");
@@ -89,7 +91,7 @@ const FieldBase = (renderUserInteractions = true) => {
       type: type
     };
     const valueProps = {
-      show: !isList && !isHierarchicalFiles && !isFilePreview,
+      show: !isList && !isHierarchicalFiles && !isFilePreview && !isCitation,
       data: data,
       mapping: mapping,
       group: group,
@@ -108,6 +110,10 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group,
       type: type
+    };
+    const citationProps = {
+      show: isCitation,
+      data: data
     };
     const hierarchicalFileProps = {
       data: data,
@@ -142,6 +148,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <ObjectFieldComponent {...objectProps} />
         <TableField {...tableProps} />
         <FilePreview {...filePreviewProps} />
+        <Citation {...citationProps} />
         {isHierarchicalFiles && (
           asyncFilesUrl?
             <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />

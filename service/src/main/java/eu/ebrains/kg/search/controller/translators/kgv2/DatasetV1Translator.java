@@ -144,12 +144,10 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                         ).collect(Collectors.toList())));
             }
         }
-
-        String citation = firstItemOrNull(datasetV1.getCitation());
         String doi = firstItemOrNull(datasetV1.getDoi());
-        if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(doi)) {
-            String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-            d.setCitation(value(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url)));
+        if (StringUtils.isNotBlank(doi)) {
+            d.setCitation(value(doi));
+            d.setDoi(value(firstItemOrNull(datasetV1.getDoi())));
         }
 
 
@@ -185,7 +183,6 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         d.setTitle(value(datasetV1.getTitle()));
         d.setModality(value(emptyToNull(datasetV1.getModalityForFilter())));
         d.setModalityForFilter(value(emptyToNull(datasetV1.getModalityForFilter())));
-        d.setDoi(value(firstItemOrNull(datasetV1.getDoi())));
 
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
             d.setContributors(datasetV1.getContributors().stream()

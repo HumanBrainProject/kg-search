@@ -44,12 +44,12 @@ public class Helpers {
     private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
     private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
 
-    public static String createEmbargoMessage(String type, FileRepository fileRepository, DataStage stage){
-        if(fileRepository!=null && fileRepository.getIri()!=null) {
+    public static String createEmbargoMessage(String type, FileRepository fileRepository, DataStage stage) {
+        if (fileRepository != null && fileRepository.getIri() != null) {
             final String message = String.format("This %s is temporarily under embargo. It will become available for download after the embargo period.", type);
             if (stage == DataStage.IN_PROGRESS) {
                 final String url = translateInternalFileRepoToUrl(fileRepository);
-                if(url!=null){
+                if (url != null) {
                     return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
                 }
             }
@@ -59,31 +59,30 @@ public class Helpers {
     }
 
 
-    public static boolean isCscsContainer(FileRepository repository){
-        if(repository!=null && repository.getIri()!=null){
+    public static boolean isCscsContainer(FileRepository repository) {
+        if (repository != null && repository.getIri() != null) {
             return repository.getIri().startsWith("https://object.cscs.ch");
         }
         return false;
     }
 
-    public static boolean isDataProxyBucket(FileRepository repository){
+    public static boolean isDataProxyBucket(FileRepository repository) {
         return repository != null && isDataProxyBucket(repository.getIri());
     }
 
-    public static boolean isDataProxyBucket(String repositoryIri){
-        if(repositoryIri!=null){
+    public static boolean isDataProxyBucket(String repositoryIri) {
+        if (repositoryIri != null) {
             return repositoryIri.startsWith("https://data-proxy.ebrains.eu");
         }
         return false;
     }
 
-    public static String translateInternalFileRepoToUrl(FileRepository repository){
-        if(repository!=null && repository.getIri()!=null) {
+    public static String translateInternalFileRepoToUrl(FileRepository repository) {
+        if (repository != null && repository.getIri() != null) {
             if (isDataProxyBucket(repository)) {
                 String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/buckets/", "");
                 return String.format("https://data-proxy.ebrains.eu/%s", id);
-            }
-            else if(isCscsContainer(repository)){
+            } else if (isCscsContainer(repository)) {
                 return String.format("https://data.kg.ebrains.eu/files/list?url=%s", repository.getIri());
             }
         }
@@ -181,7 +180,7 @@ public class Helpers {
         if (StringUtils.isNotBlank(digitalIdentifier)) {
             if (resolvedType == RelatedPublication.PublicationType.DOI) {
                 String absoluteDOI = digitalIdentifier.contains("http") && digitalIdentifier.contains("doi.org") ? digitalIdentifier : String.format("https://doi.org/%s", digitalIdentifier);
-                final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI);
+                final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI, "european-journal-of-neuroscience");
                 final String[] split = absoluteDOI.split("doi\\.org/");
                 String simpleDOI;
                 if (split.length == 2) {
@@ -227,7 +226,7 @@ public class Helpers {
     }
 
     public static void collectAllTargetInternalReferences(Object obj, List<TargetInternalReference> collector) {
-        if(obj == null){
+        if (obj == null) {
             return;
         }
         if (obj instanceof TargetInternalReference) {
