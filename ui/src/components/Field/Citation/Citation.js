@@ -21,70 +21,74 @@
  *
  */
 
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
-import Select from "../../Select/Select";
+import sanitizeHtml from "sanitize-html";
 import "./Citation.css";
 import API from "../../../services/API";
+import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
 
-const converter = new showdown.Converter({ extensions: [xssFilter] });
-
-const CITATION_STYLES = [
-  {label: "european-journal-of-neuroscience", value: "european-journal-of-neuroscience"},
-  {label: "bibtex", value: "bibtex"}
-];
-
-const Citation = ({show, data}) => {
-  if(!show) {
+const Citation = ({ show, data }) => {
+  if (!show) {
     return null;
   }
   const [citation, setCitation] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const [citationStyle, setCitationStyle] = useState("european-journal-of-neuroscience");
+  const [bibtex, setBibtex] = useState();
 
   const doi = data && data.value;
 
-  useEffect(() => getCitation(), [citationStyle]);
+  useEffect(() => getCitation(), []);
 
   const getCitation = async () => {
     setIsLoading(true);
     setError(null);
-    const _citation = await API.axios.get(API.endpoints.citation(doi, citationStyle));
-    const result = _citation?.data;
+    const _citationApa = await API.axios.get(API.endpoints.citation(doi, "apa", "text/x-bibliography"));
+    const result = _citationApa?.data;
+    const _citationBibtex = await API.axios.get(API.endpoints.citation(doi, "bibtex", "application/x-bibtex"));
+    const resultBibtex = _citationBibtex?.data;
     if (result) {
       setIsLoading(false);
       setError(null);
-      const citationWithDoi = `${result}\n<a href='https://doi.org/${doi}'>DOI: ${doi}</a>`;
-      setCitation(citationWithDoi);
+      setCitation(sanitizeHtml(result, {
+        allowedTags: [],
+        allowedAttributes: {},
+      }));
     } else {
       setIsLoading(false);
       setCitation(null);
       setError(`The citation for doi ${doi} was not found.`);
     }
+    if (resultBibtex) {
+      const url = window.URL.createObjectURL(
+        new Blob([resultBibtex]),
+      );
+      setBibtex(url);
+    }
   };
 
-  const onChange = value => setCitationStyle(value);
 
-  if(error) {
-    return(<div>
-      <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon="exclamation-triangle"/>{error} </span>
-      <FontAwesomeIcon icon="sync-alt" onClick={() => getCitation()} style={{cursor: "pointer"}}/>
+  if (error) {
+    return (<div>
+      <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon="exclamation-triangle" />{error} </span>
+      <FontAwesomeIcon icon="sync-alt" onClick={() => getCitation()} style={{ cursor: "pointer" }} />
     </div>);
   }
 
-  return(
+  return (
     <div>
-      <div className="kgs-citation-label">Select Formatting Style:</div>
-      <Select className="kgs-citation-select" value={citationStyle} list={CITATION_STYLES} onChange={onChange} />
-      {isLoading?
+      {isLoading ?
         <div className="kgs-citation-spinner spinner-border spinner-border-sm" role="status">
           <span className="sr-only">Retrieving citation...</span>
-        </div>:
+        </div> :
         <div className="kgs-citation">
-          <pre dangerouslySetInnerHTML={{ __html: converter.makeHtml(citation) }}></pre>
+          {citation ?
+            <pre>
+              <span dangerouslySetInnerHTML={{ __html: citation }} />
+              <CopyToClipboardButton icon="clipboard" title="Copy citation" confirmationText="Citation copied" content={citation} />
+              {bibtex && <a className="kgs-citation-download" href={bibtex} download={`${doi}.bib`}><FontAwesomeIcon icon="download" /> Download as bibtex</a>}
+            </pre> : <a href={`https://doi.org/${doi}`}>DOI: {doi}</a>}
         </div>}
     </div>
   );

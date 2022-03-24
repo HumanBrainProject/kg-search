@@ -180,7 +180,7 @@ public class Helpers {
         if (StringUtils.isNotBlank(digitalIdentifier)) {
             if (resolvedType == RelatedPublication.PublicationType.DOI) {
                 String absoluteDOI = digitalIdentifier.contains("http") && digitalIdentifier.contains("doi.org") ? digitalIdentifier : String.format("https://doi.org/%s", digitalIdentifier);
-                final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI, "european-journal-of-neuroscience");
+                final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI, "apa", "text/x-bibliography");
                 final String[] split = absoluteDOI.split("doi\\.org/");
                 String simpleDOI;
                 if (split.length == 2) {

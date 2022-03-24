@@ -36,7 +36,7 @@ const endpoints = {
   "instance": (group, id) => `/api/groups/${group}/documents/${id}`,
   "preview": id => `/api/${id}/live`,
   "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,
-  "citation": (doi, citationStyle) => `/api/citation?doi=${encodeURIComponent(doi)}&style=${citationStyle}`
+  "citation": (doi, citationStyle, contentType) => `/api/citation?doi=${encodeURIComponent(doi)}&style=${citationStyle}&contentType=${contentType}`
 };
 
 class API {
