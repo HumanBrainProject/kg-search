@@ -31,7 +31,7 @@ public class TargetExternalReference {
     public TargetExternalReference() {}
 
     public TargetExternalReference(String url, String value) {
-        this.url = url;
+        this.url = normalizeUrl(url);
         this.value = value;
     }
 
@@ -40,9 +40,18 @@ public class TargetExternalReference {
     private String url;
     private String value;
 
+    private String normalizeUrl(String url){
+        // We want to ensure that all the links pointing to data-proxy are having the inline parameter set (e.g. for PDFs, etc.)
+        if(url!=null && url.startsWith("https://data-proxy.ebrains.eu") && !(url.contains("&inline") || url.contains("?inline"))){
+            url = String.format("%s%sinline=true", url, url.contains("?") ? "&" : "?");
+        }
+        return url;
+    }
+
+
     public String getUrl() { return url; }
 
-    public void setUrl(String url) { this.url = url; }
+    public void setUrl(String url) { this.url = normalizeUrl(url); }
 
     public String getValue() {
         return value;
