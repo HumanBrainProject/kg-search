@@ -311,10 +311,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
 
         final List<File> specialFiles = datasetVersion.getSpecialFiles();
-        final boolean releasedMode = !liveMode && dataStage == DataStage.RELEASED;
 
-        //If the container is restricted (and the files are private), we can't take any files into account for data descriptors although they might be registered as such unless we're in "IN PROGRESS" or "preview" mode
-        final List<File> dataDescriptors = privateFiles && releasedMode ? Collections.emptyList() : specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
+        final List<File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains(Constants.OPENMINDS_INSTANCES + "/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
         if (!dataDescriptors.isEmpty()) {
             TargetExternalReference reference;
             if (dataDescriptors.size() > 1) {
@@ -336,12 +334,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             }
             d.setDataDescriptor(reference);
         } else if (datasetVersion.getFullDocumentationFile() != null) {
-            if(!releasedMode || !privateFiles) {
-                d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName()));
-            }
-            else{
-                logger.error("The dataset has defined a private file to be the data descriptor");
-            }
+            d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName()));
         } else if (datasetVersion.getFullDocumentationUrl() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));
         } else if (datasetVersion.getFullDocumentationDOI() != null) {
