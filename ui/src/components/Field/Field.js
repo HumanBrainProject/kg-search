@@ -32,7 +32,7 @@ import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 import FilePreview from "../FilePreview/FilePreview";
-import Citation from "./Citation/Citation";
+import Citation from "./Citation/DynamicCitation";
 
 const filesUrlRegex = /^(.+\/files)$/;
 const liveFilesUrlRegex = /^(.+\/files)\/live$/;
@@ -66,6 +66,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const isCitation = mapping.isCitation;
+    const isCustomCitation = isCitation && name === "customCitation";
     const asyncFilesUrl = mapping.isAsync?data:null;
     const asyncFileFormatsUrl = getFileUrlFrom(asyncFilesUrl, "formats");
     const asyncGroupingTypesUrl = getFileUrlFrom(asyncFilesUrl, "groupingTypes");
@@ -113,7 +114,8 @@ const FieldBase = (renderUserInteractions = true) => {
     };
     const citationProps = {
       show: isCitation,
-      data: data
+      data: data,
+      isCustomCitation: isCustomCitation
     };
     const hierarchicalFileProps = {
       data: data,

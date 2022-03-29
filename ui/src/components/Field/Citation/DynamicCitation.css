@@ -21,23 +21,7 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Citation.css";
-import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
-
-
-const Citation = ({citation, doi, bibtex}) => {
-  return (
-    <div className="kgs-citation">
-      {citation ?
-        <pre>
-          <span dangerouslySetInnerHTML={{ __html: citation }} />
-          <CopyToClipboardButton icon="clipboard" title="Copy citation" confirmationText="Citation copied" content={citation} />
-          {bibtex && <a className="kgs-citation-download" href={bibtex} download={`${doi}.bib`}><FontAwesomeIcon icon="download" /> Download as bibtex</a>}
-        </pre> : <a href={`https://doi.org/${doi}`}>DOI: {doi}</a>}
-    </div>
-  );
-};
-
-export default Citation;
+.kgs-citation-spinner {
+   display: block;
+   margin: 10px;
+}

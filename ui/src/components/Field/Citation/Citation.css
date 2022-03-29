@@ -20,61 +20,32 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
- .kgs-field__citation .kgs-citation-select {
-    width: auto;
-    border: 1px solid #ced4da;
-    border-radius: 0.25em;
- }
-
- .kgs-field__citation .kgs-citation-label {
-     padding-bottom: 5px;
-     font-weight: 700;
-     font-size: var(--font-size);
-     color: var(--color-8);
- }
-
- .kgs-field__citation .kgs-citation-select select {
-    font-size: medium;
-    padding: 9px 37px 9px 9px;
- }
-
- .kgs-field__citation .kgs-citation-spinner {
-    display: block;
-    margin: 10px;
- }
-
- .kgs-field__citation .kgs-citation-select select:hover,
- .kgs-field__citation .kgs-citation-select select:focus {
-    box-shadow: none;
- }
-
- .kgs-field__citation .kgs-citation {
+.kgs-citation {
     padding-top: 10px;
  }
 
- .kgs-field__citation .kgs-citation a {
+.kgs-citation a {
    text-decoration: none;
    color: var(--link-color-1);
  }
 
- .kgs-field__citation .kgs-citation .kgs-citation-download {
+.kgs-citation .kgs-citation-download {
     float: right;
     padding-top: 10px;
     transform: translateX(20px);
  }
 
- .kgs-field__citation .kgs-citation .kgs-copy-to-clipboard {
+.kgs-citation .kgs-copy-to-clipboard {
    position: absolute;
    right: 20px;
    top: 30px;
  }
  
- .kgs-field__citation .kgs-citation .kgs-copy-to-clipboard .kgs-copy-confirmation{
+.kgs-citation .kgs-copy-to-clipboard .kgs-copy-confirmation{
    margin-left: -130px;
  }
 
- .kgs-field__citation .kgs-citation pre {
+.kgs-citation pre {
    font-family: inherit; 
    padding: 10px 30px 10px 10px;
    white-space: pre-line;

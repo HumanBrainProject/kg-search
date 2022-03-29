@@ -201,8 +201,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
 
     @FieldInfo(layout = "Get data", labelHidden = true)
     private Value<String> embargoRestrictedAccess;
