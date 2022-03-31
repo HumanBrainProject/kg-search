@@ -35,6 +35,7 @@ import lombok.Setter;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 
 @Getter
@@ -138,6 +139,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     @FieldInfo(labelHidden = true, boost = 2)
     private List<PreviewObject> previewObjects;
+
+    @FieldInfo(label = "View data", isGroupedLinks=true)
+    private Map<String, List<TargetExternalReference>> viewData;
 
     //TODO how to find in openMINDS? -> studiedSpecimen -> tisseSample(Collection) -> anatomicalLocation  or is it enough through studied brain region?
     /**
@@ -321,15 +325,13 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         private String imageUrl;
         private String videoUrl;
         private String description;
-        private String link;
+        private TargetExternalReference link;
 
         @Override
         public int compareTo(PreviewObject previewObject) {
             return Comparator.comparing(PreviewObject::getDescription).compare(this, previewObject);
         }
     }
-
-
 
     @Getter
     @Setter

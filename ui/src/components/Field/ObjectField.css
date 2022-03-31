@@ -25,7 +25,8 @@
     display: block;
 }
 
-.kgs-field > ul.kgs-field__object > li:first-child {
+.kgs-field > ul.kgs-field__object > li:first-child,
+.kgs-field > ul.kgs-field__object.kgs-field__object_enforce_list > li {
     display: list-item;
 }
 

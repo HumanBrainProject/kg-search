@@ -95,6 +95,7 @@ export const loadDefinition = () => {
     field.isAsync = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isAsync", false);
     field.isCitation = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isCitation", false);
     field.isFilePreview = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isFilePreview", false);
+    field.isGroupedLinks = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isGroupedLinks", false);
     field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
     field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
     field.hint = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "hint", null);

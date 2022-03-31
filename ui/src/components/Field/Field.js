@@ -22,8 +22,8 @@
  */
 
 import React from "react";
-import { FieldLabel} from "./FieldLabel";
-import { Hint} from "../Hint/Hint";
+import { FieldLabel } from "./FieldLabel";
+import { Hint } from "../Hint/Hint";
 import { ListField, PrintViewListField } from "./ListField";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
@@ -51,42 +51,49 @@ const getFileUrlFrom = (url, type) => {
 
 const FieldBase = (renderUserInteractions = true) => {
 
-  const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
-  const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
-  const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
+  const ListFieldComponent = renderUserInteractions ? ListField : PrintViewListField;
+  const ObjectFieldComponent = renderUserInteractions ? ObjectField : PrintViewObjectField;
+  const ValueFieldComponent = renderUserInteractions ? ValueField : PrintViewValueField;
 
-  const Field = ({name, data, mapping, group, type}) => {
+  const Field = ({ name, data, mapping, group, type }) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
       return null;
     }
-    if(Array.isArray(data) && data.length === 1) {
+    if (Array.isArray(data) && data.length === 1) {
       data = data[0];
     }
+
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const isCitation = mapping.isCitation;
     const isCustomCitation = isCitation && name === "customCitation";
-    const asyncFilesUrl = mapping.isAsync?data:null;
+    const isGroupedLinks = mapping.isGroupedLinks;
+    const groupedLinksSize = isGroupedLinks && Object.keys(data).length;
+    const isSingleGroupedLinks = groupedLinksSize === 1;
+    const isMultipleGroupedLinks = groupedLinksSize && !isSingleGroupedLinks;
+    const singleGroupedLinksLabel = isGroupedLinks && Object.keys(data)[0];
+    const singleGroupedLinks = isGroupedLinks && Object.values(data)[0];
+    const asyncFilesUrl = mapping.isAsync ? data : null;
     const asyncFileFormatsUrl = getFileUrlFrom(asyncFilesUrl, "formats");
     const asyncGroupingTypesUrl = getFileUrlFrom(asyncFilesUrl, "groupingTypes");
     const isFilePreview = mapping.isFilePreview && data.url;
-    const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
+    const style = (mapping.order && !renderUserInteractions) ? { order: mapping.order } : null;
+    const className = "kgs-field" + (name ? " kgs-field__" + name : "") + (["header", "summary"].includes(mapping.layout) ? " kgs-field__layout-" + mapping.layout : "") + (isTable ? " kgs-field__table" : "") + (isHierarchicalFiles ? " kgs-field__hierarchical-files" : "");
 
     const labelProps = {
       show: !!mapping.label && (!mapping.labelHidden || !renderUserInteractions),
       showAsBlock: mapping.tagIcon,
-      value: mapping.label,
-      counter: (mapping.layout === "group" && isList)?data.length:0
+      value: isSingleGroupedLinks ? `${mapping.label} in ${singleGroupedLinksLabel}` : mapping.label,
+      counter: (mapping.layout === "group" && isList) ? data.length : 0
     };
     const hintProps = {
       show: renderUserInteractions && !!mapping.hint,
       value: mapping.hint
     };
     const listProps = {
-      show: isList && !isHierarchicalFiles,
-      items: data,
+      show: (isList && !isHierarchicalFiles) || isSingleGroupedLinks,
+      items: isSingleGroupedLinks ? singleGroupedLinks : data,
       mapping: mapping,
       group: group,
       type: type
@@ -99,11 +106,14 @@ const FieldBase = (renderUserInteractions = true) => {
       type: type
     };
     const objectProps = {
-      show: !isList && !!mapping.children,
-      data: data && data.children,
-      mapping: mapping,
+      show: (!isList && !!mapping.children) || isMultipleGroupedLinks,
+      data: isMultipleGroupedLinks ? data : data?.children,
+      mapping: isMultipleGroupedLinks?{...mapping, visible: true, enforceList: isMultipleGroupedLinks, children: Object.keys(data).reduce((acc, service) => {
+        acc[service] = {label: service, visible: true, enforceShowMore: true};
+        return acc;
+      }, {})}:mapping,
       group: group,
-      type: type
+      type: type,
     };
     const tableProps = {
       show: isTable && !isHierarchicalFiles,
@@ -152,7 +162,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <FilePreview {...filePreviewProps} />
         <Citation {...citationProps} />
         {isHierarchicalFiles && (
-          asyncFilesUrl?
+          asyncFilesUrl ?
             <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />
             :
             <HierarchicalFiles  {...hierarchicalFileProps} />

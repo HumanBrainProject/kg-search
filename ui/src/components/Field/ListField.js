@@ -105,7 +105,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
 
     setItemsState = () => {
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
-      const showMoreEnabled = this.props.mapping.layout === "summary" || !renderUserInteractions;
+      const showMoreEnabled = this.props.mapping.enforceShowMore || this.props.mapping.layout === "summary" || !renderUserInteractions;
       const showMoreToggle = this.hasShowMoreToggle && showMoreEnabled;
       this.setState({
         sizeStop: sizeStop,
