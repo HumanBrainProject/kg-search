@@ -283,18 +283,43 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         if(!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection())){
-            final Set<String> groupedSamples = datasetVersion.getTissueSampleOrCollection().stream().map(DatasetVersionV3.TissueSampleOrTissueSampleCollection::getChildren).filter(children -> !CollectionUtils.isEmpty(children)).flatMap(Collection::stream).map(DatasetVersionV3.TissueSampleOrTissueSampleCollection::getId).collect(Collectors.toSet());
+
+            final Map<String, String> sampleToGroup= new HashMap<>();
+            datasetVersion.getTissueSampleOrCollection().forEach(s -> {
+                if (!s.getChildren().isEmpty()) {
+                    s.getChildren().forEach(c -> {
+                        sampleToGroup.put(c.getId(), s.getId());
+                    });
+                }
+            });
+
+            final Map<String, Set<String>> groupToFilteredSamples = new HashMap<>();
+            datasetVersion.getTissueSampleOrCollection().forEach(s -> {
+                if (sampleToGroup.containsKey(s.getId())) {
+                    String groupId = sampleToGroup.get(s.getId());
+                    if (!groupToFilteredSamples.containsKey(groupId)) {
+                        groupToFilteredSamples.put(groupId, new HashSet<>());
+                    }
+                    groupToFilteredSamples.get(groupId).add(s.getId());
+                }
+            });
+
             final List<DatasetVersion.TissueSampleOrTissueSampleCollection> tissueSamples = datasetVersion.getTissueSampleOrCollection().stream()
-                    //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
-                    .filter(s -> !groupedSamples.contains(s.getId()))
+                    //We don't want individual tissue samples to appear on the root hierarchy level if they also have a representation inside the groups...
+                    .filter(s -> !sampleToGroup.containsKey(s.getId()))
                     .map(s ->
                             {
                                 DatasetVersion.TissueSampleOrTissueSampleCollection tissueSample = new DatasetVersion.TissueSampleOrTissueSampleCollection();
                                 fillIndividualTissueSampleInformation(tissueSample, s, null);
                                 if (!CollectionUtils.isEmpty(s.getChildren())) {
-                                    //This is a subject group with individual information.
+                                    //This is a tissue sample group with individual information.
                                     tissueSample.setCollapsible(true);
-                                    tissueSample.setChildren(s.getChildren().stream().map(child -> fillIndividualTissueSampleInformation(new DatasetVersion.SingleTissueSample(), child, tissueSample)).sorted(Comparator.comparing(DatasetVersion.SingleTissueSample::getLabel)).collect(Collectors.toList()));
+                                    boolean isFiltered = groupToFilteredSamples.containsKey(s.getId());
+                                    if (isFiltered) {
+                                        tissueSample.setSubset(true);
+                                    }
+                                    Set<String> filteredSampleIds =  groupToFilteredSamples.get(s.getId());
+                                    tissueSample.setChildren((s.getChildren().stream().filter(c -> !isFiltered || filteredSampleIds.contains(c.getId()))).map(child -> fillIndividualTissueSampleInformation(new DatasetVersion.SingleTissueSample(), child, tissueSample)).sorted(Comparator.comparing(DatasetVersion.SingleTissueSample::getLabel)).collect(Collectors.toList()));
                                 }
                                 tissueSample.setNumberOfSamples(value(s.getQuantity() != null ? String.valueOf(s.getQuantity()) : null));
                                 return tissueSample;
@@ -593,4 +618,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         return result;
     }
+
+
 }

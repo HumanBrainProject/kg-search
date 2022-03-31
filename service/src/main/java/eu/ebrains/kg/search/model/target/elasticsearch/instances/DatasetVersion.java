@@ -341,6 +341,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     public abstract static class AbstractTissueSampleOrTissueSampleCollection<C> {
         private List<C> children;
         private boolean collapsible;
+        private boolean subset;
 
 
         @FieldInfo

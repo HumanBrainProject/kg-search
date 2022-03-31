@@ -24,6 +24,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Field } from "./Field";
+import { Hint} from "../Hint/Hint";
 import "./TableField.css";
 
 const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
@@ -40,6 +41,9 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
           <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?"chevron-right":"chevron-down"} /></button>
         )}
         <Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
+        {isFirstCell && field.isCollectionASubset && (
+          <Hint className="kg-cell-hint" show={true} value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():"dataset"}`} />
+        )}
       </th>
     );
   }
@@ -57,7 +61,7 @@ const CustomTableRow = ({row, onCollapseToggle}) => {
   );
 };
 
-const normalizeCells = (fields, data, group, level, collectionIndex, isCollectionCollapsed, isCollectionCollapsible) => {
+const normalizeCells = (fields, data, type, group, level, collectionIndex, isCollectionCollapsed, isCollectionCollapsible, isCollectionASubset) => {
   return Object.entries(fields)
     .filter(([, field]) =>
       field && field.visible
@@ -66,11 +70,13 @@ const normalizeCells = (fields, data, group, level, collectionIndex, isCollectio
       name: name,
       data: data && data[name],
       mapping: {...field, labelHidden:true},
+      type: type,
       group: group,
       level: level,
       isCollectionCollapsed: isCollectionCollapsed,
       collectionIndex: collectionIndex,
-      isCollectionCollapsible: isCollectionCollapsible
+      isCollectionCollapsible: isCollectionCollapsible,
+      isCollectionASubset: isCollectionASubset
     }));
 };
 
@@ -78,15 +84,16 @@ const normalizeRows = (list, collapsedRowIndexes) => {
   return list.reduce((acc, item, index) => {
     const hasChildren = item.data && item.data.children;
     const isCollapsible = hasChildren && item.data.collapsible;
+    const isSubset = hasChildren && item.data.subset;
     const isCollectionCollapsed = isCollapsible && !!collapsedRowIndexes[index];
     if (item.isObject) {
-      acc.push(normalizeCells(item.mapping.children, item.data, item.group, 1, index, isCollectionCollapsed, isCollapsible));
+      acc.push(normalizeCells(item.mapping.children, item.data, item.type, item.group, 1, index, isCollectionCollapsed, isCollapsible, isSubset));
       if (hasChildren) {
         item.data.children.forEach(child => {
-          acc.push(normalizeCells(item.mapping.children, child, item.group, 2, index, isCollectionCollapsed, false));
+          acc.push(normalizeCells(item.mapping.children, child, item.type, item.group, 2, index, isCollectionCollapsed, false));
           if(child.children) {
             child.children.forEach(c => {
-              acc.push(normalizeCells(item.mapping.children, c, item.group, 3, index, isCollectionCollapsed, false));
+              acc.push(normalizeCells(item.mapping.children, c, item.type, item.group, 3, index, isCollectionCollapsed, false));
             });
           }
         });

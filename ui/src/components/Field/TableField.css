@@ -144,6 +144,11 @@
     width: 80%;
 }
 
+.kgs-field .kg-cell-hint.kg-cell-hint {
+    margin-right: 0;
+    margin-left: 3px;
+}
+
 @media (min-width: 992px) {
     .kgs-field__table .table {
         display: table;
