@@ -2,11 +2,11 @@ package eu.ebrains.kg.search.controller.mergers;
 
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ProjectMerger extends Merger<Project>{
 
@@ -16,8 +16,9 @@ public class ProjectMerger extends Merger<Project>{
                 parent.setDataset(new ArrayList<>());
             }
             final Set<String> datasetReferences = parent.getDataset().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
-            final Set<String> datasetReferencesWithOld = Stream.concat(datasetReferences.stream(), datasetReferences.stream().map(p -> String.format("Dataset/%s", p))).collect(Collectors.toSet());
-            parent.getDataset().addAll(child.getDataset().stream().filter(d -> !datasetReferencesWithOld.contains(d.getReference())).collect(Collectors.toList()));
+            if (CollectionUtils.isEmpty(datasetReferences)) {
+                parent.getDataset().addAll(child.getDataset());
+            }
         }
         if(child.getPublications()!=null){
             if(parent.getPublications()==null){
