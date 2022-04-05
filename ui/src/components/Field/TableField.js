@@ -24,7 +24,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Field } from "./Field";
-import { Hint} from "../Hint/Hint";
+import { Hint } from "../Hint/Hint";
 import "./TableField.css";
 
 const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
@@ -42,7 +42,7 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
         )}
         <Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
         {isFirstCell && field.isCollectionASubset && (
-          <Hint className="kg-cell-hint" show={true} value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():"dataset"}`} />
+          <Hint className="kg-cell-hint" value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():"dataset"}`} />
         )}
       </th>
     );
@@ -170,7 +170,6 @@ class TableField extends React.Component {
     return convertedItem.map((item, idx) => ({
       isObject: !!item.children,
       key: item.reference?item.reference:item.value?item.value:idx,
-      show: true,
       data: item.children?item.children:item,
       mapping: mapping,
       group: group,
@@ -179,11 +178,6 @@ class TableField extends React.Component {
   };
 
   render() {
-    const {show} = this.props;
-    if(!show) {
-      return null;
-    }
-
     return (
       <TableFieldComponent list={this.getItems()} />
     );

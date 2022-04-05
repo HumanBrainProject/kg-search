@@ -41,8 +41,8 @@ const getUrlLocation = url => {
 
 const ValueFieldBase = (renderUserInteractions = true) => {
 
-  const ValueField = ({ show, data, mapping, group }) => {
-    if (!show || !data || !mapping || !mapping.visible) {
+  const ValueField = ({ data, mapping, group }) => {
+    if (!data || !mapping || !mapping.visible) {
       return null;
     }
 
@@ -152,4 +152,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
 };
 
 export const ValueField = ValueFieldBase(true);
+ValueField.displayName = "ValueField";
 export const PrintViewValueField = ValueFieldBase(false);
+PrintViewValueField.displayName = "PrintViewValueField";

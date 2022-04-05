@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { FieldLabel } from "./FieldLabel";
 import { Hint } from "../Hint/Hint";
 import { ListField, PrintViewListField } from "./ListField";
@@ -29,10 +29,12 @@ import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
 import TableField from "./TableField";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
-import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 import FilePreview from "../FilePreview/FilePreview";
-import Citation from "./Citation/DynamicCitation";
+import MarkDownCitation from "./Citation/MarkDownCitation";
+import DynamicCitation from "./Citation/DynamicCitation";
+
+import "./Field.css";
 
 const filesUrlRegex = /^(.+\/files)$/;
 const liveFilesUrlRegex = /^(.+\/files)\/live$/;
@@ -49,130 +51,226 @@ const getFileUrlFrom = (url, type) => {
   return null;
 };
 
-const FieldBase = (renderUserInteractions = true) => {
+const FieldComponent = ({ name, layout, style, className, label, inlineLabel=true, labelCounter=null, hint, value, Component }) => {
+
+  if (!Component) {
+    return null;
+  }
+
+  const fieldClassName = name?`kgs-field__${name}`:"";
+  const layoutClassName = layout?`kgs-field__layout-${layout}`:"";
+
+  return (
+    <span style={style} className={`kgs-field ${fieldClassName} ${layoutClassName} ${className}`}>
+      <FieldLabel value={label} counter={labelCounter} inline={inlineLabel} />
+      <Hint value={hint} />
+      <Component {...value} />
+    </span>
+  );
+};
+
+const getFieldProps = (name, data, mapping, group, type, renderUserInteractions = true) => {
+
+  if (Array.isArray(data) && data.length === 1) {
+    data = data[0];
+  }
 
   const ListFieldComponent = renderUserInteractions ? ListField : PrintViewListField;
   const ObjectFieldComponent = renderUserInteractions ? ObjectField : PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions ? ValueField : PrintViewValueField;
 
-  const Field = ({ name, data, mapping, group, type }) => {
-    if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
-      return null;
-    }
-    if (Array.isArray(data) && data.length === 1) {
-      data = data[0];
-    }
+  let className = "";
+  let labelCounter = null;
+  let valueProps = null;
+  let valueComponent = null;
 
-    const isList = Array.isArray(data);
-    const isTable = mapping.isTable;
-    const isHierarchicalFiles = mapping.isHierarchicalFiles;
-    const isCitation = mapping.isCitation;
-    const isCustomCitation = isCitation && name === "customCitation";
-    const isGroupedLinks = mapping.isGroupedLinks;
-    const groupedLinksSize = isGroupedLinks && Object.keys(data).length;
+  if (mapping.isGroupedLinks) { // Grouped Links
+
+    const groupedLinksSize = Object.keys(data).length;
     const isSingleGroupedLinks = groupedLinksSize === 1;
-    const isMultipleGroupedLinks = groupedLinksSize && !isSingleGroupedLinks;
-    const singleGroupedLinksLabel = isGroupedLinks && Object.keys(data)[0];
-    const singleGroupedLinks = isGroupedLinks && Object.values(data)[0];
-    const asyncFilesUrl = mapping.isAsync ? data : null;
-    const asyncFileFormatsUrl = getFileUrlFrom(asyncFilesUrl, "formats");
-    const asyncGroupingTypesUrl = getFileUrlFrom(asyncFilesUrl, "groupingTypes");
-    const isFilePreview = mapping.isFilePreview && data.url;
-    const style = (mapping.order && !renderUserInteractions) ? { order: mapping.order } : null;
-    const className = "kgs-field" + (name ? " kgs-field__" + name : "") + (["header", "summary"].includes(mapping.layout) ? " kgs-field__layout-" + mapping.layout : "") + (isTable ? " kgs-field__table" : "") + (isHierarchicalFiles ? " kgs-field__hierarchical-files" : "");
 
-    const labelProps = {
-      show: !!mapping.label && (!mapping.labelHidden || !renderUserInteractions),
-      showAsBlock: mapping.tagIcon,
-      value: isSingleGroupedLinks ? `${mapping.label} in ${singleGroupedLinksLabel}` : mapping.label,
-      counter: (mapping.layout === "group" && isList) ? data.length : 0
+    if (isSingleGroupedLinks) { // Single Grouped Links
+
+      const singleGroupedLinksLabel = Object.keys(data)[0];
+      const singleGroupedLinks = Object.values(data)[0];
+
+      if (mapping.label) {
+        mapping.label = `${mapping.label} in ${singleGroupedLinksLabel}`;
+      } else {
+        mapping.label = singleGroupedLinksLabel;
+      }
+
+      valueProps = {
+        items: singleGroupedLinks,
+        mapping: mapping,
+        group: group,
+        type: type
+      };
+      valueComponent =  ListFieldComponent;
+
+    } else { // Multiple Grouped Links
+
+      const multipleGroupedLinksMapping = {
+        ...mapping,
+        visible: true,
+        enforceList: true,
+        children: Object.keys(data).reduce((acc, service) => {
+          acc[service] = {label: service, visible: true, enforceShowMore: true};
+          return acc;
+        }, {})
+      };
+
+      valueProps = {
+        data: data,
+        mapping: multipleGroupedLinksMapping,
+        group: group,
+        type: type,
+      };
+      valueComponent =  ObjectFieldComponent;
+
+    }
+
+  } else if (mapping.isFilePreview && data.url) { // File Preview
+
+    valueProps = {
+      url: data.url
     };
-    const hintProps = {
-      show: renderUserInteractions && !!mapping.hint,
-      value: mapping.hint
-    };
-    const listProps = {
-      show: (isList && !isHierarchicalFiles) || isSingleGroupedLinks,
-      items: isSingleGroupedLinks ? singleGroupedLinks : data,
-      mapping: mapping,
-      group: group,
-      type: type
-    };
-    const valueProps = {
-      show: !isList && !isHierarchicalFiles && !isFilePreview && !isCitation,
-      data: data,
-      mapping: mapping,
-      group: group,
-      type: type
-    };
-    const objectProps = {
-      show: (!isList && !!mapping.children) || isMultipleGroupedLinks,
-      data: isMultipleGroupedLinks ? data : data?.children,
-      mapping: isMultipleGroupedLinks?{...mapping, visible: true, enforceList: isMultipleGroupedLinks, children: Object.keys(data).reduce((acc, service) => {
-        acc[service] = {label: service, visible: true, enforceShowMore: true};
-        return acc;
-      }, {})}:mapping,
-      group: group,
-      type: type,
-    };
-    const tableProps = {
-      show: isTable && !isHierarchicalFiles,
+    valueComponent = FilePreview;
+
+  } else if (mapping.isCitation) { // Citation
+
+    if (name === "customCitation") { // MarkDown Citation
+
+      valueProps = {
+        text: data.value,
+      };
+      valueComponent = MarkDownCitation;
+
+    } else { // Dynamic Citation
+
+      valueProps = {
+        doi: data.value
+      };
+      valueComponent = DynamicCitation;
+
+    }
+
+  } else if (mapping.isHierarchicalFiles) { // Hierarchical Files
+
+    className = "kgs-field__hierarchical-files";
+
+    const asyncFilesUrl = mapping.isAsync ? data : null;
+
+    if (asyncFilesUrl) { // Async Hierarchical Files
+
+      const asyncFileFormatsUrl = getFileUrlFrom(asyncFilesUrl, "formats");
+      const asyncGroupingTypesUrl = getFileUrlFrom(asyncFilesUrl, "groupingTypes");
+
+      valueProps = {
+        mapping: mapping,
+        group: group,
+        type: type,
+        nameFieldPath: "title.value",
+        urlFieldPath: "iri.url",
+        filesUrl: asyncFilesUrl,
+        groupingTypesUrl: asyncGroupingTypesUrl,
+        fileFormatsUrl: asyncFileFormatsUrl
+      };
+      valueComponent = AsyncHierarchicalFiles;
+
+    } else { // Old Hierarchical Files
+
+      valueProps = {
+        data: data,
+        mapping: mapping,
+        group: group,
+        type: type,
+        nameFieldPath: "value",
+        urlFieldPath: "url"
+      };
+      valueComponent = HierarchicalFiles;
+    }
+  } else if (mapping.isTable) { // Table
+
+    className = "kgs-field__table";
+
+    valueProps = {
       items: data,
       mapping: mapping,
       group: group,
       type: type
     };
-    const citationProps = {
-      show: isCitation,
-      data: data,
-      isCustomCitation: isCustomCitation
+    valueComponent = TableField;
+
+  } else if (Array.isArray(data)) { // List
+
+    if (mapping.layout === "group") {
+      labelCounter = data.length;
+    }
+
+    valueProps = {
+      items: data,
+      mapping: mapping,
+      group: group,
+      type: type
     };
-    const hierarchicalFileProps = {
+    valueComponent = ListFieldComponent;
+
+  } else if (mapping.children) { // Object
+
+    valueProps = {
+      items: data,
+      mapping: mapping,
+      group: group,
+      type: type
+    };
+    valueComponent = ObjectFieldComponent;
+
+  } else { // Value
+
+    valueProps = {
       data: data,
       mapping: mapping,
       group: group,
-      type: type,
-      nameFieldPath: "value",
-      urlFieldPath: "url"
+      type: type
     };
-    const asyncHierarchicalFileProps = {
-      mapping: mapping,
-      group: group,
-      type: type,
-      nameFieldPath: "title.value",
-      urlFieldPath: "iri.url",
-      filesUrl: asyncFilesUrl,
-      groupingTypesUrl: asyncGroupingTypesUrl,
-      fileFormatsUrl: asyncFileFormatsUrl
-    };
-    const filePreviewProps = {
-      show: isFilePreview,
-      mapping: mapping,
-      data: data
-    };
+    valueComponent = ValueFieldComponent;
+
+  }
+
+  return {
+    name: name,
+    layout: ["header", "summary"].includes(mapping.layout)?mapping.layout:null,
+    style: (mapping.order && !renderUserInteractions) ? { order: mapping.order } : null,
+    className: className,
+    label: (mapping.label && (!mapping.labelHidden || !renderUserInteractions))?mapping.label:null,
+    inlineLabel: !mapping.tagIcon,
+    labelCounter: labelCounter,
+    hint: (renderUserInteractions && mapping.hint)?mapping.hint:null,
+    value: valueProps,
+    Component: valueComponent
+  };
+};
+
+export const FieldBase = (renderUserInteractions = true) => {
+
+  const Component = ({ name, data, mapping, group, type }) => {
+
+    if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
+      return null;
+    }
+
+    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, group, type, renderUserInteractions), [name, data, mapping, group, type, renderUserInteractions]);
 
     return (
-      <span style={style} className={className}>
-        <FieldLabel {...labelProps} />
-        <Hint {...hintProps} />
-        <ValueFieldComponent {...valueProps} />
-        <ListFieldComponent {...listProps} />
-        <ObjectFieldComponent {...objectProps} />
-        <TableField {...tableProps} />
-        <FilePreview {...filePreviewProps} />
-        <Citation {...citationProps} />
-        {isHierarchicalFiles && (
-          asyncFilesUrl ?
-            <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />
-            :
-            <HierarchicalFiles  {...hierarchicalFileProps} />
-        )}
-      </span>
+      <FieldComponent {...fieldProps} />
     );
   };
 
-  return Field;
+  return Component;
 };
 
 export const Field = FieldBase(true);
+Field.displayName = "Field";
 export const PrintViewField = FieldBase(false);
+PrintViewField.displayName = "PrintViewField";

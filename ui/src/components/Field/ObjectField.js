@@ -54,8 +54,8 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ObjectField = ({ show, data, mapping, group, type }) => {
-    if (!show || !mapping || !mapping.visible) {
+  const ObjectField = ({data, mapping, group, type }) => {
+    if (!mapping || !mapping.visible) {
       return null;
     }
 
@@ -93,4 +93,6 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
 };
 
 export const ObjectField = ObjectFieldBase(true);
+ObjectField.displayName = "ObjectField";
 export const PrintViewObjectField = ObjectFieldBase(false);
+PrintViewObjectField.displayName = "PrintViewObjectField";

@@ -22,14 +22,8 @@
  */
 import React from "react";
 
-const FilePreview = ({ show, data }) => {
-  if(!show) {
-    return null;
-  }
-
-  return (
-    <iframe src={data.url} height="850" style={{width:"100%"}}></iframe>
-  );
-};
+const FilePreview = ({ url }) => (
+  <iframe src={url} height="850" style={{width:"100%"}}></iframe>
+);
 
 export default FilePreview;

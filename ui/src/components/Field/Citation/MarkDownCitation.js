@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -22,30 +23,17 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
-import uniqueId from "lodash/uniqueId";
-import ReactTooltip from "react-tooltip";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
+import Citation from "./Citation";
 
-export const Hint = ({className, value}) => {
-  if (!value && value !== 0) {
-    return null;
-  }
-  const classNames = ["kgs-hint", className].join(" ");
-  const hint_id = encodeURI(uniqueId("kgs-hint_content-"));
-  return (
-    <span className={classNames}>
-      <FontAwesomeIcon icon="info-circle" data-tip data-for={hint_id} aria-hidden="true" />
-      <ReactTooltip id={hint_id} place="right" type="dark" effect="solid">
-        <span>{value}</span>
-      </ReactTooltip>
-    </span>
+const converter = new showdown.Converter({extensions: [xssFilter]});
+
+const MarkDownCitation = ({ text }) => {
+  const html = converter.makeHtml(text);
+  return(
+    <Citation citation={html} />
   );
 };
 
-Hint.propTypes = {
-  className: PropTypes.string,
-  value: PropTypes.string
-};
-
-export default Hint;
+export default MarkDownCitation;

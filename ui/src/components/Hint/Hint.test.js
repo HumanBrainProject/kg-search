@@ -25,9 +25,23 @@ import React from "react";
 import renderer from "react-test-renderer";
 import Hint from "./Hint";
 
-test("Hint test show false\"", () => {
+test("Hint test empty value", () => {
   const component = renderer.create(
-    <Hint className="test" show={false} value="some text" />
+    <Hint className="test" value="" />
   );
-  expect(component.toJSON()).toBe(null);
+  expect(component.toJSON()).toBeNull();
+});
+
+test("Hint test no value", () => {
+  const component = renderer.create(
+    <Hint className="test" />
+  );
+  expect(component.toJSON()).toBeNull();
+});
+
+test("Hint test 0 value", () => {
+  const component = renderer.create(
+    <Hint className="test" value={0} />
+  );
+  expect(component.toJSON() !== null).toBeTruthy();
 });

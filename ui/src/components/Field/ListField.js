@@ -77,9 +77,9 @@ const ListFieldBase = (renderUserInteractions = true) => {
             list.map(({isObject, key, data, mapping, group}, idx) => (
               <ListItem key={key} separator={separator} isFirst={!idx}>
                 {isObject?
-                  <ObjectFieldComponent show={true} data={data} mapping={mapping} group={group} />
+                  <ObjectFieldComponent data={data} mapping={mapping} group={group} />
                   :
-                  <ValueFieldComponent show={true} data={data} mapping={mapping} group={group} />
+                  <ValueFieldComponent data={data} mapping={mapping} group={group} />
                 }
               </ListItem>
             ))
@@ -134,7 +134,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
         .map((item, idx) => ({
           isObject: !!item.children,
           key: item.reference?item.reference:item.value?item.value:idx,
-          show: true,
           data: item.children?item.children:item,
           mapping: mapping,
           group: group,
@@ -177,11 +176,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     };
 
     render() {
-      const {show, mapping} = this.props;
-      if (!show) {
-        return null;
-      }
-
+      const { mapping } = this.props;
       return (
         <ListFieldComponent list={this.state.items} sort={mapping && mapping.sort} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
       );
@@ -191,4 +186,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
 };
 
 export const ListField = ListFieldBase(true);
+ListField.displayName = "ListField";
 export const PrintViewListField = ListFieldBase(false);
+PrintViewListField.displayName = "PrintViewListField";

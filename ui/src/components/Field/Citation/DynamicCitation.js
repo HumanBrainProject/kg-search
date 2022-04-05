@@ -24,31 +24,18 @@
 
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
 import sanitizeHtml from "sanitize-html";
 import API from "../../../services/API";
 import Citation from "./Citation";
+
 import "./DynamicCitation.css";
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const DynamicCitation = ({ doi }) => {
 
-const DynamicCitation = ({ show, data, isCustomCitation }) => {
-  if (!show) {
-    return null;
-  }
-  if(isCustomCitation && (data && data.value)) {
-    const html = converter.makeHtml(data.value);
-    return(
-      <Citation citation={html} />
-    );
-  }
   const [citation, setCitation] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [bibtex, setBibtex] = useState();
-
-  const doi = data && data.value;
 
   useEffect(() => getCitation(), []);
 
@@ -78,7 +65,6 @@ const DynamicCitation = ({ show, data, isCustomCitation }) => {
       setBibtex(url);
     }
   };
-
 
   if (error) {
     return (<div>
