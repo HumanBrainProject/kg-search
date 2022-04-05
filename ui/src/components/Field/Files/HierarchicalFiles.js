@@ -76,7 +76,7 @@ class HierarchicalFiles extends React.Component {
 
   componentDidMount() {
     const {data, groupingType, nameFieldPath, urlFieldPath} = this.props;
-    const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, urlFieldPath);
+    const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
     this.setState({tree: tree, node: tree, initialTree: tree });
   }
 

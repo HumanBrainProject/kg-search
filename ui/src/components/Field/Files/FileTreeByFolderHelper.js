@@ -23,7 +23,7 @@
 
 import { JSONPath } from "./FileTreeByGroupingTypeHelper";
 
-const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSeparator, urlFieldPath) => {
+const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSeparator, nameFieldPath, urlFieldPath) => {
   const fileUrl = JSONPath(file, urlFieldPath);
   if (fileUrl && typeof fileUrl === "string") {
     const path = fileUrl.split("/").slice(nbOfPathToSkip);
@@ -31,7 +31,8 @@ const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSepara
     path.forEach((name, index) => {
       if(index === (path.length - 1)) { // file
         node.paths[name] = {
-          name: name,
+          //name: name.replace(/\?.+$/, ""),
+          name: JSONPath(file, nameFieldPath),
           url: fileUrl,
           type: "file",
           thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
@@ -89,7 +90,7 @@ const getCommonPath = (files, urlFieldPath) => {
   return firstFilePath.splice(0, index);
 };
 
-export const getTreeByFolder = (files, urlFieldPath) => {
+export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
@@ -108,7 +109,7 @@ export const getTreeByFolder = (files, urlFieldPath) => {
   };
   const nbOfPathToSkip = commonPath.length;
   const rootUrlSeparator = nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
-  files.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator, urlFieldPath));
+  files.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator, nameFieldPath, urlFieldPath));
   setChildren(tree);
   return tree;
 };
