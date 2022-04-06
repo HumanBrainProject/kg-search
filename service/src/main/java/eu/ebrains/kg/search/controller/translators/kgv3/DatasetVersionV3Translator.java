@@ -424,6 +424,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 }
                 List<TargetExternalReference> targetExternalReferences = viewData.get(s.getService());
                 targetExternalReferences.add(new TargetExternalReference(s.getUrl(), s.getLabel()));
+                targetExternalReferences.sort(Comparator.comparing(TargetExternalReference::getValue));
             });
             d.setViewData(viewData);
         }
@@ -453,17 +454,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
 
-        List<TargetExternalReference> serviceLinks = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
-        }
-        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
-            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
-        }
-        if(!CollectionUtils.isEmpty(serviceLinks)){
-            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
-            d.setViewer(serviceLinks);
-        }
         d.setContentTypes(value(datasetVersion.getContentTypes()));
 
         final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject()!=null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
