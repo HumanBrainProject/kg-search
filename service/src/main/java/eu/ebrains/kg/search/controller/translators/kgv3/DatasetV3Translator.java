@@ -37,9 +37,6 @@ import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,21 +99,24 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
                                 Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                         )).collect(Collectors.toList()));
             }
+            String doi = dataset.getDoi();
+            String citation = dataset.getHowToCite();
+            if (StringUtils.isNotBlank(citation)) {
+                d.setCustomCitation(value(citation));
+            }
+            if (StringUtils.isNotBlank(doi)) {
+                final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
+                d.setDoi(value(doiWithoutPrefix));
+                if(StringUtils.isBlank(citation)) {
+                    d.setCitation(value(doiWithoutPrefix));
+                }
+            }
             if (!CollectionUtils.isEmpty(dataset.getCustodians())) {
                 d.setCustodians(dataset.getCustodians().stream()
                         .map(a -> new TargetInternalReference(
                                 IdUtils.getUUID(a.getId()),
                                 Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                         )).collect(Collectors.toList()));
-            }
-            String citation = dataset.getHowToCite();
-            String doi = dataset.getDoi();
-            if (StringUtils.isNotBlank(doi)) {
-                if (StringUtils.isNotBlank(citation)) {
-                    d.setDoi(doi);
-                    String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-                    d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
-                }
             }
             return d;
         }

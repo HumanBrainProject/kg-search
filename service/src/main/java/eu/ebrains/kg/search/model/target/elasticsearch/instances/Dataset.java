@@ -62,8 +62,11 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true)
+    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
 
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI representing all the underlying datasets you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
@@ -151,6 +154,18 @@ public class Dataset implements TargetInstance {
 
     public void setCitation(Value<String> citation) {
         this.citation = citation;
+    }
+
+    public Value<String> getCustomCitation() {
+        return customCitation;
+    }
+
+    public void setCustomCitation(String customCitation) {
+        setCustomCitation(StringUtils.isBlank(customCitation) ? null : new Value<>(customCitation));
+    }
+
+    public void setCustomCitation(Value<String> customCitation) {
+        this.customCitation = customCitation;
     }
 
     public Value<String> getTitle() {
