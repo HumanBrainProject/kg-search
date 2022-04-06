@@ -27,6 +27,8 @@ import uniqueId from "lodash/uniqueId";
 import ReactTooltip from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import "./Hint.css";
+
 export const Hint = ({className, value}) => {
   if (!value && value !== 0) {
     return null;

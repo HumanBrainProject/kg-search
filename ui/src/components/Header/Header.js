@@ -23,8 +23,9 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import "./Header.css";
 
 export const Header = ({ location, SignInComponent, onClearInstances }) => {
   const backToSearch = location => {
