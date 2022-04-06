@@ -108,9 +108,11 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
                 final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
                 d.setDoi(value(doiWithoutPrefix));
                 if(StringUtils.isBlank(citation)) {
+                    d.setCitationHint(value("Using this citation allows you to reference all versions of this dataset with one citation.\nUsage of version specific data and metadata should be acknowledged by citing the individual dataset version."));
                     d.setCitation(value(doiWithoutPrefix));
                 }
             }
+
             if (!CollectionUtils.isEmpty(dataset.getCustodians())) {
                 d.setCustodians(dataset.getCustodians().stream()
                         .map(a -> new TargetInternalReference(
