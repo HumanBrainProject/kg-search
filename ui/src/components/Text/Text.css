@@ -61,3 +61,7 @@
 .field-markdown img {
     max-width: 100%;
 }
+
+.field-markdown code {
+    white-space: break-spaces;
+}
