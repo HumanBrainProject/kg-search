@@ -34,7 +34,7 @@ import theme from "./Theme";
 import Header from "./Header";
 
 import { getTreeByFolder } from "./FileTreeByFolderHelper";
-import { getTreeByGroupingType } from "./FileTreeByGroupingTypeHelper";
+import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper";
 import * as filters from "./helpers";
 import { debounce } from "lodash";
 
@@ -76,11 +76,23 @@ class HierarchicalFiles extends React.Component {
 
   componentDidMount() {
     const {data, groupingType, nameFieldPath, urlFieldPath} = this.props;
-    const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
-    this.setState({tree: tree, node: tree, initialTree: tree });
+    if (data && data.length === 1 && !groupingType) {
+      const node = {
+        data: data[0],
+        name: JSONPath(data[0], nameFieldPath),
+        url: JSONPath(data[0], urlFieldPath),
+        type: "file"
+      };
+      this.setState({tree: {}, node: node, initialTree: {} });
+    } else {
+      const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
+      this.setState({tree: tree, node: tree, initialTree: tree });
+    }
   }
 
   onToggle = (node, toggled) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     node.active = true;
     if (node.children) {
       node.toggled = toggled;
@@ -105,6 +117,16 @@ class HierarchicalFiles extends React.Component {
 
   render() {
     const filesLength = this.props.data && this.props.data.length;
+    const hasFilter = this.props.hasDataFilter || this.state.filter !== "";
+
+    if (filesLength === 1 && !hasFilter) {
+      return (
+        <div className="kgs-single-file">
+          <Node node={this.state.node} isRootNode={false} group={this.props.group} type={this.props.type} hasFilter={false} />
+        </div>
+      );
+    }
+
     return (
       <>
         {filesLength < 5000 && (
@@ -125,7 +147,7 @@ class HierarchicalFiles extends React.Component {
             style={{...theme}}
           />
           {this.state.node.active && (
-            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} type={this.props.type} hasFilter={this.props.hasDataFilter || this.state.filter !== ""} />
+            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} type={this.props.type} hasFilter={hasFilter} />
           )}
         </div>
       </>

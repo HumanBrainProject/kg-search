@@ -85,10 +85,16 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
     lineHeight: "1rem"
   };
 
+  const showLabel = totalFiles !== 1 || files.length !== 1 || !!groupingType || hasDataFilter;
+
   return (
     <>
       <div>
-        <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />&nbsp;
+        {showLabel && (
+          <>
+            <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />&nbsp;
+          </>
+        )}
         {isFilesLoading?
           <div className="spinner-border spinner-border-sm" role="status">
             <span className="sr-only">Retrieving files...</span>

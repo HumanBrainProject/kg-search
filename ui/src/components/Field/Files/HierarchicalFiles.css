@@ -126,4 +126,24 @@
     line-height: 1.3em;
   } 
   
-  
+  .kgs-single-file {
+    border: 1px solid var(--default-border-color);
+    border-radius: 5px;
+    padding: 10px 20px 0 20px;
+  }
+
+  .kgs-single-file .kgs-hierarchical-files__details > .kgs-hierarchical-files__info {
+      margin-bottom: 10px;
+  }
+
+@media (min-width: 992px) {
+    .kgs-single-file {
+        margin: 0 20% 0 0;
+      }
+}
+
+@media (min-width: 1200px) {
+    .kgs-single-file {
+        margin: 0 40% 0 0;
+      }
+}
