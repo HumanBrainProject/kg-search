@@ -65,6 +65,12 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Dataset");
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
 
@@ -278,7 +284,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
-
 
     @Getter
     @Setter

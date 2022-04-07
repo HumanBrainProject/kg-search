@@ -49,6 +49,10 @@ public class FileBundle implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
     @FieldInfo(label = "Name", layout = "header")
     private Value<String> title;
     @FieldInfo(labelHidden = true)
@@ -58,4 +62,5 @@ public class FileBundle implements TargetInstance {
     public boolean isSearchableInstance() {
         return false;
     }
+
 }

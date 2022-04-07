@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.BehavioralProtocolV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.BehavioralProtocol;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -71,7 +72,11 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
 
     public BehavioralProtocol translate(BehavioralProtocolV3 behavioralProtocolV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
        BehavioralProtocol b = new BehavioralProtocol();
-       b.setId(IdUtils.getUUID(behavioralProtocolV3.getId()));
+
+        b.setCategory(new Value<>("Behaviour Protocol"));
+        b.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
+        b.setId(IdUtils.getUUID(behavioralProtocolV3.getId()));
        b.setAllIdentifiers(behavioralProtocolV3.getIdentifier());
        b.setIdentifier(IdUtils.getUUID(behavioralProtocolV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
        b.setOfficialAbbreviation(value(behavioralProtocolV3.getInternalIdentifier()));

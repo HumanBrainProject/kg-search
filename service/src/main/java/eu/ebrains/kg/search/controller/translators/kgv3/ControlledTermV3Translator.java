@@ -135,6 +135,10 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
 
     public ControlledTerm translate(ControlledTermV3 controlledTerm, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ControlledTerm t = new ControlledTerm();
+
+        t.setCategory(new Value<>("Controlled Term"));
+        t.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         t.setId(IdUtils.getUUID(controlledTerm.getId()));
 
         t.setAllIdentifiers(controlledTerm.getIdentifier());

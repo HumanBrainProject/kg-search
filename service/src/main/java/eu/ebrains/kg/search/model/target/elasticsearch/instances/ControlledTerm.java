@@ -51,6 +51,12 @@ public class ControlledTerm implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @JsonProperty("first_release")
     @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
@@ -85,4 +91,5 @@ public class ControlledTerm implements TargetInstance {
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() { return false; }
+
 }

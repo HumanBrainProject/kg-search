@@ -21,34 +21,25 @@
  *
  */
 
-package eu.ebrains.kg.search.model.target.elasticsearch;
+import React from "react";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
 
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import "./Disclaimer.css";
 
-import java.util.List;
+const converter = new showdown.Converter({extensions: [xssFilter]});
 
-public interface TargetInstance {
-    String getId();
-
-    /**
-     *
-     * @return all identifiers to identify duplicates across the multiple KG versions.
-     */
-    List<String> getAllIdentifiers();
-
-
-    List<String> getIdentifier();
-
-    Value<String> getCategory();
-    Value<String> getDisclaimer();
-
-    /**
-     * @return true if this instance shall be available for search.
-     * This allows to only flag a subset of a type for search-indexing
-     * (e.g. only the latest version of a {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion})
-     *
-     * Please note, that if any instance of a type is a searchable instance,
-     * you also need to specify this in its {@link MetaInfo}
-     */
-    boolean isSearchableInstance();
-}
+export const Disclaimer = ({ content }) => {
+  if (!content) {
+    return null;
+  }
+  let html = converter.makeHtml(content);
+  const m = html.match(/^<p>(.+)<\/p>$/);
+  if (m) {
+    html = m[1];
+  }
+  html = "Disclaimer: " + html;
+  return (
+    <strong className="kgs-instance-disclaimer" dangerouslySetInnerHTML={{ __html: html }} />
+  );
+};

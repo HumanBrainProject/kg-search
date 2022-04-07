@@ -57,6 +57,12 @@ public class ParcellationEntityVersion implements TargetInstance, VersionedInsta
     @FieldInfo(visible = false)
     private List<String> identifier;
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
     private Value<String> title;
 
@@ -76,6 +82,5 @@ public class ParcellationEntityVersion implements TargetInstance, VersionedInsta
     public boolean isSearchableInstance() {
         return false;
     }
-
 
 }

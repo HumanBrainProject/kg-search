@@ -50,6 +50,12 @@ public class Dataset implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @FieldInfo(layout = "header")
     private Value<String> editorId;
 
@@ -130,6 +136,22 @@ public class Dataset implements TargetInstance {
     @Override
     public List<String> getIdentifier() {
         return identifier;
+    }
+
+    public Value<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(Value<String> category) {
+        this.category = category;
+    }
+
+    public Value<String> getDisclaimer() {
+        return disclaimer;
+    }
+
+    public void setDisclaimer(Value<String> disclaimer) {
+        this.disclaimer = disclaimer;
     }
 
     public Value<String> getEditorId() {
@@ -240,4 +262,5 @@ public class Dataset implements TargetInstance {
     public void setCitationHint(Value<String> citationHint) {
         this.citationHint = citationHint;
     }
+
 }

@@ -121,17 +121,8 @@ button.kgs-instance-link {
 
 .kgs-instance .kgs-instance-disclaimer {
     grid-area: footer;
-    display: inline-block; 
-    font-size: small;
-    color: var(--color-8);
-    text-align: center;
-    padding: 10px 20px;
 }
-
-.kgs-instance .kgs-instance-disclaimer a {
-    color: var(--link-color-1)
-}
-
+ß
 /**********************************************************************************************************************/
 
 .kgs-instance .kgs-notice .kgs-notice-agree-button {

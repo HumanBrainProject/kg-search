@@ -77,6 +77,10 @@ public class ParcellationEntityVersionV3Translator extends TranslatorV3<Parcella
 
     public ParcellationEntityVersion translate(ParcellationEntityVersionV3 parcellationEntityVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ParcellationEntityVersion pev = new ParcellationEntityVersion();
+
+        pev.setCategory(new Value<>("Parcellation Entity"));
+        pev.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         final Versions parcellationEntity = parcellationEntityVersion.getParcellationEntity();
         List<Version> versions = parcellationEntity == null ? null : parcellationEntity.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;

@@ -75,6 +75,10 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
 
     public MetaDataModel translate(MetaDataModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         MetaDataModel m = new MetaDataModel();
+
+        m.setCategory(new Value<>("Meta Data Model Versions"));
+        m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         List<eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(model.getVersions());
         List<Children<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version>> metaDataModelVersions = sortedVersions.stream().map(v -> {
             eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version version = new eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version();

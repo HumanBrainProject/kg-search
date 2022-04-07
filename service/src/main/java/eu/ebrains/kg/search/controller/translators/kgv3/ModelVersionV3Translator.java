@@ -77,6 +77,10 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
 
     public ModelVersion translate(ModelVersionV3 modelVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ModelVersion m = new ModelVersion();
+
+        m.setCategory(new Value<>("Model"));
+        m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         ModelVersionV3.ModelVersions model = modelVersion.getModel();
         Accessibility accessibility = Accessibility.fromPayload(modelVersion);
         m.setId(IdUtils.getUUID(modelVersion.getId()));

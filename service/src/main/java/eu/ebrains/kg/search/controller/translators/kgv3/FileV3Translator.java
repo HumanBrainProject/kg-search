@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -78,6 +79,10 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         }
 
         File f = new File();
+
+        f.setCategory(new Value<>("File"));
+        f.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         f.setId(IdUtils.getUUID(file.getId()));
         f.setAllIdentifiers(file.getIdentifier());
         f.setIdentifier(IdUtils.getUUID(file.getIdentifier()).stream().distinct().collect(Collectors.toList()));

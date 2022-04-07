@@ -76,6 +76,10 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
 
     public DatasetVersion translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
+
+        d.setCategory(new Value<>("Dataset"));
+        d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         d.setId(datasetV1.getIdentifier());
         d.setAllIdentifiers(createList(datasetV1.getIdentifier()));
         List<String> identifiers = createList(datasetV1.getIdentifier(), String.format("Dataset/%s", datasetV1.getIdentifier()));

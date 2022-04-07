@@ -32,6 +32,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -51,6 +52,12 @@ public class MetaDataModel implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
 
     @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;

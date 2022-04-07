@@ -35,6 +35,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -56,6 +57,12 @@ public class BehavioralProtocol implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Behavioral protocol");
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @FieldInfo(label = "Name", sort=true, layout = "header", labelHidden = true)
     private Value<String> title;
 
@@ -74,4 +81,5 @@ public class BehavioralProtocol implements TargetInstance {
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() { return false; }
+
 }

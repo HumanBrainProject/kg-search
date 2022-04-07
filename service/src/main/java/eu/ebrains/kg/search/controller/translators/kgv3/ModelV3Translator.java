@@ -32,6 +32,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -74,6 +75,10 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
 
     public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Model m = new Model();
+
+        m.setCategory(new Value<>("Model Versions"));
+        m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         m.setId(IdUtils.getUUID(model.getId()));
 
         m.setAllIdentifiers(model.getIdentifier());

@@ -47,8 +47,6 @@ import java.util.stream.Collectors;
 @MetaInfo(name = "Model", order = 5, searchable=true)
 public class ModelVersion implements TargetInstance, VersionedInstance {
 
-
-
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -61,6 +59,12 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
@@ -186,9 +190,5 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
 
     @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
     private List<TargetInternalReference> producedDataset;
-
-
-
-
 
 }

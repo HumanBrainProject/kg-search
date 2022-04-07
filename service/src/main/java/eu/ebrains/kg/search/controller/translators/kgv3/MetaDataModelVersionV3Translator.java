@@ -80,6 +80,10 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
 
     public MetaDataModelVersion translate(MetadataModelVersionV3 metadataModelVersionV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         MetaDataModelVersion m = new MetaDataModelVersion();
+
+        m.setCategory(new Value<>("Meta Data Model"));
+        m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         MetadataModelVersionV3.MetaDataModelVersions metaDataModel = metadataModelVersionV3.getMetaDataModel();
         Accessibility accessibility = Accessibility.fromPayload(metadataModelVersionV3);
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));

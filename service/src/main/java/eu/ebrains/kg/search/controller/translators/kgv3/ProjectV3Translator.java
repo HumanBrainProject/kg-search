@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ProjectV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -70,6 +71,10 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
 
     public Project translate(ProjectV3 project, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Project p = new Project();
+
+        p.setCategory(new Value<>("Project"));
+        p.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         String uuid = IdUtils.getUUID(project.getId());
         p.setId(uuid);
         p.setAllIdentifiers(project.getIdentifier());

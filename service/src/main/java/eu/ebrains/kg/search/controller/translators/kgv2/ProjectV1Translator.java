@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +67,9 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
 
     public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Project p = new Project();
+
+        p.setCategory(new Value<>("Project"));
+        p.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         p.setAllIdentifiers(createList(projectSource.getIdentifier()));
         p.setId(projectSource.getIdentifier());

@@ -54,6 +54,12 @@ public class Subject implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
@@ -123,6 +129,22 @@ public class Subject implements TargetInstance {
 
     public void setIdentifier(List<String> identifier) {
         this.identifier = identifier;
+    }
+
+    public Value<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(Value<String> category) {
+        this.category = category;
+    }
+
+    public Value<String> getDisclaimer() {
+        return disclaimer;
+    }
+
+    public void setDisclaimer(Value<String> disclaimer) {
+        this.disclaimer = disclaimer;
     }
 
     public void setEditorId(String editorId) {

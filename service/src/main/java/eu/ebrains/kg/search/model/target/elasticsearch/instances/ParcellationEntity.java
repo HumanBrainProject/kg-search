@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -50,6 +51,12 @@ public class ParcellationEntity implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false)
     private List<String> identifier;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
 
     @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
     private Value<String> title;
@@ -80,7 +87,6 @@ public class ParcellationEntity implements TargetInstance {
     public boolean isSearchableInstance() {
         return false;
     }
-
 
     @Getter
     @Setter

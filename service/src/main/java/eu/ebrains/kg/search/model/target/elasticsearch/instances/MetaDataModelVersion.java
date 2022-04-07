@@ -35,6 +35,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -55,6 +56,12 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)

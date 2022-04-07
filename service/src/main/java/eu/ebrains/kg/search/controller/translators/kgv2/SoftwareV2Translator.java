@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +68,9 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
 
     public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         SoftwareVersion s = new SoftwareVersion();
+
+        s.setCategory(new Value<>("Software"));
+        s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         s.setAllIdentifiers(createList(softwareV2.getIdentifier()));
         s.setId(softwareV2.getIdentifier());

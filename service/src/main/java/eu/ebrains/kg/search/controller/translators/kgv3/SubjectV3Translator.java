@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SubjectV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -69,6 +70,10 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
 
     public Subject translate(SubjectV3 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Subject s = new Subject();
+
+        s.setCategory(new Value<>("Subject"));
+        s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         if(subject.getDatasets() == null || subject.getDatasets().size()<2){
             //If a subject is not part of multiple datasets, we don't expose it as its own card because there is not
             //enough additional value.

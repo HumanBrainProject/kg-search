@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
@@ -71,6 +72,10 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
 
     public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ModelVersion m = new ModelVersion();
+
+        m.setCategory(new Value<>("Model"));
+        m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         m.setId(modelV2.getIdentifier());
         List<String> identifiers = createList(modelV2.getIdentifier(), String.format("Model/%s", modelV2.getIdentifier()));
         m.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));

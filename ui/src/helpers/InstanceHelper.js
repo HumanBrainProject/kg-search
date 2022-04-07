@@ -27,8 +27,8 @@ export const getTags = header => {
     if (header.groupLabel) {
       tags.push(header.groupLabel);
     }
-    if (header.type && header.type.data && header.type.data.value) {
-      tags.push(header.type.data.value);
+    if (header.category) {
+      tags.push(header.category);
     }
   }
   return tags;
@@ -98,7 +98,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       && mapping.visible
       && (mapping.showIfEmpty || (data && data[name]))
       && mapping.layout !== "header"
-      && !["id", "identifier", "title", "first_release", "last_release", "previewObjects"].includes(name)
+      && !["id", "identifier", "category", "title", "first_release", "last_release", "previewObjects", "disclaimer"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
       const groupName = (!mapping.layout || mapping.layout === "summary") ? null : mapping.layout;
@@ -192,7 +192,7 @@ export const mapStateToProps = (state, props) => {
     header: {
       group: (group !== state.groups.defaultGroup) ? group : null,
       groupLabel: (group !== state.groups.defaultGroup) ? getGroupLabel(state.groups.groups, group) : null,
-      type: getField(group, type, "type"),
+      category: source?.category?.value,
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getHeaderFields(group, type, source, mapping),
       version: version,
@@ -201,6 +201,7 @@ export const mapStateToProps = (state, props) => {
     latestVersion: latestVersion,
     isOutdated: latestVersion && latestVersion.label !== version,
     allVersions: allVersions,
-    groups: getFieldsByGroups(group, type, source, mapping)
+    groups: getFieldsByGroups(group, type, source, mapping),
+    disclaimer: source?.disclaimer?.value
   };
 };

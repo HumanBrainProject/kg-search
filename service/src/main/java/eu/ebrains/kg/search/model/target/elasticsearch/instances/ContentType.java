@@ -33,7 +33,6 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.beans.Transient;
 import java.util.List;
 
 @Getter
@@ -46,6 +45,12 @@ public class ContentType implements TargetInstance {
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
 
     @JsonProperty("first_release")
     @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
@@ -99,4 +104,5 @@ public class ContentType implements TargetInstance {
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() { return false; }
+
 }

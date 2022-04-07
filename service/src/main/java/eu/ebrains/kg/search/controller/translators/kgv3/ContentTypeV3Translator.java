@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ContentTypeV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ContentType;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -71,7 +72,11 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
 
     public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
        ContentType c = new ContentType();
-       c.setId(IdUtils.getUUID(contentTypeV3.getId()));
+
+        c.setCategory(new Value<>("ContentType"));
+        c.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
+        c.setId(IdUtils.getUUID(contentTypeV3.getId()));
        c.setAllIdentifiers(contentTypeV3.getIdentifier());
        c.setIdentifier(IdUtils.getUUID(contentTypeV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
        c.setTitle(value(contentTypeV3.getName()));

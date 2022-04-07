@@ -55,6 +55,12 @@ public class Contributor implements TargetInstance {
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> category;
+
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> disclaimer;
+
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
 
@@ -101,4 +107,5 @@ public class Contributor implements TargetInstance {
     public boolean isSearchableInstance() {
         return true;
     }
+
 }

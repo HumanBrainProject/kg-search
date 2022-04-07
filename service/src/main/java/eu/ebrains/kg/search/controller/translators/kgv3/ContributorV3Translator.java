@@ -29,6 +29,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.PersonOrOrganizationV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -96,6 +97,10 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
 
     public Contributor translate(PersonOrOrganizationV3 personOrOrganization, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Contributor c = new Contributor();
+
+        c.setCategory(new Value<>("Contributor"));
+        c.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         String uuid = IdUtils.getUUID(personOrOrganization.getId());
         c.setId(uuid);
 

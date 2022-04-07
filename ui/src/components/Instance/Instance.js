@@ -28,13 +28,14 @@ import { history } from "../../store";
 import { BgError } from "../BgError/BgError";
 import { Header } from "./Header/Header";
 import Tabs from "../Tabs/Tabs";
+import { Disclaimer } from "../Disclaimer/Disclaimer";
 
 import "./Instance.css";
 import "./Fields.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
-export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions }) => {
+export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
 
   useEffect(() => {
     trackEvent(hasNoData);
@@ -81,8 +82,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
           </div>
         </div>):null}
       <Tabs instanceId={id} groups={groups} />
-      <strong className="kgs-instance-disclaimer">Disclaimer:
-          Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+      <Disclaimer content={disclaimer} />
       <TermsShortNoticeComponent />
       <ImagePopupComponent className="kgs-instance__image_popup" />
     </div>

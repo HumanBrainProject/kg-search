@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
@@ -70,6 +71,9 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
 
     public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Sample s = new Sample();
+
+        s.setCategory(new Value<>("Sample"));
+        s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         s.setAllIdentifiers(createList(sample.getIdentifier()));
         s.setId(sample.getIdentifier());

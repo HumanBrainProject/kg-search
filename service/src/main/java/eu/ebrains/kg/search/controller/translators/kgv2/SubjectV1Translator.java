@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.springframework.util.CollectionUtils;
@@ -65,6 +66,9 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
 
     public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Subject s = new Subject();
+
+        s.setCategory(new Value<>("Subject"));
+        s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         s.setAllIdentifiers(createList(subject.getIdentifier()));
         s.setId(subject.getIdentifier());

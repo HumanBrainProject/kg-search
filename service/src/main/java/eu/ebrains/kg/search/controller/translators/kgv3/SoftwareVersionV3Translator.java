@@ -83,6 +83,10 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
     public SoftwareVersion translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         SoftwareVersion s = new SoftwareVersion();
+
+        s.setCategory(new Value<>("Software"));
+        s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
         SoftwareVersionV3.SoftwareVersions software = softwareVersion.getSoftware();
 
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
