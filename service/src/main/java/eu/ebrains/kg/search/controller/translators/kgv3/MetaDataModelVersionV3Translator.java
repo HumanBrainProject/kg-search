@@ -95,9 +95,9 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
             m.setVersion(metadataModelVersionV3.getVersionIdentifier());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "All versions"));
+            references.add(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "version overview"));
             m.setVersions(references);
-            m.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "All versions"));
+            m.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "version overview"));
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             m.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(metadataModelVersionV3.getId()));
         } else {

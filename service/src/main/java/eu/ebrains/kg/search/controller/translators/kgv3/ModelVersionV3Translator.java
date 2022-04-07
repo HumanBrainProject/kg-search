@@ -92,9 +92,9 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setVersion(modelVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(model.getId()), "All versions"));
+            references.add(new TargetInternalReference(IdUtils.getUUID(model.getId()), "version overview"));
             m.setVersions(references);
-            m.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(model.getId()), "All versions"));
+            m.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(model.getId()), "version overview"));
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             m.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(modelVersion.getId()));
         } else {

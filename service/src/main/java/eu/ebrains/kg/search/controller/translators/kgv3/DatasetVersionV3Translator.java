@@ -173,9 +173,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setVersion(datasetVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
+            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
             d.setVersions(references);
-            d.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
+            d.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
         } else {

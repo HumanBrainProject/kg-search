@@ -90,9 +90,9 @@ public class ParcellationEntityVersionV3Translator extends TranslatorV3<Parcella
             pev.setVersion(parcellationEntityVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(parcellationEntity.getId()), "All versions"));
+            references.add(new TargetInternalReference(IdUtils.getUUID(parcellationEntity.getId()), "version overview"));
             pev.setVersions(references);
-            pev.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(parcellationEntity.getId()), "All versions"));
+            pev.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(parcellationEntity.getId()), "version overview"));
         }
 
         if (StringUtils.isNotBlank(parcellationEntityVersion.getName())) {

@@ -98,7 +98,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setVersion(softwareVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(software.getId()), "All versions"));
+            references.add(new TargetInternalReference(IdUtils.getUUID(software.getId()), "version overview"));
             s.setVersions(references);
             s.setSearchable(sortedVersions.get(sortedVersions.size()-1).getId().equals(softwareVersion.getId()));
         } else {
