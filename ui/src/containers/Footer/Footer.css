@@ -45,6 +45,7 @@
   .site-footer .footer__header .footer__primary img{
     min-width: 220px;
     height: 100%;
+    transform: translateX(-20px);
   }
   
   .site-footer .footer__header .footer__secondary {
@@ -264,19 +265,6 @@
   .logo svg {
     height: 100%;
     min-width: 160px;
-  }
-  
-  body[theme="dark"] .logo:after {
-    content: "EBRAINS";
-    display: inline-block;
-    position: absolute;
-    font-size: 33px;
-    font-weight: 600;
-    padding-right: 10px;
-    transform: translate(-140px, 39px);
-    background: var(--background-color-2);
-    color: var(--color-10);
-    -webkit-font-smoothing: auto;
   }
   
   .eu-logo {

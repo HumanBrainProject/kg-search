@@ -21,9 +21,13 @@
  *
  */
 
-import React, { useState, useEffect } from "react";
-import "./ThemeToggle.css";
+import React from "react";
+import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import * as actions from "../../actions/actions";
+
+import "./ThemeToggle.css";
 
 const themes = [
   {
@@ -32,45 +36,25 @@ const themes = [
   },
   {
     name: "default",
-    icon: "sun",
-    default: true
+    icon: "sun"
   }
 ];
 
-export const ThemeToggle = () => {
-  const [theme, setTheme] = useState();
+const ThemeToggle = ({ theme, setTheme }) => (
+  <div className="kgs-theme_toggle">
+    {themes.map(t => (
+      <button key={t.name} className={`kgs-theme_toggle__button ${(t.name === theme || (!theme && t.name === "default"))?"selected":""}`} onClick={() => setTheme(t.name)}>
+        <FontAwesomeIcon icon={t.icon} />
+      </button>
+    ))}
+  </div>
+);
 
-  const applyTheme = value => {
-    if (value) {
-      document.body.setAttribute("theme", value);
-      localStorage.setItem("currentTheme", value);
-    } else {
-      document.body.removeAttribute("theme");
-      localStorage.removeItem("currentTheme", value);
-    }
-  };
-
-  useEffect(() => {
-    const value = localStorage.getItem("currentTheme");
-    applyTheme(value);
-    setTheme(value);
-  }, []);
-
-  const handleClick = v => {
-    const value = v.default?null:v.name;
-    applyTheme(value);
-    setTheme(value);
-  };
-
-  return (
-    <div className="kgs-theme_toggle">
-      {themes.map(t => (
-        <button key={t.name} className={`kgs-theme_toggle__button ${((!theme && t.default) || (t.name === theme))?"selected":""}`} onClick={() => handleClick(t)}>
-          <FontAwesomeIcon icon={t.icon} />
-        </button>
-      ))}
-    </div>
-  );
-};
-
-export default ThemeToggle;
+export default connect(
+  state => ({
+    theme: state.application.theme
+  }),
+  dispatch => ({
+    setTheme: theme => dispatch(actions.setTheme(theme))
+  })
+)(ThemeToggle);

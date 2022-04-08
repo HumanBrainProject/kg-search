@@ -22,6 +22,7 @@
  */
 
 export const SET_APPLICATION_READY = "SET_APPLICATION_READY";
+export const SET_THEME = "SET_THEME";
 export const AGREE_TERMS_SHORT_NOTICE = "AGREE_TERMS_SHORT_NOTICE";
 export const SET_INFO = "SET_INFO";
 export const SHOW_IMAGE = "SHOW_IMAGE";

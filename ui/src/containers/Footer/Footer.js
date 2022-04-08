@@ -20,17 +20,18 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import React from "react";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import { connect } from "react-redux";
+import ThemeToggle from "../../containers/Theme/ThemeToggle";
+
 import "./Footer.css";
 
-const Footer = ({commit}) => (
+const Footer = ({ commit, theme }) => (
   <footer className="site-footer">
     <div className="footer__header">
       <div className="footer__primary">
         <a href="https://ebrains.eu" aria-label="Ebrains homepage" className="logo nuxt-link-exact-active nuxt-link-active">
-          <img src="/static/img/ebrains_logo.svg" alt="ebrains" height="100" />
+          <img src={`/static/img/${theme === "dark"?"ebrains_logo_dark.svg":"ebrains_logo.svg"}`} alt="ebrains" height="100" />
         </a>
       </div>
     </div>
@@ -153,4 +154,9 @@ const Footer = ({commit}) => (
   </footer>
 );
 
-export default Footer;
+export default connect(
+  state => ({
+    commit: state.definition.commit,
+    theme: state.application.theme
+  })
+)(Footer);

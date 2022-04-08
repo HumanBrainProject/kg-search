@@ -32,6 +32,13 @@ export const setApplicationReady = () => {
   };
 };
 
+export const setTheme = theme => {
+  return {
+    type: types.SET_THEME,
+    theme: theme
+  };
+};
+
 export const agreeTermsShortNotice = () => {
   return {
     type: types.AGREE_TERMS_SHORT_NOTICE

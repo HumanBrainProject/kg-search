@@ -35,8 +35,9 @@ import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
 import "./App.css";
 import { SessionExpiredErrorPanel } from "../Error/ErrorPanel";
-import Footer from "../../components/Footer/Footer";
+import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
+import Theme from "../Theme/Theme";
 
 class App extends React.Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <Theme />
         <Header />
         <main>
           <Notification />
@@ -76,8 +78,7 @@ export default connect(
     location: state.router.location,
     defaultGroup: state.groups.defaultGroup,
     isReady: state.application.isReady && !state.auth.error,
-    authEndpoint: state.auth.authEndpoint,
-    commit: state.definition.commit
+    authEndpoint: state.auth.authEndpoint
   }),
   dispatch => ({
     initialize: location => dispatch(actions.initialize(location))

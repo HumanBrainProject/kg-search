@@ -30,12 +30,18 @@ const initialState = {
   isReady: false,
   info: null,
   showTermsShortNotice: typeof Storage === "undefined" || !localStorage.getItem(TermsShortNoticeLocalStorageKey),
-  showTermsShortUpdateNotice: typeof Storage !== "undefined" && localStorage.getItem(TermsShortNoticeLocalStorageKey) && localStorage.getItem(TermsShortNoticeLocalStorageKey) !== termsCurrentVersion
+  showTermsShortUpdateNotice: typeof Storage !== "undefined" && localStorage.getItem(TermsShortNoticeLocalStorageKey) && localStorage.getItem(TermsShortNoticeLocalStorageKey) !== termsCurrentVersion,
+  theme: localStorage.getItem("currentTheme")
 };
 
 const setApplicationReady = state => ({
   ...state,
   isReady: true
+});
+
+const setTheme = (state, action) => ({
+  ...state,
+  theme: action.theme
 });
 
 const agreeTermsShortNotice = state => {
@@ -61,6 +67,8 @@ export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_APPLICATION_READY:
     return setApplicationReady(state, action);
+  case types.SET_THEME:
+    return setTheme(state, action);
   case types.AGREE_TERMS_SHORT_NOTICE:
     return agreeTermsShortNotice(state, action);
   case types.SET_INFO:
