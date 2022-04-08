@@ -28,10 +28,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -124,6 +121,11 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
                                 Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                         )).collect(Collectors.toList()));
             }
+
+            if (StringUtils.isNotBlank(dataset.getHomepage())) {
+                d.setHomepage(new TargetExternalReference(dataset.getHomepage(),dataset.getHomepage()));
+            }
+
             return d;
         }
         return null;

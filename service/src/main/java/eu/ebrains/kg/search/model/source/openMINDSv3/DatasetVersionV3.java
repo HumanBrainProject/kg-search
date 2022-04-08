@@ -42,7 +42,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String howToCite;
     private String description;
     private String fullName;
-    private List<String> homepage;
+    private String homepage;
+    private List<String> supportChannels;
     @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> keyword;
     private List<String> ethicsAssessment;

@@ -54,7 +54,11 @@
     },
     {
       "propertyName": "query:homepage",
-      "path": "https://openminds.ebrains.eu/vocab/homepage"
+      "path": [
+        "https://openminds.ebrains.eu/vocab/homepage",
+        "https://openminds.ebrains.eu/vocab/URL"
+      ],
+      "singleValue": "FIRST"
     },
     {
       "propertyName": "query:doi",

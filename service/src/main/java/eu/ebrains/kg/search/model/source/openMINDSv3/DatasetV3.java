@@ -33,7 +33,7 @@ public class DatasetV3 extends SourceInstanceV3 {
     private String doi;
     private String howToCite;
     private String fullName;
-    private List<String> homepage;
+    private String homepage;
     private List<Version> versions;
     private List<PersonOrOrganizationRef> authors;
     private List<PersonOrOrganizationRef> custodians;
@@ -78,11 +78,11 @@ public class DatasetV3 extends SourceInstanceV3 {
         this.fullName = fullName;
     }
 
-    public List<String> getHomepage() {
+    public String getHomepage() {
         return homepage;
     }
 
-    public void setHomepage(List<String> homepage) {
+    public void setHomepage(String homepage) {
         this.homepage = homepage;
     }
 

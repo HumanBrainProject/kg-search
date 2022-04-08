@@ -63,7 +63,12 @@
       "path": [
         "https://openminds.ebrains.eu/vocab/homepage",
         "https://openminds.ebrains.eu/vocab/URL"
-      ]
+      ],
+      "singleValue": "FIRST"
+    },
+    {
+      "propertyName": "query:supportChannels",
+      "path": "https://openminds.ebrains.eu/vocab/supportChannel"
     },
     {
       "propertyName": "query:keyword",

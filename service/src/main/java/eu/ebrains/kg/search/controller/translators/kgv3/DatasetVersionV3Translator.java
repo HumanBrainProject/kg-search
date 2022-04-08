@@ -45,6 +45,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -464,6 +465,26 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         final List<TargetInternalReference> speciesFromTS = d.getTissueSamples()!=null ? d.getTissueSamples().stream().filter(ts -> ts.getChildren() != null).map(ts -> ts.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
         List<TargetInternalReference> species = Stream.concat(speciesFromSG.stream(), speciesFromTS.stream()).distinct().collect(Collectors.toList());
         d.setSpeciesFilter(value(species.stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).collect(Collectors.toList())));
+
+        if (StringUtils.isNotBlank(datasetVersion.getHomepage())) {
+            d.setHomepage(new TargetExternalReference(datasetVersion.getHomepage(),datasetVersion.getHomepage()));
+        }
+
+        if (!CollectionUtils.isEmpty(datasetVersion.getSupportChannels())) {
+            d.setSupportChannels(datasetVersion.getSupportChannels().stream().map(supportChannel -> {
+                supportChannel = supportChannel.trim();
+                if (StringUtils.isNotBlank(supportChannel)) {
+                    if (!supportChannel.startsWith("http://") &&
+                            !supportChannel.startsWith("https://") &&
+                            Pattern.compile("^(.+)@(\\S+)$").matcher(supportChannel).matches()) {
+                        return new TargetExternalReference("mailto:" + supportChannel, supportChannel);
+                    }
+                    return new TargetExternalReference(supportChannel, supportChannel);
+                }
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+
         return d;
     }
 

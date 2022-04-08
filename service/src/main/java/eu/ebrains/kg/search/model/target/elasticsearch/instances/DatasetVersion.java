@@ -139,6 +139,12 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
 
+    @FieldInfo(label = "Homepage")
+    private TargetExternalReference homepage;
+
+    @FieldInfo(label = "Support channel")
+    private List<TargetExternalReference> supportChannels;
+
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)
     private Value<String> newInThisVersion;
 
