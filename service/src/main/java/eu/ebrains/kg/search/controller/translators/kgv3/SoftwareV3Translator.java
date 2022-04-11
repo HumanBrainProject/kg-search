@@ -76,7 +76,7 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
     public Software translate(SoftwareV3 software, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Software s = new Software();
 
-        s.setCategory(new Value<>("Software Versions"));
+        s.setCategory(new Value<>("Software Overview"));
         s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         List<Version> sortedVersions = Helpers.sort(software.getVersions());

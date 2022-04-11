@@ -38,7 +38,6 @@ export const Disclaimer = ({ content }) => {
   if (m) {
     html = m[1];
   }
-  html = "Disclaimer: " + html;
   return (
     <strong className="kgs-instance-disclaimer" dangerouslySetInnerHTML={{ __html: html }} />
   );

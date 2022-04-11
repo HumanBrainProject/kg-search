@@ -73,7 +73,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
     public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
        ContentType c = new ContentType();
 
-        c.setCategory(new Value<>("ContentType"));
+        c.setCategory(new Value<>("Content Type"));
         c.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         c.setId(IdUtils.getUUID(contentTypeV3.getId()));

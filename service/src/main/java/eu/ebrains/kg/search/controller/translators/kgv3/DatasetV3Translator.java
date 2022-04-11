@@ -74,7 +74,7 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
         if (!CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
             Dataset d = new Dataset();
 
-            d.setCategory(new Value<>("Dataset Versions"));
+            d.setCategory(new Value<>("Dataset Overview"));
             d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
             List<eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(dataset.getVersions());

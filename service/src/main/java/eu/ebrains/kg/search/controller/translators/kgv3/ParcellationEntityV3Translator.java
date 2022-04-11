@@ -197,7 +197,7 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
     public ParcellationEntity translate(ParcellationEntityV3 parcellationEntity, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ParcellationEntity pe = new ParcellationEntity();
 
-        pe.setCategory(new Value<>("Parcellation Entity Versions"));
+        pe.setCategory(new Value<>("Parcellation Entity Overview"));
         pe.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
 

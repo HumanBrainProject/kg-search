@@ -76,7 +76,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
     public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Model m = new Model();
 
-        m.setCategory(new Value<>("Model Versions"));
+        m.setCategory(new Value<>("Model Overview"));
         m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         m.setId(IdUtils.getUUID(model.getId()));
