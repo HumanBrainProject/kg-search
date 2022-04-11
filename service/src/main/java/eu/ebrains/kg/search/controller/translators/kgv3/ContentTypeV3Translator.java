@@ -74,7 +74,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
        ContentType c = new ContentType();
 
         c.setCategory(new Value<>("Content Type"));
-        c.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+        c.setDisclaimer(new Value<>("Not correct? The openMINDS library for content types is community-driven. Please get in touch with the openMINDS development team [openMINDS@ebrains.eu](mailto:openMINDS@ebrains.eu) or raise an issue on the openMINDS GitHub if you'd like to correct a content type or want to add more information to a content type. Please alert the [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors regarding the software relation of a content type."));
 
         c.setId(IdUtils.getUUID(contentTypeV3.getId()));
        c.setAllIdentifiers(contentTypeV3.getIdentifier());

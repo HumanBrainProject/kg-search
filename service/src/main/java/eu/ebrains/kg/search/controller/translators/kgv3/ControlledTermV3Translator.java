@@ -33,6 +33,7 @@ import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.stream.Stream;
 
 public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, ControlledTerm, ControlledTermV3Translator.Result> {
     private static final String CONTROLLED_TERM_QUERY_ID = "42405db5-6f86-4dea-baba-95a94105e74e";
+    private static final String CONTROLLED_TERM_NAMESPACE = "https://openminds.ebrains.eu/controlledTerms";
 
     private static final List<String> CONTROLLED_TERM_TYPES = Stream.of(
             "ActionStatusType",
@@ -93,7 +95,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
             "TissueSampleType",
             "TypeOfUncertainty",
             "UBERONParcellation",
-            "UnitOfMeasurement").map(s -> String.format("%s/%s", "https://openminds.ebrains.eu/controlledTerms", s)).collect(Collectors.toList());
+            "UnitOfMeasurement").map(s -> String.format("%s/%s", CONTROLLED_TERM_NAMESPACE, s)).collect(Collectors.toList());
 
     @Override
     public List<String> semanticTypes() {
@@ -136,8 +138,15 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
     public ControlledTerm translate(ControlledTermV3 controlledTerm, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ControlledTerm t = new ControlledTerm();
 
-        t.setCategory(new Value<>("Controlled Term"));
-        t.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+        final List<String> type = controlledTerm.getType();
+        String category = "Controlled Term";
+        if(!CollectionUtils.isEmpty(type)){
+            final String simpleType = type.get(0).replace(CONTROLLED_TERM_NAMESPACE + "/", "");
+            category = simpleType.replaceAll("([A-Z])(?=[a-z])", " $1").trim();
+        }
+
+        t.setCategory(new Value<>(category));
+        t.setDisclaimer(new Value<>("Not correct? The openMINDS terminologies are community-driven. Please get in touch with the openMINDS development team [openMINDS@ebrains.eu](mailto:openMINDS@ebrains.eu) or raise an issue on the openMINDS GitHub if you'd like to correct a term or want to add more information to a term."));
 
         t.setId(IdUtils.getUUID(controlledTerm.getId()));
 

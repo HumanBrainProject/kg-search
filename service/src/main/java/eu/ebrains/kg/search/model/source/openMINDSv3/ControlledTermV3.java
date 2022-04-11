@@ -34,6 +34,7 @@ import java.util.List;
 @Setter
 public class ControlledTermV3 extends SourceInstanceV3 {
 
+    private List<String> type;
     private String name;
     private String definition;
     private String description;
