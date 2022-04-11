@@ -188,6 +188,8 @@ public class Helpers {
                 } else {
                     simpleDOI = digitalIdentifier;
                 }
+                //We force the replacement of special characters in the link
+                absoluteDOI = absoluteDOI.replaceAll("<", "%3C").replaceAll(">", "%3E");
                 String doiLink = String.format("[DOI: %s]\n[DOI: %s]: %s", simpleDOI, simpleDOI, absoluteDOI);
                 if (doiCitation != null) {
                     return String.format("%s\n%s", doiCitation, doiLink);
