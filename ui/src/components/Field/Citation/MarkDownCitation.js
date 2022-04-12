@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *

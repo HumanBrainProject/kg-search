@@ -91,8 +91,6 @@ class HierarchicalFiles extends React.Component {
   }
 
   onToggle = (node, toggled) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     node.active = true;
     if (node.children) {
       node.toggled = toggled;

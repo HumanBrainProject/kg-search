@@ -90,14 +90,28 @@ const getCommonPath = (files, urlFieldPath) => {
   return firstFilePath.splice(0, index);
 };
 
+const getUrl = commonPath => {
+  if(isCscsContainer(commonPath)) {
+    const rootPathIndex = 6;
+    return commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
+  }
+  return commonPath.join("/");
+};
+
+const isCscsContainer = commonPath => commonPath.join("/").startsWith("https://object.cscs");
+
+const getRootUrlSeparator = (commonPath, nbOfPathToSkip) => {
+  const rootPathIndex = isCscsContainer(commonPath)?6:8;
+  return  nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
+};
+
 export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
   files.sort((a, b) => JSONPath(a, urlFieldPath).toLowerCase().localeCompare(JSONPath(b, urlFieldPath).toLowerCase()));
   const commonPath = getCommonPath(files, urlFieldPath);
-  const rootPathIndex = 6;
-  const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
+  const url = getUrl(commonPath);
   const tree = {
     name: commonPath[commonPath.length-1],
     url: `https://data.kg.ebrains.eu/zip?container=${url}`,
@@ -108,7 +122,7 @@ export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
     active: true
   };
   const nbOfPathToSkip = commonPath.length;
-  const rootUrlSeparator = nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
+  const rootUrlSeparator = getRootUrlSeparator(commonPath, nbOfPathToSkip);
   files.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator, nameFieldPath, urlFieldPath));
   setChildren(tree);
   return tree;
