@@ -285,26 +285,26 @@
     -webkit-font-smoothing: auto;
     white-space: pre;
     position: absolute;
-    top: 11px;
-    left: 2px;
+    top: 10px;
+    left: 3px;
     line-height: 1.4em;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.019em;
     text-align: right;
   }
   
   body[theme="dark"] .hbp-logo:after {
     content: "Human Brain Project";
     display: inline-block;
-    font-size: 14px;
     background: var(--background-color-2);
     color: var(--color-10);
     -webkit-font-smoothing: auto;
     white-space: pre;
     position: absolute;
-    top: 10px;
-    left: 37px;
+    top: 9px;
+    left: 38px;
     line-height: 1.4em;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.07em;
     text-align: right;
     font: initial;
+    font-size: 15px;
   }
