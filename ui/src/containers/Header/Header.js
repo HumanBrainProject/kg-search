@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { SignIn } from "../SignIn/SignIn";
@@ -8,10 +8,13 @@ import * as actionsInstances from "../../actions/actions.instances";
 
 import "./Header.css";
 
-export const Header = ({ location, SignInComponent, onClearInstances, theme }) => {
-  const backToSearch = location => {
+export const Header = ({ SignInComponent, onClearInstances, theme }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const backToSearch = () => {
     onClearInstances();
-    return { ...location, pathname: "/" };
+    navigate("/");
   };
 
   return (
@@ -26,7 +29,7 @@ export const Header = ({ location, SignInComponent, onClearInstances, theme }) =
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            {location.pathname.startsWith("/instances") && <li className="nav-item"><Link to={location => backToSearch(location)}>Search</Link></li>}
+            {location.pathname.startsWith("/instances") && <li className="nav-item"><Link onClick={backToSearch}>Search</Link></li>}
             <li className="nav-item">
               <a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
             </li>
@@ -43,7 +46,6 @@ export const Header = ({ location, SignInComponent, onClearInstances, theme }) =
 
 export default connect(
   state => ({
-    location: state.router.location,
     SignInComponent: SignIn,
     theme: state.application.theme
   }),

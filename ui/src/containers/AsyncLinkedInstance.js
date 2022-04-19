@@ -28,11 +28,18 @@ import * as actionsLinkedInstance from "../actions/actions.linkedInstance";
 import LinkedInstance from "./LinkedInstance";
 
 import "./AsyncLinkedInstance.css";
+import { useLocation } from "react-router-dom";
 
-const AsyncLinkedInstanceComponent = ({id, name, group, type, data, error, isLoading, fetch}) => {
+const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLoading, fetchInstance, fetchPreviewInstance }) => {
+
+  const location = useLocation();
 
   useEffect(() => {
-    fetch(group, id);
+    if (location.pathname.startsWith("/live/")) {
+      fetchPreviewInstance(group, id);
+    } else {
+      fetchInstance(id);
+    }
   }, [id, group]);
 
   if (error) {
@@ -48,8 +55,8 @@ const AsyncLinkedInstanceComponent = ({id, name, group, type, data, error, isLoa
   if (isLoading) {
     return (
       <div className="kgs-async-linked-instance__loading">
-        <FontAwesomeIcon icon="circle-notch" spin  />
-        {` Loading ${type} ${name?name:id}`}
+        <FontAwesomeIcon icon="circle-notch" spin />
+        {` Loading ${type} ${name ? name : id}`}
       </div>
     );
   }
@@ -73,19 +80,10 @@ const AsyncLinkedInstanceContainer = connect(
     error: state.linkedInstance.error,
     isLoading: state.linkedInstance.isLoading
   }),
-  (dispatch, props) => ({
-    fetch: (group, id) => props.isLive?dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id)):dispatch(actionsLinkedInstance.loadLinkedInstance(group, id))
+  dispatch => ({
+    fetchInstance: id => dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id)),
+    fetchPreviewInstance: (group, id) => dispatch(actionsLinkedInstance.loadLinkedInstance(group, id))
   })
 )(AsyncLinkedInstanceComponent);
 
-const AsyncLinkedInstance = connect(
-  (state, props) => ({
-    id: props.id,
-    name: props.name,
-    group: props.group,
-    type: props.type,
-    isLive: state.router.location.pathname.startsWith("/live/")
-  })
-)(AsyncLinkedInstanceContainer);
-
-export default AsyncLinkedInstance;
+export default AsyncLinkedInstanceContainer;

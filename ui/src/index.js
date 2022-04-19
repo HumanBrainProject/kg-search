@@ -24,8 +24,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
-import { store, history } from "./store";
+import { store } from "./store";
 import App from "./containers/App/App";
 import "./services/IconsImport";
 import "normalize.css/normalize.css";
@@ -34,6 +33,7 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "./index.css";
 import ReactPiwik from "react-piwik";
 import * as Sentry from "@sentry/browser";
+import { BrowserRouter } from "react-router-dom";
 
 new ReactPiwik({
   url: process.env.REACT_APP_MATOMO_URL,
@@ -50,9 +50,9 @@ ReactPiwik.push(["trackPageView"]);
 
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
+    <BrowserRouter>
       <App />
-    </ConnectedRouter>
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

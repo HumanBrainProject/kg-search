@@ -22,24 +22,42 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
 import EmailToLink from "../EmailToLink/EmailToLink";
 import "./ShareButtons.css";
+import { useLocation } from "react-router-dom";
 
-export const ShareButtons = ({className, clipboardContent, emailToLink}) => (
-  <span className={`kgs-share-links ${className?className:""}`}>
-    <span className="kgs-share-links-panel">
-      <CopyToClipboardButton icon="clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
-      <EmailToLink icon="envelope" title="Send search link by email" link={emailToLink} />
+const getClipboardContent = (location, currentInstance, group, defaultGroup) => {
+  if (location.pathname === "/" && currentInstance) {
+    const id = currentInstance._id;
+    if (id) {
+      const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
+      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
+    }
+  }
+  return window.location.href;
+};
+
+const getShareEmailToLink = url => {
+  const to = "";
+  const subject = "Knowledge Graph Search Request";
+  const body = "Please have a look to the following Knowledge Graph search request";
+  return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
+};
+
+export const ShareButtons = ({ className, currentInstance, group, defaultGroup}) => {
+  const location = useLocation();
+
+  const clipboardContent = getClipboardContent(location, currentInstance, group, defaultGroup);
+
+  return (
+    <span className={`kgs-share-links ${className ? className : ""}`}>
+      <span className="kgs-share-links-panel">
+        <CopyToClipboardButton icon="clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
+        <EmailToLink icon="envelope" title="Send search link by email" link={getShareEmailToLink(clipboardContent)} />
+      </span>
     </span>
-  </span>
-);
-
-ShareButtons.propTypes = {
-  className: PropTypes.string,
-  clipboardContent: PropTypes.string,
-  emailToLink: PropTypes.string
+  );
 };
 
 export default ShareButtons;

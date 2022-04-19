@@ -22,7 +22,6 @@
  */
 
 import { combineReducers } from "redux";
-import { connectRouter } from "connected-react-router";
 
 import { reducer as application } from "./application.reducer";
 import { reducer as definition } from "./definition.reducer";
@@ -35,7 +34,7 @@ import { reducer as files } from "./files.reducer";
 import { reducer as linkedInstance } from "./linkedInstance.reducer";
 
 
-const createRootReducer = (history) => combineReducers({
+const createRootReducer = () => combineReducers({
   application,
   definition,
   groups,
@@ -44,8 +43,7 @@ const createRootReducer = (history) => combineReducers({
   fetching,
   auth,
   files,
-  linkedInstance,
-  router: connectRouter(history)
+  linkedInstance
 });
 
 export default createRootReducer;

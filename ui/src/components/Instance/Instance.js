@@ -23,7 +23,6 @@
 
 import React, { useEffect } from "react";
 import ReactPiwik from "react-piwik";
-import { history } from "../../store";
 
 import { BgError } from "../BgError/BgError";
 import { Header } from "./Header/Header";
@@ -33,9 +32,11 @@ import { Disclaimer } from "../Disclaimer/Disclaimer";
 import "./Instance.css";
 import "./Fields.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 
 
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
+  const navigate = useNavigate();
 
   useEffect(() => {
     trackEvent(hasNoData);
@@ -48,9 +49,9 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
 
   const onVersionChange = version => {
     if(searchPage) {
-      fetch(group, version, true);
+      fetch(group, version, navigate, true);
     } else {
-      history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
+      navigate(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
     }
   };
 

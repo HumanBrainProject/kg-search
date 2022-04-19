@@ -40,13 +40,13 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onPrevious: () => {
+  onPrevious: navigate => {
     dispatch(actionsInstances.setPreviousInstance());
-    dispatch(actionsInstances.updateLocation());
+    dispatch(actionsInstances.updateLocation(navigate));
   },
-  onClose: () => {
+  onClose: navigate => {
     dispatch(actionsInstances.clearAllInstances());
-    dispatch(actionsInstances.updateLocation());
+    dispatch(actionsInstances.updateLocation(navigate));
   }
 });
 

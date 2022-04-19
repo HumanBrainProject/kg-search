@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { isMobile } from "../../helpers/BrowserHelpers";
 import "./Carousel.css";
@@ -38,7 +38,7 @@ const getNavigation = (item, showPrevious, onClose, onPrevious, navigationCompon
       )}
       <div className="kgs-carousel__navigation">
         {item.isActive && item.data && NavigationComponent && (
-          <NavigationComponent/>
+          <NavigationComponent />
         )}
       </div>
       {item.isActive && (
@@ -52,14 +52,14 @@ const getNavigation = (item, showPrevious, onClose, onPrevious, navigationCompon
   return Navigation;
 };
 
-const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent}) => {
-  const ItemComponent =  itemComponent;
+const CarouselItem = ({ item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent }) => {
+  const ItemComponent = itemComponent;
   const NavigationComponent = getNavigation(item, showPrevious, onClose, onPrevious, navigationComponent);
   return (
     <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
         {item.isActive && item.data && ItemComponent && (
-          <ItemComponent data={item.data}  NavigationComponent={NavigationComponent}  />
+          <ItemComponent data={item.data} NavigationComponent={NavigationComponent} />
         )}
       </div>
     </div>
@@ -68,83 +68,77 @@ const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, n
 
 const nbOfItems = 5;
 
-export class Carousel extends React.Component {
-  constructor(props) {
-    super(props);
+export const Carousel = ({ show, className, data, onPrevious, onClose, itemComponent, navigationComponent }) => {
+  const [items, setItems] = useState(Array.from(Array(nbOfItems)).map((x, idx) => ({
+    id: idx,
+    position: idx,
+    isActive: false,
+    data: null
+  })));
+
+  const wrapperRef = useRef();
+
+  useEffect(() => {
+    const currentPosition = (data.length - 1) % nbOfItems;
+    const result = items.map((item, idx) => {
+      const idxData = data.length - 1 - (idx <= currentPosition ? (currentPosition - idx) : (nbOfItems - (idx - currentPosition)));
+      const position = (idx <= currentPosition ? (nbOfItems - (currentPosition - idx)) : (idx - currentPosition)) % 5;
+      return {
+        isActive: item.id === currentPosition,
+        position: position,
+        data: idxData >= 0 ? data[idxData] : null
+      };
+    });
+    setItems(result);
+  }, []);
+
+  useEffect(() => {
     window.instanceTabSelection = {};
-    this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({
-      id: idx,
-      position: idx,
-      isActive: false,
-      data: null
-    }));
-  }
-
-  componentDidMount() {
     if (!isMobile) {
-      window.addEventListener("keyup", this._keyupHandler.bind(this), false);
+      const _keyupHandler = event => {
+        if (show) {
+          if (event.keyCode === 27) {
+            event.preventDefault();
+            onClose();
+          }
+        }
+      };
+      window.addEventListener("keyup", _keyupHandler, false);
+      return () => window.removeEventListener("keyup", _keyupHandler);
     }
+  }, []);
+
+  if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
+    return null;
   }
 
-  componentWillUnmount() {
-    if (!isMobile) {
-      window.removeEventListener("keyup", this._keyupHandler);
-    }
-  }
-
-  _keyupHandler = event => {
-    const {onClose} = this.props;
-    if (this.props.show) {
-      if (event.keyCode === 27) {
-        event.preventDefault();
-        typeof onClose === "function" && onClose();
-      }
-    }
-  };
-
-  onClose = e => {
+  const handleOnClose = e => {
     if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
       window.instanceTabSelection = {};
-      const { onClose } = this.props;
-      typeof onClose === "function" && onClose();
+      onClose();
     }
   };
 
-  render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent } = this.props;
-    if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
-      return null;
-    }
+  const showPrevious = data.length > 1;
 
-    const currentPosition = (data.length -1) % nbOfItems;
-    const items = this.items;
-    items.forEach((item, idx) => {
-      item.isActive = item.id === currentPosition;
-      const position = (idx <= currentPosition?(nbOfItems - (currentPosition - idx)):(idx - currentPosition)) % 5;
-      item.position = position;
-      const idxData = data.length -1 - (idx <= currentPosition?(currentPosition - idx):(nbOfItems  - (idx - currentPosition)));
-      item.data = idxData >= 0?data[idxData]:null;
-    });
-    const showPrevious = data.length > 1;
+  const classNames = ["kgs-carousel", className].join(" ");
 
-    const classNames = ["kgs-carousel", className].join(" ");
-
-    return(
-      <div className={classNames} onClick={this.onClose}>
-        <div className="kgs-carousel__panel" ref={ref => this.wrapperRef = ref}>
-          {items.map(item => (
-            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
-          ))}
-        </div>
+  return (
+    <div className={classNames} onClick={this.onClose}>
+      <div className="kgs-carousel__panel" ref={wrapperRef}>
+        {items.map(item => (
+          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={handleOnClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+
+};
 
 Carousel.propTypes = {
   className: PropTypes.string,
   show: PropTypes.bool,
-  data:  PropTypes.arrayOf(PropTypes.any),
+  data: PropTypes.arrayOf(PropTypes.any),
   onPrevious: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   itemComponent: PropTypes.oneOfType([

@@ -30,11 +30,13 @@ import * as actionsInstances from "../../../actions/actions.instances";
 import { HitsList } from "../../../components/HitsList/HitsList";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../../helpers/StatsHelpers";
+import { useNavigate } from "react-router-dom";
 
 
 const HitsPanelBase = ({ lists, itemComponent, getKey, group, onClick }) => {
+  const navigate = useNavigate();
 
-  const handleClick = (data, target) => onClick(data, target, group);
+  const handleClick = (data, target) => onClick(data, target, group, navigate);
 
   return (
     <React.Fragment>
@@ -121,14 +123,14 @@ const mapStateToProps = state => {
 export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
-    onClick: (data, target, group) => {
+    onClick: (data, target, group, navigate) => {
       if (target === "_blank") {
         const relativeUrl = `/instances/${data._id}${group?("?group=" + group):""}`;
         ReactPiwik.push(["trackEvent", "Card", "Open in new tab", relativeUrl]);
         window.open(relativeUrl, "_blank");
       } else {
         dispatch(actionsInstances.setInstance(data, target));
-        dispatch(actionsInstances.updateLocation());
+        dispatch(actionsInstances.updateLocation(navigate));
       }
     }
   })

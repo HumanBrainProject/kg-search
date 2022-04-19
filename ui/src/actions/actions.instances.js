@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -26,7 +25,7 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
-import { history, store } from "../store";
+import { store } from "../store";
 import { getSearchKey } from "../helpers/BrowserHelpers";
 
 export const loadInstanceRequest = () => {
@@ -95,20 +94,20 @@ export const goBackToInstance = id => {
   };
 };
 
-export const updateLocation = () => {
+export const updateLocation = navigate => {
   const state = store.getState();
   const id = state.instances.currentInstance?._id;
   if(id) {
-    history.push(`/${window.location.search}#${id}`);
+    navigate(`/${window.location.search}#${id}`);
   } else {
-    history.push(`/${window.location.search}`);
+    navigate(`/${window.location.search}`);
   }
   return {
     type: types.UPDATE_LOCATION
   };
 };
 
-export const goToSearch = (group, defaultGroup) => {
+export const goToSearch = (navigate, group, defaultGroup) => {
   return dispatch => {
     if (!group) {
       dispatch(clearGroupError());
@@ -116,11 +115,11 @@ export const goToSearch = (group, defaultGroup) => {
     }
     dispatch(clearInstanceError());
     dispatch(clearAllInstances());
-    history.replace(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);
+    navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
   };
 };
 
-export const loadInstance = (group, id, shouldUpdateLocation=false) => {
+export const loadInstance = (group, id, navigate, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
@@ -128,7 +127,7 @@ export const loadInstance = (group, id, shouldUpdateLocation=false) => {
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {
-          dispatch(updateLocation());
+          dispatch(updateLocation(navigate));
         }
       })
       .catch(e => {

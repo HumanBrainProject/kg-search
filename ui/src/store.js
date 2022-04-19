@@ -22,8 +22,6 @@
  */
 
 import { createStore, compose, applyMiddleware } from "redux";
-import { createBrowserHistory } from "history";
-import { routerMiddleware } from "connected-react-router";
 import thunk from "redux-thunk";
 
 import { createLogger } from "redux-logger";
@@ -31,16 +29,11 @@ import { createLogger } from "redux-logger";
 import createRootReducer from "./reducers";
 
 
-export const history = createBrowserHistory();
-//export const history = createBrowserHistory({ basename: "/search" });
-
 function configureStoreProd(initialState) {
-  const reactRouterMiddleware = routerMiddleware(history);
-
-  const middlewares = [reactRouterMiddleware,thunk];
+  const middlewares = [thunk];
 
   const store = createStore(
-    createRootReducer(history),
+    createRootReducer(),
     initialState,
     compose(applyMiddleware(...middlewares))
   );
@@ -49,14 +42,13 @@ function configureStoreProd(initialState) {
 }
 
 function configureStoreDev(initialState) {
-  const reactRouterMiddleware = routerMiddleware(history);
   const loggerMiddleware = createLogger();
-  const middlewares = [reactRouterMiddleware, thunk, loggerMiddleware];
+  const middlewares = [thunk, loggerMiddleware];
 
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
   const store = createStore(
-    createRootReducer(history),
+    createRootReducer(),
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
   );

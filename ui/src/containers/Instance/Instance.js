@@ -60,13 +60,12 @@ export const Instance = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
+      previousGroup: state.groups.previousGroup,
       id: props.match.params.type?`${props.match.params.type}/${props.match.params.id}`:props.match.params.id,
-      location: state.router.location,
       searchPage: false
     };
   },
   dispatch => ({
-    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),

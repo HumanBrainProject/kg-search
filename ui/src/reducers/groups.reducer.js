@@ -32,20 +32,23 @@ const initialState = {
   groups: [],
   group: DEFAULT_GROUP,
   defaultGroup: DEFAULT_GROUP,
-  initialGroup: DEFAULT_GROUP
+  initialGroup: DEFAULT_GROUP,
+  previousGroup: null
 };
 
 const setInitialGroup = (state, action) => {
   return {
     ...state,
-    initialGroup: action.group
+    initialGroup: action.group,
+    previousGroup: null
   };
 };
 
 const setGroup = (state, action) => {
   return {
     ...state,
-    group: action.group
+    group: action.group,
+    previousGroup: state.group
   };
 };
 
@@ -68,7 +71,8 @@ const loadGroupsSuccess = (state, action) => {
     isReady: true,
     isLoading: false,
     groups: groups,
-    group: group
+    group: group,
+    previousGroup: null
   };
 };
 
@@ -82,7 +86,8 @@ const loadGroupsFailure = (state, action) => ({
 const resetGroups = state => ({
   ...state,
   groups: [],
-  group: DEFAULT_GROUP
+  group: DEFAULT_GROUP,
+  previousGroup: null
 });
 
 const clearGroupsError = state => {

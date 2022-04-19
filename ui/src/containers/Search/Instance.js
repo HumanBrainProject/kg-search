@@ -39,6 +39,6 @@ export const Instance = connect(
     searchPage: true
   }),
   dispatch => ({
-    fetch: (group, id, updateLocation) => dispatch(actionsInstances.loadInstance(group, id, updateLocation)),
+    fetch: (group, id, navigate, updateLocation) => dispatch(actionsInstances.loadInstance(group, id, navigate, updateLocation)),
   })
 )(Component);

@@ -68,14 +68,13 @@ export const Preview = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
+      previousGroup: state.groups.previousGroup,
       id: getId(props.match.params),
-      location: state.router.location,
       watermark: "Preview",
       searchPage: false
     };
   },
   dispatch => ({
-    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),

@@ -21,7 +21,8 @@
  *
  */
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
 import * as actionsGroups from "../../actions/actions.groups";
@@ -40,19 +41,18 @@ import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, Search
 import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
 
 import "./Search.css";
-import { history } from "../../store";
 
-const SearchComponent = ({show}) => (
-  <div className = "kgs-search-container" >
+const SearchComponent = ({ show }) => (
+  <div className="kgs-search-container" >
     {show && (
       <React.Fragment>
-        <div className = "kgs-search" >
+        <div className="kgs-search" >
           <SearchPanel />
-          <TermsShortNotice className = "kgs-search__terms-short-notice" />
-          <div className = "kgs-search__panel" >
+          <TermsShortNotice className="kgs-search__terms-short-notice" />
+          <div className="kgs-search__panel" >
             <TypesFilterPanel />
             <FiltersPanel />
-            <div className = "kgs-search__main" >
+            <div className="kgs-search__main" >
               <ResultsHeader />
               <HitsPanel />
             </div>
@@ -69,121 +69,85 @@ const SearchComponent = ({show}) => (
   </div>
 );
 
-class SearchBase extends React.Component {
 
-  componentDidMount() {
-    const { setInitialSearchParams, setInitialGroup } = this.props;
-    document.title = "EBRAINS - Knowledge Graph Search";
-    const params = this.getUrlParmeters();
-    const searchParam = {...params};
-    delete searchParam.group;
-    setInitialSearchParams(searchParam);
-    const group = params.group;
-    if (group) {
-      setInitialGroup(group);
-    }
-    this.unlisten = history.listen( location => {
-      const reg = /^#(.+)$/;
-      const [, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null];
-      this.props.goBackToInstance(id);
-    });
-    //this.updateLocation({});
-    this.search();
-  }
-
-  componentDidUpdate(previousProps) {
-    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, location } = this.props;
-    this.updateLocation(previousProps);
-    if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
-      groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || group !== previousProps.group ||
-      location.search !== previousProps.location.search) {
-      this.search();
-    }
-    this.updateScrolling();
-  }
-
-  componentWillUnmount() {
-    this.unlisten();
-  }
-
-  calculateFacetList = facets => {
-    return facets.reduce((acc, facet) => {
-      switch (facet.filterType) {
-      case "list":
-        if (facet.isHierarchical) {
-          facet.keywords.forEach(keyword => {
-            keyword.children && Array.isArray(keyword.children.keywords) && keyword.children.keywords.forEach(child => {
-              acc.push({
-                name: facet.id,
-                value: child.value,
-                checked: Array.isArray(facet.value) ? facet.value.includes(child.value) : false,
-                many: true
-              });
-            });
-          });
-        } else {
-          facet.keywords.forEach(keyword => {
+const calculateFacetList = facets => {
+  return facets.reduce((acc, facet) => {
+    switch (facet.filterType) {
+    case "list":
+      if (facet.isHierarchical) {
+        facet.keywords.forEach(keyword => {
+          keyword.children && Array.isArray(keyword.children.keywords) && keyword.children.keywords.forEach(child => {
             acc.push({
               name: facet.id,
-              value: keyword.value,
-              checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+              value: child.value,
+              checked: Array.isArray(facet.value) ? facet.value.includes(child.value) : false,
               many: true
             });
           });
-        }
-        break;
-      case "exists":
-        acc.push({
-          name: facet.id,
-          value: !!facet.value,
-          checked: !!facet.value,
-          many: false
         });
-        break;
-      default:
-        break;
+      } else {
+        facet.keywords.forEach(keyword => {
+          acc.push({
+            name: facet.id,
+            value: keyword.value,
+            checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+            many: true
+          });
+        });
       }
-      return acc;
-    }, []);
-  };
-
-  updateLocation = (previousProps) => {
-    const { queryString, selectedType, facets, facetValues, sort, page, group, defaultGroup, location } = this.props;
-    const shouldUpdateQueryString = queryString !== previousProps.queryString;
-    const shouldUpdateType = selectedType !== previousProps.selectedType;
-    const shouldUpdateFacets = facetValues !== previousProps.facetValues;
-    const shouldUpdateSort = sort !== previousProps.sort;
-    const shouldUpdatePage = page !== previousProps.page;
-    const shouldUpdateGroup = group !== previousProps.group;
-
-    if (shouldUpdateQueryString || shouldUpdateType || shouldUpdateFacets || shouldUpdateSort || shouldUpdatePage || shouldUpdateGroup) {
-      let query = location.query;
-      if (shouldUpdateQueryString) {
-        query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
-      }
-      if (shouldUpdateType) {
-        query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
-      }
-      if (shouldUpdateFacets) {
-        const list = this.calculateFacetList(facets);
-        query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), query);
-      }
-      if (shouldUpdateSort) {
-        query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
-      }
-      if (shouldUpdatePage) {
-        query = getUpdatedQuery(query, "p", page !== 1, page, false);
-      }
-      if (shouldUpdateGroup) {
-        query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
-      }
-      const url = getLocationFromQuery(query, location);
-      history.push(url);
+      break;
+    case "exists":
+      acc.push({
+        name: facet.id,
+        value: !!facet.value,
+        checked: !!facet.value,
+        many: false
+      });
+      break;
+    default:
+      break;
     }
-  };
+    return acc;
+  }, []);
+};
 
-  updateScrolling = () => {
-    const { isActive } = this.props;
+const getUrlParmeters = location => {
+  const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
+  return Object.entries(location.query).reduce((acc, [key, value]) => {
+    const [, name, count] = regParamWithBrackets.test(key) ? key.match(regParamWithBrackets) : [null, key, null];
+    const val = decodeURIComponent(value);
+    if (count) {
+      if (!acc[name]) {
+        acc[name] = [];
+      }
+      acc[name].push(val);
+    } else {
+      acc[name] = val;
+    }
+    return acc;
+  }, {});
+};
+
+
+const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryString, selectedType, facets, sort, page, group, defaultGroup, definitionIsReady, definitionIsLoading, definitionHasError, loadDefinition, shouldLoadGroups, isGroupLoading, isGroupsReady, loadGroups, groupsHasError, searchHasError, search }) => {
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "EBRAINS - Knowledge Graph Search";
+    const params = getUrlParmeters(location);
+    const searchParam = { ...params };
+    delete searchParam.group;
+    setInitialSearchParams(searchParam);
+    window.onpopstate = () => {
+      const reg = /^#(.+)$/;
+      const [, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null];
+      goBackToInstance(id);
+    };
+  }, []);
+
+  useEffect(() => {
     if (isActive) {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
@@ -191,32 +155,22 @@ class SearchBase extends React.Component {
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
     }
-  };
+  }, [isActive]);
 
-  getUrlParmeters = () => {
-    const { location } = this.props;
-    const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
-    return Object.entries(location.query).reduce((acc, [key, value]) => {
-      const [, name, count] = regParamWithBrackets.test(key) ? key.match(regParamWithBrackets) : [null, key, null];
-      const val = decodeURIComponent(value);
-      if (count) {
-        if (!acc[name]) {
-          acc[name] = [];
-        }
-        acc[name].push(val);
-      } else {
-        acc[name] = val;
-      }
-      return acc;
-    }, {});
-  };
+  useEffect(() => {
+    let query = location.query;
+    query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
+    query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
+    const list = calculateFacetList(facets);
+    query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), query);
+    query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
+    query = getUpdatedQuery(query, "p", page !== 1, page, false);
+    query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
+    const url = getLocationFromQuery(query, location);
+    navigate(url);
+  }, [queryString, selectedType, sort, page, group, facets]); //location.search !== previousProps.location.search)
 
-  search() {
-    const {
-      definitionIsReady, definitionHasError, definitionIsLoading,
-      isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
-      loadDefinition, loadGroups, search
-    } = this.props;
+  useEffect(() => {
     if (!definitionIsReady) {
       if (!definitionIsLoading && !definitionHasError) {
         loadDefinition();
@@ -228,15 +182,13 @@ class SearchBase extends React.Component {
     } else {
       search();
     }
-  }
+  }, [definitionIsReady, definitionIsLoading, definitionHasError, shouldLoadGroups, isGroupsReady, isGroupLoading, groupsHasError]); //location.search !== previousProps.location.search)
 
-  render() {
-    const { definitionIsReady, definitionHasError, searchHasError, groupsHasError } = this.props;
-    return (
-      <SearchComponent show={definitionIsReady && !definitionHasError && !groupsHasError && !searchHasError} />
-    );
-  }
-}
+
+  return (
+    <SearchComponent show={definitionIsReady && !definitionHasError && !groupsHasError && !searchHasError} />
+  );
+};
 
 export const SearchWithTabKeyNavigation = withTabKeyNavigation(
   "isActive",
@@ -252,12 +204,12 @@ export const Search = connect(
     definitionHasError: !!state.definition.error,
     group: state.groups.group,
     defaultGroup: state.groups.defaultGroup,
+    previousGroup: state.groups.previousGroup,
     groupsHasError: !!state.groups.error,
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,
     shouldLoadGroups: !!state.auth.accessToken,
     searchHasError: !!state.search.error,
-    location: state.router.location,
     queryString: state.search.queryString,
     selectedType: state.search.selectedType,
     facets: state.search.facets.filter(f =>
@@ -269,12 +221,11 @@ export const Search = connect(
       acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
       return acc;
     }, ""),
-    sort: state.search.sort?state.search.sort.param:null,
+    sort: state.search.sort ? state.search.sort.param : null,
     page: state.search.page
   }),
   dispatch => ({
     setInitialSearchParams: params => dispatch(actionsSearch.setInitialSearchParams(params)),
-    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     search: () => dispatch(actionsSearch.search()),
