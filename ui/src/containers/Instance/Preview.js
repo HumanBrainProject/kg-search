@@ -31,15 +31,8 @@ import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
-const getId = ({org, domain, schema, version, id}) => {
-  if(org && domain && schema && version && id) {
-    return `${org}/${domain}/${schema}/${version}/${id}`;
-  }
-  return id;
-};
-
 export const Preview = connect(
-  (state, props) => {
+  state => {
     const instanceProps = state.instances.currentInstance?
       {
         ...mapStateToProps(state, {
@@ -68,16 +61,21 @@ export const Preview = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      previousGroup: state.groups.previousGroup,
-      id: getId(props.match.params),
       watermark: "Preview",
-      searchPage: false
+      searchPage: false,
+      getId: ({org, domain, schema, version, id}) => {
+        if(org && domain && schema && version && id) {
+          return `${org}/${domain}/${schema}/${version}/${id}`;
+        }
+        return id;
+      }
     };
   },
   dispatch => ({
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
+    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances())
   })
 )(InstanceContainer);

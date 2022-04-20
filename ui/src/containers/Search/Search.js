@@ -208,7 +208,6 @@ export const Search = connect(
     definitionHasError: !!state.definition.error,
     group: state.groups.group,
     defaultGroup: state.groups.defaultGroup,
-    previousGroup: state.groups.previousGroup,
     groupsHasError: !!state.groups.error,
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,

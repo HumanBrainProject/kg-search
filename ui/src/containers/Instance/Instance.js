@@ -31,7 +31,7 @@ import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
 export const Instance = connect(
-  (state, props) => {
+  state => {
     const instanceProps = state.instances.currentInstance?
       {
         ...mapStateToProps(state, {
@@ -60,15 +60,15 @@ export const Instance = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      previousGroup: state.groups.previousGroup,
-      id: props.match.params.type?`${props.match.params.type}/${props.match.params.id}`:props.match.params.id,
-      searchPage: false
+      searchPage: false,
+      getId: ({type, id}) => type?`${type}/${id}`:id
     };
   },
   dispatch => ({
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id, navigate) => dispatch(actionsInstances.loadInstance(group, id, navigate)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
+    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances())
   })
 )(InstanceContainer);

@@ -1,21 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { SignIn } from "../SignIn/SignIn";
-import * as actionsInstances from "../../actions/actions.instances";
 
 import "./Header.css";
 
-export const Header = ({ SignInComponent, onClearInstances, theme }) => {
+export const Header = ({ SignInComponent, theme }) => {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const backToSearch = () => {
-    onClearInstances();
-    navigate("/");
-  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light kgs-navbar">
@@ -29,7 +22,7 @@ export const Header = ({ SignInComponent, onClearInstances, theme }) => {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            {location.pathname.startsWith("/instances") && <li className="nav-item"><Link onClick={backToSearch}>Search</Link></li>}
+            {location.pathname.startsWith("/instances") && <li className="nav-item"><Link to={"/"} >Search</Link></li>}
             <li className="nav-item">
               <a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
             </li>
@@ -48,8 +41,5 @@ export default connect(
   state => ({
     SignInComponent: SignIn,
     theme: state.application.theme
-  }),
-  dispatch => ({
-    onClearInstances: () => dispatch(actionsInstances.clearAllInstances())
   })
 )(Header);

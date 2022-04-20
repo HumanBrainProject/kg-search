@@ -24,7 +24,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
 
@@ -68,7 +67,6 @@ export const InstanceLink = connect(
   },
   dispatch => ({
     onClick: (id, group, navigate) => {
-      dispatch(actionsGroups.setGroup(group));
       dispatch(actionsInstances.loadInstance(group, id, navigate, true));
     }
   })
