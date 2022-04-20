@@ -45,7 +45,8 @@ const initialState = {
   hitsPerPage: 20,
   hits: [],
   total: 0,
-  from: 0
+  from: 0,
+  isUpToDate: false
 };
 
 const setupSearch = (state, action) => {
@@ -127,7 +128,8 @@ const setQueryString = (state, action) => {
     ...state,
     queryString: action.queryString,
     page: 1,
-    from: 0
+    from: 0,
+    isUpToDate: false
   };
 };
 
@@ -189,7 +191,8 @@ const setFacet = (state, action) => {
       }
     }),
     page: 1,
-    from: 0
+    from: 0,
+    isUpToDate: false
   };
 };
 
@@ -215,7 +218,8 @@ const getResetFacets = facets => {
 const resetFacets = state => ({
   ...state,
   facets: getResetFacets(state.facets),
-  page: 1
+  page: 1,
+  isUpToDate: false
 });
 
 const setFacetSize = (state, action) => {
@@ -235,7 +239,8 @@ const setFacetSize = (state, action) => {
       default:
         return f;
       }
-    })
+    }),
+    isUpToDate: false
   };
 };
 
@@ -244,7 +249,8 @@ const setSort = (state, action) => {
   if (match.length) {
     return {
       ...state,
-      sort: match[0]
+      sort: match[0],
+      isUpToDate: false
     };
   }
   return state;
@@ -254,7 +260,8 @@ const setPage = (state, action) => {
   return {
     ...state,
     page: action.value,
-    from: (action.value -1) * state.hitsPerPage
+    from: (action.value -1) * state.hitsPerPage,
+    isUpToDate: false
   };
 };
 
@@ -264,7 +271,8 @@ const setType = (state, action) => {
     ...state,
     selectedType: selectedType,
     page: 1,
-    from: 0
+    from: 0,
+    isUpToDate: false
   };
 };
 
@@ -278,7 +286,8 @@ const resetTypeForGroup = (state, action) => {
   return {
     ...state,
     selectedType: selectedType,
-    facets: getResetFacets(state.facets)
+    facets: getResetFacets(state.facets),
+    isUpToDate: false
   };
 };
 
@@ -404,7 +413,8 @@ const loadSearchResult = (state, action) => {
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
     hits: Array.isArray(action.results?.hits?.hits) ? action.results.hits.hits : [],
     total: total,
-    totalPages: Math.ceil(total / state.hitsPerPage)
+    totalPages: Math.ceil(total / state.hitsPerPage),
+    isUpToDate: true
   };
 };
 
@@ -444,7 +454,8 @@ const logout = state => {
   return {
     ...state,
     page: 1,
-    from: 0
+    from: 0,
+    isUpToDate: false
   };
 };
 

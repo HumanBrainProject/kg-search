@@ -44,7 +44,6 @@ const App = ({ initialize, isReady }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    window.instanceTabSelection = {};
     initialize(location, navigate);
   }, []);
 

@@ -26,7 +26,7 @@ import ReactPiwik from "react-piwik";
 
 import { BgError } from "../BgError/BgError";
 import { Header } from "./Header/Header";
-import Tabs from "../Tabs/Tabs";
+import { Tabs } from "../../containers/Instance/Tabs";
 import { Disclaimer } from "../Disclaimer/Disclaimer";
 
 import "./Instance.css";
@@ -35,7 +35,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 
 
-export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
+export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, tabs, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
             </button>.
           </div>
         </div>):null}
-      <Tabs instanceId={id} groups={groups} />
+      <Tabs instanceId={id} tabs={tabs} />
       <Disclaimer content={disclaimer} />
       <TermsShortNoticeComponent />
       <ImagePopupComponent className="kgs-instance__image_popup" />

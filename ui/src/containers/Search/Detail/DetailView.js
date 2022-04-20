@@ -20,8 +20,9 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as actionsInstances from "../../../actions/actions.instances";
 import { Carousel } from "../../../components/Carousel/Carousel";
 import { ShareButtons } from "../../Share/ShareButtons";
@@ -29,28 +30,40 @@ import { Instance } from "../Instance";
 import "./DetailView.css";
 
 
-const mapStateToProps = state => {
-  return {
-    className: "kgs-detailView",
-    show: !!state.instances.currentInstance,
-    data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : [],
-    itemComponent: Instance,
-    navigationComponent: ShareButtons,
-  };
+const DetailViewComponent = ({onPrevious, onClose, clearInstanceCurrentTab, show, data}) => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => clearInstanceCurrentTab(), []);
+
+  const handleOnPrevious = () => onPrevious(navigate);
+
+  const handleOnClose = () => onClose(navigate);
+
+  if (!show || !Array.isArray(data) || !data.length) {
+    return null;
+  }
+
+  return (
+    <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onPrevious={handleOnPrevious} onClose={handleOnClose} />
+  );
 };
 
-const mapDispatchToProps = dispatch => ({
-  onPrevious: navigate => {
-    dispatch(actionsInstances.setPreviousInstance());
-    dispatch(actionsInstances.updateLocation(navigate));
-  },
-  onClose: navigate => {
-    dispatch(actionsInstances.clearAllInstances());
-    dispatch(actionsInstances.updateLocation(navigate));
-  }
-});
-
 export const DetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Carousel);
+  state => ({
+    show: !!state.instances.currentInstance,
+    data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : []
+  }),
+  dispatch => ({
+    onPrevious: navigate => {
+      dispatch(actionsInstances.setPreviousInstance());
+      dispatch(actionsInstances.updateLocation(navigate));
+    },
+    onClose: navigate => {
+      dispatch(actionsInstances.clearInstanceCurrentTab());
+      dispatch(actionsInstances.clearAllInstances());
+      dispatch(actionsInstances.updateLocation(navigate));
+    },
+    clearInstanceCurrentTab: () => dispatch(actionsInstances.clearInstanceCurrentTab())
+  })
+)(DetailViewComponent);

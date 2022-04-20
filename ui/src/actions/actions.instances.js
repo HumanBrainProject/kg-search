@@ -28,6 +28,20 @@ import { sessionFailure, logout } from "./actions";
 import { store } from "../store";
 import { searchToObj } from "../helpers/BrowserHelpers";
 
+export const setInstanceCurrentTab = (instanceId, tabName) => {
+  return {
+    type: types.SET_INSTANCE_CURRENT_TAB,
+    instanceId: instanceId,
+    tabName: tabName
+  };
+};
+
+export const clearInstanceCurrentTab = () => {
+  return {
+    type: types.CLEAR_INSTANCE_CURRENT_TAB
+  };
+};
+
 export const loadInstanceRequest = () => {
   return {
     type: types.LOAD_INSTANCE_REQUEST

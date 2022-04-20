@@ -21,11 +21,14 @@
  *
  */
 
-import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
-import { isMobile } from "../../helpers/BrowserHelpers";
-import "./Carousel.css";
+import React, { useEffect, useRef, useMemo } from "react";
+import uniqueId from "lodash/uniqueId";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PropTypes from "prop-types";
+
+import { isMobile } from "../../helpers/BrowserHelpers";
+
+import "./Carousel.css";
 
 const getNavigation = (item, showPrevious, onClose, onPrevious, navigationComponent) => {
   const NavigationComponent = navigationComponent;
@@ -68,39 +71,15 @@ const CarouselItem = ({ item, showPrevious, onClose, onPrevious, itemComponent, 
 
 const nbOfItems = 5;
 
-export const Carousel = ({ show, className, data, onPrevious, onClose, itemComponent, navigationComponent }) => {
-  const [items, setItems] = useState(Array.from(Array(nbOfItems)).map((x, idx) => ({
-    id: idx,
-    position: idx,
-    isActive: false,
-    data: null
-  })));
-
+export const Carousel = ({ className, data, onPrevious, onClose, itemComponent, navigationComponent }) => {
   const wrapperRef = useRef();
 
   useEffect(() => {
-    const currentPosition = (data.length - 1) % nbOfItems;
-    const result = items.map((item, idx) => {
-      const idxData = data.length - 1 - (idx <= currentPosition ? (currentPosition - idx) : (nbOfItems - (idx - currentPosition)));
-      const position = (idx <= currentPosition ? (nbOfItems - (currentPosition - idx)) : (idx - currentPosition)) % 5;
-      return {
-        isActive: item.id === currentPosition,
-        position: position,
-        data: idxData >= 0 ? data[idxData] : null
-      };
-    });
-    setItems(result);
-  }, []);
-
-  useEffect(() => {
-    window.instanceTabSelection = {};
     if (!isMobile) {
       const _keyupHandler = event => {
-        if (show) {
-          if (event.keyCode === 27) {
-            event.preventDefault();
-            onClose();
-          }
+        if (event.keyCode === 27) {
+          event.preventDefault();
+          onClose();
         }
       };
       window.addEventListener("keyup", _keyupHandler, false);
@@ -108,13 +87,25 @@ export const Carousel = ({ show, className, data, onPrevious, onClose, itemCompo
     }
   }, []);
 
-  if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
-    return null;
-  }
+  const items = useMemo(() => Array.from(Array(nbOfItems)).map((_, idx) => ({
+    id: uniqueId("kgs-carousel__item-"),
+    position: idx,
+    isActive: false,
+    data: null
+  })), []);
+
+  items.forEach((item, idx) => {
+    const currentPosition = (data.length - 1) % nbOfItems;
+    const idxData = data.length - 1 - (idx <= currentPosition ? (currentPosition - idx) : (nbOfItems - (idx - currentPosition)));
+    const position = (idx <= currentPosition ? (nbOfItems - (currentPosition - idx)) : (idx - currentPosition)) % 5;
+
+    item.isActive = idx === currentPosition;
+    item.position = position;
+    item.data = idxData >= 0 ? data[idxData] : null;
+  });
 
   const handleOnClose = e => {
     if (wrapperRef && !wrapperRef.current.contains(e.target)) {
-      window.instanceTabSelection = {};
       onClose();
     }
   };
@@ -127,7 +118,7 @@ export const Carousel = ({ show, className, data, onPrevious, onClose, itemCompo
     <div className={classNames} onClick={handleOnClose}>
       <div className="kgs-carousel__panel" ref={wrapperRef}>
         {items.map(item => (
-          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={handleOnClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
         ))}
       </div>
     </div>
@@ -137,7 +128,6 @@ export const Carousel = ({ show, className, data, onPrevious, onClose, itemCompo
 
 Carousel.propTypes = {
   className: PropTypes.string,
-  show: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.any),
   onPrevious: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

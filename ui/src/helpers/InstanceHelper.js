@@ -86,13 +86,13 @@ const getHeaderFields = (group, type, data, mapping) => {
   return fields;
 };
 
-const getFieldsByGroups = (group, type, data, typeMapping) => {
+const getFieldsByTabs = (group, type, data, typeMapping) => {
   if (!data || !typeMapping) {
     return [];
   }
 
   const overviewFields = [];
-  const groups = Object.entries(typeMapping.fields || {})
+  const tabs = Object.entries(typeMapping.fields || {})
     .filter(([name, mapping]) =>
       mapping
       && mapping.visible
@@ -125,10 +125,10 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
         fields: overviewFields,
         previews: previews
       },
-      ...Object.values(groups)
+      ...Object.values(tabs)
     ];
   }
-  return Object.values(groups);
+  return Object.values(tabs);
 };
 
 
@@ -201,7 +201,7 @@ export const mapStateToProps = (state, props) => {
     latestVersion: latestVersion,
     isOutdated: latestVersion && latestVersion.label !== version,
     allVersions: allVersions,
-    groups: getFieldsByGroups(group, type, source, mapping),
+    tabs: getFieldsByTabs(group, type, source, mapping),
     disclaimer: source?.disclaimer?.value
   };
 };

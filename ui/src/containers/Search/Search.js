@@ -131,7 +131,7 @@ const getUrlParmeters = () => {
 };
 
 
-const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryString, selectedType, facets, sort, page, group, defaultGroup, definitionIsReady, definitionIsLoading, definitionHasError, loadDefinition, shouldLoadGroups, isGroupLoading, isGroupsReady, loadGroups, groupsHasError, searchHasError, search }) => {
+const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryString, selectedType, facets, sort, page, group, defaultGroup, definitionIsReady, definitionIsLoading, definitionHasError, loadDefinition, shouldLoadGroups, isGroupLoading, isGroupsReady, loadGroups, groupsHasError, searchHasError, search, isUpToDate }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -172,7 +172,7 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
     if (newUrl) {
       navigate(newUrl);
     }
-  }, [queryString, selectedType, sort, page, group, location.search]);
+  }, [queryString, selectedType, sort, page, group, facets]);
 
   useEffect(() => {
     if (!definitionIsReady) {
@@ -183,10 +183,10 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
       if (!isGroupLoading && !groupsHasError) {
         loadGroups();
       }
-    } else {
+    } else if (!isUpToDate) {
       search();
     }
-  }, [definitionIsReady, definitionIsLoading, definitionHasError, shouldLoadGroups, isGroupsReady, isGroupLoading, groupsHasError, location.search]);
+  }, [definitionIsReady, definitionIsLoading, definitionHasError, shouldLoadGroups, isGroupsReady, isGroupLoading, groupsHasError, isUpToDate]);
 
 
   return (
@@ -226,7 +226,8 @@ export const Search = connect(
       return acc;
     }, ""),
     sort: state.search.sort ? state.search.sort.param : null,
-    page: state.search.page
+    page: state.search.page,
+    isUpToDate: state.search.isUpToDate
   }),
   dispatch => ({
     setInitialSearchParams: params => dispatch(actionsSearch.setInitialSearchParams(params)),
