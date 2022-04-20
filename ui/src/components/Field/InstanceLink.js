@@ -46,7 +46,7 @@ const InstanceLinkComponent = ({text, id, group, context, onClick}) => {
     if(path) {
       navigate(`${path}${id}${group && group !== "public"?("?group=" + group ):""}`, context);
     } else {
-      onClick(id, group);
+      onClick(id, group, navigate);
     }
   };
 
@@ -67,9 +67,9 @@ export const InstanceLink = connect(
     };
   },
   dispatch => ({
-    onClick: (id, group) => {
+    onClick: (id, group, navigate) => {
       dispatch(actionsGroups.setGroup(group));
-      dispatch(actionsInstances.loadInstance(group, id, true));
+      dispatch(actionsInstances.loadInstance(group, id, navigate, true));
     }
   })
 )(InstanceLinkComponent);

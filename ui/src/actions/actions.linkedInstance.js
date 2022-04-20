@@ -25,7 +25,6 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
-import { getSearchKey } from "../helpers/BrowserHelpers";
 
 export const loadLinkedInstanceRequest = () => {
   return {

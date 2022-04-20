@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -37,10 +38,8 @@ export const generateKey = () => {
 
 const regParam = /^(.+)=(.+)$/;
 
-export const searchToObj = search => {
-  if (typeof search !== "string") {
-    search = window.location.search;
-  }
+export const searchToObj = () => {
+  const search = window.location.search;
   if (search.length <= 1) {
     return {};
   }
@@ -52,29 +51,6 @@ export const searchToObj = search => {
     result[key] = value;
     return result;
   }, {});
-};
-
-export const getSearchKey = (key, ignoreCase=false, search) => {
-  if (typeof key !== "string") {
-    return null;
-  }
-  if (!ignoreCase) {
-    return searchToObj(search)[key];
-  }
-  key = key.toLocaleLowerCase();
-  const obj = searchToObj(search);
-  if (obj[key]) {
-    return obj[key];
-  }
-  let result = null;
-  Object.entries(obj).some(([name, value]) => {
-    if (name.toLocaleLowerCase() === key) {
-      result = value;
-      return true;
-    }
-    return false;
-  });
-  return result;
 };
 
 export const getHashKey = (key, hash) => {
@@ -142,7 +118,10 @@ export const getLocationFromQuery = (query, location) => {
     acc += `${(acc.length > 1)?"&":""}${key}=${value}`;
     return acc;
   }, "?");
-  return `${location.pathname}${queryString}`;
+  if (queryString !== location.search) {
+    return `${location.pathname}${queryString}`;
+  }
+  return null;
 };
 
 export const windowHeight = () => {

@@ -29,11 +29,10 @@ import { help } from "../../../data/help.js";
 import { withFloatingScrollEventsSubscription } from "../../../helpers/withFloatingScrollEventsSubscription";
 import "./SearchPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocation } from "react-router-dom";
+import { searchToObj } from "../../../helpers/BrowserHelpers";
 
 const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) => {
   const textInput = useRef();
-  const location = useLocation();
   const [value, setValue] = useState("");
 
   useEffect(() => {
@@ -41,7 +40,7 @@ const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) =>
     const blur = () => textInput && textInput.current && textInput.current.blur();
     window.addEventListener("scroll", blur);
 
-    const q = location.query["q"];
+    const q = searchToObj()["q"];
     if (q && q.length) {
       const queryString = decodeURIComponent(q);
       setValue(queryString);

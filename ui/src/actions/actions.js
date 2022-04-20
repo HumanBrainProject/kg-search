@@ -23,7 +23,7 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { getHashKey, generateKey, getSearchKey } from "../helpers/BrowserHelpers";
+import { getHashKey, generateKey, searchToObj } from "../helpers/BrowserHelpers";
 import { store } from "../store";
 import { setInitialGroup } from "./actions.groups";
 
@@ -148,7 +148,7 @@ export const getAuthEndpoint = (group=null) => {
 export const initialize = (location, navigate) => {
   return dispatch => {
     const accessToken = getHashKey("access_token");
-    const group = getSearchKey("group");
+    const group = searchToObj()["group"];
     if(group) {
       dispatch(setInitialGroup(group));
     }

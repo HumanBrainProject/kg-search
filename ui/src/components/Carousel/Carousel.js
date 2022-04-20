@@ -113,7 +113,7 @@ export const Carousel = ({ show, className, data, onPrevious, onClose, itemCompo
   }
 
   const handleOnClose = e => {
-    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
+    if (wrapperRef && !wrapperRef.current.contains(e.target)) {
       window.instanceTabSelection = {};
       onClose();
     }
@@ -124,7 +124,7 @@ export const Carousel = ({ show, className, data, onPrevious, onClose, itemCompo
   const classNames = ["kgs-carousel", className].join(" ");
 
   return (
-    <div className={classNames} onClick={this.onClose}>
+    <div className={classNames} onClick={handleOnClose}>
       <div className="kgs-carousel__panel" ref={wrapperRef}>
         {items.map(item => (
           <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={handleOnClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />

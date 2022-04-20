@@ -89,7 +89,7 @@ export const InstanceContainer = ({ definitionIsReady, definitionHasError, isGro
           setPreviousInstance();
         } else {
           if (!instanceHasError) {
-            fetch(group, id);
+            fetch(group, id, navigate);
           }
         }
       }
@@ -102,8 +102,10 @@ export const InstanceContainer = ({ definitionIsReady, definitionHasError, isGro
 
   useEffect(() => {
     const query = getUpdatedQuery(location.query, "group", group && group !== defaultGroup, group, false);
-    const url = getLocationFromQuery(query, location);
-    navigate(url);
+    const newUrl = getLocationFromQuery(query, location);
+    if (newUrl) {
+      navigate(newUrl);
+    }
   }, [group]);
 
 

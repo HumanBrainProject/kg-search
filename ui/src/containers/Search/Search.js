@@ -38,14 +38,14 @@ import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
 import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, SearchErrorPanel } from "../Error/ErrorPanel";
-import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
+import { getUpdatedQuery, getLocationFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./Search.css";
 
 const SearchComponent = ({ show }) => (
   <div className="kgs-search-container" >
     {show && (
-      <React.Fragment>
+      <>
         <div className="kgs-search" >
           <SearchPanel />
           <TermsShortNotice className="kgs-search__terms-short-notice" />
@@ -60,7 +60,7 @@ const SearchComponent = ({ show }) => (
           <Footer />
         </div>
         <DetailView />
-      </React.Fragment>
+      </>
     )}
     <DefinitionErrorPanel />
     <GroupErrorPanel />
@@ -111,9 +111,10 @@ const calculateFacetList = facets => {
   }, []);
 };
 
-const getUrlParmeters = location => {
+const getUrlParmeters = () => {
   const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
-  return Object.entries(location.query).reduce((acc, [key, value]) => {
+  const query = searchToObj();
+  const res = Object.entries(query).reduce((acc, [key, value]) => {
     const [, name, count] = regParamWithBrackets.test(key) ? key.match(regParamWithBrackets) : [null, key, null];
     const val = decodeURIComponent(value);
     if (count) {
@@ -126,6 +127,7 @@ const getUrlParmeters = location => {
     }
     return acc;
   }, {});
+  return res;
 };
 
 
@@ -136,7 +138,7 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
 
   useEffect(() => {
     document.title = "EBRAINS - Knowledge Graph Search";
-    const params = getUrlParmeters(location);
+    const params = getUrlParmeters();
     const searchParam = { ...params };
     delete searchParam.group;
     setInitialSearchParams(searchParam);
@@ -158,7 +160,7 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
   }, [isActive]);
 
   useEffect(() => {
-    let query = location.query;
+    let query = searchToObj();
     query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
     query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
     const list = calculateFacetList(facets);
@@ -166,9 +168,11 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
     query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
     query = getUpdatedQuery(query, "p", page !== 1, page, false);
     query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
-    const url = getLocationFromQuery(query, location);
-    navigate(url);
-  }, [queryString, selectedType, sort, page, group, facets]); //location.search !== previousProps.location.search)
+    const newUrl = getLocationFromQuery(query, location);
+    if (newUrl) {
+      navigate(newUrl);
+    }
+  }, [queryString, selectedType, sort, page, group, location.search]);
 
   useEffect(() => {
     if (!definitionIsReady) {
@@ -182,7 +186,7 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
     } else {
       search();
     }
-  }, [definitionIsReady, definitionIsLoading, definitionHasError, shouldLoadGroups, isGroupsReady, isGroupLoading, groupsHasError]); //location.search !== previousProps.location.search)
+  }, [definitionIsReady, definitionIsLoading, definitionHasError, shouldLoadGroups, isGroupsReady, isGroupLoading, groupsHasError, location.search]);
 
 
   return (

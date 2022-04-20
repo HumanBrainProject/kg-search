@@ -26,7 +26,7 @@ import API from "../services/API";
 import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { store } from "../store";
-import { getSearchKey } from "../helpers/BrowserHelpers";
+import { searchToObj } from "../helpers/BrowserHelpers";
 
 export const loadInstanceRequest = () => {
   return {
@@ -152,7 +152,7 @@ export const loadInstance = (group, id, navigate, shouldUpdateLocation=false) =>
         {
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
           const link = `<a href=${url}>${url}</a>`;
-          const group = getSearchKey("group");
+          const group = searchToObj()["group"];
           const error = (group && group === "curated")? "The page you requested was not found." :
             `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
           dispatch(loadInstanceFailure(error));

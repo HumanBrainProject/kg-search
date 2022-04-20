@@ -68,7 +68,7 @@ export const Instance = connect(
   dispatch => ({
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
+    fetch: (group, id, navigate) => dispatch(actionsInstances.loadInstance(group, id, navigate)),
     setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
   })
 )(InstanceContainer);
