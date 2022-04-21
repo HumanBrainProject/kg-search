@@ -28,6 +28,7 @@ import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
+import {faFileImage} from "@fortawesome/free-solid-svg-icons/faFileImage";
 import {faFolder} from "@fortawesome/free-solid-svg-icons/faFolder";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
@@ -35,6 +36,7 @@ import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import {faTag} from "@fortawesome/free-solid-svg-icons/faTag";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
 import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
@@ -60,6 +62,7 @@ library.add(
   faTimes,
   faEnvelope,
   faFile,
+  faFileImage,
   faFolder,
   faCircleNotch,
   faClipboard,
@@ -67,6 +70,7 @@ library.add(
   faInfoCircle,
   faTag,
   faExclamationTriangle,
+  faExclamationCircle,
   faPlay,
   faSearch,
   faChevronLeft,
