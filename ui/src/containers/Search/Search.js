@@ -144,7 +144,7 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
     setInitialSearchParams(searchParam);
     window.onpopstate = () => {
       const reg = /^#(.+)$/;
-      const [, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null];
+      const [, id] = reg.test(window.location.hash) ? window.location.hash.match(reg) : [null, null];
       goBackToInstance(id);
     };
   }, []);
