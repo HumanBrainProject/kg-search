@@ -30,39 +30,50 @@ import { Instance } from "../Instance";
 import "./DetailView.css";
 
 
-const DetailViewComponent = ({onPrevious, onClose, clearInstanceCurrentTab, show, data}) => {
+const DetailViewComponent = ({onBack, onClose, clearInstanceCurrentTab, show, data, previousInstanceId}) => {
 
   const navigate = useNavigate();
 
   useEffect(() => clearInstanceCurrentTab(), []);
 
-  const handleOnPrevious = () => onPrevious(navigate);
+  const handleOnBack = () => {
+    onBack();
+    if (previousInstanceId) {
+      navigate(`/${window.location.search}#${previousInstanceId}`);
+    } else {
+      navigate(`/${window.location.search}`);
+    }
+  };
 
-  const handleOnClose = () => onClose(navigate);
+  const handleOnClose = () => {
+    onClose();
+    navigate(`/${window.location.search}`);
+  };
 
   if (!show || !Array.isArray(data) || !data.length) {
     return null;
   }
 
   return (
-    <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onPrevious={handleOnPrevious} onClose={handleOnClose} />
+    <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
   );
 };
 
 export const DetailView = connect(
-  state => ({
-    show: !!state.instances.currentInstance,
-    data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : []
-  }),
+  state => {
+    const previousInstance = state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null;
+    const previousInstanceId = previousInstance?._id;
+    return {
+      show: !!state.instances.currentInstance,
+      data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : [],
+      previousInstanceId: previousInstanceId
+    };
+  },
   dispatch => ({
-    onPrevious: navigate => {
-      dispatch(actionsInstances.setPreviousInstance());
-      dispatch(actionsInstances.updateLocation(navigate));
-    },
-    onClose: navigate => {
+    onBack: () => dispatch(actionsInstances.setPreviousInstance()),
+    onClose: () => {
       dispatch(actionsInstances.clearInstanceCurrentTab());
       dispatch(actionsInstances.clearAllInstances());
-      dispatch(actionsInstances.updateLocation(navigate));
     },
     clearInstanceCurrentTab: () => dispatch(actionsInstances.clearInstanceCurrentTab())
   })

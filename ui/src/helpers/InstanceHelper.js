@@ -37,6 +37,9 @@ export const getTags = header => {
 export const getTitle = (data, id) => {
   if (data && data._id) {
     if (data._source?.title?.value) {
+      if (data._source?.version) {
+        return `${data._source.title.value} ${data._source.version}`;
+      }
       return `${data._source.title.value}`;
     }
     if (data._source?.type?.value) {

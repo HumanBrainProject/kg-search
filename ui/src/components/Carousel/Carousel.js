@@ -30,12 +30,12 @@ import { isMobile } from "../../helpers/BrowserHelpers";
 
 import "./Carousel.css";
 
-const getNavigation = (item, showPrevious, onClose, onPrevious, navigationComponent) => {
+const getNavigation = (item, showPrevious, onClose, onBack, navigationComponent) => {
   const NavigationComponent = navigationComponent;
   const Navigation = () => (
     <div className="kgs-carousel__header">
       {item.isActive && showPrevious && (
-        <button className="kgs-carousel__previous-button" onClick={onPrevious}>
+        <button className="kgs-carousel__previous-button" onClick={onBack}>
           <FontAwesomeIcon icon="chevron-left" /> Previous
         </button>
       )}
@@ -55,9 +55,9 @@ const getNavigation = (item, showPrevious, onClose, onPrevious, navigationCompon
   return Navigation;
 };
 
-const CarouselItem = ({ item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent }) => {
+const CarouselItem = ({ item, showPrevious, onClose, onBack, itemComponent, navigationComponent }) => {
   const ItemComponent = itemComponent;
-  const NavigationComponent = getNavigation(item, showPrevious, onClose, onPrevious, navigationComponent);
+  const NavigationComponent = getNavigation(item, showPrevious, onClose, onBack, navigationComponent);
   return (
     <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
@@ -71,7 +71,7 @@ const CarouselItem = ({ item, showPrevious, onClose, onPrevious, itemComponent, 
 
 const nbOfItems = 5;
 
-export const Carousel = ({ className, data, onPrevious, onClose, itemComponent, navigationComponent }) => {
+export const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationComponent }) => {
   const wrapperRef = useRef();
 
   useEffect(() => {
@@ -118,7 +118,7 @@ export const Carousel = ({ className, data, onPrevious, onClose, itemComponent, 
     <div className={classNames} onClick={handleOnClose}>
       <div className="kgs-carousel__panel" ref={wrapperRef}>
         {items.map(item => (
-          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onBack={onBack} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
         ))}
       </div>
     </div>
@@ -129,7 +129,7 @@ export const Carousel = ({ className, data, onPrevious, onClose, itemComponent, 
 Carousel.propTypes = {
   className: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.any),
-  onPrevious: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   itemComponent: PropTypes.oneOfType([
     PropTypes.element,

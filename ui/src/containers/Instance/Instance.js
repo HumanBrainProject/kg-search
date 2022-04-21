@@ -30,6 +30,8 @@ import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
+const path = "/instances/";
+
 export const Instance = connect(
   state => {
     const instanceProps = state.instances.currentInstance?
@@ -37,7 +39,7 @@ export const Instance = connect(
         ...mapStateToProps(state, {
           data: state.instances.currentInstance
         }),
-        path: "/instances/",
+        path: path,
         defaultGroup: state.groups.defaultGroup,
         ImagePopupComponent: ImagePopup,
         TermsShortNoticeComponent: TermsShortNotice
@@ -45,6 +47,7 @@ export const Instance = connect(
       :
       null;
     return {
+      path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
       definitionIsReady: state.definition.isReady,
@@ -67,8 +70,8 @@ export const Instance = connect(
   dispatch => ({
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, id, navigate) => dispatch(actionsInstances.loadInstance(group, id, navigate)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
-    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances())
+    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
+    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances()),
+    goBackToInstance: id => dispatch(actionsInstances.goBackToInstance(id))
   })
 )(InstanceContainer);

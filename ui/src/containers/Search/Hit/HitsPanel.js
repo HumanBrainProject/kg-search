@@ -129,8 +129,8 @@ export const HitsPanel = connect(
         ReactPiwik.push(["trackEvent", "Card", "Open in new tab", relativeUrl]);
         window.open(relativeUrl, "_blank");
       } else {
-        dispatch(actionsInstances.setInstance(data, target));
-        dispatch(actionsInstances.updateLocation(navigate));
+        dispatch(actionsInstances.setInstance(data));
+        navigate(`/${window.location.search}#${data._id}`);
       }
     }
   })

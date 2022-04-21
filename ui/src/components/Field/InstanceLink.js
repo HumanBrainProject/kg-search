@@ -67,7 +67,9 @@ export const InstanceLink = connect(
   },
   dispatch => ({
     onClick: (id, group, navigate) => {
-      dispatch(actionsInstances.loadInstance(group, id, navigate, true));
+      dispatch(actionsInstances.loadInstance(group, id, () => {
+        navigate(`/${window.location.search}#${id}`);
+      }));
     }
   })
 )(InstanceLinkComponent);

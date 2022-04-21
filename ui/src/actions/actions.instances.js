@@ -25,7 +25,6 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
-import { store } from "../store";
 import { searchToObj } from "../helpers/BrowserHelpers";
 
 export const setInstanceCurrentTab = (instanceId, tabName) => {
@@ -108,19 +107,6 @@ export const goBackToInstance = id => {
   };
 };
 
-export const updateLocation = navigate => {
-  const state = store.getState();
-  const id = state.instances.currentInstance?._id;
-  if(id) {
-    navigate(`/${window.location.search}#${id}`);
-  } else {
-    navigate(`/${window.location.search}`);
-  }
-  return {
-    type: types.UPDATE_LOCATION
-  };
-};
-
 export const goToSearch = (navigate, group, defaultGroup) => {
   return dispatch => {
     if (!group) {
@@ -133,16 +119,14 @@ export const goToSearch = (navigate, group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (group, id, navigate, shouldUpdateLocation=false) => {
+export const loadInstance = (group, id, onSuccessCallback) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.instance(group, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
-        if(shouldUpdateLocation) {
-          dispatch(updateLocation(navigate));
-        }
+        typeof onSuccessCallback === "function" && onSuccessCallback();
       })
       .catch(e => {
         const { response } = e;

@@ -34,14 +34,18 @@ import { getUpdatedQuery, getLocationFromQuery, searchToObj } from "../../helper
 import "./InstanceContainer.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const BackLinkButton = ({title}) => {
+const BackLinkButton = ({instance}) => {
+
   const navigate = useNavigate();
+
+  if (!instance) {
+    return null;
+  }
+
+  const title = getTitle(instance);
 
   const onClick = () => navigate(-1);
 
-  if (!title) {
-    return null;
-  }
   return (
     <button className="kgs-container__backButton" onClick={onClick}><FontAwesomeIcon icon="chevron-left" />&nbsp;{title}</button>
   );
@@ -67,7 +71,7 @@ const getNavigation = header => {
   return Navigation;
 };
 
-export const InstanceContainer = ({ definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, setPreviousInstance, clearAllInstances, getId}) => {
+export const InstanceContainer = ({ path, definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, clearAllInstances, getId, goBackToInstance}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -82,29 +86,27 @@ export const InstanceContainer = ({ definitionIsReady, definitionHasError, isGro
       if (!isGroupLoading && !groupsHasError) {
         loadGroups();
       }
-    } else {
-      if (!instanceIsLoading) {
-        if (previousInstance && previousInstance._id === id ) {
-          setPreviousInstance();
-        } else {
-          if (!instanceHasError) {
-            fetch(group, id, navigate);
-          }
-        }
+    } else if (!instanceIsLoading && !instanceHasError) {
+      if (!currentInstance || currentInstance._id !== id) {
+        fetch(group, id);
       }
     }
   }, [definitionIsReady, definitionHasError, groupsHasError, isGroupsReady, group, instanceHasError, id]);
 
-
   useEffect(() => {
-    document.title = `EBRAINS - ${getTitle(currentInstance, id)}`;
-  }, [id, currentInstance]);
-
-  useEffect(() => {
+    window.onpopstate = () => {
+      const reg = new RegExp(`^${path}(.+)$`);
+      const [, id] = reg.test(window.location.pathname) ? window.location.pathname.match(reg) : [null, null];
+      goBackToInstance(id);
+    };
     return () => {
       clearAllInstances();
     };
   }, []);
+
+  useEffect(() => {
+    document.title = `EBRAINS - ${getTitle(currentInstance, id)}`;
+  }, [id, currentInstance]);
 
   useEffect(() => {
     const query = getUpdatedQuery(searchToObj(), "group", group && group !== defaultGroup, group, false);
@@ -114,16 +116,15 @@ export const InstanceContainer = ({ definitionIsReady, definitionHasError, isGro
     }
   }, [group]);
 
-  const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
 
-  const backTitle = previousInstance?getTitle(previousInstance):null;
+  const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
 
   return (
     <>
       <div className="kgs-instance-container" >
         {showInstance && (
           <React.Fragment>
-            <BackLinkButton title={backTitle} />
+            <BackLinkButton instance={previousInstance} />
             <Instance {...instanceProps} NavigationComponent={NavigationComponent} fetch={fetch} />
           </React.Fragment>
         )}

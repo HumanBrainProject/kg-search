@@ -31,6 +31,8 @@ import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
+const path = "/live/";
+
 export const Preview = connect(
   state => {
     const instanceProps = state.instances.currentInstance?
@@ -38,7 +40,7 @@ export const Preview = connect(
         ...mapStateToProps(state, {
           data: state.instances.currentInstance
         }),
-        path: "/live/",
+        path: path,
         defaultGroup: state.groups.defaultGroup,
         ImagePopupComponent: ImagePopup,
         TermsShortNoticeComponent: TermsShortNotice
@@ -46,6 +48,7 @@ export const Preview = connect(
       :
       null;
     return {
+      path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.error,
       definitionIsReady: state.definition.isReady,
@@ -75,7 +78,7 @@ export const Preview = connect(
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
-    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances())
+    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances()),
+    goBackToInstance: id => dispatch(actionsInstances.goBackToInstance(id))
   })
 )(InstanceContainer);

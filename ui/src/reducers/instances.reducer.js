@@ -29,8 +29,7 @@ const initialState = {
   currentInstance: null,
   previousInstances: [],
   image: null,
-  currentTabByInstance: {},
-  selectedTab: null
+  currentTabByInstance: {}
 };
 
 const loadInstanceRequest = state => {
@@ -42,8 +41,10 @@ const loadInstanceRequest = state => {
 };
 
 const loadInstanceSuccess = (state, action) => {
-  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
-  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)?[...state.previousInstances]:[];
+  if (state.currentInstance && state.currentInstance._id !== action.data._id) {
+    previousInstances = [...previousInstances,state.currentInstance];
+  }
   return  {
     ...state,
     isLoading: false,
@@ -104,7 +105,8 @@ const clearAllInstances = state => {
     currentInstance: null,
     previousInstances: [],
     image: null,
-    error: null
+    error: null,
+    currentTabByInstance: {}
   };
 };
 
