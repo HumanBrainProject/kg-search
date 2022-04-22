@@ -29,16 +29,6 @@ import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 
 import "./ShareButtons.css";
 
-const getClipboardContent = (currentInstance, group, defaultGroup) => {
-  if (window.location.pathname === "/" && currentInstance) {
-    const id = currentInstance._id;
-    if (id) {
-      return `${window.location.protocol}//${window.location.host}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
-    }
-  }
-  return window.location.href;
-};
-
 const getShareEmailToLink = url => {
   const to = "";
   const subject = "Knowledge Graph Search Request";
@@ -46,15 +36,13 @@ const getShareEmailToLink = url => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-export const ShareButtons = ({ className, currentInstance, group, defaultGroup}) => {
-
-  const clipboardContent = getClipboardContent(currentInstance, group, defaultGroup);
-
+export const ShareButtons = ({ url }) => {
+  const link = getShareEmailToLink(url);
   return (
-    <span className={`kgs-share-links ${className ? className : ""}`}>
+    <span className="kgs-share-links" >
       <span className="kgs-share-links-panel">
-        <CopyToClipboardButton icon={faClipboard}  title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
-        <EmailToLink icon={faEnvelope} title="Send search link by email" link={getShareEmailToLink(clipboardContent)} />
+        <CopyToClipboardButton icon={faClipboard}  title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={url} />
+        <EmailToLink icon={faEnvelope} title="Send search link by email" link={link} />
       </span>
     </span>
   );

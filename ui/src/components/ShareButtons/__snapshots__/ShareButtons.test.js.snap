@@ -2,7 +2,7 @@
 
 exports[`ShareButtons component renders initially 1`] = `
 <span
-  className="kgs-share-links className"
+  className="kgs-share-links"
 >
   <span
     className="kgs-share-links-panel"
@@ -41,7 +41,7 @@ exports[`ShareButtons component renders initially 1`] = `
     </span>
     <a
       className="kgs-email-link "
-      href="mailto:?subject=Knowledge Graph Search Request&body=Please have a look to the following Knowledge Graph search request http%3A//localhost/."
+      href="mailto:?subject=Knowledge Graph Search Request&body=Please have a look to the following Knowledge Graph search request https%3A//search.kg.ebrains.eu."
       title="Send search link by email"
     >
       <svg

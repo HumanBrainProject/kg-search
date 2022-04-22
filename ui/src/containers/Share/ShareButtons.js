@@ -21,8 +21,32 @@
  *
  */
 
+import React from "react";
 import { connect } from "react-redux";
-import { ShareButtons as Component } from "../../components/ShareButtons/ShareButtons";
+import { useLocation } from "react-router-dom";
+
+import { ShareButtons as ShareButtonsComponent } from "../../components/ShareButtons/ShareButtons";
+
+const getUrlToShare = (location, currentInstance, group, defaultGroup) => {
+  if (location.pathname === "/" && currentInstance) {
+    const id = currentInstance._id;
+    if (id) {
+      const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
+      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
+    }
+  }
+  return window.location.href;
+};
+
+const ShareButtonsContainer = ({ currentInstance, group, defaultGroup}) => {
+  const location = useLocation();
+
+  const url = getUrlToShare(location, currentInstance, group, defaultGroup);
+
+  return (
+    <ShareButtonsComponent url={url} />
+  );
+};
 
 export const ShareButtons = connect(
   state => {
@@ -32,4 +56,4 @@ export const ShareButtons = connect(
       defaultGroup: state.groups.defaultGroup
     };
   }
-)(Component);
+)(ShareButtonsContainer);
