@@ -125,6 +125,7 @@ export const loadInstance = (group, id, onSuccessCallback) => {
     API.axios
       .get(API.endpoints.instance(group, id))
       .then(response => {
+        response.data._group = group;
         dispatch(loadInstanceSuccess(response.data));
         typeof onSuccessCallback === "function" && onSuccessCallback();
       })

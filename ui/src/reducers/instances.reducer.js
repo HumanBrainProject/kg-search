@@ -209,8 +209,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_PREVIOUS_INSTANCE:
     return setPreviousInstance(state, action);
   case types.CLEAR_ALL_INSTANCES:
-  case types.SET_GROUP:
-  case types.CLEAR_GROUPS_ERROR:
     return clearAllInstances(state, action);
   case types.CLEAR_INSTANCE_ERROR:
     return clearInstanceError(state);

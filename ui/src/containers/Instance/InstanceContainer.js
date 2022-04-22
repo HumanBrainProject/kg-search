@@ -72,6 +72,8 @@ const getNavigation = header => {
   return Navigation;
 };
 
+//const isSameGroup = (previousGroup, group, defaultGroup) => (group === previousGroup || (!previousGroup && group === defaultGroup) || (!group && previousGroup === defaultGroup));
+
 export const InstanceContainer = ({ path, definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, clearAllInstances, getId, goBackToInstance}) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -88,7 +90,10 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
         loadGroups();
       }
     } else if (!instanceIsLoading && !instanceHasError) {
-      if (!currentInstance || currentInstance._id !== id) {
+      if (!currentInstance || currentInstance._id !== id || currentInstance._group !== group) {
+        if (currentInstance && currentInstance._group !== group) {
+          clearAllInstances();
+        }
         fetch(group, id);
       }
     }
@@ -97,8 +102,12 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
   useEffect(() => {
     window.onpopstate = () => {
       const reg = new RegExp(`^${path}(.+)$`);
-      const [, id] = reg.test(window.location.pathname) ? window.location.pathname.match(reg) : [null, null];
-      goBackToInstance(id);
+      let previousGroup = searchToObj()["group"];
+      if (!previousGroup) {
+        previousGroup = defaultGroup;
+      }
+      const [, previousId] = reg.test(window.location.pathname) ? window.location.pathname.match(reg) : [null, null];
+      goBackToInstance(previousGroup, previousId);
     };
     return () => {
       clearAllInstances();

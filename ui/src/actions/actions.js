@@ -155,7 +155,7 @@ export const initialize = (location, navigate) => {
     if (accessToken) {
       dispatch(setToken(accessToken));
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(Buffer.from(decodeURIComponent(stateValue), "base64")):{};
+      const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue), "base64")):{};
       const queryString = (state && state.queryString)?state.queryString:"";
       navigate(`${location.pathname}${queryString}`, {replace: true});
       dispatch(setApplicationReady());

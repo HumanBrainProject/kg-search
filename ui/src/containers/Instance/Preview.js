@@ -79,7 +79,7 @@ export const Preview = connect(
   dispatch => ({
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),
+    fetch: (_, id) => dispatch(actionsInstances.loadPreview(id)),
     clearAllInstances: () => dispatch(actionsInstances.clearAllInstances()),
     goBackToInstance: id => dispatch(actionsInstances.goBackToInstance(id))
   })

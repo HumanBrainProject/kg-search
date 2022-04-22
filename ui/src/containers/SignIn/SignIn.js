@@ -26,6 +26,7 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsSearch from "../../actions/actions.search";
+import * as actionsInstances from "../../actions/actions.instances";
 import "./SignIn.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
@@ -80,6 +81,7 @@ export const SignIn = connect(
     login: () => dispatch(actions.authenticate()),
     onGroupChange: value => {
       dispatch(actionsGroups.setGroup(value));
+      dispatch(actionsInstances.clearAllInstances());
       dispatch(actionsGroups.resetTypeForGroup(value));
       dispatch(actionsSearch.setPage(1));
     }

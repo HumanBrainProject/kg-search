@@ -74,6 +74,9 @@ export const Instance = connect(
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
     clearAllInstances: () => dispatch(actionsInstances.clearAllInstances()),
-    goBackToInstance: id => dispatch(actionsInstances.goBackToInstance(id))
+    goBackToInstance: (group, id) => {
+      dispatch(actionsGroups.setGroup(group));
+      dispatch(actionsInstances.goBackToInstance(id));
+    }
   })
 )(InstanceContainer);

@@ -27,7 +27,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import * as actionsInstances from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
 
-const InstanceLinkComponent = ({text, id, group, context, onClick}) => {
+const InstanceLinkComponent = ({text, id, group, defaultGroup, context, onClick}) => {
   const navigate = useNavigate();
   const location = useLocation();
   if (!id) {
@@ -43,9 +43,9 @@ const InstanceLinkComponent = ({text, id, group, context, onClick}) => {
 
   const handleClick = () => {
     if(path) {
-      navigate(`${path}${id}${group && group !== "public"?("?group=" + group ):""}`, context);
+      navigate(`${path}${id}${group && group !== defaultGroup?("?group=" + group ):""}`, context);
     } else {
-      onClick(id, group, navigate);
+      onClick(id, group?group:defaultGroup, navigate);
     }
   };
 
@@ -59,7 +59,8 @@ export const InstanceLink = connect(
     return {
       text: props.text?props.text:props.id,
       id: props.id,
-      group: (props.group && props.group !== props.defaultGroup)?props.group:null,
+      group: props.group,
+      defaultGroup: state.groups.defaultGroup,
       context: {
         title: getTitle(state.instances.currentInstance)
       }

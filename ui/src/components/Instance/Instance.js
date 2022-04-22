@@ -52,7 +52,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
     if(searchPage) {
       fetch(group, version, navigate);
     } else {
-      navigate(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
+      navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`);
     }
   };
 
