@@ -25,7 +25,7 @@ import React from "react";
 import renderer from "react-test-renderer";
 import Icon from "./Icon";
 
-test.skip("Icon component renders initially", () => {
+test("Icon component renders initially", () => {
   const component = renderer.create(
     <Icon />
   );

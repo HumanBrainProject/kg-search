@@ -26,7 +26,7 @@ import uniqueId from "lodash/uniqueId";
 import renderer from "react-test-renderer";
 import HitsList from "./HitsList";
 
-test.skip("HitsList component renders initially", () => {
+test("HitsList component renders initially", () => {
   const component = renderer.create(
     <HitsList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => (<div></div>)} />
   );

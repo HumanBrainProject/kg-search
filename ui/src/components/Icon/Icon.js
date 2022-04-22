@@ -38,7 +38,7 @@ const Icon = ({className, title, url, inline}) => {
     );
   }
   return (
-    <FontAwesomeIcon icon={faTag} className={className?className:null} />
+    <FontAwesomeIcon icon={faTag} className={className?className:undefined} />
   );
 };
 
