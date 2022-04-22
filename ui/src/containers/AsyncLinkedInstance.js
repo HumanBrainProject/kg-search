@@ -21,6 +21,7 @@
  *
  */
 import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
@@ -31,7 +32,6 @@ import * as actionsLinkedInstance from "../actions/actions.linkedInstance";
 import LinkedInstance from "./LinkedInstance";
 
 import "./AsyncLinkedInstance.css";
-import { useLocation } from "react-router-dom";
 
 const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLoading, fetchInstance, fetchPreviewInstance }) => {
 
@@ -39,9 +39,9 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLo
 
   useEffect(() => {
     if (location.pathname.startsWith("/live/")) {
-      fetchPreviewInstance(group, id);
+      fetchPreviewInstance(id);
     } else {
-      fetchInstance(id);
+      fetchInstance(group, id);
     }
   }, [id, group]);
 
@@ -73,7 +73,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLo
   );
 };
 
-const AsyncLinkedInstanceContainer = connect(
+const AsyncLinkedInstance = connect(
   (state, props) => ({
     id: props.id,
     name: props.name,
@@ -84,9 +84,9 @@ const AsyncLinkedInstanceContainer = connect(
     isLoading: state.linkedInstance.isLoading
   }),
   dispatch => ({
-    fetchInstance: id => dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id)),
-    fetchPreviewInstance: (group, id) => dispatch(actionsLinkedInstance.loadLinkedInstance(group, id))
+    fetchInstance: (group, id)  => dispatch(actionsLinkedInstance.loadLinkedInstance(group, id)),
+    fetchPreviewInstance: id => dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id))
   })
 )(AsyncLinkedInstanceComponent);
 
-export default AsyncLinkedInstanceContainer;
+export default AsyncLinkedInstance;
