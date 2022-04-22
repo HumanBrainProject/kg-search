@@ -23,6 +23,8 @@
 
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 import sanitizeHtml from "sanitize-html";
 import API from "../../../services/API";
 import Citation from "./Citation";
@@ -67,8 +69,8 @@ const DynamicCitation = ({ doi }) => {
 
   if (error) {
     return (<div>
-      <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon="exclamation-triangle" />{error} </span>
-      <FontAwesomeIcon icon="sync-alt" onClick={() => getCitation()} style={{ cursor: "pointer" }} />
+      <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
+      <FontAwesomeIcon icon={faSyncAlt} onClick={() => getCitation()} style={{ cursor: "pointer" }} />
     </div>);
   }
 

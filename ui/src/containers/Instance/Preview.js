@@ -33,6 +33,13 @@ import { InstanceContainer } from "./InstanceContainer";
 
 const path = "/live/";
 
+const getId = ({org, domain, schema, version, id}) => {
+  if(org && domain && schema && version && id) {
+    return `${org}/${domain}/${schema}/${version}/${id}`;
+  }
+  return id;
+};
+
 export const Preview = connect(
   state => {
     const instanceProps = state.instances.currentInstance?
@@ -66,12 +73,7 @@ export const Preview = connect(
       defaultGroup: state.groups.defaultGroup,
       watermark: "Preview",
       searchPage: false,
-      getId: ({org, domain, schema, version, id}) => {
-        if(org && domain && schema && version && id) {
-          return `${org}/${domain}/${schema}/${version}/${id}`;
-        }
-        return id;
-      }
+      getId: getId
     };
   },
   dispatch => ({

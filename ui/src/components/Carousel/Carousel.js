@@ -24,6 +24,8 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import uniqueId from "lodash/uniqueId";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import PropTypes from "prop-types";
 
 import { isMobile } from "../../helpers/BrowserHelpers";
@@ -36,7 +38,7 @@ const getNavigation = (item, showPrevious, onClose, onBack, navigationComponent)
     <div className="kgs-carousel__header">
       {item.isActive && showPrevious && (
         <button className="kgs-carousel__previous-button" onClick={onBack}>
-          <FontAwesomeIcon icon="chevron-left" /> Previous
+          <FontAwesomeIcon icon={faChevronLeft} /> Previous
         </button>
       )}
       <div className="kgs-carousel__navigation">
@@ -46,7 +48,7 @@ const getNavigation = (item, showPrevious, onClose, onBack, navigationComponent)
       </div>
       {item.isActive && (
         <button className="kgs-carousel__close-button" onClick={onClose}>
-          <FontAwesomeIcon icon="times" />
+          <FontAwesomeIcon icon={faTimes} />
         </button>
       )}
     </div>

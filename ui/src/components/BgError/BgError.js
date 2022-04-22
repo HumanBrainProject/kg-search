@@ -27,6 +27,7 @@ import "./BgError.css";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
@@ -42,7 +43,7 @@ export const BgError = ({ cancelAction, retryAction, onAction, show, message, re
   const html = converter.makeHtml(message);
   return (
     <div className="kgs-bg-error">
-      <FontAwesomeIcon icon="ban" className="kgs-bg-error-icon" size="5x"/><br/>
+      <FontAwesomeIcon icon={faBan} className="kgs-bg-error-icon" size="5x"/><br/>
       <span className="kgs-bg-error-message" dangerouslySetInnerHTML={{__html:html}} />
       <div className="kgs-bg-error-navigation">
         {cancelLabel && (

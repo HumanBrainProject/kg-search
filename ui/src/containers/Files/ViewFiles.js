@@ -22,6 +22,8 @@
  */
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
@@ -53,8 +55,8 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
   if (filesError) {
     return (
       <div>
-        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon="exclamation-triangle"/>{filesError} </span>
-        <FontAwesomeIcon icon="sync-alt" onClick={() => fetchFiles(true)} style={{cursor: "pointer"}}/>
+        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{filesError} </span>
+        <FontAwesomeIcon icon={faSyncAlt} onClick={() => fetchFiles(true)} style={{cursor: "pointer"}}/>
       </div>
     );
   }
@@ -70,7 +72,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
       );
     }
     return (
-      <span>No files available <FontAwesomeIcon icon="sync-alt" onClick={() => fetchFiles(true)} style={{cursor: "pointer"}}/></span>
+      <span>No files available <FontAwesomeIcon icon={faSyncAlt} onClick={() => fetchFiles(true)} style={{cursor: "pointer"}}/></span>
     );
   }
 

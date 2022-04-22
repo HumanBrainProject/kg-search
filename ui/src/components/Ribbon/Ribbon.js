@@ -26,8 +26,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./Ribbon.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 
-export const Ribbon = ({className, icon, text, counter, suffix}) => (
+export const Ribbon = ({className, icon=faDownload, text, counter, suffix}) => (
   <div className={`ribbon-container ${icon?"ribbon-with-icon":""} ${text?"ribbon-with-text":""}  ${className?className:""}`}>
     <div className="ribbon-inner-container">
       <div className="ribbon-inner">
@@ -48,7 +49,7 @@ export const Ribbon = ({className, icon, text, counter, suffix}) => (
 
 Ribbon.propTypes = {
   className: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.object,
   text: PropTypes.string,
   counter: PropTypes.oneOfType([
     PropTypes.string,

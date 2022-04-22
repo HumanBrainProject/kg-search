@@ -23,6 +23,9 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 
 import * as actionsLinkedInstance from "../actions/actions.linkedInstance";
 import LinkedInstance from "./LinkedInstance";
@@ -45,9 +48,9 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLo
   if (error) {
     return (
       <div className="kgs-async-linked-instance__error">
-        <FontAwesomeIcon icon="ban" />
+        <FontAwesomeIcon icon={faBan} />
         &nbsp;{error}
-        <button onClick={() => fetch(group, id)} title="Retry"><FontAwesomeIcon icon="sync-alt" /></button>
+        <button onClick={() => fetch(group, id)} title="Retry"><FontAwesomeIcon icon={faSyncAlt} /></button>
       </div>
     );
   }
@@ -55,7 +58,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLo
   if (isLoading) {
     return (
       <div className="kgs-async-linked-instance__loading">
-        <FontAwesomeIcon icon="circle-notch" spin />
+        <FontAwesomeIcon icon={faCircleNotch} spin />
         {` Loading ${type} ${name ? name : id}`}
       </div>
     );

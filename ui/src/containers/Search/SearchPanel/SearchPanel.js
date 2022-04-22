@@ -29,6 +29,8 @@ import { help } from "../../../data/help.js";
 import { withFloatingScrollEventsSubscription } from "../../../helpers/withFloatingScrollEventsSubscription";
 import "./SearchPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import { searchToObj } from "../../../helpers/BrowserHelpers";
 
 const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) => {
@@ -68,7 +70,7 @@ const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) =>
     <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>
       <div>
         <div>
-          <FontAwesomeIcon icon="search" size="2x" className="kg-search-bar__icon" />
+          <FontAwesomeIcon icon={faSearch} size="2x" className="kg-search-bar__icon" />
           <input className="kg-search-bar"
             type="text"
             placeholder="Search (e.g. brain or neuroscience)"
@@ -78,7 +80,7 @@ const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) =>
             onKeyDown={handleKeyDown}
             ref={textInput} />
           <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
-            <FontAwesomeIcon icon="info-circle" size="2x" />
+            <FontAwesomeIcon icon={faInfoCircle} size="2x" />
           </button>
         </div>
         <button className="kgs-search-panel-button" onClick={handleSearch}>Search</button>

@@ -24,6 +24,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faMoon} from "@fortawesome/free-solid-svg-icons/faMoon";
+import {faSun} from "@fortawesome/free-solid-svg-icons/faSun";
 
 import * as actions from "../../actions/actions";
 
@@ -32,11 +34,11 @@ import "./ThemeToggle.css";
 const themes = [
   {
     name: "dark",
-    icon: "moon"
+    icon: faMoon
   },
   {
     name: "default",
-    icon: "sun"
+    icon: faSun
   }
 ];
 

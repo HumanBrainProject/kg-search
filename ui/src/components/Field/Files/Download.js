@@ -24,6 +24,7 @@
 import React, { useState } from "react";
 import ReactPiwik from "react-piwik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 
 import { InfoPanel } from "../../InfoPanel/InfoPanel";
 
@@ -52,7 +53,7 @@ const Download = ({name, type, url}) => {
   return (
     <>
       <a type="button" className="btn kgs-hierarchical-files__info_link" rel="noopener noreferrer" target="_blank" href={url} onClick={trackDownload} >
-        <FontAwesomeIcon icon="download" /> {name}
+        <FontAwesomeIcon icon={faDownload} /> {name}
       </a>
       <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <button onClick={openTermsOfUse}><strong>Terms of use</strong></button></span></div>
       {showTermsOfUse && (

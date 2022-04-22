@@ -23,6 +23,8 @@
 
 import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
 import { Select } from "../../components/Select/Select";
 import "./FileFilter.css";
@@ -46,8 +48,8 @@ const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, is
     }
     return (
       <div>
-        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon="exclamation-triangle"/>{fileFiltersError} </span>
-        <FontAwesomeIcon icon="sync-alt" onClick={fetch} style={{cursor: "pointer"}}/>
+        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{fileFiltersError} </span>
+        <FontAwesomeIcon icon={faSyncAlt} onClick={fetch} style={{cursor: "pointer"}}/>
       </div>
     );
   }

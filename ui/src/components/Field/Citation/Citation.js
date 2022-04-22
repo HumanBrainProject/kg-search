@@ -23,9 +23,11 @@
 
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Citation.css";
+import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
+import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
 
+import "./Citation.css";
 
 const Citation = ({citation, doi, bibtex}) => {
   return (
@@ -33,8 +35,8 @@ const Citation = ({citation, doi, bibtex}) => {
       {citation ?
         <pre>
           <span dangerouslySetInnerHTML={{ __html: citation }} />
-          <CopyToClipboardButton icon="clipboard" title="Copy citation" confirmationText="Citation copied" content={citation} />
-          {bibtex && <a className="kgs-citation-download" href={bibtex} download={`${doi}.bib`}><FontAwesomeIcon icon="download" /> Download as bibtex</a>}
+          <CopyToClipboardButton icon={faClipboard} title="Copy citation" confirmationText="Citation copied" content={citation} />
+          {bibtex && <a className="kgs-citation-download" href={bibtex} download={`${doi}.bib`}><FontAwesomeIcon icon={faDownload} /> Download as bibtex</a>}
         </pre> : <a href={`https://doi.org/${doi}`}>DOI: {doi}</a>}
     </div>
   );

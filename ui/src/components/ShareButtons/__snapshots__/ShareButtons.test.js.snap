@@ -14,7 +14,25 @@ exports[`ShareButtons component renders initially 1`] = `
         onClick={[Function]}
         role="link"
         title="Copy search link to clipboard"
-      />
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-clipboard "
+          data-icon="clipboard"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 384 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M336 64h-53.88C268.9 26.8 233.7 0 192 0S115.1 26.8 101.9 64H48C21.5 64 0 85.48 0 112v352C0 490.5 21.5 512 48 512h288c26.5 0 48-21.48 48-48v-352C384 85.48 362.5 64 336 64zM192 64c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S160 113.7 160 96C160 78.33 174.3 64 192 64zM272 224h-160C103.2 224 96 216.8 96 208C96 199.2 103.2 192 112 192h160C280.8 192 288 199.2 288 208S280.8 224 272 224z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </button>
       <div
         className="kgs-copy-confirmation"
       >
@@ -23,9 +41,26 @@ exports[`ShareButtons component renders initially 1`] = `
     </span>
     <a
       className="kgs-email-link "
-      href="email to link"
+      href="mailto:?subject=Knowledge Graph Search Request&body=Please have a look to the following Knowledge Graph search request http%3A//localhost/."
       title="Send search link by email"
     >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-envelope "
+        data-icon="envelope"
+        data-prefix="fas"
+        focusable="false"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 512 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
       <span />
     </a>
   </span>

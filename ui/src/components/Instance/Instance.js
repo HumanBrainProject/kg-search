@@ -23,6 +23,9 @@
 
 import React, { useEffect } from "react";
 import ReactPiwik from "react-piwik";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
+import { useNavigate } from "react-router-dom";
 
 import { BgError } from "../BgError/BgError";
 import { Header } from "./Header/Header";
@@ -31,8 +34,6 @@ import { Disclaimer } from "../Disclaimer/Disclaimer";
 
 import "./Instance.css";
 import "./Fields.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
 
 
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, tabs, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
@@ -73,7 +74,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
       {isOutdated && allVersions ? (
         <div className="kgs-outdated-alert" >
           <div className="alert alert-secondary" role="alert">
-            <FontAwesomeIcon icon="info-circle"/>&nbsp;This is not the newest version of this {type.toLowerCase()}.
+            <FontAwesomeIcon icon={faInfoCircle} />&nbsp;This is not the newest version of this {type.toLowerCase()}.
             <button className="kgs-instance-link" onClick={() => onVersionChange(latestVersion.value)}>
             &nbsp;Visit {latestVersion.label}
             </button> for the latest version or

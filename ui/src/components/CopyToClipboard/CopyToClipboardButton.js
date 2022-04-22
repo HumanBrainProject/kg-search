@@ -25,6 +25,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./CopyToClipboardButton.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 
 export const CopyToClipboardButton = props => {
 
@@ -80,7 +81,7 @@ export const CopyToClipboardButton = props => {
     confirmationText = props.confirmationText;
   }
 
-  let iconClassName = "clipboard";
+  let iconClassName = faClipboard;
   if (props.icon) {
     iconClassName = props.icon;
   }
@@ -110,7 +111,7 @@ CopyToClipboardButton.propTypes = {
   content: PropTypes.string,
   title: PropTypes.string,
   confirmationText: PropTypes.string,
-  icon: PropTypes.string
+  icon: PropTypes.object
 };
 
 export default CopyToClipboardButton;

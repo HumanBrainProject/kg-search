@@ -25,8 +25,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./EmailToLink.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
 
-const EmailToLink = ({className, title = "Send search link by email", text, icon = "envelope", link}) => {
+const EmailToLink = ({className, title = "Send search link by email", text, icon=faEnvelope, link}) => {
   const classNames = ["kgs-email-link", className].join(" ");
   return (
     <a className={classNames} href={link} title={title}>
@@ -39,7 +40,7 @@ EmailToLink.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   text: PropTypes.string,
-  icon: PropTypes.string
+  icon: PropTypes.object
 };
 
 export default EmailToLink;

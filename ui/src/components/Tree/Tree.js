@@ -23,6 +23,7 @@
 
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
 
 import "./Tree.css";
 
@@ -100,7 +101,7 @@ class CollapisbleNode extends React.Component {
     return (
       <div className={`kgs-tree-collapsible-node ${this.state.isCollapsed ? "is-collapsed" : ""}`}>
         <div className="kgs-tree-collapsible-node__header">
-          <button className="kgs-tree-collapsible-node__button" title={`${this.state.isCollapsed ? "expand" : "collapse"}`} tabIndex={readOnly ? -1 : 0} onClick={readOnly ? undefined : this.handleCollapseToggle} style={readOnly ? { pointerEvents: "none" } : {}}><FontAwesomeIcon icon="chevron-down" /></button>
+          <button className="kgs-tree-collapsible-node__button" title={`${this.state.isCollapsed ? "expand" : "collapse"}`} tabIndex={readOnly ? -1 : 0} onClick={readOnly ? undefined : this.handleCollapseToggle} style={readOnly ? { pointerEvents: "none" } : {}}><FontAwesomeIcon icon={faChevronDown} /></button>
           <NodeItem ItemComponent={ItemComponent} item={item} onClick={onClick} readOnly={readOnly} />
         </div>
         <div className="kgs-tree-collapsible-node__children" ref={this.childrenRef} style={{ maxHeight: maxHeight }}>

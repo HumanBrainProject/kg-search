@@ -28,20 +28,23 @@ import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsSearch from "../../actions/actions.search";
 import "./SignIn.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
+import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
+import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 
 const SignInComponent = ({ className, Tag, isAuthenticated, group, groups, login, logout, onGroupChange }) => {
   if(isAuthenticated) {
     return (
       <Tag className={`${className} dropdown`}>
         <a className="dropdown-toggle kgs-sign__in kgs_signed__in" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <FontAwesomeIcon icon="user" size="2x" />
+          <FontAwesomeIcon icon={faUser} size="2x" />
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           {groups.map(g => (
             <div className="dropdown-item" key={g.value}>
               <button  onClick={() => onGroupChange(g.value)}>
                 {group === g.value?
-                  <FontAwesomeIcon icon="check" style={{marginRight: "4px"}} />
+                  <FontAwesomeIcon icon={faCheck} style={{marginRight: "4px"}} />
                   :
                   <span className="kgs-sign__in__space"/>
                 }
@@ -51,7 +54,7 @@ const SignInComponent = ({ className, Tag, isAuthenticated, group, groups, login
           ))}
           <div className="dropdown-divider"></div>
           <div className="dropdown-item">
-            <button onClick={logout}><FontAwesomeIcon icon="sign-out-alt" style={{marginRight: "4px"}} />Logout</button>
+            <button onClick={logout}><FontAwesomeIcon icon={faSignOutAlt} style={{marginRight: "4px"}} />Logout</button>
           </div>
         </div>
       </Tag>

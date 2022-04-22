@@ -23,6 +23,7 @@
 
 import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 
 import { getTags, getTitle } from "../../helpers/InstanceHelper";
 import { ShareButtons } from "../Share/ShareButtons";
@@ -47,7 +48,7 @@ const BackLinkButton = ({instance}) => {
   const onClick = () => navigate(-1);
 
   return (
-    <button className="kgs-container__backButton" onClick={onClick}><FontAwesomeIcon icon="chevron-left" />&nbsp;{title}</button>
+    <button className="kgs-container__backButton" onClick={onClick}><FontAwesomeIcon icon={faChevronLeft} />&nbsp;{title}</button>
   );
 
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
 
 import { SignIn } from "../SignIn/SignIn";
 
@@ -17,7 +18,7 @@ export const Header = ({ SignInComponent, theme }) => {
           <img src={`/static/img/${theme === "dark"?"ebrains_logo_dark.svg":"ebrains_logo.svg"}`} alt="ebrains" height="100" />
         </a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <FontAwesomeIcon icon="bars" />
+          <FontAwesomeIcon icon={faBars} />
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">

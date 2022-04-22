@@ -22,6 +22,8 @@
  */
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import React, { useState } from "react";
 import { Field } from "./Field";
 import { Hint } from "../Hint/Hint";
@@ -38,7 +40,7 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
     return (
       <th>
         {isFirstCell && field.isCollectionCollapsible && (
-          <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?"chevron-right":"chevron-down"} /></button>
+          <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?faChevronRight:faChevronDown} /></button>
         )}
         <Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
         {isFirstCell && field.isCollectionASubset && (

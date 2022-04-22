@@ -32,6 +32,8 @@ import { InstanceContainer } from "./InstanceContainer";
 
 const path = "/instances/";
 
+const getId = ({type, id}) => type?`${type}/${id}`:id;
+
 export const Instance = connect(
   state => {
     const instanceProps = state.instances.currentInstance?
@@ -64,7 +66,7 @@ export const Instance = connect(
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
       searchPage: false,
-      getId: ({type, id}) => type?`${type}/${id}`:id
+      getId: getId
     };
   },
   dispatch => ({

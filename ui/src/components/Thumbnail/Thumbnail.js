@@ -24,6 +24,10 @@
 import React from "react";
 import "./Thumbnail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
+import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
+import {faFileImage} from "@fortawesome/free-solid-svg-icons/faFileImage";
 
 const getImage = url => {
   return new Promise((resolve, reject) => {
@@ -111,7 +115,7 @@ export class Thumbnail extends React.Component {
       }
       return (
         <span className="fa-stack fa-1x kgs-thumbnail--panel">
-          <FontAwesomeIcon icon="file" />
+          <FontAwesomeIcon icon={faFile} />
         </span>
       );
     }
@@ -124,19 +128,19 @@ export class Thumbnail extends React.Component {
               <div className="kgs-thumbnail--image">
                 <img src={url} alt={alt} />
                 {isAnimated?
-                  <FontAwesomeIcon icon="play" className="kgs-thumbnail--zoom-dynamic" />
+                  <FontAwesomeIcon icon={faPlay} className="kgs-thumbnail--zoom-dynamic" />
                   :
-                  <FontAwesomeIcon icon="search" className="kgs-thumbnail--zoom-static" />
+                  <FontAwesomeIcon icon={faSearch} className="kgs-thumbnail--zoom-static" />
                 }
               </div>
             </span>
             :
             <span className="fa-stack fa-1x kgs-thumbnail--panel">
-              <FontAwesomeIcon icon="fileImage"/>
+              <FontAwesomeIcon icon={faFileImage} />
               {isAnimated?
-                <FontAwesomeIcon icon="play" className="kgs-thumbnail--zoom-dynamic"/>
+                <FontAwesomeIcon icon={faPlay} className="kgs-thumbnail--zoom-dynamic"/>
                 :
-                <FontAwesomeIcon icon="search" className="kgs-thumbnail--zoom-static"/>
+                <FontAwesomeIcon icon={faSearch} className="kgs-thumbnail--zoom-static"/>
               }
             </span>
           }

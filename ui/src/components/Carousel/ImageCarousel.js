@@ -23,6 +23,7 @@
 
 import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
@@ -44,7 +45,7 @@ export const ImageCarousel = ({ className, width, images, onClick }) => {
           <div key={src}>
             <img src={src} alt={label ? label : ""} />
             {isTargetAnimated && <div className="kgs-image_carousel-icon is-animated">
-              <FontAwesomeIcon icon="play" size="3x" />
+              <FontAwesomeIcon icon={faPlay} size="3x" />
             </div>}
             {label && (
               <div className="kgs-image_carousel-label-wrapper">

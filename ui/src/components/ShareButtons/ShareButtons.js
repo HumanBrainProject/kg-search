@@ -24,15 +24,16 @@
 import React from "react";
 import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
 import EmailToLink from "../EmailToLink/EmailToLink";
-import "./ShareButtons.css";
-import { useLocation } from "react-router-dom";
+import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
+import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 
-const getClipboardContent = (location, currentInstance, group, defaultGroup) => {
-  if (location.pathname === "/" && currentInstance) {
+import "./ShareButtons.css";
+
+const getClipboardContent = (currentInstance, group, defaultGroup) => {
+  if (window.location.pathname === "/" && currentInstance) {
     const id = currentInstance._id;
     if (id) {
-      const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
-      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
+      return `${window.location.protocol}//${window.location.host}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
     }
   }
   return window.location.href;
@@ -46,15 +47,14 @@ const getShareEmailToLink = url => {
 };
 
 export const ShareButtons = ({ className, currentInstance, group, defaultGroup}) => {
-  const location = useLocation();
 
-  const clipboardContent = getClipboardContent(location, currentInstance, group, defaultGroup);
+  const clipboardContent = getClipboardContent(currentInstance, group, defaultGroup);
 
   return (
     <span className={`kgs-share-links ${className ? className : ""}`}>
       <span className="kgs-share-links-panel">
-        <CopyToClipboardButton icon="clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
-        <EmailToLink icon="envelope" title="Send search link by email" link={getShareEmailToLink(clipboardContent)} />
+        <CopyToClipboardButton icon={faClipboard}  title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
+        <EmailToLink icon={faEnvelope} title="Send search link by email" link={getShareEmailToLink(clipboardContent)} />
       </span>
     </span>
   );

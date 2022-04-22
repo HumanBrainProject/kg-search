@@ -25,6 +25,8 @@ import React, { useState } from "react";
 import { Text } from "../Text/Text";
 import "./Details.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
 export const Details = ({ toggleLabel, content, asPopup }) => {
   const [collapsed, setCollapsed] = useState(true);
@@ -41,7 +43,7 @@ export const Details = ({ toggleLabel, content, asPopup }) => {
   return (
     <span className="field-details">
       <button className={className} onClick={handleToggle}>
-        <FontAwesomeIcon icon="exclamation-circle" />
+        <FontAwesomeIcon icon={faExclamationCircle} />
         {toggleLabel && (
           <span>{toggleLabel}</span>
         )}
@@ -52,7 +54,7 @@ export const Details = ({ toggleLabel, content, asPopup }) => {
             <div className="field-details__panel">
               <Text content={content} isMarkdown={true} />
               <button className="field-details__close-button" onClick={handleClose} title="close">
-                <FontAwesomeIcon icon="times" size="2x" />
+                <FontAwesomeIcon icon={faTimes} size="2x" />
               </button>
             </div>
           )}
@@ -62,7 +64,7 @@ export const Details = ({ toggleLabel, content, asPopup }) => {
           <div className="field-details__panel">
             <Text content={content} isMarkdown={true} />
             <button className="field-details__close-button" onClick={handleClose} title="close">
-              <FontAwesomeIcon icon="times" size="2x" />
+              <FontAwesomeIcon icon={faTimes} size="2x" />
             </button>
           </div>
         </div>

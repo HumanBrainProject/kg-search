@@ -24,6 +24,9 @@
 import React from "react";
 import { Treebeard, decorators } from "react-treebeard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
+import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
+import {faFolder} from "@fortawesome/free-solid-svg-icons/faFolder";
 
 import Download from "./Download";
 import LinkedInstance from "../../../containers/LinkedInstance";
@@ -41,7 +44,7 @@ import { debounce } from "lodash";
 
 const Node = ({node, isRootNode, group, type, hasFilter}) => {
   const isFile = node.type === "file";
-  const icon = isFile?"file":"folder";
+  const icon = isFile?faFile:faFolder;
   return (
     <div className="kgs-hierarchical-files__details">
       <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={icon} size="5x"/>}</div>
@@ -129,7 +132,7 @@ class HierarchicalFiles extends React.Component {
       <>
         {filesLength < 5000 && (
           <div className="kgs-files-search">
-            <FontAwesomeIcon icon="search" className="kgs-files-search-icon" />
+            <FontAwesomeIcon icon={faSearch} className="kgs-files-search-icon" />
             <input
               className="form-control"
               onKeyUp={this.onFilterMouseUp}

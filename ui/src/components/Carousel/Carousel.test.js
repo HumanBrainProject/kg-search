@@ -25,29 +25,56 @@ import React from "react";
 import renderer from "react-test-renderer";
 import Carousel from "./Carousel";
 
+const data = [
+  {
+    label: "a label",
+    value: "a value"
+  },
+  {
+    label: "a second label",
+    value: "a second value"
+  },
+  {
+    label: "a third label",
+    value: "a third value"
+  },
+  {
+    label: "a forth label",
+    value: "a forth value"
+  },
+  {
+    label: "a fifth label",
+    value: "a fifth value"
+  }
+];
+
 test("Carousel component renders initially", () => {
   const component = renderer.create(
-    <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+    <Carousel className="className" data={data} onBack={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
 });
 
-test("Carousel test show false\"", () => {
-  const component = renderer.create(
-    <Carousel className="className" show={false} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
-  );
-  expect(component.toJSON()).toBe(null);
-});
-
 test("Carousel test items", () => {
   const component = renderer.create(
-    <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+    <Carousel className="className" data={data} onBack={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
   );
-  const instance = component.getInstance();
+  const instance = component.root;
 
-  expect(instance.items.length).toBe(5);
-  expect(instance.items[1].position).toBe(0);
-  expect(instance.items[1].isActive).toBe(true);
-  expect(instance.items[1].data.label).toBe("another label");
+  const carouselItemEls = instance.children[0].children[0].children;
+  expect(carouselItemEls.length).toBe(5);
+
+  const expectedPositions = [1, 2, 3, 4, 0];
+  const expectedIsActives = [false, false, false, false, true];
+
+  carouselItemEls.forEach((el, index) => {
+    const item = el.props.item;
+    expect(item).toMatchObject({});
+    expect(index).toBe(index);
+    expect(item.position).toBe(expectedPositions[index]);
+    expect(item.isActive).toBe(expectedIsActives[index]);
+    expect(item.data).toMatchObject(data[index]);
+  });
+
 });

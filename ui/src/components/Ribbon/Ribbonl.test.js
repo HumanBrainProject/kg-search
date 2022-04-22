@@ -24,10 +24,11 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import Ribbon from "./Ribbon";
+import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 
 test("Ribbon component renders initially", () => {
   const component = renderer.create(
-    <Ribbon className="className" icon="times" text="some text" counter={12} suffix="a suffix" />
+    <Ribbon className="className" icon={faDownload} text="some text" counter={12} suffix="a suffix" />
   );
 
   expect(component.toJSON()).toMatchSnapshot();

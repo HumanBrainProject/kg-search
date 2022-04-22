@@ -23,12 +23,14 @@
 
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
+import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus";
 
 import "./FacetCheckbox.css";
 
 export const FacetCheckbox = ({ item: { label, count, checked, hasAnyChildChecked } }) => (
   <div className={`kgs-facet-checkbox ${checked ? "is-active" : ""}  ${hasAnyChildChecked ? "has-any-child-active" : ""}`}>
-    <input type="checkbox" tabIndex="-1" />{checked?<FontAwesomeIcon icon="check"/>:hasAnyChildChecked?<FontAwesomeIcon icon="minus"/>:null}
+    <input type="checkbox" tabIndex="-1" />{checked?<FontAwesomeIcon icon={faCheck} />:hasAnyChildChecked?<FontAwesomeIcon icon={faMinus}/>:null}
     <div className="kgs-facet-checkbox__text">{label}</div>
     <div className="kgs-facet-checkbox__count">{count}</div>
   </div>
