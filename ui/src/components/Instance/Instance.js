@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ReactPiwik from "react-piwik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
@@ -48,13 +48,13 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
     ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
   };
 
-  const onVersionChange = version => {
+  const onVersionChange = useMemo(() => version => {
     if(searchPage) {
       fetch(group, version, navigate);
     } else {
       navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`);
     }
-  };
+  }, [fetch, path, group, defaultGroup]);
 
   if (hasNoData) {
     return(

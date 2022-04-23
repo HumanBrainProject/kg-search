@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
@@ -74,7 +74,7 @@ const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, is
     return acc;
   }, [{label: "none", value: ""}]);
 
-  const handleChange = value => onSelect(value?value:null);
+  const handleChange = useMemo(() => value => onSelect(value?value:null), [onSelect]);
 
   return (
     <div><Select className="kgs-fileFilter" label={title} value={fileFilter} list={list} onChange={handleChange} /></div>

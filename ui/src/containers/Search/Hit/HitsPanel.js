@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import uniqueId from "lodash/uniqueId";
 import { connect } from "react-redux";
 import ReactPiwik from "react-piwik";
@@ -36,7 +36,7 @@ import { useNavigate } from "react-router-dom";
 const HitsPanelBase = ({ lists, itemComponent, getKey, group, onClick }) => {
   const navigate = useNavigate();
 
-  const handleClick = (data, target) => onClick(data, target, group, navigate);
+  const handleClick = useMemo(() => (data, target) => onClick(data, target, group, navigate), [group]);
 
   return (
     <React.Fragment>

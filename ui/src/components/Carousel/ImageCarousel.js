@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 import { Carousel } from "react-responsive-carousel";
@@ -36,7 +36,7 @@ export const ImageCarousel = ({ className, width, images, onClick }) => {
     return null;
   }
 
-  const onClickItem = index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
+  const onClickItem = useMemo(() => index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]), [images]);
 
   return (
     <div className={`kgs-image_carousel ${className ? className : ""}`}>

@@ -21,6 +21,7 @@
  *
  */
 
+import { useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
@@ -76,7 +77,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
     );
   }
 
-  const fetchMoreFiles = () => fetchFiles(false);
+  const fetchMoreFiles = useMemo(() => () => fetchFiles(false), [fetchFiles]);
 
   const showMoreStyle = {
     display: "inline",

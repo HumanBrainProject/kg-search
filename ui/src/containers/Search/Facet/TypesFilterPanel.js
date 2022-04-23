@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { connect } from "react-redux";
 
 import * as actionsSearch from "../../../actions/actions.search";
@@ -34,17 +34,14 @@ const TypeFilterBase = ({ type: { label, count, active }, onClick }) => (
   </div>
 );
 
-class TypeFilter extends React.Component {
+const TypeFilter = ({type, onClick}) => {
 
-  onClick = () => this.props.onClick(this.props.type.type);
+  const handleOnClick = useMemo(() => () => onClick(type.type), [type, onClick]);
 
-  render() {
-    return ( <TypeFilterBase type = { this.props.type }
-      onClick = { this.onClick }
-    />
-    );
-  }
-}
+  return (
+    <TypeFilterBase type={type} onClick={handleOnClick} />
+  );
+};
 
 const TypesFilterPanelBase = ({ types, onClick }) => (
   <div className = "kgs-fieldsFilter" >

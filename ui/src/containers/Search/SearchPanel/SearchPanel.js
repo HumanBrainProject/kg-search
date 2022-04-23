@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../actions/actions";
 import * as actionsSearch from "../../../actions/actions.search";
@@ -58,13 +58,13 @@ const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) =>
     setValue(e.target.value);
   };
 
-  const handleSearch = () => onQueryStringChange(value);
+  const handleSearch = useMemo(() => () => onQueryStringChange(value), [value, onQueryStringChange]);
 
-  const handleKeyDown = e => {
+  const handleKeyDown = useMemo(() => e => {
     if (e.key === "Enter") {
       onQueryStringChange(value);
     }
-  };
+  }, [value, onQueryStringChange]);
 
   return (
     <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>

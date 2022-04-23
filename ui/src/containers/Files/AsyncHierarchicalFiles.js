@@ -20,7 +20,7 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React from "react";
+import React, { useMemo } from "react";
 import { connect } from "react-redux";
 
 import { FileFormatFilter } from "./FileFormatFilter";
@@ -30,17 +30,17 @@ import * as actionsFiles from "../../actions/actions.files";
 
 export const AsyncHierarchicalFilesComponent = ({mapping, group, type, nameFieldPath, urlFieldPath, searchFilesAfter, groupingType, fileFormat, fetchFiles, fetchFileFormats, fetchGroupingTypes}) => {
 
-  const handleSelectFileFormat = format => {
+  const handleSelectFileFormat = useMemo(() => format => {
     fetchFiles(searchFilesAfter, groupingType, format, true);
-  };
+  }, [searchFilesAfter, groupingType]);
 
-  const handleSelectGroupingType = type => {
+  const handleSelectGroupingType = useMemo(() => type => {
     fetchFiles(searchFilesAfter, type, fileFormat, true);
-  };
+  }, [searchFilesAfter, fileFormat]);
 
-  const handleFetchFiles = reset => {
+  const handleFetchFiles = useMemo(() => reset => {
     fetchFiles(searchFilesAfter, groupingType, fileFormat, reset);
-  };
+  }, [searchFilesAfter, groupingType, fileFormat]);
 
   return (
     <>

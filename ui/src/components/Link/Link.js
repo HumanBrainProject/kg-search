@@ -47,7 +47,7 @@ export const Link = ({ url, label, isAFileLink, isExternalLink, icon }) => {
   };
 
   return (
-    <a href={url} {...props} onClick={() => handleClick()}>
+    <a href={url} {...props} onClick={handleClick}>
       {icon ? <span className="field-value__link_icon" dangerouslySetInnerHTML={{ __html: icon }} /> : null}
       {text}
     </a>

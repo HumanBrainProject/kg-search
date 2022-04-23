@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 
 import { getTags } from "../../../helpers/InstanceHelper";
 import { Tags } from "../../Tags/Tags";
@@ -33,9 +33,9 @@ import "./Header.css";
 
 export const Header = ({header, NavigationComponent, onVersionChange}) => {
 
-  const tags = getTags(header);
+  const tags = useMemo(() => getTags(header), [header]);
 
-  const handleVersionChange = version => onVersionChange(version);
+  const handleVersionChange = useMemo(() => version => onVersionChange(version), [onVersionChange]);
 
   return (
     <div className="kgs-instance__header">

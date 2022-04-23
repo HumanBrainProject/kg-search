@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Ribbon } from "../../../components/Ribbon/Ribbon";
 
 const getCounter = (data, mapping) => {
@@ -52,8 +52,8 @@ export const HitRibbon = ({className, data, mapping}) => {
   if (!mapping || !data) {
     return null;
   }
-  const counter = getCounter(data, mapping);
-  const suffix = getSuffix(counter, mapping);
+  const counter = useMemo(() => getCounter(data, mapping), [data, mapping]);
+  const suffix = useMemo(() => getSuffix(counter, mapping), [counter, mapping]);
   return (
     <Ribbon className={className} icon={mapping.icon} text={mapping.content} counter={counter} suffix={suffix} />
   );
