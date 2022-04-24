@@ -32,6 +32,8 @@ import "./FileFilter.css";
 
 const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, isFileFiltersInitialized, isFileFiltersLoading, filesError, fileFiltersError, fileFilter, fetch, onSelect }) => {
 
+  const handleChange = useMemo(() => value => onSelect(value?value:null), [onSelect]);
+
   useEffect(() => {
     if (!isFileFiltersInitialized) {
       fetch();
@@ -73,8 +75,6 @@ const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, is
     acc.push({label: value, value: value});
     return acc;
   }, [{label: "none", value: ""}]);
-
-  const handleChange = useMemo(() => value => onSelect(value?value:null), [onSelect]);
 
   return (
     <div><Select className="kgs-fileFilter" label={title} value={fileFilter} list={list} onChange={handleChange} /></div>

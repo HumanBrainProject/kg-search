@@ -71,6 +71,10 @@ const FieldComponent = ({ name, layout, style, className, label, inlineLabel=tru
 
 const getFieldProps = (name, data, mapping, group, type, renderUserInteractions = true) => {
 
+  if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
+    return null;
+  }
+
   if (Array.isArray(data) && data.length === 1) {
     data = data[0];
   }
@@ -256,11 +260,11 @@ export const FieldBase = (renderUserInteractions = true) => {
 
   const Component = ({ name, data, mapping, group, type }) => {
 
-    if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
+    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, group, type, renderUserInteractions), [name, data, mapping, group, type, renderUserInteractions]);
+
+    if (!fieldProps) {
       return null;
     }
-
-    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, group, type, renderUserInteractions), [name, data, mapping, group, type, renderUserInteractions]);
 
     return (
       <FieldComponent {...fieldProps} />

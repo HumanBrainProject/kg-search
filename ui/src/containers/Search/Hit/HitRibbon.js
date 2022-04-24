@@ -49,11 +49,13 @@ const getSuffix = (counter, mapping) => {
 };
 
 export const HitRibbon = ({className, data, mapping}) => {
+
+  const counter = useMemo(() => getCounter(data, mapping), [data, mapping]);
+  const suffix = useMemo(() => getSuffix(counter, mapping), [counter, mapping]);
+
   if (!mapping || !data) {
     return null;
   }
-  const counter = useMemo(() => getCounter(data, mapping), [data, mapping]);
-  const suffix = useMemo(() => getSuffix(counter, mapping), [counter, mapping]);
   return (
     <Ribbon className={className} icon={mapping.icon} text={mapping.content} counter={counter} suffix={suffix} />
   );

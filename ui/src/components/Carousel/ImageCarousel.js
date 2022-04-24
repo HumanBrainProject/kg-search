@@ -32,11 +32,11 @@ import "./ImageCarousel.css";
 export const ImageCarousel = ({ className, width, images, onClick }) => {
   const labelRef = useRef();
 
+  const onClickItem = useMemo(() => index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]), [images]);
+
   if (!images || !images.length) {
     return null;
   }
-
-  const onClickItem = useMemo(() => index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]), [images]);
 
   return (
     <div className={`kgs-image_carousel ${className ? className : ""}`}>

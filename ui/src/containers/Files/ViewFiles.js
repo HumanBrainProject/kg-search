@@ -53,6 +53,8 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
     };
   }, []);
 
+  const fetchMoreFiles = useMemo(() => () => fetchFiles(false), [fetchFiles]);
+
   if (filesError) {
     return (
       <div>
@@ -76,8 +78,6 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
       <span>No files available <FontAwesomeIcon icon={faSyncAlt} onClick={() => fetchFiles(true)} style={{cursor: "pointer"}}/></span>
     );
   }
-
-  const fetchMoreFiles = useMemo(() => () => fetchFiles(false), [fetchFiles]);
 
   const showMoreStyle = {
     display: "inline",
