@@ -84,8 +84,12 @@ const AsyncLinkedInstance = connect(
     isLoading: state.linkedInstance.isLoading
   }),
   dispatch => ({
-    fetchInstance: (group, id)  => dispatch(actionsLinkedInstance.loadLinkedInstance(group, id)),
-    fetchPreviewInstance: id => dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id))
+    fetchInstance: (group, id)  => {
+      dispatch(actionsLinkedInstance.loadLinkedInstance(group, id));
+    },
+    fetchPreviewInstance: id => {
+      dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id));
+    }
   })
 )(AsyncLinkedInstanceComponent);
 

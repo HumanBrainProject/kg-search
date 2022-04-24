@@ -48,6 +48,8 @@ export const SortingSelector = connect(
     }))
   }),
   dispatch => ({
-    onChange: value => dispatch(actionsSearch.setSort(value))
+    onChange: value => {
+      dispatch(actionsSearch.setSort(value));
+    }
   })
 )(SortingSelectorComponent);

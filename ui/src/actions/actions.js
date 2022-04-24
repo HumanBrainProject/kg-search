@@ -20,7 +20,6 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import * as types from "./actions.types";
 import API from "../services/API";
 import { getHashKey, generateKey, searchToObj } from "../helpers/BrowserHelpers";
@@ -113,7 +112,7 @@ export const authenticate = (group=null) => {
       }));
       const nonceKey=  generateKey();
       const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
-      window.location.href = API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey);
+      window.location.replace(API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey));
     } else {
       dispatch(sessionFailure("Restricted area is currently not available, please retry in a few minutes!"));
     }
@@ -157,14 +156,13 @@ export const initialize = (location, navigate) => {
       const stateValue = getHashKey("state");
       const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue), "base64")):{};
       const queryString = (state && state.queryString)?state.queryString:"";
-      navigate(`${location.pathname}${queryString}`, {replace: true});
+      setTimeout(() => navigate(`${location.pathname}${queryString}`, {replace: true}), 0);
       dispatch(setApplicationReady());
     } else {
-      // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
         const url = `/instances/${instance}${group?("?group=" + group):""}`;
-        navigate(url, {replace: true});
+        setTimeout(() => navigate(url, {replace: true}), 0);
       }
       if((group && (group === "public" || group === "curated")) || location.pathname.startsWith("/live/")) {
         dispatch(getAuthEndpoint(group));

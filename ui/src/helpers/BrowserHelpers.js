@@ -112,16 +112,10 @@ export const getUpdatedQuery = (query, name, checked, value, many) => {
   return result;
 };
 
-export const getLocationFromQuery = (query, location) => {
-  const queryString = Object.entries(query).reduce((acc, [key, value]) => {
-    acc += `${(acc.length > 1)?"&":""}${key}=${value}`;
-    return acc;
-  }, "?");
-  if (queryString !== location.search) {
-    return `${location.pathname}${queryString}`;
-  }
-  return null;
-};
+export const getLocationSearchFromQuery = query => Object.entries(query).reduce((acc, [key, value]) => {
+  acc += `${(acc.length > 0)?"&":"?"}${key}=${value}`;
+  return acc;
+}, "");
 
 export const windowHeight = () => {
   const w = window,

@@ -35,7 +35,9 @@ export const ImagePopup = connect(
     };
   },
   dispatch => ({
-    onClick: () => dispatch(actions.showImage(null, null))
+    onClick: () => {
+      dispatch(actions.showImage(null, null));
+    }
   })
 )(Component);
 

@@ -33,6 +33,8 @@ export const TermsShortNotice = connect(
     text: state.application.showTermsShortUpdateNotice ? termsShortNoticeUpdate : termsShortNotice
   }),
   dispatch => ({
-    onAgree: () => dispatch(actions.agreeTermsShortNotice())
+    onAgree: () => {
+      dispatch(actions.agreeTermsShortNotice());
+    }
   })
 )(Notice);

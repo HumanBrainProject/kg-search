@@ -67,6 +67,8 @@ export const TypesFilterPanel = connect(
       }))
   }),
   dispatch => ({
-    onClick: value => dispatch(actionsSearch.setType(value))
+    onClick: value => {
+      dispatch(actionsSearch.setType(value));
+    }
   })
 )(TypesFilterPanelBase);

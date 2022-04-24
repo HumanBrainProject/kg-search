@@ -57,6 +57,8 @@ export default connect(
     theme: state.application.theme
   }),
   dispatch => ({
-    setTheme: theme => dispatch(actions.setTheme(theme))
+    setTheme: theme => {
+      dispatch(actions.setTheme(theme));
+    }
   })
 )(ThemeToggle);

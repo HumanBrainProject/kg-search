@@ -77,8 +77,12 @@ export const SignIn = connect(
     Tag: props.Tag
   }),
   dispatch => ({
-    logout: () => dispatch(actions.logout()),
-    login: () => dispatch(actions.authenticate()),
+    logout: () => {
+      dispatch(actions.logout());
+    },
+    login: () => {
+      dispatch(actions.authenticate());
+    },
     onGroupChange: value => {
       dispatch(actionsGroups.setGroup(value));
       dispatch(actionsInstances.clearAllInstances());

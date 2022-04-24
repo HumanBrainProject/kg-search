@@ -30,6 +30,8 @@ export const InfoPanel = connect(
     text: state.application.info
   }),
   dispatch => ({
-    onClose: () => dispatch(actions.setInfo())
+    onClose: () => {
+      dispatch(actions.setInfo());
+    }
   })
 )(Component);

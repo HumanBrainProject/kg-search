@@ -130,6 +130,8 @@ export const ViewFiles = connect(
   }),
   (dispatch, props) => ({
     fetchFiles: reset => props.fetch(reset),
-    clear: () => dispatch(actionsFiles.clearFiles())
+    clear: () => {
+      dispatch(actionsFiles.clearFiles());
+    }
   })
 )(ViewFilesComponent);

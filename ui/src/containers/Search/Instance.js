@@ -39,8 +39,10 @@ export const Instance = connect(
     searchPage: true
   }),
   dispatch => ({
-    fetch: (group, id, navigate) => dispatch(actionsInstances.loadInstance(group, id, () => {
-      navigate(`/${window.location.search}#${id}`);
-    })),
+    fetch: (group, id, navigate) => {
+      dispatch(actionsInstances.loadInstance(group, id, () => {
+        navigate(`/${window.location.search}#${id}`);
+      }));
+    }
   })
 )(Component);

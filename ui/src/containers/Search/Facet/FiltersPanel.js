@@ -96,8 +96,14 @@ export const FiltersPanel = connect(
     };
   },
   dispatch => ({
-    onChange: (id, active, keyword) => dispatch(actionsSearch.setFacet(id, active, keyword)),
-    onViewChange: (id, size) => dispatch(actionsSearch.setFacetSize(id, size)),
-    onReset: () => dispatch(actionsSearch.resetFacets())
+    onChange: (id, active, keyword) => {
+      dispatch(actionsSearch.setFacet(id, active, keyword));
+    },
+    onViewChange: (id, size) => {
+      dispatch(actionsSearch.setFacetSize(id, size));
+    },
+    onReset: () => {
+      dispatch(actionsSearch.resetFacets());
+    }
   })
 )(FiltersPanelBase);

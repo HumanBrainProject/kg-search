@@ -41,7 +41,9 @@ export const DefinitionErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
@@ -56,7 +58,9 @@ const GroupErrorPanelContainer = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
@@ -80,7 +84,9 @@ const InstanceErrorPanelContainer = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
@@ -102,7 +108,9 @@ export const SearchInstanceErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(Component);
 
@@ -115,7 +123,9 @@ export const SearchErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
@@ -128,6 +138,8 @@ export const SessionExpiredErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);

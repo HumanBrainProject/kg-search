@@ -70,10 +70,18 @@ export const Instance = connect(
     };
   },
   dispatch => ({
-    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
-    loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
-    clearAllInstances: () => dispatch(actionsInstances.clearAllInstances()),
+    loadDefinition: () => {
+      dispatch(actionsDefinition.loadDefinition());
+    },
+    loadGroups: () => {
+      dispatch(actionsGroups.loadGroups());
+    },
+    fetch: (group, id) => {
+      dispatch(actionsInstances.loadInstance(group, id));
+    },
+    clearAllInstances: () => {
+      dispatch(actionsInstances.clearAllInstances());
+    },
     goBackToInstance: (group, id) => {
       dispatch(actionsGroups.setGroup(group));
       dispatch(actionsInstances.goBackToInstance(id));

@@ -78,6 +78,8 @@ export default connect(
     isReady: state.application.isReady && !state.auth.error
   }),
   dispatch => ({
-    initialize: (location, navigate) => dispatch(actions.initialize(location, navigate))
+    initialize: (location, navigate) => {
+      dispatch(actions.initialize(location, navigate));
+    }
   })
 )(App);

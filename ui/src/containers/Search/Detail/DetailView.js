@@ -70,11 +70,15 @@ export const DetailView = connect(
     };
   },
   dispatch => ({
-    onBack: () => dispatch(actionsInstances.setPreviousInstance()),
+    onBack: () => {
+      dispatch(actionsInstances.setPreviousInstance());
+    },
     onClose: () => {
       dispatch(actionsInstances.clearInstanceCurrentTab());
       dispatch(actionsInstances.clearAllInstances());
     },
-    clearInstanceCurrentTab: () => dispatch(actionsInstances.clearInstanceCurrentTab())
+    clearInstanceCurrentTab: () => {
+      dispatch(actionsInstances.clearInstanceCurrentTab());
+    }
   })
 )(DetailViewComponent);

@@ -30,7 +30,7 @@ import { ShareButtons } from "../Share/ShareButtons";
 import { Instance } from "../../components/Instance/Instance";
 import { Tags } from "../../components/Tags/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
-import { getUpdatedQuery, getLocationFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
+import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -120,9 +120,9 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
 
   useEffect(() => {
     const query = getUpdatedQuery(searchToObj(), "group", group && group !== defaultGroup, group, false);
-    const newUrl = getLocationFromQuery(query, location);
-    if (newUrl) {
-      navigate(newUrl);
+    const newLocationSearch = getLocationSearchFromQuery(query);
+    if (newLocationSearch !== location.search) {
+      navigate(`${location.pathname}${newLocationSearch}`);
     }
   }, [group]);
 

@@ -67,8 +67,14 @@ export const AsyncHierarchicalFiles = connect(
     urlFieldPath: props.urlFieldPath
   }),
   (dispatch, props) => ({
-    fetchFiles: (searchAfter, groupingType, fileFilter, reset) => dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, groupingType, fileFilter, reset)),
-    fetchFileFormats: () => dispatch(actionsFiles.loadFileFormats(props.fileFormatsUrl)),
-    fetchGroupingTypes: () => dispatch(actionsFiles.loadGroupingTypes(props.groupingTypesUrl))
+    fetchFiles: (searchAfter, groupingType, fileFilter, reset) => {
+      dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, groupingType, fileFilter, reset));
+    },
+    fetchFileFormats: () => {
+      dispatch(actionsFiles.loadFileFormats(props.fileFormatsUrl));
+    },
+    fetchGroupingTypes: () => {
+      dispatch(actionsFiles.loadGroupingTypes(props.groupingTypesUrl));
+    }
   })
 )(AsyncHierarchicalFilesComponent);

@@ -79,7 +79,9 @@ export const loadFiles = (filesUrl, searchAfter, groupingType, fileFormat, reset
     const url = filesUrl + (paramsString.length?`?${paramsString}`:"");
     API.axios
       .get(url)
-      .then(response => dispatch(loadFilesSuccess(response.data, reset)))
+      .then(response => {
+        dispatch(loadFilesSuccess(response.data, reset));
+      })
       .catch(e => {
         const { response } = e;
         if (response) {
@@ -137,7 +139,9 @@ export const loadGroupingTypes = url => {
     dispatch(loadGroupingTypesRequest());
     API.axios
       .get(url)
-      .then(response => dispatch(loadGroupingTypesSuccess(response.data)))
+      .then(response => {
+        dispatch(loadGroupingTypesSuccess(response.data));
+      })
       .catch(e => {
         const { response } = e;
         if (response) {
@@ -195,7 +199,9 @@ export const loadFileFormats = url => {
     dispatch(loadFileFormatsRequest());
     API.axios
       .get(url)
-      .then(response => dispatch(loadFileFormatsSuccess(response.data)))
+      .then(response => {
+        dispatch(loadFileFormatsSuccess(response.data));
+      })
       .catch(e => {
         const { response } = e;
         if (response) {

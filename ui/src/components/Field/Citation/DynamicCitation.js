@@ -38,7 +38,9 @@ const DynamicCitation = ({ doi }) => {
   const [error, setError] = useState();
   const [bibtex, setBibtex] = useState();
 
-  useEffect(() => getCitation(), []);
+  useEffect(() => {
+    getCitation();
+  }, []);
 
   const getCitation = async () => {
     setIsLoading(true);
@@ -70,7 +72,7 @@ const DynamicCitation = ({ doi }) => {
   if (error) {
     return (<div>
       <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
-      <FontAwesomeIcon icon={faSyncAlt} onClick={() => getCitation()} style={{ cursor: "pointer" }} />
+      <FontAwesomeIcon icon={faSyncAlt} onClick={getCitation} style={{ cursor: "pointer" }} />
     </div>);
   }
 

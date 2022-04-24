@@ -103,8 +103,12 @@ const SearchPanelContainer = connect(
     };
   },
   dispatch => ({
-    onHelp: () => dispatch(actions.setInfo(help)),
-    onQueryStringChange: value => dispatch(actionsSearch.setQueryString(value))
+    onHelp: () => {
+      dispatch(actions.setInfo(help));
+    },
+    onQueryStringChange: value => {
+      dispatch(actionsSearch.setQueryString(value));
+    }
   })
 )(SeachPanelComponent);
 

@@ -38,7 +38,7 @@ import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
 import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, SearchErrorPanel } from "../Error/ErrorPanel";
-import { getUpdatedQuery, getLocationFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
+import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./Search.css";
 
@@ -160,19 +160,21 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
   }, [isActive]);
 
   useEffect(() => {
-    let query = searchToObj();
-    query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
-    query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
-    const list = calculateFacetList(facets);
-    query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), query);
-    query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
-    query = getUpdatedQuery(query, "p", page !== 1, page, false);
-    query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
-    const newUrl = getLocationFromQuery(query, location);
-    if (newUrl) {
-      navigate(newUrl);
+    if (definitionIsReady && (!shouldLoadGroups || isGroupsReady)) {
+      let query = searchToObj();
+      query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
+      query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
+      const list = calculateFacetList(facets);
+      query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), query);
+      query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
+      query = getUpdatedQuery(query, "p", page !== 1, page, false);
+      query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
+      const newLocationSearch = getLocationSearchFromQuery(query);
+      if (newLocationSearch !== location.search) {
+        navigate(`${location.pathname}${newLocationSearch}`, {replace: !window.location.search}); // replace no type at initialisation
+      }
     }
-  }, [queryString, selectedType, sort, page, group, facets]);
+  }, [definitionIsReady, shouldLoadGroups, isGroupsReady, queryString, selectedType, sort, page, group, facets]);
 
   useEffect(() => {
     if (!definitionIsReady) {
@@ -229,10 +231,20 @@ export const Search = connect(
     isUpToDate: state.search.isUpToDate
   }),
   dispatch => ({
-    setInitialSearchParams: params => dispatch(actionsSearch.setInitialSearchParams(params)),
-    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
-    loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    search: () => dispatch(actionsSearch.search()),
-    goBackToInstance: id => dispatch(actionsInstances.goBackToInstance(id))
+    setInitialSearchParams: params => {
+      dispatch(actionsSearch.setInitialSearchParams(params));
+    },
+    loadDefinition: () => {
+      dispatch(actionsDefinition.loadDefinition());
+    },
+    loadGroups: () => {
+      dispatch(actionsGroups.loadGroups());
+    },
+    search: () => {
+      dispatch(actionsSearch.search());
+    },
+    goBackToInstance: id => {
+      dispatch(actionsInstances.goBackToInstance(id));
+    }
   })
 )(SearchWithTabKeyNavigation);
