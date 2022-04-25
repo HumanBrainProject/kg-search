@@ -20,61 +20,189 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
-import { FileFormatFilter } from "./FileFormatFilter";
-import { GroupingTypeFilter } from "./GroupingTypeFilter";
-import { ViewFiles } from "./ViewFiles";
-import * as actionsFiles from "../../actions/actions.files";
+import { FileFilter } from "./FileFilter";
+import HierarchicalFiles from "../../components/Field/Files/HierarchicalFiles";
+import API from "../../services/API";
+import { sessionFailure } from "../../actions/actions";
 
-export const AsyncHierarchicalFilesComponent = ({mapping, group, type, nameFieldPath, urlFieldPath, searchFilesAfter, groupingType, fileFormat, fetchFiles, fetchFileFormats, fetchGroupingTypes}) => {
+const showMoreStyle = {
+  display: "inline",
+  padding: 0,
+  border: 0,
+  verticalAlign: "baseline",
+  color: "var(--link-color-1)",
+  lineHeight: "1rem"
+};
 
-  const handleSelectFileFormat = useMemo(() => format => {
-    fetchFiles(searchFilesAfter, groupingType, format, true);
-  }, [searchFilesAfter, groupingType]);
+const Label = ({isAllFetched, number, total}) => {
 
-  const handleSelectGroupingType = useMemo(() => type => {
-    fetchFiles(searchFilesAfter, type, fileFormat, true);
-  }, [searchFilesAfter, fileFormat]);
+  if (isAllFetched) {
+    return (
+      <span><i>{total}</i> files</span>
+    );
+  }
 
-  const handleFetchFiles = useMemo(() => reset => {
-    fetchFiles(searchFilesAfter, groupingType, fileFormat, reset);
-  }, [searchFilesAfter, groupingType, fileFormat]);
+  return (
+    <span>Showing <i>{number}</i> files out of <i>{total}</i>.</span>
+  );
+};
+
+export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl, nameFieldPath, urlFieldPath, fileFormatsUrl, groupingTypesUrl, onSessionFailure}) => {
+
+  const [files, setFiles] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchAfter, setSearchAfter] = useState(null);
+  const [fileFormat, setFileFormat] = useState(null);
+  const [groupingType, setGroupingType] = useState(null);
+  const [isReset, setIsReset] = useState(true);
+
+  const fetch = () => {
+    if (!filesUrl) {
+      throw new Error("AsyncHierarchicalFiles is missing prop url");
+    }
+    setIsLoading(true);
+    setError(null);
+    const params = {};
+    if (searchAfter) {
+      params["searchAfter"] = searchAfter;
+    }
+    if (groupingType) {
+      params["groupingType"] = groupingType;
+    }
+    if (fileFormat) {
+      params["format"] = fileFormat;
+    }
+    const paramsString = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+    const url = filesUrl + (paramsString.length?`?${paramsString}`:"");
+    API.axios
+      .get(url)
+      .then(response => {
+        const data = response.data;
+        const items = searchAfter?[...files, ...data.data]:data.data;
+        setFiles(items);
+        setIsLoading(false);
+        setTotal(data.total);
+        setSearchAfter(data.searchAfter);
+      })
+      .catch(e => {
+        const { response } = e;
+        if (response) {
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            setIsLoading(false);
+            onSessionFailure();
+            break;
+          }
+          case 500:
+          case 404:
+          default:
+          {
+            setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+            setIsLoading(false);
+          }
+          }
+        } else {
+          setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+          setIsLoading(false);
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (isReset) {
+      setSearchAfter(null);
+      setIsReset(false);
+    } else {
+      fetch();
+    }
+  }, [isReset, groupingType, fileFormat]);
+
+  const handleSetFileFormat = useMemo(() => value => {
+    setFileFormat(value);
+    setIsReset(true);
+  }, []);
+
+  const handleSetGroupingType = useMemo(() => value => {
+    setGroupingType(value);
+    setIsReset(true);
+  }, []);
+
+  const handleRetry = useMemo(() => setIsReset(true), []);
+
+  const isAllFetched = useMemo(() => files.length === total, [files, total]);
+
+  const hasFilter = useMemo(() => !!groupingType || !!fileFormat, [groupingType, fileFormat]);
+
+  const showLabel = useMemo(() => total !== 1 || files.length !== 1 || !!groupingType || hasFilter, [files, total, groupingType, hasFilter]);
 
   return (
     <>
-      <FileFormatFilter onSelect={handleSelectFileFormat} fetch={fetchFileFormats} />
-      <GroupingTypeFilter onSelect={handleSelectGroupingType} fetch={fetchGroupingTypes} />
-      <ViewFiles mapping={mapping} group={group} type={type} fetch={handleFetchFiles} nameFieldPath={nameFieldPath} urlFieldPath={urlFieldPath} />
+      <FileFilter title="Filter by" show={!isLoading} url={fileFormatsUrl} value={fileFormat} onSelect={handleSetFileFormat} onSessionFailure={onSessionFailure} />
+      <FileFilter title="Group by" show={!isLoading} url={groupingTypesUrl} value={groupingType} onSelect={handleSetGroupingType} onSessionFailure={onSessionFailure} />
+
+      {error?
+        <div>
+          <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
+          <FontAwesomeIcon icon={faSyncAlt} onClick={handleRetry} style={{cursor: "pointer"}}/>
+        </div>
+        :
+        files.length === 0?
+          isLoading?
+            <div className="spinner-border spinner-border-sm" role="status">
+              <span className="sr-only">Retrieving files...</span>
+            </div>
+            :
+            <span>No files available <FontAwesomeIcon icon={faSyncAlt} onClick={fetch} style={{cursor: "pointer"}}/></span>
+          :
+          <>
+            <div>
+              {showLabel && (
+                <>
+                  <Label isAllFetched={isAllFetched} number={files.length} total={total} />&nbsp;
+                </>
+              )}
+              {isLoading?
+                <div className="spinner-border spinner-border-sm" role="status">
+                  <span className="sr-only">Retrieving files...</span>
+                </div>
+                :
+                !isAllFetched && (
+                  <button type="button" className="btn btn-link" onClick={fetch} style={showMoreStyle}>show more</button>
+                )
+              }
+            </div>
+            <HierarchicalFiles data={files} mapping={mapping} group={group} type={type} groupingType={groupingType} hasDataFilter={hasFilter} nameFieldPath={nameFieldPath} urlFieldPath={urlFieldPath} />
+          </>
+      }
     </>
   );
 };
 
 export const AsyncHierarchicalFiles = connect(
-  (state, props) => ({
-    files: state.files.files,
-    searchFilesAfter: state.files.searchFilesAfter,
-    isFilesInitialized: state.files.isFilesInitialized,
-    isFilesLoading: state.files.isFilesLoading,
-    filesError: state.files.filesError,
-    fileFormat: state.files.fileFormat,
-    groupingType: state.files.groupingType,
+  (_, props) => ({
     mapping: props.mapping,
     group: props.group,
     type: props.type,
     nameFieldPath: props.nameFieldPath,
-    urlFieldPath: props.urlFieldPath
+    urlFieldPath: props.urlFieldPath,
+    fileFormatsUrl: props.fileFormatsUrl,
+    groupingTypesUrl: props.groupingTypesUrl
   }),
-  (dispatch, props) => ({
-    fetchFiles: (searchAfter, groupingType, fileFilter, reset) => {
-      dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, groupingType, fileFilter, reset));
-    },
-    fetchFileFormats: () => {
-      dispatch(actionsFiles.loadFileFormats(props.fileFormatsUrl));
-    },
-    fetchGroupingTypes: () => {
-      dispatch(actionsFiles.loadGroupingTypes(props.groupingTypesUrl));
+  dispatch => ({
+    onSessionFailure: () => {
+      dispatch(sessionFailure("Your session has expired. Please login again."));
     }
   })
 )(AsyncHierarchicalFilesComponent);

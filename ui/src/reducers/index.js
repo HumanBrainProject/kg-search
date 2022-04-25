@@ -30,7 +30,6 @@ import { reducer as search } from "./search.reducer";
 import { reducer as instances } from "./instances.reducer";
 import { reducer as fetching } from "./fetching.reducer";
 import { reducer as auth } from "./auth.reducer";
-import { reducer as files } from "./files.reducer";
 import { reducer as linkedInstance } from "./linkedInstance.reducer";
 
 
@@ -42,7 +41,6 @@ const createRootReducer = () => combineReducers({
   instances,
   fetching,
   auth,
-  files,
   linkedInstance
 });
 

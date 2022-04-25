@@ -41,6 +41,14 @@ import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper"
 import * as filters from "./helpers";
 import { debounce } from "lodash";
 
+const getFilteredTree = (tree, filter) => {
+  if (!filter) {
+    return tree;
+  }
+  let filtered = filters.filterTree(tree, filter);
+  filtered = filters.expandFilteredNodes(filtered, filter);
+  return filtered;
+};
 
 const Node = ({node, isRootNode, group, type, hasFilter}) => {
   const isFile = node.type === "file";
@@ -77,9 +85,9 @@ class HierarchicalFiles extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const {data, groupingType, nameFieldPath, urlFieldPath} = this.props;
-    if (data && data.length === 1 && !groupingType) {
+  setTree() {
+    const {data, groupingType, hasDataFilter, nameFieldPath, urlFieldPath} = this.props;
+    if (data && data.length === 1 && !hasDataFilter) {
       const node = {
         data: data[0],
         name: JSONPath(data[0], nameFieldPath),
@@ -88,8 +96,23 @@ class HierarchicalFiles extends React.Component {
       };
       this.setState({tree: {}, node: node, initialTree: {} });
     } else {
-      const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
-      this.setState({tree: tree, node: tree, initialTree: tree });
+      const initialTree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
+      const tree = getFilteredTree(initialTree, this.state.filter);
+      this.setState({tree: tree,  node: tree, initialTree: initialTree });
+    }
+  }
+
+  componentDidMount() {
+    this.setTree();
+  }
+
+  componentDidUpdate(previousProps) {
+    const { data, groupingType, nameFieldPath, urlFieldPath } = this.props;
+    if (data !== previousProps.data
+      || groupingType !== previousProps.groupingType
+      || nameFieldPath !== previousProps.nameFieldPath
+      || urlFieldPath !== previousProps.urlFieldPath) {
+      this.setTree();
     }
   }
 
@@ -108,12 +131,8 @@ class HierarchicalFiles extends React.Component {
   onFilterMouseUp = debounce(({target: {value}}) => {
     const filter = value.trim();
     this.setState({filter: filter});
-    if (!filter) {
-      this.setState({tree: this.state.initialTree});
-    }
-    let filtered = filters.filterTree(this.state.initialTree, filter);
-    filtered = filters.expandFilteredNodes(filtered, filter);
-    this.setState({tree: filtered});
+    const tree = getFilteredTree(this.state.initialTree, filter);
+    this.setState({tree: tree});
   }, 500);
 
   render() {
