@@ -20,7 +20,7 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,21 +28,71 @@ import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 
-import * as actionsLinkedInstance from "../actions/actions.linkedInstance";
+import API from "../services/API";
+import { sessionFailure } from "../actions/actions";
 import LinkedInstance from "./LinkedInstance";
 
 import "./AsyncLinkedInstance.css";
 
-const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLoading, fetchInstance, fetchPreviewInstance }) => {
+const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure }) => {
 
   const location = useLocation();
 
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetch = () => {
+    setIsLoading(true);
+    setError(null);
+    const url = location.pathname.startsWith("/live/")?API.endpoints.preview(id):API.endpoints.instance(group, id);
+    API.axios
+      .get(url)
+      .then(response => {
+        if (response.data && response.data._source && !response.data.error) {
+          response.data._id = id;
+          if (!location.pathname.startsWith("/live/")) {
+            response.data._group = group;
+          }
+          setData(response.data._source);
+        } else if (response.data && response.data.error) {
+          setError(response.data.message ? response.data.message : response.data.error);
+        } else {
+          const error = `The instance with id ${id} is not available.`;
+          setError(error);
+        }
+        setIsLoading(false);
+      })
+      .catch(e => {
+        const { response } = e;
+        if (response) {
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            setIsLoading(false);
+            onSessionFailure();
+            break;
+          }
+          case 500:
+          case 404:
+          default:
+          {
+            setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+            setIsLoading(false);
+          }
+          }
+        } else {
+          setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+          setIsLoading(false);
+        }
+      });
+  };
+
   useEffect(() => {
-    if (location.pathname.startsWith("/live/")) {
-      fetchPreviewInstance(id);
-    } else {
-      fetchInstance(group, id);
-    }
+    fetch();
   }, [id, group]);
 
   if (error) {
@@ -50,7 +100,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLo
       <div className="kgs-async-linked-instance__error">
         <FontAwesomeIcon icon={faBan} />
         &nbsp;{error}
-        <button onClick={() => fetch(group, id)} title="Retry"><FontAwesomeIcon icon={faSyncAlt} /></button>
+        <button onClick={fetch} title="Retry"><FontAwesomeIcon icon={faSyncAlt} /></button>
       </div>
     );
   }
@@ -74,21 +124,15 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, data, error, isLo
 };
 
 const AsyncLinkedInstance = connect(
-  (state, props) => ({
+  (_, props) => ({
     id: props.id,
     name: props.name,
     group: props.group,
-    type: props.type,
-    data: state.linkedInstance.data,
-    error: state.linkedInstance.error,
-    isLoading: state.linkedInstance.isLoading
+    type: props.type
   }),
   dispatch => ({
-    fetchInstance: (group, id)  => {
-      dispatch(actionsLinkedInstance.loadLinkedInstance(group, id));
-    },
-    fetchPreviewInstance: id => {
-      dispatch(actionsLinkedInstance.loadLinkedInstancePreview(id));
+    onSessionFailure: () => {
+      dispatch(sessionFailure("Your session has expired. Please login again."));
     }
   })
 )(AsyncLinkedInstanceComponent);
