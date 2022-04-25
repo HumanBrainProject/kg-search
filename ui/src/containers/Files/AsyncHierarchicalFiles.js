@@ -139,7 +139,7 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl,
     setIsReset(true);
   }, []);
 
-  const handleRetry = useMemo(() => setIsReset(true), []);
+  const handleRetry = () => setIsReset(true);
 
   const isAllFetched = useMemo(() => files.length === total, [files, total]);
 
@@ -149,8 +149,8 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl,
 
   return (
     <>
-      <FileFilter title="Filter by" show={!isLoading} url={fileFormatsUrl} value={fileFormat} onSelect={handleSetFileFormat} onSessionFailure={onSessionFailure} />
-      <FileFilter title="Group by" show={!isLoading} url={groupingTypesUrl} value={groupingType} onSelect={handleSetGroupingType} onSessionFailure={onSessionFailure} />
+      <FileFilter title="Filter by" show={!isLoading && !error} url={fileFormatsUrl} value={fileFormat} onSelect={handleSetFileFormat} onSessionFailure={onSessionFailure} />
+      <FileFilter title="Group by" show={!isLoading && !error} url={groupingTypesUrl} value={groupingType} onSelect={handleSetGroupingType} onSessionFailure={onSessionFailure} />
 
       {error?
         <div>
@@ -164,7 +164,7 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl,
               <span className="sr-only">Retrieving files...</span>
             </div>
             :
-            <span>No files available <FontAwesomeIcon icon={faSyncAlt} onClick={fetch} style={{cursor: "pointer"}}/></span>
+            <span>No files available <FontAwesomeIcon icon={faSyncAlt} onClick={handleRetry} style={{cursor: "pointer"}}/></span>
           :
           <>
             <div>
