@@ -72,8 +72,7 @@
     },
     {
       "propertyName": "query:keyword",
-      "path": "https://openminds.ebrains.eu/vocab/keyword",
-      "sort": true
+      "path": "https://openminds.ebrains.eu/vocab/keyword"
     },
     {
       "propertyName": "query:version",
@@ -1374,7 +1373,8 @@
                           "propertyName": "query:fullName",
                           "path": "https://openminds.ebrains.eu/vocab/name"
                         }
-                      ]
+                      ],
+                      "singleValue": "FIRST"
                     },
                     {
                       "propertyName": "query:minValueUnit",
@@ -1388,7 +1388,8 @@
                           "propertyName": "query:fullName",
                           "path": "https://openminds.ebrains.eu/vocab/name"
                         }
-                      ]
+                      ],
+                      "singleValue": "FIRST"
                     }
                   ]
                 },
