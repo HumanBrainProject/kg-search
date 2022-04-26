@@ -44,7 +44,9 @@ export const ImagePreviews = connect(
     };
   },
   dispatch => ({
-    onClick: image => dispatch(actions.showImage(image.target, image.label, image.link))
+    onClick: image => {
+      dispatch(actions.showImage(image.target, image.label, image.link));
+    }
   })
 )(ImageCarousel);
 

@@ -25,6 +25,9 @@ import React, { useState, useEffect, useRef } from "react";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+
 import "./ImagePopup.css";
 
 const converter = new showdown.Converter({ extensions: [xssFilter] });
@@ -66,7 +69,7 @@ export const ImagePopup = ({ className, src, label, link, onClick }) => {
           {
             error ?
               <div className="kgs-image_popup-error">
-                <FontAwesomeIcon icon="ban" />
+                <FontAwesomeIcon icon={faBan} />
                 <span>{`failed to fetch image "${label}" ...`}</span>
               </div>
               :
@@ -86,7 +89,7 @@ export const ImagePopup = ({ className, src, label, link, onClick }) => {
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>
-            <FontAwesomeIcon icon="times" />
+            <FontAwesomeIcon icon={faTimes} />
           </div>
         </div>
       )}

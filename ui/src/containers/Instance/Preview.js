@@ -31,6 +31,8 @@ import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
+const path = "/live/";
+
 const getId = ({org, domain, schema, version, id}) => {
   if(org && domain && schema && version && id) {
     return `${org}/${domain}/${schema}/${version}/${id}`;
@@ -39,13 +41,13 @@ const getId = ({org, domain, schema, version, id}) => {
 };
 
 export const Preview = connect(
-  (state, props) => {
+  state => {
     const instanceProps = state.instances.currentInstance?
       {
         ...mapStateToProps(state, {
           data: state.instances.currentInstance
         }),
-        path: "/live/",
+        path: path,
         defaultGroup: state.groups.defaultGroup,
         ImagePopupComponent: ImagePopup,
         TermsShortNoticeComponent: TermsShortNotice
@@ -53,6 +55,7 @@ export const Preview = connect(
       :
       null;
     return {
+      path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.error,
       definitionIsReady: state.definition.isReady,
@@ -68,17 +71,26 @@ export const Preview = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      id: getId(props.match.params),
-      location: state.router.location,
       watermark: "Preview",
-      searchPage: false
+      searchPage: false,
+      getId: getId
     };
   },
   dispatch => ({
-    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
-    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
-    loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
+    loadDefinition: () => {
+      dispatch(actionsDefinition.loadDefinition());
+    },
+    loadGroups: () => {
+      dispatch(actionsGroups.loadGroups());
+    },
+    fetch: (_, id) => {
+      dispatch(actionsInstances.loadPreview(id));
+    },
+    clearAllInstances: () => {
+      dispatch(actionsInstances.clearAllInstances());
+    },
+    goBackToInstance: id => {
+      dispatch(actionsInstances.goBackToInstance(id));
+    }
   })
 )(InstanceContainer);

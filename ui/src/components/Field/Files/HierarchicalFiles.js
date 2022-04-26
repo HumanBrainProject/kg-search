@@ -24,6 +24,9 @@
 import React from "react";
 import { Treebeard, decorators } from "react-treebeard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
+import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
+import {faFolder} from "@fortawesome/free-solid-svg-icons/faFolder";
 
 import Download from "./Download";
 import LinkedInstance from "../../../containers/LinkedInstance";
@@ -38,10 +41,18 @@ import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper"
 import * as filters from "./helpers";
 import { debounce } from "lodash";
 
+const getFilteredTree = (tree, filter) => {
+  if (!filter) {
+    return tree;
+  }
+  let filtered = filters.filterTree(tree, filter);
+  filtered = filters.expandFilteredNodes(filtered, filter);
+  return filtered;
+};
 
 const Node = ({node, isRootNode, group, type, hasFilter}) => {
   const isFile = node.type === "file";
-  const icon = isFile?"file":"folder";
+  const icon = isFile?faFile:faFolder;
   return (
     <div className="kgs-hierarchical-files__details">
       <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={icon} size="5x"/>}</div>
@@ -74,9 +85,9 @@ class HierarchicalFiles extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const {data, groupingType, nameFieldPath, urlFieldPath} = this.props;
-    if (data && data.length === 1 && !groupingType) {
+  setTree() {
+    const {data, groupingType, hasDataFilter, nameFieldPath, urlFieldPath} = this.props;
+    if (data && data.length === 1 && !hasDataFilter) {
       const node = {
         data: data[0],
         name: JSONPath(data[0], nameFieldPath),
@@ -85,8 +96,23 @@ class HierarchicalFiles extends React.Component {
       };
       this.setState({tree: {}, node: node, initialTree: {} });
     } else {
-      const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
-      this.setState({tree: tree, node: tree, initialTree: tree });
+      const initialTree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
+      const tree = getFilteredTree(initialTree, this.state.filter);
+      this.setState({tree: tree,  node: tree, initialTree: initialTree });
+    }
+  }
+
+  componentDidMount() {
+    this.setTree();
+  }
+
+  componentDidUpdate(previousProps) {
+    const { data, groupingType, nameFieldPath, urlFieldPath } = this.props;
+    if (data !== previousProps.data
+      || groupingType !== previousProps.groupingType
+      || nameFieldPath !== previousProps.nameFieldPath
+      || urlFieldPath !== previousProps.urlFieldPath) {
+      this.setTree();
     }
   }
 
@@ -105,12 +131,8 @@ class HierarchicalFiles extends React.Component {
   onFilterMouseUp = debounce(({target: {value}}) => {
     const filter = value.trim();
     this.setState({filter: filter});
-    if (!filter) {
-      this.setState({tree: this.state.initialTree});
-    }
-    let filtered = filters.filterTree(this.state.initialTree, filter);
-    filtered = filters.expandFilteredNodes(filtered, filter);
-    this.setState({tree: filtered});
+    const tree = getFilteredTree(this.state.initialTree, filter);
+    this.setState({tree: tree});
   }, 500);
 
   render() {
@@ -129,7 +151,7 @@ class HierarchicalFiles extends React.Component {
       <>
         {filesLength < 5000 && (
           <div className="kgs-files-search">
-            <FontAwesomeIcon icon="search" className="kgs-files-search-icon" />
+            <FontAwesomeIcon icon={faSearch} className="kgs-files-search-icon" />
             <input
               className="form-control"
               onKeyUp={this.onFilterMouseUp}

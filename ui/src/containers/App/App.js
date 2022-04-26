@@ -21,9 +21,9 @@
  *
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import * as actions from "../../actions/actions";
 import { Notification } from "../Notification/Notification";
@@ -39,48 +39,47 @@ import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import Theme from "../Theme/Theme";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    window.instanceTabSelection = {};
-    this.props.initialize(this.props.location);
-  }
+const App = ({ initialize, isReady }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  render() {
-    return (
-      <React.Fragment>
-        <Theme />
-        <Header />
-        <main>
-          <Notification />
-          {this.props.isReady && (
-            <Switch>
-              <Route path="/instances/:id" exact component={Instance} />
-              <Route path="/instances/:type/:id" exact component={Instance} />
-              <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
-              <Route path="/live/:id" exact component={Preview} />
-              <Route path="/" exact component={Search} />
-              <Route component={NotFound} />
-            </Switch>
-          )}
-          <FetchingPanel />
-          <SessionExpiredErrorPanel />
-          <InfoPanel />
-        </main>
-        <Footer commit={this.props.commit}/>
-      </React.Fragment>
-    );
-  }
-}
+  useEffect(() => {
+    initialize(location, navigate);
+  }, []);
+
+
+  return (
+    <>
+      <Theme />
+      <Header />
+      <main>
+        <Notification />
+        {isReady && (
+          <Routes>
+            <Route path="/" element={<Search />} />
+            <Route path="/instances/:id" element={<Instance />} />
+            <Route path="/instances/:type/:id" element={<Instance />} />
+            <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
+            <Route path="/live/:id" element={<Preview />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        )}
+        <FetchingPanel />
+        <SessionExpiredErrorPanel />
+        <InfoPanel />
+      </main>
+      <Footer />
+    </>
+  );
+};
 
 export default connect(
   state => ({
-    location: state.router.location,
-    defaultGroup: state.groups.defaultGroup,
-    isReady: state.application.isReady && !state.auth.error,
-    authEndpoint: state.auth.authEndpoint
+    isReady: state.application.isReady && !state.auth.error
   }),
   dispatch => ({
-    initialize: location => dispatch(actions.initialize(location))
+    initialize: (location, navigate) => {
+      dispatch(actions.initialize(location, navigate));
+    }
   })
 )(App);

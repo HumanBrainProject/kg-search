@@ -21,21 +21,21 @@
  *
  */
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
-import { store, history } from "../../store";
+import { BrowserRouter } from "react-router-dom";
+import { store } from "../../store";
 import App from "./App";
 
 // eslint-disable-next-line jest/expect-expect
 it("renders without crashing", () => {
-  const div = document.createElement("div");
-  ReactDOM.render(
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  root.render(
     <Provider store={store}>
-      <ConnectedRouter history={history}>
+      <BrowserRouter>
         <App />
-      </ConnectedRouter>
-    </Provider>,
-    div
+      </BrowserRouter>
+    </Provider>
   );
 });

@@ -25,8 +25,10 @@ import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-import "./InfoPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+
+import "./InfoPanel.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
@@ -52,7 +54,7 @@ export const InfoPanel = ({text, onClose}) => {
         <div className="kgs-info__container">
           <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
           <button className="kgs-info__closeButton" onClick={handleOnCloseButton}>
-            <FontAwesomeIcon icon="times" />
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
       </div>

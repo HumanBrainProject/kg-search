@@ -24,6 +24,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faTag} from "@fortawesome/free-solid-svg-icons/faTag";
 
 const Icon = ({className, title, url, inline}) => {
   if (url) {
@@ -37,7 +38,7 @@ const Icon = ({className, title, url, inline}) => {
     );
   }
   return (
-    <FontAwesomeIcon icon="tag" className={className?className:null} />
+    <FontAwesomeIcon icon={faTag} className={className?className:undefined} />
   );
 };
 

@@ -24,6 +24,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import * as actionsSearch from "../../../actions/actions.search";
 import { Facet } from "./Facet";
 
@@ -56,7 +57,7 @@ class FiltersPanelBase extends React.Component {
         <div className="kgs-filters__header" >
           <div className="kgs-filters__title" >
             <button type="button" className={`kgs-filters__toggle ${this.state.collapsed?"":"in"} ${hasFilters?"hasFilters":""}`} onClick={this.toggleFilters}>
-              <FontAwesomeIcon icon="chevron-right" />
+              <FontAwesomeIcon icon={faChevronRight} />
             </button> Filters </div>
           <div className= "kgs-filters__reset" >
             <button type="button" className="kgs-filters__reset-button" onClick={onReset}>Reset</button>
@@ -95,8 +96,14 @@ export const FiltersPanel = connect(
     };
   },
   dispatch => ({
-    onChange: (id, active, keyword) => dispatch(actionsSearch.setFacet(id, active, keyword)),
-    onViewChange: (id, size) => dispatch(actionsSearch.setFacetSize(id, size)),
-    onReset: () => dispatch(actionsSearch.resetFacets())
+    onChange: (id, active, keyword) => {
+      dispatch(actionsSearch.setFacet(id, active, keyword));
+    },
+    onViewChange: (id, size) => {
+      dispatch(actionsSearch.setFacetSize(id, size));
+    },
+    onReset: () => {
+      dispatch(actionsSearch.resetFacets());
+    }
   })
 )(FiltersPanelBase);

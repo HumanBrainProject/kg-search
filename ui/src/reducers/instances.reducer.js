@@ -28,7 +28,8 @@ const initialState = {
   isLoading: false,
   currentInstance: null,
   previousInstances: [],
-  image: null
+  image: null,
+  currentTabByInstance: {}
 };
 
 const loadInstanceRequest = state => {
@@ -40,8 +41,10 @@ const loadInstanceRequest = state => {
 };
 
 const loadInstanceSuccess = (state, action) => {
-  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
-  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)?[...state.previousInstances]:[];
+  if (state.currentInstance && state.currentInstance._id !== action.data._id) {
+    previousInstances = [...previousInstances,state.currentInstance];
+  }
   return  {
     ...state,
     isLoading: false,
@@ -102,7 +105,8 @@ const clearAllInstances = state => {
     currentInstance: null,
     previousInstances: [],
     image: null,
-    error: null
+    error: null,
+    currentTabByInstance: {}
   };
 };
 
@@ -177,6 +181,19 @@ const goBackToInstance = (state, action) => {
   };
 };
 
+const setInstanceCurrentTab = (state, action) => ({
+  ...state,
+  currentTabByInstance: {
+    ...state.currentTabByInstance,
+    [action.instanceId]: action.tabName
+  }
+});
+
+const clearInstanceCurrentTab = state => ({
+  ...state,
+  currentTabByInstance: {}
+});
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_INSTANCE_REQUEST:
@@ -199,6 +216,10 @@ export function reducer(state = initialState, action = {}) {
     return showImage(state, action);
   case types.GO_BACK_TO_INSTANCE:
     return goBackToInstance(state, action);
+  case types.CLEAR_INSTANCE_CURRENT_TAB:
+    return clearInstanceCurrentTab(state);
+  case types.SET_INSTANCE_CURRENT_TAB:
+    return setInstanceCurrentTab(state, action);
   default:
     return state;
   }

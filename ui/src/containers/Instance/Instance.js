@@ -30,14 +30,18 @@ import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
+const path = "/instances/";
+
+const getId = ({type, id}) => type?`${type}/${id}`:id;
+
 export const Instance = connect(
-  (state, props) => {
+  state => {
     const instanceProps = state.instances.currentInstance?
       {
         ...mapStateToProps(state, {
           data: state.instances.currentInstance
         }),
-        path: "/instances/",
+        path: path,
         defaultGroup: state.groups.defaultGroup,
         ImagePopupComponent: ImagePopup,
         TermsShortNoticeComponent: TermsShortNotice
@@ -45,6 +49,7 @@ export const Instance = connect(
       :
       null;
     return {
+      path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
       definitionIsReady: state.definition.isReady,
@@ -60,16 +65,26 @@ export const Instance = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      id: props.match.params.type?`${props.match.params.type}/${props.match.params.id}`:props.match.params.id,
-      location: state.router.location,
-      searchPage: false
+      searchPage: false,
+      getId: getId
     };
   },
   dispatch => ({
-    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
-    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
-    loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
+    loadDefinition: () => {
+      dispatch(actionsDefinition.loadDefinition());
+    },
+    loadGroups: () => {
+      dispatch(actionsGroups.loadGroups());
+    },
+    fetch: (group, id) => {
+      dispatch(actionsInstances.loadInstance(group, id));
+    },
+    clearAllInstances: () => {
+      dispatch(actionsInstances.clearAllInstances());
+    },
+    goBackToInstance: (group, id) => {
+      dispatch(actionsGroups.setGroup(group));
+      dispatch(actionsInstances.goBackToInstance(id));
+    }
   })
 )(InstanceContainer);

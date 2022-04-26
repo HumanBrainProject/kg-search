@@ -24,6 +24,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 import "./FetchingPanel.css";
 
 export const FetchingPanel = ({show, message}) => {
@@ -33,7 +34,7 @@ export const FetchingPanel = ({show, message}) => {
   return (
     <div className="kgs-fetching-container" >
       <div className="kgs-fetching-panel">
-        <FontAwesomeIcon icon="circle-notch" spin  />
+        <FontAwesomeIcon icon={faCircleNotch} spin  />
         <span className="kgs-spinner-label">{message}</span>
       </div>
     </div>

@@ -20,89 +20,61 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Field } from "../Field/Field";
 import { FieldsPanel } from "../Field/FieldsPanel";
 import { ImagePreviews } from "../../containers/Image/ImagePreviews";
 import "./Tabs.css";
 import "./Overview.css";
-import ReactPiwik from "react-piwik";
 
-const Tab = ({group, active, onClick}) => {
+const Tab = ({tab, active, onClick}) => {
 
-  const handleClick = () => onClick(group);
+  const handleClick = () => onClick(tab);
 
   const className = `kgs-tabs__button ${active?"is-active":""}`;
   return (
-    <button type="button" className={className} onClick={handleClick}>{group.name?group.name:""}</button>
+    <button type="button" className={className} onClick={handleClick}>{tab.name?tab.name:""}</button>
   );
 };
 
 
-const TabsView = ({group}) => {
-  if (!group || !Array.isArray(group.fields)) {
+const TabsView = ({tab}) => {
+  if (!tab || !Array.isArray(tab.fields)) {
     return null;
   }
 
-  if (group.name === "Overview") {
-    const previews = group.previews;
-    const summaryFields = group.fields.filter(f => f.mapping.layout === "summary");
+  if (tab.name === "Overview") {
+    const previews = tab.previews;
+    const summaryFields = tab.fields.filter(f => f.mapping.layout === "summary");
 
     return (
       <div className={`kgs-tabs__view kgs-tabs__overview ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}  ${(summaryFields && summaryFields.length) ? "kgs-tabs__overview__with-summary" : ""}`}>
         <ImagePreviews className={`kgs-tabs__overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
         <FieldsPanel className="kgs-tabs__overview__summary" fields={summaryFields} fieldComponent={Field} />
-        <FieldsPanel className="kgs-tabs__overview__main" fields={group.fields} fieldComponent={Field} />
+        <FieldsPanel className="kgs-tabs__overview__main" fields={tab.fields} fieldComponent={Field} />
       </div>
     );
   }
 
   return (
-    <FieldsPanel className="kgs-tabs__view" fields={group.fields} fieldComponent={Field} />
+    <FieldsPanel className="kgs-tabs__view" fields={tab.fields} fieldComponent={Field} />
   );
 };
 
-export const Tabs = ({instanceId, groups }) => {
-  const [group, setGroup] = useState();
-
-  useEffect(() => {
-    if (!window.instanceTabSelection) {
-      window.instanceTabSelection = {};
-    }
-    let selectedGroup = null;
-    if (Array.isArray(groups) && groups.length) {
-      if (window.instanceTabSelection[instanceId]) {
-        selectedGroup = groups.find(g => g.name === window.instanceTabSelection[instanceId]);
-      }
-      if (!selectedGroup && Array.isArray(groups) && groups.length) {
-        selectedGroup = groups[0];
-      }
-    }
-    setGroup(selectedGroup);
-  }, [instanceId]);
-
-  const handleClick = g => {
-    setGroup(g);
-    if (!window.instanceTabSelection) {
-      window.instanceTabSelection = {};
-    }
-    window.instanceTabSelection[instanceId] = g.name;
-    ReactPiwik.push(["trackEvent", "Tab", `${g.name} clicked`, instanceId]);
-  };
-
-  if (!Array.isArray(groups) || !groups.length) {
+export const Tabs = ({tabs, selectedTab, selectTab }) => {
+  if (!Array.isArray(tabs) || !tabs.length) {
     return null;
   }
 
   return (
     <>
       <div className="kgs-tabs__buttons">
-        {groups.map(g => (
-          <Tab key={g.name} group={g} active={group && g.name === group.name} onClick={handleClick} />
+        {tabs.map(t => (
+          <Tab key={t.name} tab={t} active={t && t.name === selectedTab.name} onClick={selectTab} />
         ))}
       </div>
       <div className="kgs-tabs__content">
-        <TabsView group={group}/>
+        <TabsView tab={selectedTab}/>
       </div>
     </>
   );

@@ -27,7 +27,7 @@ import ShareButtons from "./ShareButtons";
 
 test("ShareButtons component renders initially", () => {
   const component = renderer.create(
-    <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
+    <ShareButtons url="https://search.kg.ebrains.eu" />
   );
 
   expect(component.toJSON()).toMatchSnapshot();

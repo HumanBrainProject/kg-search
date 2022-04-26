@@ -20,11 +20,11 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import * as types from "./actions.types";
 import API from "../services/API";
-import { getHashKey, generateKey, getSearchKey } from "../helpers/BrowserHelpers";
-import { history, store } from "../store";
+import { getHashKey, generateKey, searchToObj } from "../helpers/BrowserHelpers";
+import { store } from "../store";
+import { setInitialGroup } from "./actions.groups";
 
 export const setApplicationReady = () => {
   return {
@@ -112,7 +112,7 @@ export const authenticate = (group=null) => {
       }));
       const nonceKey=  generateKey();
       const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
-      window.location.href = API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey);
+      window.location.replace(API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey));
     } else {
       dispatch(sessionFailure("Restricted area is currently not available, please retry in a few minutes!"));
     }
@@ -144,23 +144,25 @@ export const getAuthEndpoint = (group=null) => {
   };
 };
 
-export const initialize = location => {
+export const initialize = (location, navigate) => {
   return dispatch => {
     const accessToken = getHashKey("access_token");
-    const group = getSearchKey("group");
+    const group = searchToObj()["group"];
+    if(group) {
+      dispatch(setInitialGroup(group));
+    }
     if (accessToken) {
       dispatch(setToken(accessToken));
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue))):{};
+      const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue), "base64")):{};
       const queryString = (state && state.queryString)?state.queryString:"";
-      history.replace(`${location.pathname}${queryString}`);
+      setTimeout(() => navigate(`${location.pathname}${queryString}`, {replace: true}), 0);
       dispatch(setApplicationReady());
     } else {
-      // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
         const url = `/instances/${instance}${group?("?group=" + group):""}`;
-        history.replace(url);
+        setTimeout(() => navigate(url, {replace: true}), 0);
       }
       if((group && (group === "public" || group === "curated")) || location.pathname.startsWith("/live/")) {
         dispatch(getAuthEndpoint(group));

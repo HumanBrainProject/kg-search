@@ -28,6 +28,8 @@ import { windowWidth } from "../../../helpers/BrowserHelpers";
 import * as actionsSearch from "../../../actions/actions.search";
 import "./Pagination.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 
 class PageLinkButton extends React.PureComponent {
 
@@ -43,9 +45,9 @@ class PageLinkButton extends React.PureComponent {
     const ellipsis = name === "ellipsis";
     return (
       <button className={`kgs-page-link ${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly}>
-        {previous && <FontAwesomeIcon icon="chevron-left" className="is-previous" />}
+        {previous && <FontAwesomeIcon icon={faChevronLeft} className="is-previous" />}
         {!previous && !next && title}
-        {next && <FontAwesomeIcon icon="chevron-right" className="is-next" />}
+        {next && <FontAwesomeIcon icon={faChevronRight} className="is-next" />}
       </button>
     );
   }

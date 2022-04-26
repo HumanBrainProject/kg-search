@@ -26,6 +26,7 @@ import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
 import ReactTooltip from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 
 import "./Hint.css";
 
@@ -37,7 +38,7 @@ export const Hint = ({className, value}) => {
   const hint_id = encodeURI(uniqueId("kgs-hint_content-"));
   return (
     <span className={classNames}>
-      <FontAwesomeIcon icon="info-circle" data-tip data-for={hint_id} aria-hidden="true" />
+      <FontAwesomeIcon icon={faInfoCircle} data-tip data-for={hint_id} aria-hidden="true" />
       <ReactTooltip id={hint_id} place="right" type="dark" effect="solid">
         <span>{value}</span>
       </ReactTooltip>
@@ -47,7 +48,10 @@ export const Hint = ({className, value}) => {
 
 Hint.propTypes = {
   className: PropTypes.string,
-  value: PropTypes.string
+  value: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ])
 };
 
 export default Hint;

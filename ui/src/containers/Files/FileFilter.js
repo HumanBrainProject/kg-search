@@ -21,41 +21,41 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
+import API from "../../services/API";
 import { Select } from "../../components/Select/Select";
+
 import "./FileFilter.css";
 
 
-const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, isFileFiltersInitialized, isFileFiltersLoading, filesError, fileFiltersError, fileFilter, fetch, onSelect }) => {
+const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, onRetry }) => {
 
-  useEffect(() => {
-    if (!isFileFiltersInitialized) {
-      fetch();
+  const handleChange = useMemo(() => value => onSelect(value?value:null), [onSelect]);
+
+  const selectList = useMemo(() => {
+    if (!Array.isArray(list) || !list.length) {
+      return [];
     }
-  }, [isFileFiltersInitialized]);
+    return list.reduce((acc, value) => {
+      acc.push({label: value, value: value});
+      return acc;
+    }, [{label: "none", value: ""}]);
+  }, [list]);
 
-  if (!isFilesInitialized || filesError) {
-    return null;
-  }
-
-  if (fileFiltersError) {
-    if (isFilesLoading) {
-      return null;
-    }
+  if (error) {
     return (
       <div>
-        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon="exclamation-triangle"/>{fileFiltersError} </span>
-        <FontAwesomeIcon icon="sync-alt" onClick={fetch} style={{cursor: "pointer"}}/>
+        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
+        <FontAwesomeIcon icon={faSyncAlt} onClick={onRetry} style={{cursor: "pointer"}}/>
       </div>
     );
   }
 
-  if (!isFileFiltersInitialized || isFileFiltersLoading) {
-    if (isFilesLoading) {
-      return null;
-    }
+  if (isLoading) {
     return (
       <div className="spinner-border spinner-border-sm" role="status">
         <span className="sr-only">Retrieving {title}...</span>
@@ -63,22 +63,74 @@ const FileFilter = ({ title, fileFilters, isFilesInitialized, isFilesLoading, is
     );
   }
 
-  if (!fileFilters.length) {
+  if (!selectList.length) {
     return null;
   }
 
-  const list = fileFilters.reduce((acc, value) => {
-    acc.push({label: value, value: value});
-    return acc;
-  }, [{label: "none", value: ""}]);
-
-  const handleChange = value => onSelect(value?value:null);
-
   return (
-    <div><Select className="kgs-fileFilter" label={title} value={fileFilter} list={list} onChange={handleChange} /></div>
+    <div><Select className="kgs-fileFilter" label={title} value={value} list={selectList} onChange={handleChange} /></div>
   );
 
 };
 
+export const FileFilter = ({ title, show, url, value, onSelect, onSessionFailure }) => {
+
+  const [list, setList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetch = () => {
+    if (!url) {
+      throw new Error("FileFilter is missing prop url");
+    }
+    setIsLoading(true);
+    setError(null);
+    API.axios
+      .get(url)
+      .then(response => {
+        const data = response.data;
+        const items = Array.isArray(data.data)?data.data.sort():[];
+        setList(items);
+        setIsLoading(false);
+      })
+      .catch(e => {
+        const { response } = e;
+        if (response) {
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            setIsLoading(false);
+            typeof onSessionFailure === "function" && onSessionFailure();
+            break;
+          }
+          case 500:
+          case 404:
+          default:
+          {
+            setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+            setIsLoading(false);
+          }
+          }
+        } else {
+          setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+          setIsLoading(false);
+        }
+      });
+  };
+
+  useEffect(fetch, []);
+
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <FileFilterComponent title={title} value={value} list={list} error={error} isLoading={isLoading} onSelect={onSelect} onRetry={fetch} />
+  );
+
+};
 
 export default FileFilter;

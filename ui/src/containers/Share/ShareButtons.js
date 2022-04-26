@@ -21,33 +21,39 @@
  *
  */
 
+import React from "react";
 import { connect } from "react-redux";
-import { ShareButtons as Component } from "../../components/ShareButtons/ShareButtons";
+import { useLocation } from "react-router-dom";
 
-const getShareEmailToLink = url => {
-  const to = "";
-  const subject = "Knowledge Graph Search Request";
-  const body = "Please have a look to the following Knowledge Graph search request";
-  return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
-};
+import { ShareButtons as ShareButtonsComponent } from "../../components/ShareButtons/ShareButtons";
 
-const getClipboardContent = (location, currentInstance, group, defaultGroup) => {
+const getUrlToShare = (location, currentInstance, group, defaultGroup) => {
   if (location.pathname === "/" && currentInstance) {
     const id = currentInstance._id;
     if (id) {
       const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
-      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup?("?group=" + group ):""}`;
+      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
     }
   }
   return window.location.href;
 };
 
+const ShareButtonsContainer = ({ currentInstance, group, defaultGroup}) => {
+  const location = useLocation();
+
+  const url = getUrlToShare(location, currentInstance, group, defaultGroup);
+
+  return (
+    <ShareButtonsComponent url={url} />
+  );
+};
+
 export const ShareButtons = connect(
   state => {
-    const href = getClipboardContent(state.router.location, state.instances.currentInstance, state.groups.group, state.groups.defaultGroup);
     return {
-      clipboardContent: href,
-      emailToLink: getShareEmailToLink(href)
+      currentInstance: state.instances.currentInstance,
+      group: state.groups.group,
+      defaultGroup: state.groups.defaultGroup
     };
   }
-)(Component);
+)(ShareButtonsContainer);

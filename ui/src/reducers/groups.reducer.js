@@ -43,6 +43,10 @@ const setInitialGroup = (state, action) => {
 };
 
 const setGroup = (state, action) => {
+  let group = action.group;
+  if (!state.groups.some(g => g.value === group)) {
+    group = state.defaultGroup;
+  }
   return {
     ...state,
     group: action.group

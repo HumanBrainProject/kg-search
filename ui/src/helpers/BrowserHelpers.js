@@ -37,10 +37,8 @@ export const generateKey = () => {
 
 const regParam = /^(.+)=(.+)$/;
 
-export const searchToObj = search => {
-  if (typeof search !== "string") {
-    search = window.location.search;
-  }
+export const searchToObj = () => {
+  const search = window.location.search;
   if (search.length <= 1) {
     return {};
   }
@@ -52,29 +50,6 @@ export const searchToObj = search => {
     result[key] = value;
     return result;
   }, {});
-};
-
-export const getSearchKey = (key, ignoreCase=false, search) => {
-  if (typeof key !== "string") {
-    return null;
-  }
-  if (!ignoreCase) {
-    return searchToObj(search)[key];
-  }
-  key = key.toLocaleLowerCase();
-  const obj = searchToObj(search);
-  if (obj[key]) {
-    return obj[key];
-  }
-  let result = null;
-  Object.entries(obj).some(([name, value]) => {
-    if (name.toLocaleLowerCase() === key) {
-      result = value;
-      return true;
-    }
-    return false;
-  });
-  return result;
 };
 
 export const getHashKey = (key, hash) => {
@@ -137,13 +112,10 @@ export const getUpdatedQuery = (query, name, checked, value, many) => {
   return result;
 };
 
-export const getLocationFromQuery = (query, location) => {
-  const queryString = Object.entries(query).reduce((acc, [key, value]) => {
-    acc += `${(acc.length > 1)?"&":""}${key}=${value}`;
-    return acc;
-  }, "?");
-  return `${location.pathname}${queryString}`;
-};
+export const getLocationSearchFromQuery = query => Object.entries(query).reduce((acc, [key, value]) => {
+  acc += `${(acc.length > 0)?"&":"?"}${key}=${value}`;
+  return acc;
+}, "");
 
 export const windowHeight = () => {
   const w = window,

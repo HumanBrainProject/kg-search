@@ -22,24 +22,30 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
 import EmailToLink from "../EmailToLink/EmailToLink";
+import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
+import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
+
 import "./ShareButtons.css";
 
-export const ShareButtons = ({className, clipboardContent, emailToLink}) => (
-  <span className={`kgs-share-links ${className?className:""}`}>
-    <span className="kgs-share-links-panel">
-      <CopyToClipboardButton icon="clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
-      <EmailToLink icon="envelope" title="Send search link by email" link={emailToLink} />
-    </span>
-  </span>
-);
+const getShareEmailToLink = url => {
+  const to = "";
+  const subject = "Knowledge Graph Search Request";
+  const body = "Please have a look to the following Knowledge Graph search request";
+  return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
+};
 
-ShareButtons.propTypes = {
-  className: PropTypes.string,
-  clipboardContent: PropTypes.string,
-  emailToLink: PropTypes.string
+export const ShareButtons = ({ url }) => {
+  const link = getShareEmailToLink(url);
+  return (
+    <span className="kgs-share-links" >
+      <span className="kgs-share-links-panel">
+        <CopyToClipboardButton icon={faClipboard}  title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={url} />
+        <EmailToLink icon={faEnvelope} title="Send search link by email" link={link} />
+      </span>
+    </span>
+  );
 };
 
 export default ShareButtons;

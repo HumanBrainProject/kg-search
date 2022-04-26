@@ -20,8 +20,9 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
+import React, { useEffect, useMemo } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as actionsInstances from "../../../actions/actions.instances";
 import { Carousel } from "../../../components/Carousel/Carousel";
 import { ShareButtons } from "../../Share/ShareButtons";
@@ -29,28 +30,55 @@ import { Instance } from "../Instance";
 import "./DetailView.css";
 
 
-const mapStateToProps = state => {
-  return {
-    className: "kgs-detailView",
-    show: !!state.instances.currentInstance,
-    data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : [],
-    itemComponent: Instance,
-    navigationComponent: ShareButtons,
-  };
+const DetailViewComponent = ({onBack, onClose, clearInstanceCurrentTab, show, data, previousInstanceId}) => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => clearInstanceCurrentTab(), []);
+
+  const handleOnBack = useMemo(() => () => {
+    onBack();
+    if (previousInstanceId) {
+      navigate(`/${window.location.search}#${previousInstanceId}`);
+    } else {
+      navigate(`/${window.location.search}`);
+    }
+  }, [onBack]);
+
+  const handleOnClose = useMemo(() => () => {
+    onClose();
+    navigate(`/${window.location.search}`);
+  }, [onClose]);
+
+  if (!show || !Array.isArray(data) || !data.length) {
+    return null;
+  }
+
+  return (
+    <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
+  );
 };
 
-const mapDispatchToProps = dispatch => ({
-  onPrevious: () => {
-    dispatch(actionsInstances.setPreviousInstance());
-    dispatch(actionsInstances.updateLocation());
-  },
-  onClose: () => {
-    dispatch(actionsInstances.clearAllInstances());
-    dispatch(actionsInstances.updateLocation());
-  }
-});
-
 export const DetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Carousel);
+  state => {
+    const previousInstance = state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null;
+    const previousInstanceId = previousInstance?._id;
+    return {
+      show: !!state.instances.currentInstance,
+      data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : [],
+      previousInstanceId: previousInstanceId
+    };
+  },
+  dispatch => ({
+    onBack: () => {
+      dispatch(actionsInstances.setPreviousInstance());
+    },
+    onClose: () => {
+      dispatch(actionsInstances.clearInstanceCurrentTab());
+      dispatch(actionsInstances.clearAllInstances());
+    },
+    clearInstanceCurrentTab: () => {
+      dispatch(actionsInstances.clearInstanceCurrentTab());
+    }
+  })
+)(DetailViewComponent);

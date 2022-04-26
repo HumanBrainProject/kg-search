@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -26,8 +25,21 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
-import { history, store } from "../store";
-import { getSearchKey } from "../helpers/BrowserHelpers";
+import { searchToObj } from "../helpers/BrowserHelpers";
+
+export const setInstanceCurrentTab = (instanceId, tabName) => {
+  return {
+    type: types.SET_INSTANCE_CURRENT_TAB,
+    instanceId: instanceId,
+    tabName: tabName
+  };
+};
+
+export const clearInstanceCurrentTab = () => {
+  return {
+    type: types.CLEAR_INSTANCE_CURRENT_TAB
+  };
+};
 
 export const loadInstanceRequest = () => {
   return {
@@ -95,20 +107,7 @@ export const goBackToInstance = id => {
   };
 };
 
-export const updateLocation = () => {
-  const state = store.getState();
-  const id = state.instances.currentInstance?._id;
-  if(id) {
-    history.push(`/${window.location.search}#${id}`);
-  } else {
-    history.push(`/${window.location.search}`);
-  }
-  return {
-    type: types.UPDATE_LOCATION
-  };
-};
-
-export const goToSearch = (group, defaultGroup) => {
+export const goToSearch = (navigate, group, defaultGroup) => {
   return dispatch => {
     if (!group) {
       dispatch(clearGroupError());
@@ -116,20 +115,19 @@ export const goToSearch = (group, defaultGroup) => {
     }
     dispatch(clearInstanceError());
     dispatch(clearAllInstances());
-    history.replace(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);
+    navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
   };
 };
 
-export const loadInstance = (group, id, shouldUpdateLocation=false) => {
+export const loadInstance = (group, id, onSuccessCallback) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.instance(group, id))
       .then(response => {
+        response.data._group = group;
         dispatch(loadInstanceSuccess(response.data));
-        if(shouldUpdateLocation) {
-          dispatch(updateLocation());
-        }
+        typeof onSuccessCallback === "function" && onSuccessCallback();
       })
       .catch(e => {
         const { response } = e;
@@ -153,7 +151,7 @@ export const loadInstance = (group, id, shouldUpdateLocation=false) => {
         {
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
           const link = `<a href=${url}>${url}</a>`;
-          const group = getSearchKey("group");
+          const group = searchToObj()["group"];
           const error = (group && group === "curated")? "The page you requested was not found." :
             `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
           dispatch(loadInstanceFailure(error));

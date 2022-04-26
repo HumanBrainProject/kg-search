@@ -21,29 +21,34 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { isMobile } from "../../helpers/BrowserHelpers";
-import "./Carousel.css";
+import React, { useEffect, useRef, useMemo } from "react";
+import uniqueId from "lodash/uniqueId";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import PropTypes from "prop-types";
 
-const getNavigation = (item, showPrevious, onClose, onPrevious, navigationComponent) => {
+import { isMobile } from "../../helpers/BrowserHelpers";
+
+import "./Carousel.css";
+
+const getNavigation = (item, showPrevious, onClose, onBack, navigationComponent) => {
   const NavigationComponent = navigationComponent;
   const Navigation = () => (
     <div className="kgs-carousel__header">
       {item.isActive && showPrevious && (
-        <button className="kgs-carousel__previous-button" onClick={onPrevious}>
-          <FontAwesomeIcon icon="chevron-left" /> Previous
+        <button className="kgs-carousel__previous-button" onClick={onBack}>
+          <FontAwesomeIcon icon={faChevronLeft} /> Previous
         </button>
       )}
       <div className="kgs-carousel__navigation">
         {item.isActive && item.data && NavigationComponent && (
-          <NavigationComponent/>
+          <NavigationComponent />
         )}
       </div>
       {item.isActive && (
         <button className="kgs-carousel__close-button" onClick={onClose}>
-          <FontAwesomeIcon icon="times" />
+          <FontAwesomeIcon icon={faTimes} />
         </button>
       )}
     </div>
@@ -52,14 +57,14 @@ const getNavigation = (item, showPrevious, onClose, onPrevious, navigationCompon
   return Navigation;
 };
 
-const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent}) => {
-  const ItemComponent =  itemComponent;
-  const NavigationComponent = getNavigation(item, showPrevious, onClose, onPrevious, navigationComponent);
+const CarouselItem = ({ item, showPrevious, onClose, onBack, itemComponent, navigationComponent }) => {
+  const ItemComponent = itemComponent;
+  const NavigationComponent = getNavigation(item, showPrevious, onClose, onBack, navigationComponent);
   return (
     <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
         {item.isActive && item.data && ItemComponent && (
-          <ItemComponent data={item.data}  NavigationComponent={NavigationComponent}  />
+          <ItemComponent data={item.data} NavigationComponent={NavigationComponent} />
         )}
       </div>
     </div>
@@ -68,84 +73,65 @@ const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, n
 
 const nbOfItems = 5;
 
-export class Carousel extends React.Component {
-  constructor(props) {
-    super(props);
-    window.instanceTabSelection = {};
-    this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({
-      id: idx,
-      position: idx,
-      isActive: false,
-      data: null
-    }));
-  }
+export const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationComponent }) => {
+  const wrapperRef = useRef();
 
-  componentDidMount() {
+  useEffect(() => {
     if (!isMobile) {
-      window.addEventListener("keyup", this._keyupHandler.bind(this), false);
+      const _keyupHandler = event => {
+        if (event.keyCode === 27) {
+          event.preventDefault();
+          onClose();
+        }
+      };
+      window.addEventListener("keyup", _keyupHandler, false);
+      return () => window.removeEventListener("keyup", _keyupHandler);
     }
-  }
+  }, []);
 
-  componentWillUnmount() {
-    if (!isMobile) {
-      window.removeEventListener("keyup", this._keyupHandler);
-    }
-  }
+  const items = useMemo(() => Array.from(Array(nbOfItems)).map((_, idx) => ({
+    id: uniqueId("kgs-carousel__item-"),
+    position: idx,
+    isActive: false,
+    data: null
+  })), []);
 
-  _keyupHandler = event => {
-    const {onClose} = this.props;
-    if (this.props.show) {
-      if (event.keyCode === 27) {
-        event.preventDefault();
-        typeof onClose === "function" && onClose();
-      }
+  items.forEach((item, idx) => {
+    const currentPosition = (data.length - 1) % nbOfItems;
+    const idxData = data.length - 1 - (idx <= currentPosition ? (currentPosition - idx) : (nbOfItems - (idx - currentPosition)));
+    const position = (idx <= currentPosition ? (nbOfItems - (currentPosition - idx)) : (idx - currentPosition)) % 5;
+
+    item.isActive = idx === currentPosition;
+    item.position = position;
+    item.data = idxData >= 0 ? data[idxData] : null;
+  });
+
+  const handleOnClose = e => {
+    if (wrapperRef && !wrapperRef.current.contains(e.target)) {
+      onClose();
     }
   };
 
-  onClose = e => {
-    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
-      window.instanceTabSelection = {};
-      const { onClose } = this.props;
-      typeof onClose === "function" && onClose();
-    }
-  };
+  const showPrevious = data.length > 1;
 
-  render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent } = this.props;
-    if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
-      return null;
-    }
+  const classNames = ["kgs-carousel", className].join(" ");
 
-    const currentPosition = (data.length -1) % nbOfItems;
-    const items = this.items;
-    items.forEach((item, idx) => {
-      item.isActive = item.id === currentPosition;
-      const position = (idx <= currentPosition?(nbOfItems - (currentPosition - idx)):(idx - currentPosition)) % 5;
-      item.position = position;
-      const idxData = data.length -1 - (idx <= currentPosition?(currentPosition - idx):(nbOfItems  - (idx - currentPosition)));
-      item.data = idxData >= 0?data[idxData]:null;
-    });
-    const showPrevious = data.length > 1;
-
-    const classNames = ["kgs-carousel", className].join(" ");
-
-    return(
-      <div className={classNames} onClick={this.onClose}>
-        <div className="kgs-carousel__panel" ref={ref => this.wrapperRef = ref}>
-          {items.map(item => (
-            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
-          ))}
-        </div>
+  return (
+    <div className={classNames} onClick={handleOnClose}>
+      <div className="kgs-carousel__panel" ref={wrapperRef}>
+        {items.map(item => (
+          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onBack={onBack} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+
+};
 
 Carousel.propTypes = {
   className: PropTypes.string,
-  show: PropTypes.bool,
-  data:  PropTypes.arrayOf(PropTypes.any),
-  onPrevious: PropTypes.func.isRequired,
+  data: PropTypes.arrayOf(PropTypes.any),
+  onBack: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   itemComponent: PropTypes.oneOfType([
     PropTypes.element,

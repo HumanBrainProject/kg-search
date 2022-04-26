@@ -13,6 +13,7 @@ exports[`HitsList component renders initially 1`] = `
         className="kgs-hit-button"
         data-reference="3"
         onClick={[Function]}
+        onContextMenu={[Function]}
         role="link"
       >
         <div />
@@ -23,6 +24,7 @@ exports[`HitsList component renders initially 1`] = `
         className="kgs-hit-button"
         data-reference="4"
         onClick={[Function]}
+        onContextMenu={[Function]}
         role="link"
       >
         <div />

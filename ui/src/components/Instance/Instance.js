@@ -21,38 +21,40 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ReactPiwik from "react-piwik";
-import { history } from "../../store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
+import { useNavigate } from "react-router-dom";
 
 import { BgError } from "../BgError/BgError";
 import { Header } from "./Header/Header";
-import Tabs from "../Tabs/Tabs";
+import { Tabs } from "../../containers/Instance/Tabs";
 import { Disclaimer } from "../Disclaimer/Disclaimer";
 
 import "./Instance.css";
 import "./Fields.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
-export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
-
-  useEffect(() => {
-    trackEvent(hasNoData);
-  }, [id, hasNoData, group]);
+export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, tabs, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
+  const navigate = useNavigate();
 
   const trackEvent = hasNoData => {
     const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
     ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
   };
 
-  const onVersionChange = version => {
+  useEffect(() => {
+    trackEvent(hasNoData);
+  }, [id, hasNoData, group]);
+
+  const onVersionChange = useMemo(() => version => {
     if(searchPage) {
-      fetch(group, version, true);
+      fetch(group, version, navigate);
     } else {
-      history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
+      navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`);
     }
-  };
+  }, [fetch, path, group, defaultGroup]);
 
   if (hasNoData) {
     return(
@@ -72,7 +74,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
       {isOutdated && allVersions ? (
         <div className="kgs-outdated-alert" >
           <div className="alert alert-secondary" role="alert">
-            <FontAwesomeIcon icon="info-circle"/>&nbsp;This is not the newest version of this {type.toLowerCase()}.
+            <FontAwesomeIcon icon={faInfoCircle} />&nbsp;This is not the newest version of this {type.toLowerCase()}.
             <button className="kgs-instance-link" onClick={() => onVersionChange(latestVersion.value)}>
             &nbsp;Visit {latestVersion.label}
             </button> for the latest version or
@@ -81,7 +83,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
             </button>.
           </div>
         </div>):null}
-      <Tabs instanceId={id} groups={groups} />
+      <Tabs instanceId={id} tabs={tabs} />
       <Disclaimer content={disclaimer} />
       <TermsShortNoticeComponent />
       <ImagePopupComponent className="kgs-instance__image_popup" />

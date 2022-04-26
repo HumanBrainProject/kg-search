@@ -20,29 +20,33 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import { connect } from "react-redux";
+import ReactPiwik from "react-piwik";
 
-import FileFilter from "./FileFilter";
+import { Tabs as Component } from "../../components/Tabs/Tabs";
+import * as actionsInstances from "../../actions/actions.instances";
 
-export const GroupingTypeFilter = connect(
-  (state, props) => ({
-    title:"Group by",
-    filesUrl: props.filesUrl,
-    fileFiltersUrl: props.groupingTypesUrl,
-    files: state.files.files,
-    fileFilters: state.files.groupingTypes,
-    searchFilesAfter: state.files.searchFilesAfter,
-    isFilesInitialized: state.files.isFilesInitialized,
-    isFileFiltersInitialized: state.files.isGroupingTypesInitialized,
-    isFilesLoading: state.files.isFilesLoading,
-    isFileFiltersLoading: state.files.isGroupingTypesLoading,
-    filesError: state.files.filesError,
-    fileFiltersError: state.files.groupingTypesError,
-    fileFilter: state.files.groupingType
-  }),
+export const Tabs = connect(
+  (state, props) => {
+    let selectedTab = null;
+    if (Array.isArray(props.tabs) && props.tabs.length) {
+      if (state.instances.currentTabByInstance[props.instanceId]) {
+        selectedTab = props.tabs.find(g => g.name === state.instances.currentTabByInstance[props.instanceId]);
+      }
+      if (!selectedTab) {
+        selectedTab = props.tabs[0];
+      }
+    }
+    return {
+      instanceId: props.instanceId,
+      tabs: props.tabs,
+      selectedTab: selectedTab
+    };
+  },
   (dispatch, props) => ({
-    onSelect: filter => props.onSelect(filter),
-    fetchFileFilters: () => props.fetch()
+    selectTab: tab =>  {
+      dispatch(actionsInstances.setInstanceCurrentTab(props.instanceId, tab.name));
+      ReactPiwik.push(["trackEvent", "Tab", `${name} clicked`, props.instanceId]);
+    }
   })
-)(FileFilter);
+)(Component);

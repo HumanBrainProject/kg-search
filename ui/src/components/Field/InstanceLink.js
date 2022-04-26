@@ -23,18 +23,30 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import { history } from "../../store";
-import * as actionsGroups from "../../actions/actions.groups";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as actionsInstances from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
 
-const InstanceLinkComponent = ({text, id, group, path, context, onClick}) => {
+const InstanceLinkComponent = ({text, id, group, defaultGroup, context, onClick}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   if (!id) {
     return text;
   }
 
+  let path = null;
+  if (location.pathname.startsWith("/instances/")) {
+    path = "/instances/";
+  } else if (location.pathname.startsWith("/live/")) {
+    path = "/live/";
+  }
+
   const handleClick = () => {
-    typeof onClick === "function" && onClick(id, group, path, context);
+    if(path) {
+      navigate(`${path}${id}${group && group !== defaultGroup?("?group=" + group ):""}`, context);
+    } else {
+      onClick(id, group?group:defaultGroup, navigate);
+    }
   };
 
   return (
@@ -44,30 +56,21 @@ const InstanceLinkComponent = ({text, id, group, path, context, onClick}) => {
 
 export const InstanceLink = connect(
   (state, props) => {
-    let path = null;
-    if (state.router.location.pathname.startsWith("/instances/")) {
-      path = "/instances/";
-    } else if (state.router.location.pathname.startsWith("/live/")) {
-      path = "/live/";
-    }
     return {
       text: props.text?props.text:props.id,
       id: props.id,
-      group: (props.group && props.group !== props.defaultGroup)?props.group:null,
-      path: path,
+      group: props.group,
+      defaultGroup: state.groups.defaultGroup,
       context: {
         title: getTitle(state.instances.currentInstance)
       }
     };
   },
   dispatch => ({
-    onClick: (id, group, path, context) => {
-      if (path) {
-        history.push(`${path}${id}${group && group !== "public"?("?group=" + group ):""}`, context);
-      } else {
-        dispatch(actionsGroups.setGroup(group));
-        dispatch(actionsInstances.loadInstance(group, id, true));
-      }
+    onClick: (id, group, navigate) => {
+      dispatch(actionsInstances.loadInstance(group, id, () => {
+        navigate(`/${window.location.search}#${id}`);
+      }));
     }
   })
 )(InstanceLinkComponent);

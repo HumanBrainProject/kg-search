@@ -21,6 +21,7 @@
  *
  */
 
+import React from "react";
 import { connect } from "react-redux";
 import { ErrorPanel as  Component } from "../../components/Error/ErrorPanel";
 import { BgError } from "../../components/BgError/BgError";
@@ -29,6 +30,7 @@ import * as actionsSearch from "../../actions/actions.search";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsDefinition from "../../actions/actions.definition";
+import { useNavigate } from "react-router-dom";
 
 export const DefinitionErrorPanel = connect(
   state => ({
@@ -39,40 +41,62 @@ export const DefinitionErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
-export const GroupErrorPanel = connect(
-  state => ({
+const GroupErrorPanelContainer = connect(
+  (state, props) => ({
     show: !!state.groups.error,
     message: state.groups.error,
     cancelLabel: "Back to search",
-    cancelAction: actionsInstances.goToSearch(),
+    cancelAction: actionsInstances.goToSearch(props.navigate),
     retryLabel: "Retry",
     retryAction: actionsGroups.clearGroupError(),
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
 
-export const InstanceErrorPanel = connect(
-  state => ({
+export const GroupErrorPanel = () => {
+  const navigate = useNavigate();
+  return (
+    <GroupErrorPanelContainer navigate={navigate} />
+  );
+};
+
+
+const InstanceErrorPanelContainer = connect(
+  (state, props) => ({
     show: !!state.instances.error,
     message: state.instances.error,
     cancelLabel: "Back to search",
-    cancelAction: actionsInstances.goToSearch(state.groups.group, state.groups.defaultGroup),
+    cancelAction: actionsInstances.goToSearch(props.navigate, state.groups.group, state.groups.defaultGroup),
     retryLabel: "Retry",
     retryAction: actionsInstances.clearInstanceError(),
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
+
+export const InstanceErrorPanel = () => {
+  const navigate = useNavigate();
+  return (
+    <InstanceErrorPanelContainer navigate={navigate} />
+  );
+};
+
 
 
 export const SearchInstanceErrorPanel = connect(
@@ -84,7 +108,9 @@ export const SearchInstanceErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(Component);
 
@@ -97,7 +123,9 @@ export const SearchErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
 
@@ -110,6 +138,8 @@ export const SessionExpiredErrorPanel = connect(
     retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch(action)
+    onAction:  action => {
+      dispatch(action);
+    }
   })
 )(BgError);
