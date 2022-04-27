@@ -41,11 +41,13 @@ const loadInstanceRequest = state => {
 };
 
 const loadInstanceSuccess = (state, action) => {
-  let previousInstances = Array.isArray(state.previousInstances)?[...state.previousInstances]:[];
+  let previousInstances = Array.isArray(state.previousInstances)
+    ? [...state.previousInstances]
+    : [];
   if (state.currentInstance && state.currentInstance._id !== action.data._id) {
-    previousInstances = [...previousInstances,state.currentInstance];
+    previousInstances = [...previousInstances, state.currentInstance];
   }
-  return  {
+  return {
     ...state,
     isLoading: false,
     currentInstance: action.data,
@@ -74,8 +76,12 @@ const loadInstanceFailure = (state, action) => {
 };
 
 const setInstance = (state, action) => {
-  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
-  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)
+    ? state.previousInstances
+    : [];
+  previousInstances = state.currentInstance
+    ? [...previousInstances, state.currentInstance]
+    : [...previousInstances];
   return {
     ...state,
     currentInstance: action.data,
@@ -86,7 +92,9 @@ const setInstance = (state, action) => {
 
 const setPreviousInstance = state => {
   if (state.currentInstance) {
-    const previousInstances = Array.isArray(state.previousInstances)?[...state.previousInstances]:[];
+    const previousInstances = Array.isArray(state.previousInstances)
+      ? [...state.previousInstances]
+      : [];
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
@@ -120,7 +128,10 @@ const clearInstanceError = state => {
 const showImage = (state, action) => {
   return {
     ...state,
-    image: typeof action.url === "string"?{url: action.url, label: action.label, link: action.link}:null
+    image:
+      typeof action.url === "string"
+        ? { url: action.url, label: action.label, link: action.link }
+        : null
   };
 };
 
@@ -159,9 +170,12 @@ const goBackToInstance = (state, action) => {
     };
   }
 
-  const previousInstances = (state && Array.isArray(state.previousInstances))?[...state.previousInstances]:[];
+  const previousInstances =
+    state && Array.isArray(state.previousInstances)
+      ? [...state.previousInstances]
+      : [];
   instance = previousInstances.pop() || null;
-  while(previousInstances.length && instance && instance._id !== instanceId)  {
+  while (previousInstances.length && instance && instance._id !== instanceId) {
     instance = previousInstances.pop();
   }
   if (instance && instance._id === instanceId) {
@@ -197,7 +211,7 @@ const clearInstanceCurrentTab = state => ({
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_INSTANCE_REQUEST:
-    return loadInstanceRequest(state, action);
+    return loadInstanceRequest(state);
   case types.LOAD_INSTANCE_SUCCESS:
     return loadInstanceSuccess(state, action);
   case types.LOAD_INSTANCE_NO_DATA:
@@ -207,9 +221,9 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_INSTANCE:
     return setInstance(state, action);
   case types.SET_PREVIOUS_INSTANCE:
-    return setPreviousInstance(state, action);
+    return setPreviousInstance(state);
   case types.CLEAR_ALL_INSTANCES:
-    return clearAllInstances(state, action);
+    return clearAllInstances(state);
   case types.CLEAR_INSTANCE_ERROR:
     return clearInstanceError(state);
   case types.SHOW_IMAGE:

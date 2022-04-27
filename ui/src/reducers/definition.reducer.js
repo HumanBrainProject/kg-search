@@ -70,17 +70,16 @@ const setCommit = (state, action) => {
   };
 };
 
-
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_DEFINITION_REQUEST:
-    return loadDefinitionRequest(state, action);
+    return loadDefinitionRequest(state);
   case types.LOAD_DEFINITION_SUCCESS:
     return loadDefinitionSuccess(state, action);
   case types.LOAD_DEFINITION_FAILURE:
     return loadDefinitionFailure(state, action);
   case types.CLEAR_DEFINITION_ERROR:
-    return clearDefinitionError(state, action);
+    return clearDefinitionError(state);
   case types.SET_COMMIT:
     return setCommit(state, action);
   default:

@@ -47,7 +47,6 @@ const setAuthEndpoint = (state, action) => {
   };
 };
 
-
 const setToken = (state, action) => {
   return {
     ...state,
@@ -90,7 +89,7 @@ export function reducer(state = initialState, action = {}) {
   case types.SESSION_FAILURE:
     return authenticationExpired(state, action);
   case types.LOGOUT:
-    return logout(state, action);
+    return logout(state);
   default:
     return state;
   }

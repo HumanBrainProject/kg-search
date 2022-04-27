@@ -22,15 +22,21 @@
  */
 
 import * as types from "../actions/actions.types";
-import {termsCurrentVersion} from "../data/termsShortNotice";
+import { termsCurrentVersion } from "../data/termsShortNotice";
 
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
   isReady: false,
   info: null,
-  showTermsShortNotice: typeof Storage === "undefined" || !localStorage.getItem(TermsShortNoticeLocalStorageKey),
-  showTermsShortUpdateNotice: typeof Storage !== "undefined" && localStorage.getItem(TermsShortNoticeLocalStorageKey) && localStorage.getItem(TermsShortNoticeLocalStorageKey) !== termsCurrentVersion,
+  showTermsShortNotice:
+    typeof Storage === "undefined" ||
+    !localStorage.getItem(TermsShortNoticeLocalStorageKey),
+  showTermsShortUpdateNotice:
+    typeof Storage !== "undefined" &&
+    localStorage.getItem(TermsShortNoticeLocalStorageKey) &&
+    localStorage.getItem(TermsShortNoticeLocalStorageKey) !==
+      termsCurrentVersion,
   theme: localStorage.getItem("currentTheme")
 };
 
@@ -45,7 +51,7 @@ const setTheme = (state, action) => ({
 });
 
 const agreeTermsShortNotice = state => {
-  if (typeof(Storage) !== "undefined") {
+  if (typeof Storage !== "undefined") {
     localStorage.setItem(TermsShortNoticeLocalStorageKey, termsCurrentVersion);
   }
   setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
@@ -66,11 +72,11 @@ const setInfo = (state, action) => {
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_APPLICATION_READY:
-    return setApplicationReady(state, action);
+    return setApplicationReady(state);
   case types.SET_THEME:
     return setTheme(state, action);
   case types.AGREE_TERMS_SHORT_NOTICE:
-    return agreeTermsShortNotice(state, action);
+    return agreeTermsShortNotice(state);
   case types.SET_INFO:
     return setInfo(state, action);
   case types.LOAD_SEARCH_REQUEST:

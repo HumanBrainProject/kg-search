@@ -29,42 +29,47 @@ export const withTabKeyNavigation = (propKey, rootNodeQuerySelector, excludeNode
   class WithTabKey extends React.Component {
     constructor(props) {
       super(props);
-      this.handleChange = this.handleChange.bind(this);
       this.tabAbles = [];
     }
+
     componentDidMount() {
       this.handleChange();
     }
+
     componentDidUpdate() {
       this.handleChange();
     }
-    handleChange() {
+
+    handleActiveTabables = () => {
+      this.tabAbles.forEach(e => {
+        if (e.tabIndex >= 0) {
+          e.node.setAttribute("tabIndex", e.tabIndex);
+        } else {
+          e.node.removeAttribute("tabIndex");
+        }
+      });
+    };
+
+    handleInactiveTabables = () => {
+      const excludeNode = excludeNodeQuerySelector?document.body.querySelector(excludeNodeQuerySelector):null;
+      const rootNode = rootNodeQuerySelector?document.body.querySelector(rootNodeQuerySelector):document.body;
+      if (rootNode) {
+        this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
+          .filter(e => !excludeNode || !excludeNode.contains(e))
+          .map(node => ({node: node, tabIndex: node.tabIndex}));
+        this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
+      }
+    };
+
+    handleChange = () => {
       const isActive = !propKey || !!this.props[propKey];
       if (isActive) {
-
-        //window.console.debug(new Date().toLocaleTimeString() + ": enable tabs", this.tabAbles);
-        this.tabAbles.forEach(e => {
-          if (e.tabIndex >= 0) {
-            e.node.setAttribute("tabIndex", e.tabIndex);
-          } else {
-            e.node.removeAttribute("tabIndex");
-          }
-        });
-
+        this.handleActiveTabables();
       } else {
-
-        const excludeNode = excludeNodeQuerySelector?document.body.querySelector(excludeNodeQuerySelector):null;
-        const rootNode = rootNodeQuerySelector?document.body.querySelector(rootNodeQuerySelector):document.body;
-        if (rootNode) {
-          this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
-            .filter(e => !excludeNode || !excludeNode.contains(e))
-            .map(node => ({node: node, tabIndex: node.tabIndex}));
-
-          //window.console.debug(new Date().toLocaleTimeString() + ": masterView disable tabs", this.tabAbles);
-          this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
-        }
+        this.handleInactiveTabables();
       }
-    }
+    };
+
     render() {
       return <WrappedComponent {...this.props} />;
     }

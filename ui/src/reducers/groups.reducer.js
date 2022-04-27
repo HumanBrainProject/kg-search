@@ -63,9 +63,13 @@ const loadGroupsRequest = state => {
 };
 
 const loadGroupsSuccess = (state, action) => {
-
-  const groups = Array.isArray(action.groups) ? [...action.groups.map(e => ({ label: e.label, value: e.name }))] : [];
-  const group = (state.initialGroup && groups.some(g => g.value === state.initialGroup)) ? state.initialGroup : state.defaultGroup;
+  const groups = Array.isArray(action.groups)
+    ? [...action.groups.map(e => ({ label: e.label, value: e.name }))]
+    : [];
+  const group =
+    state.initialGroup && groups.some(g => g.value === state.initialGroup)
+      ? state.initialGroup
+      : state.defaultGroup;
 
   return {
     ...state,
@@ -81,7 +85,6 @@ const loadGroupsFailure = (state, action) => ({
   isLoading: false,
   error: action.error
 });
-
 
 const resetGroups = state => ({
   ...state,
@@ -105,15 +108,15 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_GROUP:
     return setGroup(state, action);
   case types.LOAD_GROUPS_REQUEST:
-    return loadGroupsRequest(state, action);
+    return loadGroupsRequest(state);
   case types.LOAD_GROUPS_SUCCESS:
     return loadGroupsSuccess(state, action);
   case types.LOAD_GROUPS_FAILURE:
     return loadGroupsFailure(state, action);
   case types.LOGOUT:
-    return resetGroups(state, action);
+    return resetGroups(state);
   case types.CLEAR_GROUPS_ERROR:
-    return clearGroupsError(state, action);
+    return clearGroupsError(state);
   default:
     return state;
   }

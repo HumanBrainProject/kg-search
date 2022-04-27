@@ -218,11 +218,12 @@ const updateListFacet = (f, action) => {
     facet.value = values;
   } else {
     if (Array.isArray(facet.value)) {
-      if (Array.isArray(action.keyword)) {
-        facet.value = facet.value.filter(value => !action.keyword.includes(value));
-      } else {
-        facet.value = facet.value.filter(value => value !== action.keyword);
-      }
+      facet.value = facet.value.filter(value => {
+        if(Array.isArray(action.keyword)) {
+          return !action.keyword.includes(value);
+        }
+        return value !== action.keyword;
+      });
     }
   }
   return facet;
