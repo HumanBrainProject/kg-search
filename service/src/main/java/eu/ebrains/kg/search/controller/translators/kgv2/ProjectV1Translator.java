@@ -38,6 +38,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, ProjectV1Translator.Result> {
@@ -89,19 +90,17 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
         if(!CollectionUtils.isEmpty(projectSource.getPublications())) {
             p.setPublications(value(projectSource.getPublications().stream()
                     .map(publication -> {
-                        String doi;
+                        String doi = null;
                         if(StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
                             doi = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        } else {
-                            doi = "[DOI: null]\n[DOI: null]: https://doi.org/null";
                         }
                         if (StringUtils.isNotBlank(publication.getCitation())) {
-                            return publication.getCitation() + "\n" + doi;
+                            return publication.getCitation() + (doi != null ? "\n" + doi : "");
                         } else {
                             return doi;
                         }
-                    }).collect(Collectors.toList())));
+                    }).filter(Objects::nonNull).collect(Collectors.toList())));
         }
         if (dataStage == DataStage.IN_PROGRESS) {
             p.setEditorId(value(projectSource.getEditorId()));
