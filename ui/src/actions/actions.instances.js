@@ -25,7 +25,6 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
-import { searchToObj } from "../helpers/BrowserHelpers";
 
 export const setInstanceCurrentTab = (instanceId, tabName) => {
   return {
@@ -119,98 +118,111 @@ export const goToSearch = (navigate, group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (group, id, onSuccessCallback) => {
-  return dispatch => {
-    dispatch(loadInstanceRequest());
-    API.axios
-      .get(API.endpoints.instance(group, id))
-      .then(response => {
-        response.data._group = group;
-        dispatch(loadInstanceSuccess(response.data));
-        typeof onSuccessCallback === "function" && onSuccessCallback();
-      })
-      .catch(e => {
-        const { response } = e;
-        const { status } = response;
-        switch (status) {
-        case 400: // Bad Request
-        {
-          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
-          dispatch(loadInstanceFailure(error));
-          break;
-        }
-        case 401: // Unauthorized
-        case 403: // Forbidden
-        case 511: // Network Authentication Required
-        {
-          const error = "Your session has expired. Please login again.";
-          dispatch(sessionFailure(error));
-          break;
-        }
-        case 404:
-        {
-          const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
-          const link = `<a href=${url}>${url}</a>`;
-          const group = searchToObj()["group"];
-          const error = (group && group === "curated")? "The page you requested was not found." :
-            `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
-          dispatch(loadInstanceFailure(error));
-          break;
-        }
-        default:
-        {
-          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
-          dispatch(loadInstanceFailure(error));
-        }
-        }
-      });
-  };
+const handleLoadInstanceResponse = (dispatch, group, data, onSuccessCallback) => {
+  data._group = group;
+  dispatch(loadInstanceSuccess(data));
+  typeof onSuccessCallback === "function" && onSuccessCallback();
 };
 
-export const loadPreview = id => {
-  return dispatch => {
-    dispatch(loadInstanceRequest());
-    API.axios
-      .get(API.endpoints.preview(id))
-      .then(response => {
-        if (response.data && !response.data.error) {
-          response.data._id = id;
-          dispatch(loadInstanceSuccess(response.data));
-        } else if (response.data && response.data.error) {
-          dispatch(loadInstanceFailure(response.data.message ? response.data.message : response.data.error));
-        } else {
-          const error = `The instance with id ${id} is not available.`;
-          dispatch(loadInstanceNoData(error));
-        }
-      })
-      .catch(e => {
-        if (e.stack === "SyntaxError: Unexpected end of JSON input" || e.message === "Unexpected end of JSON input") {
-          dispatch(loadInstanceNoData(e));
-        } else {
-          const { response } = e;
-          const { status } = response;
-          switch (status) {
-          case 401: // Unauthorized
-          case 403: // Forbidden
-          case 511: // Network Authentication Required
-          {
-            const error = "Your session has expired. Please login again.";
-            dispatch(sessionFailure(error));
-            break;
-          }
-          case 404:
-          {
-            const error = "The page you requested was not found.";
-            dispatch(loadInstanceFailure(error));
-            break;
-          }
-          default:
-          {
-            const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
-            dispatch(loadInstanceFailure(error));
-          }
-          }
-        }
-      });
-  };
+const handleLoadInstanceException = (dispatch, group, e) => {
+  const status = e.response?.status;
+  switch (status) {
+  case 400: // Bad Request
+  {
+    const technicalError = e.message?e.message:e;
+    const error = `The service is temporarily unavailable. Please retry in a few minutes. (${technicalError})`;
+    dispatch(loadInstanceFailure(error));
+    break;
+  }
+  case 401: // Unauthorized
+  case 403: // Forbidden
+  case 511: // Network Authentication Required
+  {
+    const error = "Your session has expired. Please login again.";
+    dispatch(sessionFailure(error));
+    break;
+  }
+  case 404:
+  {
+    const isCurated = group && group === "curated";
+    if (isCurated) {
+      const error = "The page you requested was not found.";
+      dispatch(loadInstanceFailure(error));
+    } else {
+      const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
+      const link = `<a href=${url}>${url}</a>`;
+      const error = `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
+      dispatch(loadInstanceFailure(error));
+    }
+    break;
+  }
+  default:
+  {
+    const technicalError = e.message?e.message:e;
+    const error = `The service is temporarily unavailable. Please retry in a few minutes. (${technicalError})`;
+    dispatch(loadInstanceFailure(error));
+  }
+  }
+};
+
+export const loadInstance = (group, id, onSuccessCallback) => dispatch => {
+  dispatch(loadInstanceRequest());
+  API.axios
+    .get(API.endpoints.instance(group, id))
+    .then(response => handleLoadInstanceResponse(dispatch, group, response.data, onSuccessCallback))
+    .catch(e => handleLoadInstanceException(dispatch, group, e));
+};
+
+const handleLoadPreviewResponse = (dispatch, id, data) => {
+  if (data) {
+    if (data.error) {
+      const error = data.message ? data.message : data.error;
+      dispatch(loadInstanceFailure(error));
+    } else {
+      data._id = id;
+      dispatch(loadInstanceSuccess(data));
+    }
+  } else {
+    const error = `The instance with id ${id} is not available.`;
+    dispatch(loadInstanceNoData(error));
+  }
+};
+
+const handleLoadPreviewException = (dispatch, e) => {
+  const hasBadJSON = e.stack === "SyntaxError: Unexpected end of JSON input" || e.message === "Unexpected end of JSON input";
+  if (hasBadJSON) {
+    dispatch(loadInstanceNoData(e));
+  } else {
+    const status = e.response?.status;
+    switch (status) {
+    case 401: // Unauthorized
+    case 403: // Forbidden
+    case 511: // Network Authentication Required
+    {
+      const error = "Your session has expired. Please login again.";
+      dispatch(sessionFailure(error));
+      break;
+    }
+    case 404:
+    {
+      const error = "The page you requested was not found.";
+      dispatch(loadInstanceFailure(error));
+      break;
+    }
+    default:
+    {
+      const technicalError = e.message?e.message:e;
+      const error = `The service is temporarily unavailable. Please retry in a few minutes. (${technicalError})`;
+      dispatch(loadInstanceFailure(error));
+    }
+    }
+  }
+};
+
+export const loadPreview = id => dispatch => {
+  dispatch(loadInstanceRequest());
+  API.axios
+    .get(API.endpoints.preview(id))
+    .then(response => handleLoadPreviewResponse(dispatch, id, response.data))
+    .catch(e => handleLoadPreviewException(dispatch, e));
 };
