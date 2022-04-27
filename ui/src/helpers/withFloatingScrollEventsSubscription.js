@@ -27,6 +27,60 @@ import { windowHeight } from "../helpers/BrowserHelpers";
 
 const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";
 
+const getStatusForElement = (e, needSizeCalculation) => {
+  let cookieChange = false;
+  let localStorageChange = false;
+  let doCalc = e.height === undefined || needSizeCalculation;
+  if (e.cookieKey && (e.cookieValue === undefined || e.cookieValue === "")) {
+    let value = document.cookie;
+    if (typeof e.cookieKey === "string") {
+      value = "";
+      const cookie = "; " + document.cookie;
+      const parts = cookie.split("; " + e.cookieKey + "=");
+      if (parts.length === 2) {
+        value = parts.pop().split(";").shift();
+      }
+    }
+    if (e.cookieValue !== value) {
+      e.cookieValue = value;
+      cookieChange = true;
+      if (value !== "") {
+        e.height = 0;
+      } else {
+        doCalc = true;
+      }
+    }
+  }
+  if (e.localStorageKey && (e.localStorageValue === undefined || e.localStorageValue === null)) {
+    const value = localStorage.getItem(e.localStorageKey);
+    if (e.localStorageValue !== value) {
+      e.localStorageValue = value;
+      localStorageChange = true;
+      if (value !== null) {
+        e.height = 0;
+      } else {
+        doCalc = true;
+      }
+    }
+  }
+  if (doCalc) {
+    e.height = 0;
+    if (!e.conditionQuerySelector || document.querySelector(e.conditionQuerySelector)) {
+      if (!e.nodes || !e.nodes.length) {
+        e.nodes = document.querySelectorAll(e.querySelector);
+      }
+      [].forEach.call(e.nodes, n => {
+        e.height += n.offsetHeight;
+      });
+    }
+  }
+  return {
+    cookieChange: cookieChange,
+    localStorageChange: localStorageChange,
+    height: e.height
+  };
+};
+
 export const withFloatingScrollEventsSubscription = (floatingPosition, relatedElements) => (WrappedComponent) => {
 
   floatingPosition = floatingPosition?floatingPosition.toLowerCase():null;
@@ -108,51 +162,10 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       let cookieChange = false;
       let localStorageChange = false;
       relatedElements.forEach(e => {
-        let doCalc = e.height === undefined || needSizeCalculation;
-        if (e.cookieKey && (e.cookieValue === undefined || e.cookieValue === "")) {
-          let value = document.cookie;
-          if (typeof e.cookieKey === "string") {
-            value = "";
-            const cookie = "; " + document.cookie;
-            const parts = cookie.split("; " + e.cookieKey + "=");
-            if (parts.length === 2) {
-              value = parts.pop().split(";").shift();
-            }
-          }
-          if (e.cookieValue !== value) {
-            e.cookieValue = value;
-            cookieChange = true;
-            if (value !== "") {
-              e.height = 0;
-            } else {
-              doCalc = true;
-            }
-          }
-        }
-        if (e.localStorageKey && (e.localStorageValue === undefined || e.localStorageValue === null)) {
-          const value = localStorage.getItem(e.localStorageKey);
-          if (e.localStorageValue !== value) {
-            e.localStorageValue = value;
-            localStorageChange = true;
-            if (value !== null) {
-              e.height = 0;
-            } else {
-              doCalc = true;
-            }
-          }
-        }
-        if (doCalc) {
-          e.height = 0;
-          if (!e.conditionQuerySelector || document.querySelector(e.conditionQuerySelector)) {
-            if (!e.nodes || !e.nodes.length) {
-              e.nodes = document.querySelectorAll(e.querySelector);
-            }
-            [].forEach.call(e.nodes, n => {
-              e.height += n.offsetHeight;
-            });
-          }
-        }
-        height += e.height;
+        const status = getStatusForElement(e, needSizeCalculation);
+        cookieChange |= status.cookieChange;
+        localStorageChange |= status.localStorageChange;
+        height += status.height;
       });
       if (localStorageChange || cookieChange || eventWasTriggered) {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
