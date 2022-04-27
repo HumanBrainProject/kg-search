@@ -127,13 +127,6 @@ const handleLoadInstanceResponse = (dispatch, group, data, onSuccessCallback) =>
 const handleLoadInstanceException = (dispatch, group, e) => {
   const status = e.response?.status;
   switch (status) {
-  case 400: // Bad Request
-  {
-    const technicalError = e.message?e.message:e;
-    const error = `The service is temporarily unavailable. Please retry in a few minutes. (${technicalError})`;
-    dispatch(loadInstanceFailure(error));
-    break;
-  }
   case 401: // Unauthorized
   case 403: // Forbidden
   case 511: // Network Authentication Required
