@@ -84,7 +84,7 @@ public class ControlledTerm implements TargetInstance {
     @FieldInfo(markdown = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Definition")
+    @FieldInfo(label = "Definition", markdown = true)
     private Value<String> definition;
 
 
