@@ -14,7 +14,9 @@ module.exports = {
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaFeatures": {
