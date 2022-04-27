@@ -41,11 +41,8 @@ export const SortingSelector = connect(
     show: state.search.total && state.search.total > 0,
     className: props.className,
     label: "Sort by",
-    value: state.search.sort?state.search.sort.label:null,
-    list: state.search.sortFields.map(f => ({
-      label: f.label,
-      value: f.key
-    }))
+    value: state.search.sort?state.search.sort:null,
+    list: state.search.sortFields
   }),
   dispatch => ({
     onChange: value => {

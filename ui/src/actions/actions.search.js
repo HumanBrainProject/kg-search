@@ -24,7 +24,7 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import ReactPiwik from "react-piwik";
-import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
+import { getQueryPayload } from "../helpers/ElasticSearch/Query";
 import { sessionFailure } from "./actions";
 
 export const loadSearchBadRequest = error => {
@@ -130,7 +130,7 @@ export const setInitialSearchParams = params => {
 export const search = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const payload = ElasticSearchHelpers.buildRequest(state.search);
+    const payload = getQueryPayload(state.search);
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);

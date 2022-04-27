@@ -159,7 +159,7 @@ const goBackToInstance = (state, action) => {
     };
   }
 
-  const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
+  const previousInstances = (state && Array.isArray(state.previousInstances))?[...state.previousInstances]:[];
   instance = previousInstances.pop() || null;
   while(previousInstances.length && instance && instance._id !== instanceId)  {
     instance = previousInstances.pop();

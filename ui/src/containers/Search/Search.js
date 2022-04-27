@@ -226,7 +226,7 @@ export const Search = connect(
       acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
       return acc;
     }, ""),
-    sort: state.search.sort ? state.search.sort.param : null,
+    sort: state.search.sort,
     page: state.search.page,
     isUpToDate: state.search.isUpToDate
   }),
