@@ -136,7 +136,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       this.initialized = false;
       this.observer = null;
       this.interval = null;
-      this.adjustLayout = this.adjustLayout.bind(this);
+      this.checkLayoutChange = this.checkLayoutChange.bind(this);
       this.handleScrollEvent = this.handleScrollEvent.bind(this);
       this.handleResizeEvent = this.handleResizeEvent.bind(this);
       this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
@@ -146,27 +146,33 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       window.addEventListener("scroll", this.handleScrollEvent, false);
       window.addEventListener("resize", this.handleResizeEvent, false);
       window.addEventListener("orientationchange", this.handleOrientationChangeEvent, false);
-      if (window.MutationObserver) {
-        this.observer = new MutationObserver(this.handleMutationEvent);
-        this.observer.observe(document.body, { attributes: true, childList: true });
-      }
+      this.listenToDOMMutations();
       window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
       window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
-      this.interval = setInterval(this.adjustLayout, 250);
+      this.interval = setInterval(this.checkLayoutChange, 250);
     }
     componentWillUnmount() {
       window.removeEventListener("scroll", this.handleScrollEvent);
       window.removeEventListener("resize", this.handleResizeEvent);
       window.removeEventListener("orientationchange", this.handleOrientationChangeEvent);
+      this.unlistenDOMMutations();
+      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+    listenToDOMMutations() {
+      if (window.MutationObserver && !this.observer) {
+        this.observer = new MutationObserver(this.handleMutationEvent);
+        this.observer.observe(document.body, { attributes: true, childList: true });
+      }
+    }
+    unlistenDOMMutations() {
       if (this.observer) {
         this.observer.disconnect();
         delete this.observer;
         this.observer = null;
       }
-      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
-      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
-      clearInterval(this.interval);
-      this.interval = null;
     }
     handleScrollEvent() {
       this.eventState.didScroll = true;
@@ -180,7 +186,18 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
     handleMutationEvent() {
       this.eventState.didMute = true;
     }
-    adjustLayout() {
+    adjustLayout(height) {
+      const newScrollTop = window.scrollY || document.documentElement.scrollTop;
+      const isFloating = getIsFloating(height, floatingPosition, this.eventState.scrollTop, newScrollTop);
+      // new scrollTop should be set after isFloating calculation but before setting the state
+      if (floatingPosition === "bottom") {
+        this.eventState.scrollTop = newScrollTop;
+      }
+      if (isFloating !== null) {
+        this.setState({isFloating: isFloating});
+      }
+    }
+    checkLayoutChange() {
       const needSizeCalculation = !this.initialized || this.eventState.didResize || this.eventState.didOrientationChange || this.eventState.didMute;
       const eventWasTriggered = this.eventState.didScroll || needSizeCalculation;
       this.eventState = {
@@ -193,15 +210,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       this.initialized = true;
       const height = getHeight(relatedElements, needSizeCalculation, eventWasTriggered);
       if (height !== null ) {
-        const newScrollTop = window.scrollY || document.documentElement.scrollTop;
-        const isFloating = getIsFloating(height, floatingPosition, this.eventState.scrollTop, newScrollTop);
-        // new scrollTop should be set after isFloating calculation but before setting the state
-        if (floatingPosition === "bottom") {
-          this.eventState.scrollTop = newScrollTop;
-        }
-        if (isFloating !== null) {
-          this.setState({isFloating: isFloating});
-        }
+        this.adjustLayout(height);
       }
     }
     render() {
