@@ -55,7 +55,6 @@ body[theme="dark"] .navbar >.nav-item > button.kgs-login {
 
 .kgs-sign__in, .kgs-sign__in + .dropdown-menu > .dropdown-item > button {
     width: 100%;
-    border: none;
     cursor: pointer;
     padding: 10px 20px;
     border: 0;

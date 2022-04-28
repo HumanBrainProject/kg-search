@@ -38,7 +38,7 @@ new ReactPiwik({
   url: process.env.REACT_APP_MATOMO_URL,
   siteId: process.env.REACT_APP_MATOMO_SITE_ID,
   trackErrors: true
-});
+}); //NOSONAR
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_URL,

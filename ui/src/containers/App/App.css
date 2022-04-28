@@ -28,10 +28,9 @@ main {
     font-family: var(--font-stack);
     position: relative;
     min-height: 100vh;
-    background-color: transparent;
+    background: var(--background-color-2);
     border-bottom: 1px solid var(--border-color-1);
     z-index: 100;
-    background: var(--background-color-2);
 }
 
 main a, main a:visited {

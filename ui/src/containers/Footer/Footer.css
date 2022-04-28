@@ -195,7 +195,6 @@
     }
   
     .site-footer .footer__end {
-      flex-wrap: wrap;
       justify-content: center;
       flex-flow: column-reverse;
       line-height: 50px;
@@ -299,7 +298,6 @@
     position: absolute;
     top: 9px;
     left: 38px;
-    line-height: 1.4em;
     letter-spacing: 0.07em;
     text-align: right;
     font: initial;
