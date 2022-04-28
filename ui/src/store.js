@@ -32,13 +32,13 @@ import createRootReducer from "./reducers";
 function configureStoreProd(initialState) {
   const middlewares = [thunk];
 
-  const store = createStore(
+  const storeProd = createStore(
     createRootReducer(),
     initialState,
     compose(applyMiddleware(...middlewares))
   );
 
-  return store;
+  return storeProd;
 }
 
 function configureStoreDev(initialState) {
@@ -47,7 +47,7 @@ function configureStoreDev(initialState) {
 
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
-  const store = createStore(
+  const storeDev = createStore(
     createRootReducer(),
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
@@ -57,11 +57,11 @@ function configureStoreDev(initialState) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept("./reducers", () => {
       const nextReducer = require("./reducers").default; // eslint-disable-line global-require
-      store.replaceReducer(nextReducer);
+      storeDev.replaceReducer(nextReducer);
     });
   }
 
-  return store;
+  return storeDev;
 }
 
 const configureStore =
