@@ -78,7 +78,28 @@ class PaginationComponent extends React.Component {
 
   get pageScope() {
     const width = windowWidth();
-    return (width >= 1400)?3:(width >= 1200)?2:(width >= 1050)?1:(width >= 992)?0:(width >= 750)?3:(width >= 650)?2:(width >= 460)?1:0;
+    if(width >= 1400) {
+      return 3;
+    }
+    if(width >= 1200) {
+      return 2;
+    }
+    if(width >= 1050) {
+      return 1;
+    }
+    if(width >= 992) {
+      return 0;
+    }
+    if(width >= 750) {
+      return 3;
+    }
+    if(width >= 650) {
+      return 2;
+    }
+    if(width >= 460) {
+      return 1;
+    }
+    return 0;
   }
 
   updatePageScope() {

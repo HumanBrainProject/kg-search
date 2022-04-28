@@ -26,7 +26,7 @@ import * as actions from "../../actions/actions";
 import { Thumbnail as Component} from "../../components/Thumbnail/Thumbnail";
 
 export const Thumbnail = connect(
-  (state, props) => ({
+  (_state, props) => ({
     url: props.thumbnailUrl,
     alt: props.alt,
     isAnimated: !!props.isAnimated

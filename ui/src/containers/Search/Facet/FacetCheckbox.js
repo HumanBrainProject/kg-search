@@ -28,9 +28,19 @@ import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus";
 
 import "./FacetCheckbox.css";
 
+const Icon = ({checked, hasAnyChildChecked}) => {
+  if(checked) {
+    return <FontAwesomeIcon icon={faCheck} />;
+  }
+  if(hasAnyChildChecked) {
+    return <FontAwesomeIcon icon={faMinus} />;
+  }
+  return null;
+};
+
 export const FacetCheckbox = ({ item: { label, count, checked, hasAnyChildChecked } }) => (
   <div className={`kgs-facet-checkbox ${checked ? "is-active" : ""}  ${hasAnyChildChecked ? "has-any-child-active" : ""}`}>
-    <input type="checkbox" tabIndex="-1" />{checked?<FontAwesomeIcon icon={faCheck} />:hasAnyChildChecked?<FontAwesomeIcon icon={faMinus}/>:null}
+    <input type="checkbox" tabIndex="-1" /><Icon checked={checked} hasAnyChildChecked={hasAnyChildChecked} />
     <div className="kgs-facet-checkbox__text">{label}</div>
     <div className="kgs-facet-checkbox__count">{count}</div>
   </div>

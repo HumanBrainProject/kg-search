@@ -79,12 +79,12 @@ const getHeaderFields = (group, type, data, mapping) => {
   }
 
   const fields = Object.entries(mapping.fields || {})
-    .filter(([name, mapping]) =>
-      mapping
-      && (mapping.showIfEmpty || (data && data[name]))
-      && mapping.layout === "header" && name !== "title"
+    .filter(([name, fieldsMapping]) =>
+      fieldsMapping
+      && (fieldsMapping.showIfEmpty || (data && data[name]))
+      && fieldsMapping.layout === "header" && name !== "title"
     )
-    .map(([name, mapping]) => getField(group, type, name, data[name], mapping));
+    .map(([name, fieldsMapping]) => getField(group, type, name, data[name], fieldsMapping));
 
   return fields;
 };

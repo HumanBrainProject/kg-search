@@ -26,7 +26,7 @@ import * as actions from "../../actions/actions";
 import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
 
 export const ImagePreviews = connect(
-  (state, props) => {
+  (_state, props) => {
     const images = props.images && props.images.map(image => {
       const isVideoWithoutBackground  = image?.previewUrl?.isAnimated && !image.staticImageUrl;
       return {

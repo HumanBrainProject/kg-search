@@ -80,7 +80,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SESSION_FAILURE:
   case types.CANCEL_SEARCH:
   case types.LOAD_INSTANCE_SUCCESS:
-  case types.LOAD_INSTANCE_NO_DATA:
   case types.LOAD_INSTANCE_FAILURE:
   case types.CLEAR_INSTANCE_ERROR:
   case types.CANCEL_INSTANCE_LOADING:

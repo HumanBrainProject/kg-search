@@ -83,7 +83,7 @@ const resolveFacets = (facets, params) => {
         facet.value = Array.isArray(value)?value:[];
         break;
       case "exists":
-        facet.value = !!value;
+        facet.value = true;
         break;
       default:
         break;
@@ -126,12 +126,12 @@ const initialState = {
 };
 
 
-export const getSortFields = types => {
+export const getSortFields = typesDefinition => {
   const sortFields = {
     _score: { value: "newestFirst", label: "Relevance" }
   };
-  if (typeof types === "object" && !Array.isArray(types)) {
-    Object.values(types).forEach(mapping => {
+  if (typeof typesDefinition === "object" && !Array.isArray(typesDefinition)) {
+    Object.values(typesDefinition).forEach(mapping => {
       Object.entries(mapping.fields).forEach(([name, field]) => {
         if (field.sort && sortFields[name] === undefined) {
           sortFields[name] = {value: name, label: field.label};

@@ -53,13 +53,6 @@ export const loadInstanceSuccess = data => {
   };
 };
 
-export const loadInstanceNoData = error => {
-  return {
-    type: types.LOAD_INSTANCE_NO_DATA,
-    error: error
-  };
-};
-
 export const loadInstanceFailure = error => {
   return {
     type: types.LOAD_INSTANCE_FAILURE,
@@ -177,14 +170,14 @@ const handleLoadPreviewResponse = (dispatch, id, data) => {
     }
   } else {
     const error = `The instance with id ${id} is not available.`;
-    dispatch(loadInstanceNoData(error));
+    dispatch(loadInstanceFailure(error));
   }
 };
 
 const handleLoadPreviewException = (dispatch, e) => {
   const hasBadJSON = e.stack === "SyntaxError: Unexpected end of JSON input" || e.message === "Unexpected end of JSON input";
   if (hasBadJSON) {
-    dispatch(loadInstanceNoData(e));
+    dispatch(loadInstanceFailure(e));
   } else {
     const status = e.response?.status;
     switch (status) {

@@ -34,14 +34,14 @@ import "./FileFilter.css";
 
 const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, onRetry }) => {
 
-  const handleChange = useMemo(() => value => onSelect(value?value:null), [onSelect]);
+  const handleChange = useMemo(() => v => onSelect(v?v:null), [onSelect]);
 
   const selectList = useMemo(() => {
     if (!Array.isArray(list) || !list.length) {
       return [];
     }
-    return list.reduce((acc, value) => {
-      acc.push({label: value, value: value});
+    return list.reduce((acc, v) => {
+      acc.push({label: v, value: v});
       return acc;
     }, [{label: "none", value: ""}]);
   }, [list]);

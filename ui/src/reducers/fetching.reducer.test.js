@@ -109,14 +109,6 @@ describe("confirguration reducer", () => {
       expect(newState.active).toBe(false);
     });
   });
-  describe("load instance no data", () => {
-    it("should set is active to false", () => {
-      const state = {active: true};
-      const action = actionsInstances.loadInstanceNoData(123);
-      const newState = fetchingReducer(state, action);
-      expect(newState.active).toBe(false);
-    });
-  });
   describe("load instance failure", () => {
     it("should set is active to false", () => {
       const state = {active: true};

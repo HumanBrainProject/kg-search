@@ -57,15 +57,6 @@ const loadInstanceSuccess = (state, action) => {
   };
 };
 
-const loadInstanceNoData = (state, action) => {
-  return {
-    ...state,
-    error: action.error,
-    isLoading: false,
-    image: null
-  };
-};
-
 const loadInstanceFailure = (state, action) => {
   return {
     ...state,
@@ -214,8 +205,6 @@ export function reducer(state = initialState, action = {}) {
     return loadInstanceRequest(state);
   case types.LOAD_INSTANCE_SUCCESS:
     return loadInstanceSuccess(state, action);
-  case types.LOAD_INSTANCE_NO_DATA:
-    return loadInstanceNoData(state, action);
   case types.LOAD_INSTANCE_FAILURE:
     return loadInstanceFailure(state, action);
   case types.SET_INSTANCE:

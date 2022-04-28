@@ -26,7 +26,7 @@ import { Notification as component } from "../../components/Notification/Notific
 import { notification } from "../../data/notification";
 
 export const Notification = connect(
-  (state, props) => ({
+  (_state, props) => ({
     className: props.className,
     show: notification && notification.length,
     text: notification

@@ -72,8 +72,6 @@ const getNavigation = header => {
   return Navigation;
 };
 
-//const isSameGroup = (previousGroup, group, defaultGroup) => (group === previousGroup || (!previousGroup && group === defaultGroup) || (!group && previousGroup === defaultGroup));
-
 export const InstanceContainer = ({ path, definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, clearAllInstances, getId, goBackToInstance}) => {
   const location = useLocation();
   const navigate = useNavigate();

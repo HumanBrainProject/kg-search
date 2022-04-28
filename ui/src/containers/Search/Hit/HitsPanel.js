@@ -49,41 +49,29 @@ const HitsPanelBase = ({ lists, itemComponent, getKey, group, onClick }) => {
 
 
 const mapStateToProps = state => {
-  //const { hits } = props;
   const hits = state.search.hits;
 
-  let trySplitResult = true;
-  let isSortedByRelevance = false;
-  try {
-    const params = window.location.search
-      .substring(1)
-      .split("&")
-      .map(s => s.split("="))
-      .reduce((obj, a) => {
-        obj[a[0]] = a[1];
-        return obj;
-      }, {});
-    const page = params["p"];
-    const sort = params["sort"];
-    typeof sort === "undefined" || sort === "newestFirst" ? isSortedByRelevance = true : isSortedByRelevance = false;
-    trySplitResult = !(page && page !== "1") && !(sort && sort !== "_score_desc");
-  } catch (e) {
-    // window.console.debug("Failed to calculate stats");
-  }
+  const params = window.location.search
+    .substring(1)
+    .split("&")
+    .map(s => s.split("="))
+    .reduce((obj, a) => {
+      obj[a[0]] = a[1];
+      return obj;
+    }, {});
+  const page = params["p"];
+  const sort = params["sort"];
+  const isSortedByRelevance = typeof sort === "undefined" || sort === "newestFirst" ? true : false;
+  const trySplitResult = !(page && page !== "1") && !(sort && sort !== "_score_desc");
 
   let limit = -1;
   if (trySplitResult) {
-    try {
-      const values = hits.map(hit => hit._score);
-      const average = StatsHelpers.average(values);
-      const standardDeviation = StatsHelpers.standardDeviation(values);
-      limit = average + 2 * standardDeviation;
-      if (standardDeviation < 10) {
-        limit = -1;
-      }
-      // window.console.debug(" average: " + average + ", standard deviation: " + standardDeviation + ", limit: " + limit);
-    } catch (e) {
-      // window.console.debug("Failed to calculate stats");
+    const values = hits.map(hit => hit._score);
+    const average = StatsHelpers.average(values);
+    const standardDeviation = StatsHelpers.standardDeviation(values);
+    limit = average + 2 * standardDeviation;
+    if (standardDeviation < 10) {
+      limit = -1;
     }
   }
 

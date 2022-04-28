@@ -32,7 +32,7 @@ const getCounter = (data, mapping) => {
       counter = Array.isArray(data)?data.length:1;
       break;
     default:
-      counter = 0;
+      break;
     }
   }
   return counter;

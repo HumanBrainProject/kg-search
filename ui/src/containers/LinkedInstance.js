@@ -51,14 +51,14 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
   }
   // END v1 file
   const fields = Object.entries(mapping)
-    .filter(([name, mapping]) =>
-      mapping
-      && (mapping.showIfEmpty || (data && data[name]))
+    .filter(([name, fieldsMapping]) =>
+      fieldsMapping
+      && (fieldsMapping.showIfEmpty || (data && data[name]))
     )
-    .map(([name, mapping]) => ({
+    .map(([name, fieldsMapping]) => ({
       name: name,
       data: data[name],
-      mapping: mapping,
+      mapping: fieldsMapping,
       group: group,
       type: type
     }));
@@ -70,13 +70,13 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
 
 export const LinkedInstance = connect(
   (state, props) => {
-    const mapping = Object.entries((props.type && state.definition.typeMappings[props.type] && state.definition.typeMappings[props.type].fields)?state.definition.typeMappings[props.type].fields:{}).reduce((acc, [name, mapping]) => {
+    const mapping = Object.entries((props.type && state.definition.typeMappings[props.type] && state.definition.typeMappings[props.type].fields)?state.definition.typeMappings[props.type].fields:{}).reduce((acc, [name, fieldsMapping]) => {
       if (
         name !== "title" && // filter title as we only want to show the details of the linked instance
-        !mapping.isAsync && // filter async data in linked instance
+        !fieldsMapping.isAsync && // filter async data in linked instance
         !(props.type === "File" && name === "iri") // filter iri in file linked instance
       ) {
-        acc[name] = mapping;
+        acc[name] = fieldsMapping;
       }
       return acc;
     }, {});

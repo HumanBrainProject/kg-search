@@ -101,6 +101,9 @@
     .kgs-footer-nav .kgs-group-selection {
         min-width: 300px;
         padding-left: 10px;
+        display: block;
+        grid-area: group;
+        margin-top: 15px;
     }
 
     .kgs-footer-nav .kgs-sign-in {
@@ -119,12 +122,6 @@
     
     .kgs-footer-nav button.kgs-sign-in {
         display: block;
-    }
-
-    .kgs-footer-nav .kgs-group-selection {
-        display: block;
-        grid-area: group;
-        margin-top: 15px;
     }
 }
 

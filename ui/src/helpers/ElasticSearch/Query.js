@@ -63,12 +63,22 @@ const buildFilter = (facet, key, value) => {
   };
 };
 
+const getFacetKey = facet => {
+  if(facet.isChild) {
+    if(facet.isHierarchical) {
+      return `${facet.childName}.value.keyword`;
+    }
+    return `${facet.name}.children.${facet.childName}.value.keyword`;
+  }
+  return `${facet.name}.value.keyword`;
+};
+
 const getAllFilters = facets => {
   const filters = {};
 
   facets.forEach(facet => {
     let filter = null;
-    const facetKey = facet.isChild ?(facet.isHierarchical?`${facet.childName}.value.keyword`:`${facet.name}.children.${facet.childName}.value.keyword`):`${facet.name}.value.keyword`;
+    const facetKey = getFacetKey(facet);
     switch (facet.filterType) {
     case "type":
     {

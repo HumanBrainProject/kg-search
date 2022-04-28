@@ -123,7 +123,6 @@ export const windowHeight = () => {
     e = d.documentElement,
     g = d.getElementsByTagName("body")[0];
   return w.innerHeight || e.clientHeight || g.clientHeight;
-  //return $(window).height();
 };
 
 export const windowWidth = () => {
@@ -132,7 +131,6 @@ export const windowWidth = () => {
     e = d.documentElement,
     g = d.getElementsByTagName("body")[0];
   return w.innerWidth || e.clientWidth || g.clientWidth;
-  //return $(window).height();
 };
 
 export const isMobile = (navigator.userAgent.match(/Android/i)
