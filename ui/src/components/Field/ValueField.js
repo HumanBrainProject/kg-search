@@ -45,28 +45,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     if (!data || !mapping || !mapping.visible) {
       return null;
     }
-
-    /*
-    if (!data.previewUrl && Math.round(Math.random() * 10) % 2 === 0) {
-      if (Math.round(Math.random() * 10) % 2 === 0) {
-        data.previewUrl = {
-          url: "https://cdn2.thecatapi.com/images/18f.gif",
-          isAnimated: true
-        };
-      } else {
-        data.previewUrl = {
-          url: "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
-          isAnimated: false
-        };
-      }
-    }
-    if (!data.thumbnailUrl && Math.round(Math.random() * 10) % 2 === 0) {
-      data.thumbnailUrl = {
-        url: "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
-        isAnimated: false
-      };
-    }
-    */
     const regInstanceLink = /^(.+)$/;
     const [, instanceIdLink] = (!!renderUserInteractions && !!data.reference && regInstanceLink.test(data.reference))?data.reference.match(regInstanceLink):[null, null];
     const hasInstanceLink = !!instanceIdLink;

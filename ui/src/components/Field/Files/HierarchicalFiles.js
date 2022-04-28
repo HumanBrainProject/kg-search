@@ -53,6 +53,14 @@ const getFilteredTree = (tree, filter) => {
 const Node = ({node, isRootNode, group, type, hasFilter}) => {
   const isFile = node.type === "file";
   const icon = isFile?faFile:faFolder;
+
+  const getDownloadName = () => {
+    if(isRootNode) {
+      return `Download ${(typeof type === "string"?type.toLowerCase():"Dataset")}`;
+    }
+    return `Download ${node.type}`;
+  };
+
   return (
     <div className="kgs-hierarchical-files__details">
       <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={icon} size="5x"/>}</div>
@@ -60,7 +68,7 @@ const Node = ({node, isRootNode, group, type, hasFilter}) => {
         <div>
           <div><strong>Name:</strong> {node.name}</div>
           {node.url && (isFile || !hasFilter) && (
-            <Download name={`Download ${isRootNode?(typeof type === "string"?type.toLowerCase():"Dataset"):node.type}`} type={type} url={node.url} />
+            <Download name={getDownloadName()} type={type} url={node.url} />
           )}
           {node.type === "file" && (
             <LinkedInstance data={node.data} group={group} type={node.data?.type?.value || "File"} />

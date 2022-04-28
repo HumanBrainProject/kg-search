@@ -24,7 +24,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import showdown from "showdown";
-/*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
 import "./Notice.css";
 

@@ -24,15 +24,29 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
+import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 
-const Header = ({node}) => (
+const NodeTypeIcon = ({type}) => {
+  if (type !== "file") {
+    return null;
+  }
+  return <FontAwesomeIcon icon={faFile} style={{ marginRight: "5px" }} />;
+};
+
+const Header = ({ node }) => (
   <div className="kgs-hierarchical-files__node_wrapper">
     <div className="kgs-hierarchical-files__node">
-      {node.thumbnail ?
-        <img height="14" width="12" src={node.thumbnail} alt={node.url} style={{marginRight: "5px"}} />:
-        node.type === "file" ? <FontAwesomeIcon icon={faFile} style={{marginRight: "5px"}} />:null
-      }
+      {node.thumbnail ? (
+        <img
+          height="14"
+          width="12"
+          src={node.thumbnail}
+          alt={node.url}
+          style={{ marginRight: "5px" }}
+        />
+      ) : (
+        <NodeTypeIcon type={node.type} />
+      )}
       <span className="kgs-hierarchical-files__node_name">{node.name}</span>
     </div>
   </div>

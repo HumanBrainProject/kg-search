@@ -28,6 +28,7 @@ import React, { useState } from "react";
 import { Field } from "./Field";
 import { Hint } from "../Hint/Hint";
 import "./TableField.css";
+import { getKey } from "./helpers";
 
 const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
   if (!field.data) {
@@ -171,7 +172,7 @@ class TableField extends React.Component {
     const convertedItem = Array.isArray(items)?items:[items];
     return convertedItem.map((item, idx) => ({
       isObject: !!item.children,
-      key: item.reference?item.reference:item.value?item.value:idx,
+      key: getKey(item, idx),
       data: item.children?item.children:item,
       mapping: mapping,
       group: group,

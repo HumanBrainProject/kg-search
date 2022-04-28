@@ -64,15 +64,15 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     const FieldComponent = renderUserInteractions ? Field : PrintViewField;
 
     const fields = Object.entries(mapping.children)
-      .filter(([name, mapping]) =>
-        mapping
-        && (mapping.showIfEmpty || (data && data[name]))
-        && mapping.visible
+      .filter(([name, childMapping]) =>
+        childMapping
+        && (childMapping.showIfEmpty || (data && data[name]))
+        && childMapping.visible
       )
-      .map(([name, mapping]) => ({
+      .map(([name, childMapping]) => ({
         name: name,
         data: data && data[name],
-        mapping: mapping,
+        mapping: childMapping,
         group: group
       }));
 

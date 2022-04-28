@@ -40,6 +40,7 @@ export const Details = ({ toggleLabel, content, asPopup }) => {
   }
 
   const className = `toggle ${collapsed ? "" : "in"}`;
+  const classNameAsPopup = `popup ${collapsed ? "" : "show"}`;
   return (
     <span className="field-details">
       <button className={className} onClick={handleToggle}>
@@ -60,7 +61,7 @@ export const Details = ({ toggleLabel, content, asPopup }) => {
           )}
         </div>
         :
-        <div className={`popup ${collapsed ? "" : "show"}`}>
+        <div className={classNameAsPopup}>
           <div className="field-details__panel">
             <Text content={content} isMarkdown={true} />
             <button className="field-details__close-button" onClick={handleClose} title="close">

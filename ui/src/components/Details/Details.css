@@ -40,7 +40,7 @@
 .field-details button.toggle i {
   margin-right: 3px;
   transition: transform 0.2s ease-in;
-  font: normal normal normal 19px/1 FontAwesome;
+  font: normal normal normal 19px/1 FontAwesome initial;
 }
 
 .field-details button.toggle.in i {

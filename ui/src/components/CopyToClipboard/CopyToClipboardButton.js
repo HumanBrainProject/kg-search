@@ -58,15 +58,10 @@ export const CopyToClipboardButton = props => {
 
     textArea.select();
 
-    try {
-      document.execCommand("copy");
+    document.execCommand("copy");
 
-      button.setAttribute("show", "true");
-      setTimeout(() => button.removeAttribute("show"), 1000);
-
-    } catch (e) {
-      //window.console.debug("could not run execCommand copy");
-    }
+    button.setAttribute("show", "true");
+    setTimeout(() => button.removeAttribute("show"), 1000);
 
     button.removeChild(textArea);
   };

@@ -39,13 +39,9 @@ import "./Fields.css";
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, tabs, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions, disclaimer }) => {
   const navigate = useNavigate();
 
-  const trackEvent = hasNoData => {
+  useEffect(() => {
     const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
     ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
-  };
-
-  useEffect(() => {
-    trackEvent(hasNoData);
   }, [id, hasNoData, group]);
 
   const onVersionChange = useMemo(() => version => {

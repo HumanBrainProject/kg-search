@@ -51,12 +51,12 @@ export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
 
   const nbToDisplay = Math.min(maxSizeStop, sizeStop);
   return items
-    .filter((item, idx) => {
+    .filter((_item, idx) => {
       return idx < nbToDisplay;
     })
     .map((item, idx) => ({
       isObject: !!item.children,
-      key: item.reference?item.reference:item.value?item.value:idx,
+      key: getKey(item, idx),
       show: true,
       data: item.children?item.children:item,
       mapping: mapping,
@@ -76,4 +76,14 @@ export const getShowMoreLabel = (sizeStop, props) => {
   }
 
   return VIEW_LESS_LABEL;
+};
+
+export const getKey = (item, idx) => {
+  if(item.reference) {
+    return item.reference;
+  }
+  if(item.value) {
+    return item.value;
+  }
+  return idx;
 };
