@@ -109,7 +109,7 @@ export const authenticate = (group=null) => {
     const state = store.getState();
     const authEndpoint = state.auth.authEndpoint;
     if(authEndpoint) {
-      const stateKey= btoa(JSON.stringify({
+      const stateKey= window.btoa(JSON.stringify({  // btoa is only deprecated on Node.js
         queryString: window.location.search
       }));
       const nonceKey=  _.uuid();
@@ -155,7 +155,7 @@ export const initialize = (location, navigate) => {
     if (accessToken) {
       dispatch(setToken(accessToken));
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(Buffer.from(decodeURIComponent(stateValue), "base64")):{};
+      const state = stateValue?JSON.parse(window.atob(decodeURIComponent(stateValue), "base64")):{}; // atob is only deprecated on Node.js
       const queryString = (state && state.queryString)?state.queryString:"";
       setTimeout(() => navigate(`${location.pathname}${queryString}`, {replace: true}), 0);
       dispatch(setApplicationReady());
