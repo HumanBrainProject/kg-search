@@ -136,8 +136,7 @@ export const getAuthEndpoint = (group=null) => {
         case 404:
         default:
         {
-          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
-          dispatch(loadAuthEndpointFailure(error));
+          dispatch(loadAuthEndpointFailure());
         }
         }
       });
@@ -154,7 +153,7 @@ export const initialize = (location, navigate) => {
     if (accessToken) {
       dispatch(setToken(accessToken));
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue), "base64")):{};
+      const state = stateValue?JSON.parse(Buffer.from(decodeURIComponent(stateValue), "base64")):{};
       const queryString = (state && state.queryString)?state.queryString:"";
       setTimeout(() => navigate(`${location.pathname}${queryString}`, {replace: true}), 0);
       dispatch(setApplicationReady());
