@@ -36,8 +36,6 @@ export class StatsHelpers {
     const avg = StatsHelpers.average(values);
     const squareDiffs = values.map(value => value - avg).map(val => val * val);
     const avgSquareDiff = StatsHelpers.average(squareDiffs);
-    const stdDev = Math.sqrt(avgSquareDiff);
-
-    return stdDev;
+    return Math.sqrt(avgSquareDiff);
   }
 }
