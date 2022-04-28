@@ -32,6 +32,12 @@ import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsDefinition from "../../actions/actions.definition";
 import { useNavigate } from "react-router-dom";
 
+const mapDispatchToProps = dispatch => ({
+  onAction:  action => {
+    dispatch(action);
+  }
+});
+
 export const DefinitionErrorPanel = connect(
   state => ({
     show: !!state.definition.error,
@@ -40,11 +46,7 @@ export const DefinitionErrorPanel = connect(
     retryAction: actionsDefinition.clearDefinitionError(),
     retryStyle: "primary"
   }),
-  dispatch => ({
-    onAction:  action => {
-      dispatch(action);
-    }
-  })
+  mapDispatchToProps
 )(BgError);
 
 const GroupErrorPanelContainer = connect(
@@ -57,11 +59,7 @@ const GroupErrorPanelContainer = connect(
     retryAction: actionsGroups.clearGroupError(),
     retryStyle: "primary"
   }),
-  dispatch => ({
-    onAction:  action => {
-      dispatch(action);
-    }
-  })
+  mapDispatchToProps
 )(BgError);
 
 
@@ -83,11 +81,7 @@ const InstanceErrorPanelContainer = connect(
     retryAction: actionsInstances.clearInstanceError(),
     retryStyle: "primary"
   }),
-  dispatch => ({
-    onAction:  action => {
-      dispatch(action);
-    }
-  })
+  mapDispatchToProps
 )(BgError);
 
 export const InstanceErrorPanel = () => {
@@ -97,8 +91,6 @@ export const InstanceErrorPanel = () => {
   );
 };
 
-
-
 export const SearchInstanceErrorPanel = connect(
   state => ({
     show: !!state.instances.error,
@@ -107,11 +99,7 @@ export const SearchInstanceErrorPanel = connect(
     retryAction: actionsInstances.clearInstanceError(),
     retryStyle: "primary"
   }),
-  dispatch => ({
-    onAction:  action => {
-      dispatch(action);
-    }
-  })
+  mapDispatchToProps
 )(Component);
 
 export const SearchErrorPanel = connect(
@@ -122,11 +110,7 @@ export const SearchErrorPanel = connect(
     retryAction: actionsSearch.search(),
     retryStyle: "primary"
   }),
-  dispatch => ({
-    onAction:  action => {
-      dispatch(action);
-    }
-  })
+  mapDispatchToProps
 )(BgError);
 
 export const SessionExpiredErrorPanel = connect(
@@ -137,9 +121,5 @@ export const SessionExpiredErrorPanel = connect(
     retryAction: state.auth.authEndpoint ? actions.authenticate(): actionsDefinition.loadDefinition(),
     retryStyle: "primary"
   }),
-  dispatch => ({
-    onAction:  action => {
-      dispatch(action);
-    }
-  })
+  mapDispatchToProps
 )(BgError);
