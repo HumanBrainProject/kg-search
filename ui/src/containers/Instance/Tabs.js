@@ -46,7 +46,7 @@ export const Tabs = connect(
   (dispatch, props) => ({
     selectTab: tab =>  {
       dispatch(actionsInstances.setInstanceCurrentTab(props.instanceId, tab.name));
-      ReactPiwik.push(["trackEvent", "Tab", `${name} clicked`, props.instanceId]);
+      ReactPiwik.push(["trackEvent", "Tab", `${tab.name} clicked`, props.instanceId]);
     }
   })
 )(Component);

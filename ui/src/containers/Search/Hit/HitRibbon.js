@@ -27,12 +27,8 @@ import { Ribbon } from "../../../components/Ribbon/Ribbon";
 const getCounter = (data, mapping) => {
   let counter = 0;
   if (mapping && mapping.framed) {
-    switch (mapping.framed.aggregation) {
-    case "count":
+    if (mapping.framed.aggregation === "count") {
       counter = Array.isArray(data)?data.length:1;
-      break;
-    default:
-      break;
     }
   }
   return counter;

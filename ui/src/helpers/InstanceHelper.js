@@ -53,8 +53,7 @@ export const getTitle = (data, id) => {
 };
 
 const getField = (group, type, name, data, mapping) => {
-  switch (name) {
-  case "type":
+  if (name === "type") {
     return {
       name: "type",
       data: { value: type },
@@ -62,15 +61,14 @@ const getField = (group, type, name, data, mapping) => {
       group: group,
       type: type
     };
-  default:
-    return {
-      name: name,
-      data: data,
-      mapping: mapping,
-      group: group,
-      type: type
-    };
   }
+  return {
+    name: name,
+    data: data,
+    mapping: mapping,
+    group: group,
+    type: type
+  };
 };
 
 const getHeaderFields = (group, type, data, mapping) => {
@@ -78,15 +76,17 @@ const getHeaderFields = (group, type, data, mapping) => {
     return [];
   }
 
-  const fields = Object.entries(mapping.fields || {})
-    .filter(([name, fieldsMapping]) =>
-      fieldsMapping
-      && (fieldsMapping.showIfEmpty || (data && data[name]))
-      && fieldsMapping.layout === "header" && name !== "title"
+  return Object.entries(mapping.fields || {})
+    .filter(
+      ([name, fieldsMapping]) =>
+        fieldsMapping &&
+        (fieldsMapping.showIfEmpty || (data && data[name])) &&
+        fieldsMapping.layout === "header" &&
+        name !== "title"
     )
-    .map(([name, fieldsMapping]) => getField(group, type, name, data[name], fieldsMapping));
-
-  return fields;
+    .map(([name, fieldsMapping]) =>
+      getField(group, type, name, data[name], fieldsMapping)
+    );
 };
 
 const getFieldsByTabs = (group, type, data, typeMapping) => {
@@ -96,15 +96,26 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
 
   const overviewFields = [];
   const tabs = Object.entries(typeMapping.fields || {})
-    .filter(([name, mapping]) =>
-      mapping
-      && mapping.visible
-      && (mapping.showIfEmpty || (data && data[name]))
-      && mapping.layout !== "header"
-      && !["id", "identifier", "category", "title", "first_release", "last_release", "previewObjects", "disclaimer"].includes(name)
+    .filter(
+      ([name, mapping]) =>
+        mapping &&
+        mapping.visible &&
+        (mapping.showIfEmpty || (data && data[name])) &&
+        mapping.layout !== "header" &&
+        ![
+          "id",
+          "identifier",
+          "category",
+          "title",
+          "first_release",
+          "last_release",
+          "previewObjects",
+          "disclaimer"
+        ].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary") ? null : mapping.layout;
+      const groupName =
+        !mapping.layout || mapping.layout === "summary" ? null : mapping.layout;
       const field = getField(group, type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);
@@ -133,7 +144,6 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
   }
   return Object.values(tabs);
 };
-
 
 export const getPreviews = data => {
   if (Array.isArray(data.previewObjects)) {
@@ -172,15 +182,20 @@ const getGroupLabel = (groups, name) => {
 };
 
 export const mapStateToProps = (state, props) => {
-
   const { data } = props;
 
   const source = data && data._source;
   const type = source?.type?.value;
-  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type]) ?? {};
+  const mapping =
+    (source &&
+      state.definition?.typeMappings &&
+      state.definition.typeMappings[type]) ??
+    {};
   const group = state.groups.group;
   const version = source && source.version ? source.version : "Current";
-  const versions = (source && Array.isArray(source.versions) ? source.versions : []).map(v => ({
+  const versions = (
+    source && Array.isArray(source.versions) ? source.versions : []
+  ).map(v => ({
     label: v.value ? v.value : "Current",
     value: v.reference
   }));
@@ -193,10 +208,19 @@ export const mapStateToProps = (state, props) => {
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
-      group: (group !== state.groups.defaultGroup) ? group : null,
-      groupLabel: (group !== state.groups.defaultGroup) ? getGroupLabel(state.groups.groups, group) : null,
+      group: group !== state.groups.defaultGroup ? group : null,
+      groupLabel:
+        group !== state.groups.defaultGroup
+          ? getGroupLabel(state.groups.groups, group)
+          : null,
       category: source?.category?.value,
-      title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
+      title: getField(
+        group,
+        type,
+        "title",
+        source && source["title"],
+        mapping && mapping.fields && mapping.fields["title"]
+      ),
       fields: getHeaderFields(group, type, source, mapping),
       version: version,
       versions: versions

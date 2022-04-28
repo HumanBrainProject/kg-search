@@ -95,14 +95,13 @@ export const getTreeByGroupingType = (files, nameFieldPath, urlFieldPath, groupi
           data: file
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
-      const folder = {
+      return {
         name: fileBundle.name,
         //url: `${groupingType}/${fileBundle}`,
         type: "fileBundle",
         reference: fileBundle.reference,
         children: children
       };
-      return folder;
     });
   return tree;
 };

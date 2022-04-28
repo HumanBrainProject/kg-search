@@ -114,7 +114,7 @@ const calculateFacetList = facets => {
 const getUrlParmeters = () => {
   const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
   const query = searchToObj();
-  const res = Object.entries(query).reduce((acc, [key, value]) => {
+  return Object.entries(query).reduce((acc, [key, value]) => {
     const [, name, count] = regParamWithBrackets.test(key) ? key.match(regParamWithBrackets) : [null, key, null];
     const val = decodeURIComponent(value);
     if (count) {
@@ -127,7 +127,6 @@ const getUrlParmeters = () => {
     }
     return acc;
   }, {});
-  return res;
 };
 
 
