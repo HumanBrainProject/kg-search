@@ -81,6 +81,39 @@ const getStatusForElement = (e, needSizeCalculation) => {
   };
 };
 
+// Return null when layout doesn't need any adjustement
+const getHeight = (relatedElements, needSizeCalculation, eventWasTriggered) => {
+  let cookieChange = false;
+  let localStorageChange = false;
+  let height = 0;
+  relatedElements.forEach(e => {
+    const status = getStatusForElement(e, needSizeCalculation);
+    cookieChange = cookieChange || status.cookieChange;
+    localStorageChange = localStorageChange || status.localStorageChange;
+    height += status.height;
+  });
+  if (eventWasTriggered || localStorageChange || cookieChange) {
+    return height;
+  }
+  return null;
+};
+
+// Return null if floating state should not be updated
+const getIsFloating = (height, floatingPosition, scrollTop, newScrollTop) => {
+  if (floatingPosition === "top") {
+    return newScrollTop > height;
+  } else if (floatingPosition === "bottom") {
+    const scrollDown = (newScrollTop - scrollTop) > 0;
+    const fixedLayout = document.documentElement.scrollHeight - scrollTop - windowHeight() < height;
+    if (scrollDown && fixedLayout) {
+      return false;
+    } else if (!scrollDown && !fixedLayout) {
+      return true;
+    }
+  }
+  return null;
+};
+
 export const withFloatingScrollEventsSubscription = (floatingPosition, relatedElements) => (WrappedComponent) => {
 
   floatingPosition = floatingPosition?floatingPosition.toLowerCase():null;
@@ -148,7 +181,6 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       this.eventState.didMute = true;
     }
     adjustLayout() {
-      let height = 0;
       const needSizeCalculation = !this.initialized || this.eventState.didResize || this.eventState.didOrientationChange || this.eventState.didMute;
       const eventWasTriggered = this.eventState.didScroll || needSizeCalculation;
       this.eventState = {
@@ -159,31 +191,16 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
         didMute: false
       };
       this.initialized = true;
-      let cookieChange = false;
-      let localStorageChange = false;
-      relatedElements.forEach(e => {
-        const status = getStatusForElement(e, needSizeCalculation);
-        cookieChange |= status.cookieChange;
-        localStorageChange |= status.localStorageChange;
-        height += status.height;
-      });
-      if (localStorageChange || cookieChange || eventWasTriggered) {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        if (floatingPosition === "top") {
-          if (scrollTop <= height) {
-            this.setState(() => ({isFloating: false}));
-          } else {
-            this.setState(() => ({isFloating: true}));
-          }
-        } else if (floatingPosition === "bottom") {
-          const scrollDown = (scrollTop - this.eventState.scrollTop) > 0;
-          const fixedLayout = document.documentElement.scrollHeight - this.eventState.scrollTop - windowHeight() < height;
-          this.eventState.scrollTop = scrollTop;
-          if (scrollDown && fixedLayout) {
-            this.setState(() => ({isFloating: false}));
-          } else if (!scrollDown && !fixedLayout) {
-            this.setState(() => ({isFloating: true}));
-          }
+      const height = getHeight(relatedElements, needSizeCalculation, eventWasTriggered);
+      if (height !== null ) {
+        const newScrollTop = window.scrollY || document.documentElement.scrollTop;
+        const isFloating = getIsFloating(height, floatingPosition, this.eventState.scrollTop, newScrollTop);
+        // new scrollTop should be set after isFloating calculation but before setting the state
+        if (floatingPosition === "bottom") {
+          this.eventState.scrollTop = newScrollTop;
+        }
+        if (isFloating !== null) {
+          this.setState({isFloating: isFloating});
         }
       }
     }
