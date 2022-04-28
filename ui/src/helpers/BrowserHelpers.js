@@ -35,7 +35,7 @@ export const generateKey = () => {
   return key;
 };
 
-const regParam = /^(.+)=(.+)$/;
+const regParam = /^(.+)=(.+)$/; //NOSONAR
 
 export const searchToObj = () => {
   const search = window.location.search;

@@ -43,10 +43,10 @@ const escapeSpecialCharacters = str => {
 
 const trimOperators = str => {
   let res = str;
-  res = res.replace(/^\s*&&\s*(.*)$/, "$1");
-  res = res.replace(/^\s*\|\|\s*(.*)$/, "$1");
-  res = res.replace(/^(.*)\s*&&\s*$/, "$1");
-  res = res.replace(/^(.*)\s*\|\|\s*$/, "$1");
+  res = res.replace(/^\s*&&\s*(.*)$/, "$1"); //NOSONAR
+  res = res.replace(/^\s*\|\|\s*(.*)$/, "$1"); //NOSONAR
+  res = res.replace(/^(.*)\s*&&\s*$/, "$1"); //NOSONAR
+  res = res.replace(/^(.*)\s*\|\|\s*$/, "$1"); //NOSONAR
   res = res.trim();
   if (res !== str) {
     return trimOperators(res);
@@ -73,7 +73,7 @@ const addTermsFromFieldExpression = (node, terms) => {
     return;
   }
 
-  if (node.term && Number.isNaN(Number(node.term)) && !/.+\*$/.test(node.term) && !/.+\?$/.test(node.term) && !/\s/.test(node.term)) {
+  if (node.term && Number.isNaN(Number(node.term)) && !/.+\*$/.test(node.term) && !/.+\?$/.test(node.term) && !/\s/.test(node.term)) {//NOSONAR
     terms.push(node.term.toLowerCase());
   }
 };

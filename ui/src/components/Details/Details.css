@@ -37,16 +37,6 @@
   color: var(--color-warning-off);
 }
 
-.field-details button.toggle i {
-  margin-right: 3px;
-  transition: transform 0.2s ease-in;
-  font: normal normal normal 19px/1 FontAwesome;
-}
-
-.field-details button.toggle.in i {
-  transform: rotateX(180deg);
-}
-
 .field-details button.toggle span {
   display: inline-block;
   font-size: var(--font-size-extra-small);
