@@ -209,7 +209,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       };
       this.initialized = false;
       this.interval = null;
-      this.scrollTop = 0,
+      this.scrollTop = 0;
       this.checkLayoutChange = this.checkLayoutChange.bind(this);
       this.adjustLayout = this.adjustLayout.bind(this);
     }
