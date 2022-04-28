@@ -34,11 +34,11 @@ import ReactPiwik from "react-piwik";
 import * as Sentry from "@sentry/browser";
 import { BrowserRouter } from "react-router-dom";
 
-new ReactPiwik({
+new ReactPiwik({ //NOSONAR
   url: process.env.REACT_APP_MATOMO_URL,
   siteId: process.env.REACT_APP_MATOMO_SITE_ID,
   trackErrors: true
-}); //NOSONAR
+});
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_URL,
