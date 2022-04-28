@@ -20,9 +20,11 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import _ from "lodash-uuid";
+
 import * as types from "./actions.types";
 import API from "../services/API";
-import { getHashKey, generateKey, searchToObj } from "../helpers/BrowserHelpers";
+import { getHashKey, searchToObj } from "../helpers/BrowserHelpers";
 import { store } from "../store";
 import { setInitialGroup } from "./actions.groups";
 
@@ -110,7 +112,7 @@ export const authenticate = (group=null) => {
       const stateKey= btoa(JSON.stringify({
         queryString: window.location.search
       }));
-      const nonceKey=  generateKey();
+      const nonceKey=  _.uuid();
       const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
       window.location.replace(API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey));
     } else {
