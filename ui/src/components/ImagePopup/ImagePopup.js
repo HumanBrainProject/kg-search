@@ -32,6 +32,19 @@ import "./ImagePopup.css";
 
 const converter = new showdown.Converter({ extensions: [xssFilter] });
 
+const Media = ({label, srcState}) => {
+  const isVideo = typeof srcState === "string" && srcState.endsWith(".mp4");
+  const alt = label ? label:"";
+  if(isVideo) {
+    return(
+      <video alt={alt} width="750" height="250" autoPlay loop>
+        <source src={srcState} type="video/mp4" />
+      </video>
+    );
+  }
+  return <img src={srcState} alt={alt} />;
+};
+
 export const ImagePopup = ({ className, src, label, link, onClick }) => {
   const [srcState, setSrc] = useState();
   const [error, setError] = useState(false);
@@ -74,13 +87,7 @@ export const ImagePopup = ({ className, src, label, link, onClick }) => {
               </div>
               :
               <React.Fragment>
-                {(typeof srcState === "string" && srcState.endsWith(".mp4")) ?
-                  <video alt={label ? label : ""} width="750" height="250" autoPlay loop>
-                    <source src={srcState} type="video/mp4" />
-                  </video>
-                  :
-                  <img src={srcState} alt={label ? label : ""} />
-                }
+                <Media label={label} srcState={srcState}/>
                 {label && (
                   <div className="kgs-image_popup-label-wrapper">
                     <p className="kgs-image_popup-label">{label}</p>

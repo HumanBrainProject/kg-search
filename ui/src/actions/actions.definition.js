@@ -171,7 +171,7 @@ export const loadDefinition = () => {
     }
   };
 
-  const simplifySemantics = types => types instanceof Object && !Array.isArray(types) && Object.values(types).forEach(mapping => simplifySemanticKeyForType(mapping));
+  const simplifySemantics = typesDefinition => !Array.isArray(typesDefinition) && Object.values(typesDefinition).forEach(mapping => simplifySemanticKeyForType(mapping));
 
   return dispatch => {
     dispatch(loadDefinitionRequest());

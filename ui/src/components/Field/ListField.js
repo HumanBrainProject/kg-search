@@ -27,7 +27,8 @@ import { ValueField, PrintViewValueField } from "./ValueField";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,
-  getShowMoreLabel} from "./helpers";
+  getShowMoreLabel,
+  getKey} from "./helpers";
 import "./ListField.css";
 
 const ListFieldBase = (renderUserInteractions = true) => {
@@ -130,10 +131,11 @@ const ListFieldBase = (renderUserInteractions = true) => {
       if (!Array.isArray(items)) {
         return [];
       }
+
       return items
         .map((item, idx) => ({
           isObject: !!item.children,
-          key: item.reference?item.reference:item.value?item.value:idx,
+          key: getKey(item, idx),
           data: item.children?item.children:item,
           mapping: mapping,
           group: group,
