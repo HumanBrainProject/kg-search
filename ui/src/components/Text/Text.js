@@ -34,7 +34,7 @@ export const Text = ({ content, isMarkdown }) => {
   }
 
   if (!isMarkdown) {
-    const html_text = typeof content === "string" && content.replace(/<[^>]+!span>/g, "");
+    const html_text = typeof content === "string" && content.replace(/<[^>]+!span>/g, ""); //NOSONAR
     return (
       <span dangerouslySetInnerHTML={{ __html: html_text }}></span>
     );
