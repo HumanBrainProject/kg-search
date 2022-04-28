@@ -27,10 +27,10 @@ import { windowHeight } from "../helpers/BrowserHelpers";
 
 const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";
 
-const getStatusForElement = (e, needSizeCalculation) => {
+const getStatusForElement = (e, hasSizeChanged) => {
   let cookieChange = false;
   let localStorageChange = false;
-  let doCalc = e.height === undefined || needSizeCalculation;
+  let doCalc = e.height === undefined || hasSizeChanged;
   if (e.cookieKey && (e.cookieValue === undefined || e.cookieValue === "")) {
     let value = document.cookie;
     if (typeof e.cookieKey === "string") {
@@ -82,17 +82,17 @@ const getStatusForElement = (e, needSizeCalculation) => {
 };
 
 // Return null when layout doesn't need any adjustement
-const getHeight = (relatedElements, needSizeCalculation, eventWasTriggered) => {
+const getHeight = (relatedElements, hasSizeChanged, hasChanged) => {
   let cookieChange = false;
   let localStorageChange = false;
   let height = 0;
   relatedElements.forEach(e => {
-    const status = getStatusForElement(e, needSizeCalculation);
+    const status = getStatusForElement(e, hasSizeChanged);
     cookieChange = cookieChange || status.cookieChange;
     localStorageChange = localStorageChange || status.localStorageChange;
     height += status.height;
   });
-  if (eventWasTriggered || localStorageChange || cookieChange) {
+  if (hasChanged || localStorageChange || cookieChange) {
     return height;
   }
   return null;
@@ -114,101 +114,131 @@ const getIsFloating = (height, floatingPosition, scrollTop, newScrollTop) => {
   return null;
 };
 
+class WithEventsBase extends React.Component {
+  constructor(props) {
+    super(props);
+    this.eventId = uniqueId("kgs-");
+    this.eventState = {
+      didScroll: false,
+      didResize: false,
+      didOrientationChange: false,
+      didMute: false
+    };
+    this.observer = null;
+    this.handleScrollEvent = this.handleScrollEvent.bind(this);
+    this.handleResizeEvent = this.handleResizeEvent.bind(this);
+    this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
+    this.handleMutationEvent = this.handleMutationEvent.bind(this);
+    this.listenToDOMMutations = this.listenToDOMMutations.bind(this);
+    this.unlistenDOMMutations = this.unlistenDOMMutations.bind(this);
+    this.resetEvents = this.resetEvents.bind(this);
+    this.hasChanged =  this.hasChanged.bind(this);
+    this.didScroll =  this.didScroll.bind(this);
+    this.hasSizeChanged = this.hasSizeChanged.bind(this);
+  }
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScrollEvent, false);
+    window.addEventListener("resize", this.handleResizeEvent, false);
+    window.addEventListener("orientationchange", this.handleOrientationChangeEvent, false);
+    this.listenToDOMMutations();
+    window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+    window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScrollEvent);
+    window.removeEventListener("resize", this.handleResizeEvent);
+    window.removeEventListener("orientationchange", this.handleOrientationChangeEvent);
+    this.unlistenDOMMutations();
+    window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+    window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+  }
+  listenToDOMMutations() {
+    if (window.MutationObserver && !this.observer) {
+      this.observer = new MutationObserver(this.handleMutationEvent);
+      this.observer.observe(document.body, { attributes: true, childList: true });
+    }
+  }
+  unlistenDOMMutations() {
+    if (this.observer) {
+      this.observer.disconnect();
+      delete this.observer;
+      this.observer = null;
+    }
+  }
+  handleScrollEvent() {
+    this.eventState.didScroll = true;
+  }
+  handleResizeEvent() {
+    this.eventState.didResize = true;
+  }
+  handleOrientationChangeEvent() {
+    this.eventState.didOrientationChange = true;
+  }
+  handleMutationEvent() {
+    this.eventState.didMute = true;
+  }
+  resetEvents() {
+    this.eventState = {
+      didScroll: false,
+      didResize: false,
+      didOrientationChange: false,
+      didMute: false
+    };
+  }
+  hasChanged() {
+    return this.eventState.didResize || this.eventState.didOrientationChange || this.eventState.didMute || this.eventState.didScroll;
+  }
+  didScroll() {
+    return this.eventState.didScroll;
+  }
+  hasSizeChanged() {
+    return this.eventState.didResize || this.eventState.didOrientationChange || this.eventState.didMute;
+  }
+}
+
 export const withFloatingScrollEventsSubscription = (floatingPosition, relatedElements) => (WrappedComponent) => {
 
   floatingPosition = floatingPosition?floatingPosition.toLowerCase():null;
   relatedElements = Array.isArray(relatedElements)?relatedElements:[];
 
-  class withEvents extends React.Component {
+  class WithEvents extends WithEventsBase {
     constructor(props) {
       super(props);
-      this.eventId = uniqueId("kgs-");
       this.state = {
         isFloating: false
       };
-      this.eventState = {
-        scrollTop: 0,
-        didScroll: false,
-        didResize: false,
-        didOrientationChange: false,
-        didMute: false
-      };
       this.initialized = false;
-      this.observer = null;
       this.interval = null;
+      this.scrollTop = 0,
       this.checkLayoutChange = this.checkLayoutChange.bind(this);
-      this.handleScrollEvent = this.handleScrollEvent.bind(this);
-      this.handleResizeEvent = this.handleResizeEvent.bind(this);
-      this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
-      this.handleMutationEvent = this.handleMutationEvent.bind(this);
+      this.adjustLayout = this.adjustLayout.bind(this);
     }
     componentDidMount() {
-      window.addEventListener("scroll", this.handleScrollEvent, false);
-      window.addEventListener("resize", this.handleResizeEvent, false);
-      window.addEventListener("orientationchange", this.handleOrientationChangeEvent, false);
-      this.listenToDOMMutations();
-      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
-      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
+      super.componentDidMount();
       this.interval = setInterval(this.checkLayoutChange, 250);
     }
     componentWillUnmount() {
-      window.removeEventListener("scroll", this.handleScrollEvent);
-      window.removeEventListener("resize", this.handleResizeEvent);
-      window.removeEventListener("orientationchange", this.handleOrientationChangeEvent);
-      this.unlistenDOMMutations();
-      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
-      window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
       clearInterval(this.interval);
       this.interval = null;
-    }
-    listenToDOMMutations() {
-      if (window.MutationObserver && !this.observer) {
-        this.observer = new MutationObserver(this.handleMutationEvent);
-        this.observer.observe(document.body, { attributes: true, childList: true });
-      }
-    }
-    unlistenDOMMutations() {
-      if (this.observer) {
-        this.observer.disconnect();
-        delete this.observer;
-        this.observer = null;
-      }
-    }
-    handleScrollEvent() {
-      this.eventState.didScroll = true;
-    }
-    handleResizeEvent() {
-      this.eventState.didResize = true;
-    }
-    handleOrientationChangeEvent() {
-      this.eventState.didOrientationChange = true;
-    }
-    handleMutationEvent() {
-      this.eventState.didMute = true;
+      super.componentWillUnmount();
     }
     adjustLayout(height) {
       const newScrollTop = window.scrollY || document.documentElement.scrollTop;
-      const isFloating = getIsFloating(height, floatingPosition, this.eventState.scrollTop, newScrollTop);
+      const isFloating = getIsFloating(height, floatingPosition, this.scrollTop, newScrollTop);
       // new scrollTop should be set after isFloating calculation but before setting the state
       if (floatingPosition === "bottom") {
-        this.eventState.scrollTop = newScrollTop;
+        this.scrollTop = newScrollTop;
       }
       if (isFloating !== null) {
         this.setState({isFloating: isFloating});
       }
     }
     checkLayoutChange() {
-      const needSizeCalculation = !this.initialized || this.eventState.didResize || this.eventState.didOrientationChange || this.eventState.didMute;
-      const eventWasTriggered = this.eventState.didScroll || needSizeCalculation;
-      this.eventState = {
-        scrollTop: this.eventState.scrollTop,
-        didScroll: false,
-        didResize: false,
-        didOrientationChange: false,
-        didMute: false
-      };
+      const hasSizeChanged = !this.initialized || this.hasSizeChanged();
+      const hasChanged = !this.initialized || this.hasChanged();
+      this.resetEvents();
       this.initialized = true;
-      const height = getHeight(relatedElements, needSizeCalculation, eventWasTriggered);
+      const height = getHeight(relatedElements, hasSizeChanged, hasChanged);
       if (height !== null ) {
         this.adjustLayout(height);
       }
@@ -217,5 +247,5 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       return <WrappedComponent {...this.props} isFloating={this.state.isFloating}  />;
     }
   }
-  return withEvents;
+  return WithEvents;
 };
