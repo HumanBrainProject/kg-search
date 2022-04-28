@@ -24,10 +24,10 @@
 import React from "react";
 import "./Thumbnail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
-import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
-import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
-import {faFileImage} from "@fortawesome/free-solid-svg-icons/faFileImage";
+import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
+import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
+import { faFileImage } from "@fortawesome/free-solid-svg-icons/faFileImage";
 
 const getImage = url => {
   return new Promise((resolve, reject) => {
@@ -45,15 +45,36 @@ const getImage = url => {
   });
 };
 
+const ThumbnailIcon = ({isAnimated}) => {
+  if(isAnimated) {
+    return(
+      <FontAwesomeIcon
+        icon={faPlay}
+        className="kgs-thumbnail--zoom-dynamic"
+      />
+    );
+  }
+  return(
+    <FontAwesomeIcon
+      icon={faSearch}
+      className="kgs-thumbnail--zoom-static"
+    />
+  );
+};
 export class Thumbnail extends React.Component {
   constructor(props) {
     super(props);
     this.state = { src: null, show: false, fetched: false, error: false };
   }
+
   async loadImage() {
     if (typeof this.props.previewUrl === "string") {
       if (this.props.previewUrl !== this.state.src || this.state.error) {
-        this.setState({ src: this.props.previewUrl, fetched: false, error: false });
+        this.setState({
+          src: this.props.previewUrl,
+          fetched: false,
+          error: false
+        });
         try {
           await getImage(this.props.previewUrl);
           this.setState({ fetched: true });
@@ -77,39 +98,41 @@ export class Thumbnail extends React.Component {
   };
 
   clickOutHandler = e => {
-    if (this.wrapperRef  && this.wrapperRef.contains(e.target)) {
+    if (this.wrapperRef && this.wrapperRef.contains(e.target)) {
       e && e.preventDefault();
     } else {
       this.unlistenClickOutHandler();
-      this.setState({previewUrl: null});
+      this.setState({ previewUrl: null });
     }
   };
 
-  listenClickOutHandler(){
+  listenClickOutHandler() {
     this.clickOutHandlerRef = this.clickOutHandler.bind(this);
     window.addEventListener("mouseup", this.clickOutHandlerRef, false);
     window.addEventListener("touchend", this.clickOutHandlerRef, false);
     window.addEventListener("keyup", this.clickOutHandlerRef, false);
   }
 
-  unlistenClickOutHandler(){
+  unlistenClickOutHandler() {
     window.removeEventListener("mouseup", this.clickOutHandlerRef, false);
     window.removeEventListener("touchend", this.clickOutHandlerRef, false);
     window.removeEventListener("keyup", this.clickOutHandlerRef, false);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unlistenClickOutHandler();
   }
 
   render() {
-    const {url, alt, isAnimated, onClick} = this.props;
+    const { url, alt, isAnimated, onClick } = this.props;
 
     if (typeof onClick !== "function") {
       if (typeof url === "string") {
         return (
           <span className="kgs-thumbnail--panel">
-            <div><img src={url} alt={alt} /></div>
+            <div>
+              <img src={url} alt={alt} />
+            </div>
           </span>
         );
       }
@@ -122,28 +145,20 @@ export class Thumbnail extends React.Component {
 
     return (
       <div className="fa-stack fa-1x kgs-thumbnail--container">
-        <button className="kgs-thumbnail--button" onClick={onClick} >
-          {typeof url === "string"?
+        <button className="kgs-thumbnail--button" onClick={onClick}>
+          {typeof url === "string" ? (
             <span className="kgs-thumbnail--panel">
               <div className="kgs-thumbnail--image">
                 <img src={url} alt={alt} />
-                {isAnimated?
-                  <FontAwesomeIcon icon={faPlay} className="kgs-thumbnail--zoom-dynamic" />
-                  :
-                  <FontAwesomeIcon icon={faSearch} className="kgs-thumbnail--zoom-static" />
-                }
+                <ThumbnailIcon isAnimated={isAnimated}/>
               </div>
             </span>
-            :
+          ) : (
             <span className="fa-stack fa-1x kgs-thumbnail--panel">
               <FontAwesomeIcon icon={faFileImage} />
-              {isAnimated?
-                <FontAwesomeIcon icon={faPlay} className="kgs-thumbnail--zoom-dynamic"/>
-                :
-                <FontAwesomeIcon icon={faSearch} className="kgs-thumbnail--zoom-static"/>
-              }
+              <ThumbnailIcon isAnimated={isAnimated}/>
             </span>
-          }
+          )}
         </button>
       </div>
     );

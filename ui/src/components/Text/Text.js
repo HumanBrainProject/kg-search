@@ -23,7 +23,6 @@
 
 import React from "react";
 import showdown from "showdown";
-/*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
 import "./Text.css";
 

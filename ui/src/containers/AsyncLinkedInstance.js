@@ -58,8 +58,8 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
         } else if (response.data && response.data.error) {
           setError(response.data.message ? response.data.message : response.data.error);
         } else {
-          const error = `The instance with id ${id} is not available.`;
-          setError(error);
+          const errorMessage = `The instance with id ${id} is not available.`;
+          setError(errorMessage);
         }
         setIsLoading(false);
       })

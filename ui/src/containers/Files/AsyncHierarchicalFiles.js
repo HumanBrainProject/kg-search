@@ -23,8 +23,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
-import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
 import { FileFilter } from "./FileFilter";
 import HierarchicalFiles from "../../components/Field/Files/HierarchicalFiles";
@@ -40,21 +40,100 @@ const showMoreStyle = {
   lineHeight: "1rem"
 };
 
-const Label = ({isAllFetched, number, total}) => {
-
+const Label = ({ isAllFetched, number, total }) => {
   if (isAllFetched) {
     return (
-      <span><i>{total}</i> files</span>
+      <span>
+        <i>{total}</i> files
+      </span>
     );
   }
 
   return (
-    <span>Showing <i>{number}</i> files out of <i>{total}</i>.</span>
+    <span>
+      Showing <i>{number}</i> files out of <i>{total}</i>.
+    </span>
   );
 };
 
-export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl, nameFieldPath, urlFieldPath, fileFormatsUrl, groupingTypesUrl, onSessionFailure}) => {
+const FetchingFiles = () => (
+  <div className="spinner-border spinner-border-sm" role="status">
+    <span className="sr-only">Retrieving files...</span>
+  </div>
+);
 
+const FileLabel = ({ showLabel, isAllFetched, length, total }) => {
+  if (!showLabel) {
+    return null;
+  }
+  return (
+    <>
+      <Label isAllFetched={isAllFetched} number={length} total={total} />
+      &nbsp;
+    </>
+  );
+};
+
+const FileError = ({ error, handleRetry }) => (
+  <div>
+    <span style={{ color: "var(--code-color)" }}>
+      <FontAwesomeIcon icon={faExclamationTriangle} />
+      {error}{" "}
+    </span>
+    <FontAwesomeIcon
+      icon={faSyncAlt}
+      onClick={handleRetry}
+      style={{ cursor: "pointer" }}
+    />
+  </div>
+);
+
+const NoFiles = ({ isLoading, handleRetry }) => {
+  if (isLoading) {
+    return <FetchingFiles />;
+  }
+  return (
+    <span>
+      No files available{" "}
+      <FontAwesomeIcon
+        icon={faSyncAlt}
+        onClick={handleRetry}
+        style={{ cursor: "pointer" }}
+      />
+    </span>
+  );
+};
+
+const ShowMoreFiles = ({ isLoading, isAllFetched, showMoreStyle, fetch }) => {
+  if (isLoading) {
+    return <FetchingFiles />;
+  }
+  if (!isAllFetched) {
+    return (
+      <button
+        type="button"
+        className="btn btn-link"
+        onClick={fetch}
+        style={showMoreStyle}
+      >
+        show more
+      </button>
+    );
+  }
+  return null;
+};
+
+export const AsyncHierarchicalFilesComponent = ({
+  mapping,
+  group,
+  type,
+  filesUrl,
+  nameFieldPath,
+  urlFieldPath,
+  fileFormatsUrl,
+  groupingTypesUrl,
+  onSessionFailure
+}) => {
   const [files, setFiles] = useState([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,13 +159,15 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl,
     if (fileFormat) {
       params["format"] = fileFormat;
     }
-    const paramsString = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join("&");
-    const url = filesUrl + (paramsString.length?`?${paramsString}`:"");
+    const paramsString = Object.entries(params)
+      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+      .join("&");
+    const url = filesUrl + (paramsString.length ? `?${paramsString}` : "");
     API.axios
       .get(url)
       .then(response => {
         const data = response.data;
-        const items = searchAfter?[...files, ...data.data]:data.data;
+        const items = searchAfter ? [...files, ...data.data] : data.data;
         setFiles(items);
         setIsLoading(false);
         setTotal(data.total);
@@ -99,22 +180,29 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl,
           switch (status) {
           case 401: // Unauthorized
           case 403: // Forbidden
-          case 511: // Network Authentication Required
-          {
+          case 511: {
+            // Network Authentication Required
             setIsLoading(false);
             onSessionFailure();
             break;
           }
           case 500:
           case 404:
-          default:
-          {
-            setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+          default: {
+            setError(
+              `The service is temporarily unavailable. Please retry in a few minutes. (${
+                e.message ? e.message : e
+              })`
+            );
             setIsLoading(false);
           }
           }
         } else {
-          setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
+          setError(
+            `The service is temporarily unavailable. Please retry in a few minutes. (${
+              e.message ? e.message : e
+            })`
+          );
           setIsLoading(false);
         }
       });
@@ -127,65 +215,85 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, type, filesUrl,
     } else {
       fetch();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReset, groupingType, fileFormat]);
 
-  const handleSetFileFormat = useMemo(() => value => {
-    setFileFormat(value);
-    setIsReset(true);
-  }, []);
+  const handleSetFileFormat = useMemo(
+    () => value => {
+      setFileFormat(value);
+      setIsReset(true);
+    },
+    []
+  );
 
-  const handleSetGroupingType = useMemo(() => value => {
-    setGroupingType(value);
-    setIsReset(true);
-  }, []);
+  const handleSetGroupingType = useMemo(
+    () => value => {
+      setGroupingType(value);
+      setIsReset(true);
+    },
+    []
+  );
 
   const handleRetry = () => setIsReset(true);
 
   const isAllFetched = useMemo(() => files.length === total, [files, total]);
 
-  const hasFilter = useMemo(() => !!groupingType || !!fileFormat, [groupingType, fileFormat]);
+  const hasFilter = useMemo(
+    () => !!groupingType || !!fileFormat,
+    [groupingType, fileFormat]
+  );
 
-  const showLabel = useMemo(() => total !== 1 || files.length !== 1 || !!groupingType || hasFilter, [files, total, groupingType, hasFilter]);
+  const showLabel = useMemo(
+    () => total !== 1 || files.length !== 1 || !!groupingType || hasFilter,
+    [files, total, groupingType, hasFilter]
+  );
 
   return (
     <>
-      <FileFilter title="Filter by" show={!isLoading && !error} url={fileFormatsUrl} value={fileFormat} onSelect={handleSetFileFormat} onSessionFailure={onSessionFailure} />
-      <FileFilter title="Group by" show={!isLoading && !error} url={groupingTypesUrl} value={groupingType} onSelect={handleSetGroupingType} onSessionFailure={onSessionFailure} />
+      <FileFilter
+        title="Filter by"
+        show={!isLoading && !error}
+        url={fileFormatsUrl}
+        value={fileFormat}
+        onSelect={handleSetFileFormat}
+        onSessionFailure={onSessionFailure}
+      />
+      <FileFilter
+        title="Group by"
+        show={!isLoading && !error}
+        url={groupingTypesUrl}
+        value={groupingType}
+        onSelect={handleSetGroupingType}
+        onSessionFailure={onSessionFailure}
+      />
 
-      {error?
-        <div>
-          <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
-          <FontAwesomeIcon icon={faSyncAlt} onClick={handleRetry} style={{cursor: "pointer"}}/>
-        </div>
-        :
-        files.length === 0?
-          isLoading?
-            <div className="spinner-border spinner-border-sm" role="status">
-              <span className="sr-only">Retrieving files...</span>
-            </div>
-            :
-            <span>No files available <FontAwesomeIcon icon={faSyncAlt} onClick={handleRetry} style={{cursor: "pointer"}}/></span>
-          :
-          <>
-            <div>
-              {showLabel && (
-                <>
-                  <Label isAllFetched={isAllFetched} number={files.length} total={total} />&nbsp;
-                </>
-              )}
-              {isLoading?
-                <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="sr-only">Retrieving files...</span>
-                </div>
-                :
-                !isAllFetched && (
-                  <button type="button" className="btn btn-link" onClick={fetch} style={showMoreStyle}>show more</button>
-                )
-              }
-            </div>
-            <HierarchicalFiles data={files} mapping={mapping} group={group} type={type} groupingType={groupingType} hasDataFilter={hasFilter} nameFieldPath={nameFieldPath} urlFieldPath={urlFieldPath} />
-          </>
-      }
+      {error ? (
+        <FileError error={error} />
+      ) : files.length === 0 ? (
+        <NoFiles isLoading={isLoading} handleRetry={handleRetry} />
+      ) : (
+        <>
+          <div>
+            <FileLabel
+              showLabel={showLabel}
+              isAllFetched={isAllFetched}
+              length={files.length}
+              total={total}
+            />
+            <ShowMoreFiles isLoading={isLoading} isAllFetched={isAllFetched} showMoreStyle={showMoreStyle} fetch={fetch}/>
+          </div>
+          <HierarchicalFiles
+            data={files}
+            mapping={mapping}
+            group={group}
+            type={type}
+            groupingType={groupingType}
+            hasDataFilter={hasFilter}
+            nameFieldPath={nameFieldPath}
+            urlFieldPath={urlFieldPath}
+          />
+        </>
+      )}
     </>
   );
 };
