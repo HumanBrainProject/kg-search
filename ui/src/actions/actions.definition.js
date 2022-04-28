@@ -70,7 +70,7 @@ export const loadDefinition = () => {
 
   const GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
   const SEARCHUI_NAMESPACE = "https://schema.hbp.eu/searchUi/";
-  const SCHEMA_ORG = "http://schema.org/";
+  const SCHEMA_ORG = "http://schema.org/"; //NOSONAR it's a schema only
 
   const getFieldAndRemove = (field, key, defaultValue) => {
     let valueFromField = field[key];

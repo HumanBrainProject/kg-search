@@ -20,9 +20,11 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import _ from "lodash-uuid";
+
 import * as types from "./actions.types";
 import API from "../services/API";
-import { getHashKey, generateKey, searchToObj } from "../helpers/BrowserHelpers";
+import { getHashKey, searchToObj } from "../helpers/BrowserHelpers";
 import { store } from "../store";
 import { setInitialGroup } from "./actions.groups";
 
@@ -107,10 +109,10 @@ export const authenticate = (group=null) => {
     const state = store.getState();
     const authEndpoint = state.auth.authEndpoint;
     if(authEndpoint) {
-      const stateKey= btoa(JSON.stringify({
+      const stateKey= window.btoa(JSON.stringify({  // btoa is only deprecated on Node.js
         queryString: window.location.search
       }));
-      const nonceKey=  generateKey();
+      const nonceKey=  _.uuid();
       const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
       window.location.replace(API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey));
     } else {
@@ -153,7 +155,7 @@ export const initialize = (location, navigate) => {
     if (accessToken) {
       dispatch(setToken(accessToken));
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(Buffer.from(decodeURIComponent(stateValue), "base64")):{};
+      const state = stateValue?JSON.parse(window.atob(decodeURIComponent(stateValue), "base64")):{}; // atob is only deprecated on Node.js
       const queryString = (state && state.queryString)?state.queryString:"";
       setTimeout(() => navigate(`${location.pathname}${queryString}`, {replace: true}), 0);
       dispatch(setApplicationReady());

@@ -42,7 +42,7 @@ const Footer = ({ commit, theme }) => (
           <a className="hbp-logo" href="https://www.humanbrainproject.eu/" title="Human Brain Project" target="_blank" rel="noopener noreferrer">
             <img src="/static/img/hbp.svg" alt="Human Brain Project" />
           </a>
-          <a className="eu-logo" href="http://ec.europa.eu/programmes/horizon2020/en/h2020-section/fet-flagships" target="_blank" rel="noopener noreferrer">
+          <a className="eu-logo" href="https://ec.europa.eu/programmes/horizon2020/en/h2020-section/fet-flagships" target="_blank" rel="noopener noreferrer">
             <img src="/static/img/eu_cofunded_logo.png" alt="Cofunded by EU" />
           </a>
         </div>

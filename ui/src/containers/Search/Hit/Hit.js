@@ -161,14 +161,14 @@ const getComponentField = (group, data, mapping) => {
   };
 };
 
-const getField = (group, type, name, data, highlight, mapping) => {
+const getField = (group, name, data, highlight, mapping) => {
   switch (name) {
   case "title":
     return getTitleField(group, data, highlight, mapping);
   case "description":
     return getDescriptionField(group, data, highlight, mapping);
   case "component":
-    return getComponentField(group, data, mapping, highlight);
+    return getComponentField(group, data, mapping);
   default:
     return {
       name: name,
@@ -179,20 +179,18 @@ const getField = (group, type, name, data, highlight, mapping) => {
   }
 };
 
-const getFields = (group, type, data, highlight, mapping) => {
-  if (!data || !mapping) {
+const getFields = (group, data, highlight, parentMapping) => {
+  if (!data || !parentMapping) {
     return [];
   }
   const primaryFields = ["title", "description"];
-  const fields = Object.entries(mapping.fields || {})
+  return Object.entries(parentMapping.fields || {})
     .filter(([name, mapping]) =>
       mapping
       && (mapping.overview || primaryFields.includes(name))
       && (mapping.showIfEmpty || (data && data[name]))
     )
-    .map(([name, mapping]) => getField(group, type, name, data[name], highlight, mapping));
-
-  return fields;
+    .map(([name, mapping]) => getField(group, name, data[name], highlight, mapping));
 };
 
 const filterHighlightFields = (data, excludeFieldNames) => {
@@ -239,8 +237,8 @@ export const Hit = connect(
       type: type,
       hasNoData: !source,
       hasUnknownData: !mapping,
-      ribbon: getField(group, type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-      fields: getFields(group, type, source, data && data.highlight, mapping, false),
+      ribbon: getField(group, "ribbon", ribbonData, null, mapping && mapping.ribbon),
+      fields: getFields(group, source, data && data.highlight, mapping),
       preview: getPreview(),
       highlightsField: {
         fields: filterHighlightFields(data && data.highlight, ["title.value", "description.value"]),
