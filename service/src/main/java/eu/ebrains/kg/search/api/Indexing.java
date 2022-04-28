@@ -110,15 +110,12 @@ public class Indexing {
     }
 
     @PostMapping("/autorelease")
-    public ResponseEntity<ErrorReportResult> fullReplacementAutoRelease() {
+    public ResponseEntity<ErrorReportResult> fullReplacementAutoRelease(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
-                indexingController.recreateIndex(DataStage.IN_PROGRESS, m.getTargetClass(), m.isAutoRelease(), true);
-                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.IN_PROGRESS, true);
-                indexingController.reindexTemporaryToReal(DataStage.IN_PROGRESS, m.getTargetClass(), m.isAutoRelease());
-                indexingController.recreateIndex(DataStage.RELEASED, m.getTargetClass(), true, m.isAutoRelease());
-                errorsBySource.addAll(indexingController.populateIndex(m, DataStage.RELEASED, true));
-                indexingController.reindexTemporaryToReal(DataStage.RELEASED, m.getTargetClass(), m.isAutoRelease());
+                indexingController.recreateIndex(dataStage, m.getTargetClass(), m.isAutoRelease(), true);
+                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage, true);
+                indexingController.reindexTemporaryToReal(dataStage, m.getTargetClass(), m.isAutoRelease());
                 return handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
@@ -163,11 +160,10 @@ public class Indexing {
     }
 
     @PutMapping("/autorelease")
-    public ResponseEntity<ErrorReportResult> incrementalUpdateAutoRelease() {
+    public ResponseEntity<ErrorReportResult> incrementalUpdateAutoRelease(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
-                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.IN_PROGRESS, false);
-                errorsBySource.addAll(indexingController.populateIndex(m, DataStage.RELEASED, false));
+                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage, false);
                 return  handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
