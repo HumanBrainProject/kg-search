@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.controller.authentication;
 
+import eu.ebrains.kg.search.configuration.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,7 +85,7 @@ public class UserInfoRepository {
     @Cacheable(value="userInfo", key="#token")
     public UserInfo fetchUserInfo(String token){
         logger.info("Fetching user information from endpoint - no cache available");
-        return webClient.get().uri(this.userInfoUrl).header("Authorization", String.format("Bearer %s", token)).retrieve().bodyToMono(UserInfo.class).block();
+        return webClient.get().uri(this.userInfoUrl).header(Constants.AUTHORIZATION, String.format("Bearer %s", token)).retrieve().bodyToMono(UserInfo.class).block();
     }
 
     @CacheEvict(value="userInfo", key="#token")

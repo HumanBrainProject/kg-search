@@ -39,6 +39,8 @@ import java.util.*;
 public class MappingController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MetaModelUtils utils;
+    private final static String KEYWORD = "keyword";
+    private final static String PROPERTIES = "properties";
 
     public MappingController(MetaModelUtils utils) {
         this.utils = utils;
@@ -48,12 +50,12 @@ public class MappingController {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
-        properties.put("id", Map.of("type", "keyword"));
-        properties.put("identifier", Map.of("type", "keyword"));
-        properties.put("type", Map.of("properties", Map.of("value", Map.of("type", "keyword"))));
+        properties.put("id", Map.of("type", KEYWORD));
+        properties.put("identifier", Map.of("type", KEYWORD));
+        properties.put("type", Map.of(PROPERTIES, Map.of("value", Map.of("type", KEYWORD))));
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
-        mapping.put("properties", properties);
+        mapping.put(PROPERTIES, properties);
         mapping.put("dynamic", false);
         logger.info(String.format("Mapping created: %s", mapping));
         return mapping;
@@ -63,11 +65,11 @@ public class MappingController {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
-        mapping.put("properties", properties);
+        mapping.put(PROPERTIES, properties);
         mapping.put("dynamic", false);
         timestamp.put("type", "date");
-        properties.put("id", Map.of("type", "keyword"));
-        properties.put("type", Map.of("type", "keyword"));
+        properties.put("id", Map.of("type", KEYWORD));
+        properties.put("type", Map.of("type", KEYWORD));
         properties.put("@timestamp", timestamp);
         properties.putAll(handleType(clazz, null));
         logger.info(String.format("Mapping created: %s", mapping));
@@ -102,7 +104,7 @@ public class MappingController {
                     Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
                     //TODO check if nested shouldn't be defined one level further up
                     ((Map<String, Object>)otherType.get("children")).put("type", "nested");
-                    fieldDefinition.put("properties", otherType);
+                    fieldDefinition.put(PROPERTIES, otherType);
 
                     //TODO check why we need this "artificial" value mapping
                     Map<String,  Object> value= new LinkedHashMap<>();
@@ -111,8 +113,8 @@ public class MappingController {
                     value.put("fields", fields);
                     value.put("type", "text");
                     Map<String,  Object> keyword= new LinkedHashMap<>();
-                    fields.put("keyword", keyword);
-                    keyword.put("type","keyword");
+                    fields.put(KEYWORD, keyword);
+                    keyword.put("type",KEYWORD);
 
                 }
                 else if (topTypeToHandle == String.class) {
@@ -123,8 +125,8 @@ public class MappingController {
                         Map<String, Object> fields = new HashMap<>();
                         fieldDefinition.put("fields", fields);
                         Map<String, Object> keyword = new LinkedHashMap<>();
-                        fields.put("keyword", keyword);
-                        keyword.put("type", "keyword");
+                        fields.put(KEYWORD, keyword);
+                        keyword.put("type", KEYWORD);
                         if (esInfo != null && esInfo.ignoreAbove() > 0) {
                             keyword.put("ignore_above", esInfo.ignoreAbove());
                         }
@@ -135,7 +137,7 @@ public class MappingController {
                     fieldDefinition.put("type", "boolean");
                 } else {
                     Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
-                    fieldDefinition.put("properties", otherType);
+                    fieldDefinition.put(PROPERTIES, otherType);
                 }
                 return fieldDefinition;
             } else {

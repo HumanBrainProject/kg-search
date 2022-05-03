@@ -61,6 +61,7 @@ public class Search {
     private final KGv2 kgV2;
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
+    private final static String SOURCE = "_source";
 
     @Value("${eu.ebrains.kg.commit}")
     String commit;
@@ -94,7 +95,7 @@ public class Search {
     public Map<String, Object> getLabels() {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         Map<String, Object> result = new HashMap<>();
-        result.put("_source", labelsController.generateLabels());
+        result.put(SOURCE, labelsController.generateLabels());
         result.put("authEndpoint", authEndpoint);
         if(StringUtils.isNotBlank(commit)){
             result.put("commit", commit);
@@ -103,7 +104,7 @@ public class Search {
     }
 
     @GetMapping("/groups")
-    public ResponseEntity<?> getGroups(Principal principal) {
+    public ResponseEntity<?> getGroups(Principal principal) { //NOSONAR
         if (searchController.isInInProgressRole(principal)) {
             return ResponseEntity.ok(Arrays.asList(
                     Map.of("name", "curated",
@@ -128,14 +129,14 @@ public class Search {
             if(translatorModel!=null){
                 TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV2translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
                 if(v!=null){
-                   return ResponseEntity.ok(Map.of("_source", v));
+                   return ResponseEntity.ok(Map.of(SOURCE, v));
                 }
             }
             translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV1translator()!=null && m.getV1translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
             if(translatorModel!=null){
                 TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV1translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
                 if(v!=null){
-                    return ResponseEntity.ok(Map.of("_source", v));
+                    return ResponseEntity.ok(Map.of(SOURCE, v));
                 }
             }
             return ResponseEntity.notFound().build();
@@ -153,7 +154,7 @@ public class Search {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
                 final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, true);
                 if(v!=null) {
-                    return queryId == null ? null : ResponseEntity.ok(Map.of("_source", v));
+                    return queryId == null ? null : ResponseEntity.ok(Map.of(SOURCE, v));
                 }
             }
             return ResponseEntity.notFound().build();
@@ -165,7 +166,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/documents/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) {
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) { //NOSONAR
         String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
@@ -176,7 +177,7 @@ public class Search {
 
 
     @GetMapping("/repositories/{id}/files/live")
-    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId,
+    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId, //NOSONAR
                                                      @RequestParam(required = false, name = "searchAfter") String searchAfter,
                                                      @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                      @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -187,8 +188,6 @@ public class Search {
                 return ResponseEntity.badRequest().build();
             }
             try {
-                //FIXME fix the files for live mechanism
-                //kgV3.fetchInstance(repositoryId, DataStage.IN_PROGRESS);
                 return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryId, searchAfter, size, format, groupingType);
                 
             } catch (WebClientResponseException e) {
@@ -200,7 +199,7 @@ public class Search {
     }
 
     @GetMapping("/repositories/{id}/files/formats/live")
-    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId,
+    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId, //NOSONAR
                                                      Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -215,7 +214,7 @@ public class Search {
     }
 
     @GetMapping("/repositories/{id}/files/groupingTypes/live")
-    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId,
+    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId, //NOSONAR
                                                      Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -230,7 +229,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files/formats")
-    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String repositoryId) {
+    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String repositoryId) { //NOSONAR
         if (!MetaModelUtils.isValidUUID(repositoryId)) {
             return ResponseEntity.badRequest().build();
         }
@@ -238,7 +237,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files/formats")
-    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId,
+    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId, //NOSONAR
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -251,7 +250,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String repositoryId) {
+    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String repositoryId) { //NOSONAR
         if (!MetaModelUtils.isValidUUID(repositoryId)) {
             return ResponseEntity.badRequest().build();
         }
@@ -259,7 +258,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId,
+    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId, //NOSONAR
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -272,7 +271,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
+    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id, //NOSONAR
                                                        @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                        @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -284,7 +283,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id,
+    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id, //NOSONAR
                                                         @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                         @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                         @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -301,7 +300,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/documents/{type}/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) {
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) { //NOSONAR
         String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
@@ -311,7 +310,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/documents/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) {
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) { //NOSONAR
         if (searchController.isInInProgressRole(principal)) {
             try {
                 String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
@@ -325,7 +324,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/documents/{type}/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) {
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) { //NOSONAR
         if (searchController.isInInProgressRole(principal)) {
             try {
                 String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
@@ -339,7 +338,7 @@ public class Search {
     }
 
     @PostMapping("/groups/public/search")
-    public ResponseEntity<?> searchPublic(@RequestBody String payload) throws JsonProcessingException {
+    public ResponseEntity<?> searchPublic(@RequestBody String payload) throws JsonProcessingException { //NOSONAR
         try {
             return ResponseEntity.ok(searchController.getResult(payload, DataStage.RELEASED));
         } catch (WebClientResponseException e) {
@@ -348,7 +347,7 @@ public class Search {
     }
 
     @PostMapping("/groups/curated/search")
-    public ResponseEntity<?> searchCurated(@RequestBody String payload, Principal principal) throws JsonProcessingException {
+    public ResponseEntity<?> searchCurated(@RequestBody String payload, Principal principal) throws JsonProcessingException { //NOSONAR
         if (searchController.isInInProgressRole(principal)) {
             try {
                 return ResponseEntity.ok(searchController.getResult(payload, DataStage.IN_PROGRESS));

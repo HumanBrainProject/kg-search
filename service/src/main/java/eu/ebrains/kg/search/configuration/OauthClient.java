@@ -87,7 +87,7 @@ public class OauthClient {
         oauth2.setDefaultClientRegistrationId("kg");
         return WebClient.builder().exchangeStrategies(exchangeStrategies).apply(oauth2.oauth2Configuration()).filter((clientRequest, nextFilter) ->{
             ClientRequest updatedHeaders = ClientRequest.from(clientRequest).headers(h -> {
-                h.put("Client-Authorization", h.get("Authorization"));
+                h.put("Client-Authorization", h.get(Constants.AUTHORIZATION));
             }).build();
             return nextFilter.exchange(updatedHeaders);
         }).build();
@@ -103,10 +103,10 @@ public class OauthClient {
             ClientRequest updatedHeaders = ClientRequest.from(clientRequest).headers(h -> {
                 //Spring adds the oauth2 bearer token to the standard "Authorization" header -> we want it to be sent as
                 // "Client-Authorization" though to let the user token be handed in properly.
-                h.put("Client-Authorization", h.get("Authorization"));
-                List<String> userAuth = h.get("User-Authorization");
-                h.put("Authorization", userAuth);
-                h.remove("User-Authorization");
+                h.put("Client-Authorization", h.get(Constants.AUTHORIZATION));
+                List<String> userAuth = h.get(Constants.USER_AUTHORIZATION);
+                h.put(Constants.AUTHORIZATION, userAuth);
+                h.remove(Constants.USER_AUTHORIZATION);
             }).build();
             return nextFilter.exchange(updatedHeaders);
         }).defaultRequest(r -> {
@@ -115,7 +115,7 @@ public class OauthClient {
              *  thread and we therefore have access to the original request. We store it in a temporary header since otherwise
              *  it would be overwritten by the above exchange filter.
              */
-            r.header("User-Authorization", request.getHeader("Authorization"));
+            r.header(Constants.USER_AUTHORIZATION, request.getHeader(Constants.AUTHORIZATION));
         }).build();
     }
 

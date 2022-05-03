@@ -44,7 +44,7 @@ public class Sitemap {
     }
 
     @GetMapping
-    public ResponseEntity<?> generateSitemap() {
+    public ResponseEntity<?> generateSitemap() { //NOSONAR
         try {
             SitemapXML sitemapXML = sitemapController.getSitemap();
             if(sitemapXML == null) {

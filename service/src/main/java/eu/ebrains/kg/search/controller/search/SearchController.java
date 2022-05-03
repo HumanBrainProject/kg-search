@@ -63,6 +63,7 @@ public class SearchController {
     private final ESServiceClient esServiceClient;
     private final MetaModelUtils utils;
     private final UserInfoRoles userInfoRoles;
+    private final static String TOTAL = "total";
 
     public SearchController(ESServiceClient esServiceClient, MetaModelUtils utils, UserInfoRoles userInfoRoles) throws JsonProcessingException {
         this.esServiceClient = esServiceClient;
@@ -89,10 +90,10 @@ public class SearchController {
                     .sorted()
                     .collect(Collectors.toList());
 
-            result.put("total", formats.size());
+            result.put(TOTAL, formats.size());
             result.put("data", formats);
         } else {
-            result.put("total", 0);
+            result.put(TOTAL, 0);
             result.put("data", Collections.emptyList());
         }
         return result;
@@ -104,19 +105,19 @@ public class SearchController {
             List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
             List<Object> data = hits.stream().map(e -> e.getSource()).filter(Objects::nonNull).collect(Collectors.toList());
             ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
-            result.put("total", total.getValue());
+            result.put(TOTAL, total.getValue());
             result.put("data", data);
             if (hits.size() > 0) {
                 result.put("searchAfter", hits.get(hits.size() - 1).getId());
             }
         } else {
-            result.put("total", 0);
+            result.put(TOTAL, 0);
             result.put("data", Collections.emptyList());
         }
         return result;
     }
 
-    private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) {
+    private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) { //NOSONAR
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             Map<String, String> aggs = Map.of("patterns", field);
@@ -128,15 +129,15 @@ public class SearchController {
         }
     }
 
-    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) {
+    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) { //NOSONAR
         return getAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
     }
 
-    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) {
+    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) { //NOSONAR
         return getAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) {
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) { //NOSONAR
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);
