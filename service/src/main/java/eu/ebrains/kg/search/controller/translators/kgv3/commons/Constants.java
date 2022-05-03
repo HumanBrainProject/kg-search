@@ -1,8 +1,12 @@
 package eu.ebrains.kg.search.controller.translators.kgv3.commons;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Arrays;
 import java.util.List;
 
+@NoArgsConstructor(access= AccessLevel.PRIVATE)
 public final class Constants {
 
     public static final String OPENMINDS_ROOT = "https://openminds.ebrains.eu/";

@@ -30,6 +30,8 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access= AccessLevel.PRIVATE)
 public class Helpers {
     private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
     private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
@@ -189,7 +192,7 @@ public class Helpers {
                     simpleDOI = digitalIdentifier;
                 }
                 //We force the replacement of special characters in the link
-                absoluteDOI = absoluteDOI.replaceAll("<", "%3C").replaceAll(">", "%3E");
+                absoluteDOI = absoluteDOI.replace("<", "%3C").replace(">", "%3E");
                 String doiLink = String.format("[DOI: %s]\n[DOI: %s]: %s", simpleDOI, simpleDOI, absoluteDOI);
                 if (doiCitation != null) {
                     return String.format("%s\n%s", doiCitation, doiLink);

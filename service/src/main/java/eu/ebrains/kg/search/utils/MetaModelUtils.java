@@ -109,7 +109,7 @@ public class MetaModelUtils {
     }
 
     public static String getIndexNameForClass(Class<?> clazz){
-        return getNameForClass(clazz).toLowerCase().replaceAll(" ", "_");
+        return getNameForClass(clazz).toLowerCase().replace(" ", "_");
     }
 
 

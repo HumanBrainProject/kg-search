@@ -24,7 +24,10 @@
 package eu.ebrains.kg.search.utils;
 
 import eu.ebrains.kg.search.model.DataStage;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access= AccessLevel.PRIVATE)
 public class ESHelper {
 
     private final static String INDEX_PREFIX_IN_PROGRESS = "in_progress";

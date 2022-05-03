@@ -23,6 +23,8 @@
 
 package eu.ebrains.kg.search.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -33,6 +35,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access= AccessLevel.PRIVATE)
 public class IdUtils {
     public static String getUUID(String id) {
         if (StringUtils.isBlank(id)) {

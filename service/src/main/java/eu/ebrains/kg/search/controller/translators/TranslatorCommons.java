@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("java:S1118") //We inherit this one from other classes.
 public class TranslatorCommons {
 
     public static <T> T firstItemOrNull(List<T> list) {
