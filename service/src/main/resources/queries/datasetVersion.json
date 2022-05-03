@@ -87,6 +87,14 @@
       "path": "https://openminds.ebrains.eu/vocab/releaseDate"
     },
     {
+      "propertyName": "query:firstReleasedAt",
+      "path": "https://core.kg.ebrains.eu/vocab/meta/firstReleasedAt"
+    },
+    {
+      "propertyName": "query:lastReleasedAt",
+      "path": "https://core.kg.ebrains.eu/vocab/meta/lastReleasedAt"
+    },
+    {
       "propertyName": "query:relatedPublications",
       "path": "https://openminds.ebrains.eu/vocab/relatedPublication",
       "ensureOrder": true,

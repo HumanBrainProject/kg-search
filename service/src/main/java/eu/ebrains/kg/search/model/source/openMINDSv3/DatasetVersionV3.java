@@ -50,6 +50,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String version;
     private String versionInnovation;
     private Date releaseDate;
+    private Date firstReleasedAt;
+    private Date lastReleasedAt;
     private List<RelatedPublication> relatedPublications;
     private ExternalRef license;
     private List<PersonOrOrganizationRef> author;

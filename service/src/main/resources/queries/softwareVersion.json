@@ -196,6 +196,18 @@
       "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
     },
     {
+      "propertyName": "query:releaseDate",
+      "path": "https://openminds.ebrains.eu/vocab/releaseDate"
+    },
+    {
+      "propertyName": "query:firstReleasedAt",
+      "path": "https://core.kg.ebrains.eu/vocab/meta/firstReleasedAt"
+    },
+    {
+      "propertyName": "query:lastReleasedAt",
+      "path": "https://core.kg.ebrains.eu/vocab/meta/lastReleasedAt"
+    },
+    {
       "propertyName": "query:publications",
       "path": "https://openminds.ebrains.eu/vocab/relatedPublication",
       "ensureOrder": true,

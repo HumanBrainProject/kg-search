@@ -49,6 +49,8 @@ public class MetadataModelVersionV3 extends SourceInstanceV3 {
     private List<String> keyword;
     private String versionInnovation;
     private Date releaseDate;
+    private Date firstReleasedAt;
+    private Date lastReleasedAt;
     private List<RelatedPublication> relatedPublications;
     private List<ExternalRef> license;
     private Copyright copyright;

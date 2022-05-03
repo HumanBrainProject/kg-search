@@ -79,12 +79,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     private List<String> identifier;
 
     @JsonProperty("first_release")
-    //TODO Set from DatasetVersionV3
     @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
 
     @JsonProperty("last_release")
-    //TODO Set from DatasetVersionV3
     @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 

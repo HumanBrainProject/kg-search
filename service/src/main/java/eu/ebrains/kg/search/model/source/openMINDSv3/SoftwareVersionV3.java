@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -47,6 +48,9 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private List<PersonOrOrganizationRef> custodian;
     private String description;
     private String versionInnovation;
+    private Date releaseDate;
+    private Date firstReleasedAt;
+    private Date lastReleasedAt;
     private List<RelatedPublication> publications;
     private List<FullNameRef> applicationCategory;
     private List<FullNameRef> operatingSystem;
