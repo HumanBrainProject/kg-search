@@ -50,7 +50,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     public final static String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
 
     public static String createEmbargoInProgressMessage(String containerUrl){
-        String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replaceAll("api/buckets/", "") : String.format("https://data.kg.ebrains.eu/files/list?url=%s", containerUrl);
+        String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replace("api/buckets/", "") : String.format("https://data.kg.ebrains.eu/files/list?url=%s", containerUrl);
         return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", endpoint);
     }
 

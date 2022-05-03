@@ -37,11 +37,6 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false, 1000)
     );
 
-    public static TranslatorModel<?,?,?,?> getModelByType(String type){
-        return MODELS.stream().filter(m -> m.getV3translator()!=null && m.getV3translator().semanticTypes().contains(type)).findFirst().orElse(null);
-    }
-
-
     private final Class<Output> targetClass;
     private final Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> v1translator;
     private final Translator<v2Input, Output, ? extends ResultsOfKGv2<v2Input>> v2translator;
@@ -78,16 +73,16 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
         return targetClass;
     }
 
-    public Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> getV1translator() {
+    public Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> getV1translator() { //NOSONAR
         return v1translator;
     }
 
 
-    public Translator<v2Input, Output, ? extends ResultsOfKGv2<v2Input>> getV2translator() {
+    public Translator<v2Input, Output, ? extends ResultsOfKGv2<v2Input>> getV2translator() { //NOSONAR
         return v2translator;
     }
 
-    public TranslatorV3<v3Input, Output, ? extends ResultsOfKGv3<v3Input>> getV3translator() {
+    public TranslatorV3<v3Input, Output, ? extends ResultsOfKGv3<v3Input>> getV3translator() { //NOSONAR
         return v3translator;
     }
 

@@ -49,7 +49,7 @@ public class KGV2ServiceClient extends KGServiceClient {
         this.kgCoreEndpoint = kgCoreEndpoint;
     }
 
-    private static final String vocab = "https://schema.hbp.eu/search/";
+    private static final String VOCAB = "https://schema.hbp.eu/search/";
 
     @Cacheable(value = "authEndpoint", unless = "#result == null")
     public String getAuthEndpoint() {
@@ -74,7 +74,7 @@ public class KGV2ServiceClient extends KGServiceClient {
             return null;
         }
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
-        String url = String.format("%s/query/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
+        String url = String.format("%s/query/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, VOCAB);
         return executeCallForIndexing(clazz, url);
     }
 
@@ -83,7 +83,7 @@ public class KGV2ServiceClient extends KGServiceClient {
             return null;
         }
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
-        String url = String.format("%s/query/%s/search/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
+        String url = String.format("%s/query/%s/search/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, VOCAB, from, size);
         return executeCallForIndexing(clazz, url);
     }
 
@@ -92,7 +92,7 @@ public class KGV2ServiceClient extends KGServiceClient {
             return null;
         }
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED : DatabaseScope.RELEASED;
-        String url = String.format("%s/query/%s/search/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
+        String url = String.format("%s/query/%s/search/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, VOCAB);
         try {
             return executeCallForInstance(clazz, url, asServiceAccount);
         } catch (WebClientResponseException.NotFound e){

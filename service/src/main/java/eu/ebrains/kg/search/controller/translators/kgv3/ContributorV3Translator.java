@@ -43,6 +43,10 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
 
     private static final String CONTRIBUTOR_ORGANIZATION_QUERY_ID = "00ef38c9-2532-4403-a292-5f6b3ccb85a9";
 
+    private static final String OPENMINDS_PERSON = "https://openminds.ebrains.eu/core/Person";
+
+    private static final String OPENMINDS_ORGANIZATION = "https://openminds.ebrains.eu/core/Organization";
+
     public static class Result extends ResultsOfKGv3<PersonOrOrganizationV3> {
     }
 
@@ -64,10 +68,12 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
     @Override
     public String getQueryFileName(String type) {
         switch (type) {
-            case "https://openminds.ebrains.eu/core/Person":
+            case OPENMINDS_PERSON:
                 return "contributorPerson";
-            case "https://openminds.ebrains.eu/core/Organization":
+            case OPENMINDS_ORGANIZATION:
                 return "contributorOrganization";
+            default:
+                break;
         }
         return null;
     }
@@ -75,9 +81,9 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
     @Override
     public String getQueryIdByType(String type) {
         switch (type) {
-            case "https://openminds.ebrains.eu/core/Person":
+            case OPENMINDS_PERSON:
                 return CONTRIBUTOR_QUERY_ID;
-            case "https://openminds.ebrains.eu/core/Organization":
+            case OPENMINDS_ORGANIZATION:
                 return CONTRIBUTOR_ORGANIZATION_QUERY_ID;
             default:
                 throw new RuntimeException(String.format("There is no query defined for type %s", type));
@@ -91,7 +97,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
 
     @Override
     public List<String> semanticTypes() {
-        return Arrays.asList("https://openminds.ebrains.eu/core/Organization", "https://openminds.ebrains.eu/core/Person");
+        return Arrays.asList(OPENMINDS_ORGANIZATION, OPENMINDS_PERSON);
     }
 
 

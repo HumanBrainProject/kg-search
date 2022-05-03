@@ -232,9 +232,6 @@ public class Software implements TargetInstance {
     }
 
     public static class Version {
-        public Version() {
-        }
-
         @FieldInfo(label = "Version", groupBy = true)
         private TargetInternalReference version;
 
