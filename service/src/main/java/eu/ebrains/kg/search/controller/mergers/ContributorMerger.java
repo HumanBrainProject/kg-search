@@ -20,16 +20,12 @@ public class ContributorMerger extends Merger<Contributor> {
             parent.getIdentifier().addAll(child.getIdentifier().stream().filter(d -> !parent.getIdentifier().contains(d)).collect(Collectors.toList()));
         }
         if (child.getFirstRelease() != null) {
-            if (parent.getFirstRelease() == null) {
-                parent.setFirstRelease(child.getFirstRelease());
-            } else if (child.getFirstRelease().getValue().before(parent.getFirstRelease().getValue())) {
+            if (parent.getFirstRelease() == null || child.getFirstRelease().getValue().before(parent.getFirstRelease().getValue())) {
                 parent.setFirstRelease(child.getFirstRelease());
             }
         }
         if (child.getLastRelease() != null) {
-            if (parent.getLastRelease() == null) {
-                parent.setLastRelease(child.getLastRelease());
-            } else if (child.getLastRelease().getValue().after(parent.getLastRelease().getValue())) {
+            if (parent.getLastRelease() == null || child.getLastRelease().getValue().after(parent.getLastRelease().getValue())) {
                 parent.setLastRelease(child.getLastRelease());
             }
         }

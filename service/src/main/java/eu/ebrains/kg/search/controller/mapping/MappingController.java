@@ -82,7 +82,7 @@ public class MappingController {
         allFields.sort(Comparator.comparing(f -> utils.getPropertyName(f.getField())));
         allFields.forEach(field -> {
             Map<String, Object> fieldDefinition = handleField(field, parentInfo);
-            if (fieldDefinition != null) {
+            if (!fieldDefinition.isEmpty()) {
                 properties.put(utils.getPropertyName(field.getField()), fieldDefinition);
             }
         });
@@ -141,7 +141,7 @@ public class MappingController {
                 }
                 return fieldDefinition;
             } else {
-                return null;
+                return Collections.emptyMap();
             }
         } catch (
                 ClassNotFoundException e) {

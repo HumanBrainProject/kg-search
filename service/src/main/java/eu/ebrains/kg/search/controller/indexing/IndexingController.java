@@ -38,7 +38,6 @@ import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -53,7 +52,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.Helpers.*;
+import static eu.ebrains.kg.search.controller.translators.Helpers.collectAllTargetInternalReferences;
 
 @Component
 public class IndexingController {
@@ -189,7 +188,6 @@ public class IndexingController {
         final Set<String> existingRefs = elasticSearchController.existingDocuments(refs, dataStage);
         references.forEach(r -> {
             if(r.getReference()!=null && !existingRefs.contains(r.getReference())){
-//                logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference", r.getReference(), dataStage));
                 r.setReference(null);
             }
         });

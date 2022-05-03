@@ -24,19 +24,12 @@
 package eu.ebrains.kg.search.controller.kg;
 
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
-import eu.ebrains.kg.search.model.source.SourceInstanceIdentifierV1andV2;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class KGv2 implements KG {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final KGV2ServiceClient kgV2ServiceClient;
-
-    private final int PAGE_SIZE = 20;
 
     public KGv2(KGV2ServiceClient KGV2ServiceClient) {
         this.kgV2ServiceClient = KGV2ServiceClient;
@@ -46,8 +39,6 @@ public class KGv2 implements KG {
     public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, int from, int size){
         return kgV2ServiceClient.executeQuery(queryId, dataStage, clazz, from, size);
     }
-
-    private static class ResultsOfKGV2Source extends ResultsOfKGv2<SourceInstanceIdentifierV1andV2> {}
 
     @Override
     public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String query, String id, boolean asServiceAccount) {

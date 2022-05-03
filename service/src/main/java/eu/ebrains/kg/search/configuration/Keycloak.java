@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.configuration;
 
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.keycloak.adapters.springsecurity.management.HttpSessionManager;
@@ -64,8 +63,6 @@ public class Keycloak extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http.authorizeRequests().anyRequest().permitAll().and().csrf().disable();
-
-       // http.oauth2ResourceServer(oauth2 -> oauth2.opaqueToken(token -> token.introspectionUri(this.introspectionUri).introspectionClientCredentials(this.clientId, this.clientSecret)));
     }
 
 

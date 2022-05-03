@@ -47,7 +47,13 @@ import java.util.stream.Collectors;
 @Component
 public class ESServiceClient {
 
-    private final static Integer esQuerySize = 10000;
+    private final static Integer ES_QUERY_SIZE = 10000;
+
+    private final static String QUERY = "query";
+
+    private final static String INDEX = "index";
+
+    private final static String IDENTIFIER = "identifier";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -85,7 +91,7 @@ public class ESServiceClient {
                     " \"sort\": [\n" +
                     "    {\"_id\": \"asc\"}\n" +
                     " ]\n" +
-                    "}", esQuerySize);
+                    "}", ES_QUERY_SIZE);
         }
         return String.format("{\n" +
                 " \"size\": %d,\n" +
@@ -95,7 +101,7 @@ public class ESServiceClient {
                 "  \"search_after\": [\n" +
                 "      \"%s\"\n" +
                 "   ]\n" +
-                "}", esQuerySize, id);
+                "}", ES_QUERY_SIZE, id);
     }
 
     private String getAgg(String field) {
@@ -207,7 +213,7 @@ public class ESServiceClient {
                 "size", sizeValue,
                 "sort", sortValue,
                 "search_after", searchAfterValue,
-                "query", queryValue,
+                QUERY, queryValue,
                 "track_total_hits", "true"
         );
 
@@ -226,7 +232,7 @@ public class ESServiceClient {
         Map<String, String> parameters = Map.of(
                 "size", "0",
                 "aggs", aggsValue,
-                "query", queryValue
+                QUERY, queryValue
         );
 
         return getPayload(parameters);
@@ -249,7 +255,7 @@ public class ESServiceClient {
                     "    }\n" +
                     "  },\n" +
                     " \"_source\": \"false\"\n" +
-                    "}", esQuerySize, type);
+                    "}", ES_QUERY_SIZE, type);
         }
         return String.format("{\n" +
                 " \"size\": %d,\n" +
@@ -269,7 +275,7 @@ public class ESServiceClient {
                 "    }\n" +
                 "  },\n" +
                 " \"_source\": \"false\"\n" +
-                "}", esQuerySize, id, type);
+                "}", ES_QUERY_SIZE, id, type);
     }
 
     @Getter
@@ -309,7 +315,7 @@ public class ESServiceClient {
             ElasticSearchResult documents = getPaginatedDocuments(index, searchAfter);
             List<ElasticSearchDocument> hits = documents.getHits().getHits();
             result.addAll(hits);
-            searchAfter = hits.size() < esQuerySize ? null:hits.get(hits.size()-1).getId();
+            searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
             continueSearch = searchAfter != null;
         }
         return result;
@@ -323,7 +329,7 @@ public class ESServiceClient {
             ElasticSearchResult documents = getPaginatedDocumentIds(index, searchAfter, type);
             List<ElasticSearchDocument> hits = documents.getHits().getHits();
             hits.forEach(hit -> result.add(hit.getId()));
-            searchAfter = hits.size() < esQuerySize ? null:hits.get(hits.size()-1).getId();
+            searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
             continueSearch = searchAfter != null;
         }
         return result;
@@ -408,7 +414,7 @@ public class ESServiceClient {
     }
 
     public void reindex(String source, String target){
-        final Map<String, Map<String, String>> payload = Map.of("source", Map.of("index", source), "dest", Map.of("index", target));
+        final Map<String, Map<String, String>> payload = Map.of("source", Map.of(INDEX, source), "dest", Map.of(INDEX, target));
          webClient.post().uri(String.format("%s/_reindex", elasticSearchEndpoint))
                 .body(BodyInserters.fromValue(payload)).retrieve().bodyToMono(Void.class).block();
     }
@@ -433,7 +439,7 @@ public class ESServiceClient {
                 .block();
         if (result != null && ((boolean) result.get("errors"))) {
             ((List<Map<String, Object>>) result.get("items")).forEach(item -> {
-                Map<String, Object> instance = (Map) item.get("index");
+                Map<String, Object> instance = (Map) item.get(INDEX);
                 if ((int) instance.get("status") >= 400) {
                     logger.error(instance.toString());
                 }
@@ -452,11 +458,11 @@ public class ESServiceClient {
         int numberOfPages = (identifiers.size()/pageSize)+1;
         Set<String> result = new HashSet<>();
         for(int p = 0; p<numberOfPages; p++){
-            Object query = Map.of("query",
+            Object query = Map.of(QUERY,
                     Map.of("terms",
-                            Map.of("identifier", identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
+                            Map.of(IDENTIFIER, identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
                     ),
-                    "_source", Collections.singletonList("identifier"));
+                    "_source", Collections.singletonList(IDENTIFIER));
             ElasticSearchResult r = webClient.post()
                     .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, pageSize))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -467,7 +473,7 @@ public class ESServiceClient {
             if(r!=null && r.getHits()!=null && r.getHits().getHits()!=null){
                 r.getHits().getHits().forEach(esDocument -> {
                     if(esDocument != null && esDocument.getSource() !=null) {
-                        result.addAll((List)esDocument.getSource().get("identifier"));
+                        result.addAll((List)esDocument.getSource().get(IDENTIFIER));
                     }
                 });
             }

@@ -51,15 +51,25 @@ public class KGv3 implements KG {
     }
 
     public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
-        final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount);
+        final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount); //NOSONAR
         if (instance != null) {
             final Object data = instance.get("data");
             if (data instanceof Map) {
                 final Object type = ((Map) data).get("@type");
-                return type instanceof String ? Collections.singletonList((String) type) : type instanceof List ? (List<String>) type : null;
+                return getType(type);
             }
         }
-        return null;
+        return Collections.emptyList();
+    }
+
+    private List<String> getType(Object type) {
+        if (type instanceof String) {
+            return Collections.singletonList((String) type);
+        }
+        if (type instanceof List) {
+            return (List<String>) type;
+        }
+        return Collections.emptyList();
     }
 
 
