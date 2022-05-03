@@ -36,33 +36,33 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class RestControllerAdvice {
 
     @ExceptionHandler({WebClientResponseException.Unauthorized.class})
-    protected ResponseEntity<?> unauthorized(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<?> unauthorized(RuntimeException ex, WebRequest request) { //NOSONAR
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler({WebClientResponseException.Forbidden.class})
-    protected ResponseEntity<?> forbidden(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<?> forbidden(RuntimeException ex, WebRequest request) { //NOSONAR
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @ExceptionHandler({WebClientResponseException.InternalServerError.class})
-    protected ResponseEntity<?> internalServerError(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<?> internalServerError(RuntimeException ex, WebRequest request) { //NOSONAR
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @ExceptionHandler({TranslationException.class})
-    protected ResponseEntity<?> translationExceptionError(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<?> translationExceptionError(RuntimeException ex, WebRequest request) { //NOSONAR
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
 
     @ExceptionHandler({WebClientResponseException.NotFound.class})
-    protected ResponseEntity<?> notFound(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<?> notFound(RuntimeException ex, WebRequest request) { //NOSONAR
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
-    protected ResponseEntity<?> illegalArgument(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<?> illegalArgument(RuntimeException ex, WebRequest request) { //NOSONAR
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
