@@ -50,6 +50,7 @@ public class KGv3 implements KG {
         return kgServiceClient.executeQueryForInstance(clazz, dataStage, queryId, id, asServiceAccount);
     }
 
+    @SuppressWarnings("java:S3740") // we keep the generics intentionally
     public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
         final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount); 
         if (instance != null) {

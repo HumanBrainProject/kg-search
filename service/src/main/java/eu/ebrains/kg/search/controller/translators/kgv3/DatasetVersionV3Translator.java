@@ -507,7 +507,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return (childValue == null && parentValue == null) || (childValue != null && childValue.equals(parentValue));
     }
 
-
+    @SuppressWarnings("java:S3740") // we keep the generics intentionally
     private <T extends DatasetVersion.AbstractTissueSampleOrTissueSampleCollection> T fillIndividualTissueSampleInformation(T tissueSample, DatasetVersionV3.TissueSampleOrTissueSampleCollection t, DatasetVersion.AbstractTissueSampleOrTissueSampleCollection parent) {
         String type = "Tissue sample";
         if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains(Constants.OPENMINDS_ROOT + "core/TissueSampleCollection")){
@@ -577,7 +577,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return tissueSample;
     }
 
-
+    @SuppressWarnings("java:S3740") // we keep the generics intentionally
     private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
         String type = "Subject";
         if(s.getSubjectType()!=null && s.getSubjectType().contains(Constants.OPENMINDS_ROOT + "core/SubjectGroup")){

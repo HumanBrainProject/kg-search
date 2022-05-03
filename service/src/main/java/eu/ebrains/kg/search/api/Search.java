@@ -52,6 +52,7 @@ import java.util.*;
 
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
+@SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class Search {
     private final KGV2ServiceClient KGV2ServiceClient;
     private final ESServiceClient esServiceClient;
@@ -117,6 +118,7 @@ public class Search {
         }
     }
 
+    @SuppressWarnings("java:S3740") // we keep the generics intentionally
     @GetMapping("/{org}/{domain}/{schema}/{version}/{id}/live")
     public ResponseEntity<Map> translate(@PathVariable("org") String org,
                                          @PathVariable("domain") String domain,
@@ -145,6 +147,7 @@ public class Search {
         }
     }
 
+    @SuppressWarnings("java:S3740") // we keep the generics intentionally
     @GetMapping("/{id}/live")
     public ResponseEntity<Map> translate(@PathVariable("id") String id) throws TranslationException {
         try {

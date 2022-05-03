@@ -44,6 +44,7 @@ public class Sitemap {
     }
 
     @GetMapping
+    @SuppressWarnings("java:S1452") // we keep the generics intentionally
     public ResponseEntity<?> generateSitemap() { 
         try {
             SitemapXML sitemapXML = sitemapController.getSitemap();

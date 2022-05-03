@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 
 
 @Component
+@SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class SearchController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ObjectMapper objectMapper = new ObjectMapper();

@@ -186,17 +186,17 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Preparation", layout = "summary")
     private List<TargetInternalReference> preparation;
 
-    @Deprecated(forRemoval = true)
     /**
      * @deprecated - split up in openMINDS -> see technique / experimental approach
      */
+    @Deprecated(forRemoval = true)
     @FieldInfo(label = "Modality", type = FieldInfo.Type.TEXT, visible = false, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modalityForFilter;
 
-    @Deprecated(forRemoval = true)
     /**
      * @deprecated - split up in openMINDS -> see technique / experimental approach
      */
+    @Deprecated(forRemoval = true)
     @FieldInfo(label = "Modality", type = FieldInfo.Type.TEXT)
     private List<Value<String>> modality;
 
@@ -255,27 +255,27 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(layout = "Publications", markdown = true, labelHidden = true)
     private List<Value<String>> publications;
 
-    @Deprecated(forRemoval = true)
     /**
      * @deprecated - split up in openMINDS -> see technique / experimental approach
      */
+    @Deprecated(forRemoval = true)
     @FieldInfo(label = "Methods", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> methodsForFilter;
 
-    @Deprecated(forRemoval = true)
     /**
      * @deprecated - split up in openMINDS -> see technique / experimental approach
      */
+    @Deprecated(forRemoval = true)
     @FieldInfo(label = "Methods", order = 2, layout = "summary", overview = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
     private List<Value<String>> methods;
 
     @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     private List<Value<String>> keywords;
 
-    @Deprecated(forRemoval = true)
     /**
      * @deprecated  use subjects for openMINDS instead
      */
+    @Deprecated(forRemoval = true)
     @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
     private List<Children<OldSubject>> subjectGroupOrSingleSubjectOld;
 

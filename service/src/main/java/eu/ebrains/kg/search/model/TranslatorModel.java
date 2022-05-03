@@ -14,6 +14,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetInstance> {
 
     public static final List<TranslatorModel<?,?,?,?>> MODELS = Arrays.asList(

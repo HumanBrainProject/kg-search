@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("java:S3740") // we keep the generics intentionally
 public class ListOrSingleStringAsListDeserializer extends JsonDeserializer<List> { 
 
     @Override

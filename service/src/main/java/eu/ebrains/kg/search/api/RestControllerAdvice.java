@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+@SuppressWarnings("java:S1452") // we keep the generics intentionally
 @ControllerAdvice(annotations = RestController.class)
 public class RestControllerAdvice {
 

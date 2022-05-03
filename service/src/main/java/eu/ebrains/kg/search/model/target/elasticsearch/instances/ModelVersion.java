@@ -25,7 +25,6 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FileRepository;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
@@ -36,11 +35,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -99,7 +95,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
      * @deprecated not needed in openMINDS anymore since the id is consistent across systems
      */
     @FieldInfo(layout = "header")
-    @Deprecated
+    @Deprecated(forRemoval = true)
     private Value<String> editorId;
 
     @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
