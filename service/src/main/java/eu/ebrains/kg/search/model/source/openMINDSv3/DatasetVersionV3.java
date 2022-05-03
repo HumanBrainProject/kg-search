@@ -111,11 +111,21 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
                 String maxValueStr = getValueDisplay(maxValue);
                 return String.format("%s %s - %s %s",
                         StringUtils.defaultString(minValueStr, ""),
-                        sameUnit ? "" : minValueUnit != null ? StringUtils.defaultString(minValueUnit.getFullName(), "") : "",
+                                getString(sameUnit),
                         StringUtils.defaultString(maxValueStr, ""),
                         maxValueUnit!=null ? StringUtils.defaultString(maxValueUnit.getFullName(), "") : "").trim()
                         .replaceAll(" {2,}", " ");
             }
+        }
+
+        private String getString(boolean sameUnit) {
+            if(sameUnit) {
+                return "";
+            }
+            if(minValueUnit != null) {
+                return StringUtils.defaultString(minValueUnit.getFullName(), "");
+            }
+            return "";
         }
     }
 
@@ -282,7 +292,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
                     }
                 }
             }
-            if(range.getMinValueUnit()!=null && range.getMinValue()!=null && range.getMinValueUnit()!=null && range.getMaxValue()!=null){
+            if(range.getMinValue()!=null && range.getMinValueUnit()!=null && range.getMaxValue()!=null){
                 return range;
             }
             else{

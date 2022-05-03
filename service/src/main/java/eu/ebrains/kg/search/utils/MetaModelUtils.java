@@ -80,7 +80,6 @@ public class MetaModelUtils {
             rawType = ((Class<?>) type);
         }
         if (rawType != null) {
-            //System.out.println(String.format("Getting fields for %s", type.getTypeName()));
             List<FieldWithGenericTypeInfo> result = new ArrayList<>(getAllFields(rawType.getGenericSuperclass()));
             Map<String, Type> genericTypes = genericTypes(type);
             result.addAll(Arrays.stream(rawType.getDeclaredFields()).filter(field -> !Modifier.isStatic(field.getModifiers())).map(field ->

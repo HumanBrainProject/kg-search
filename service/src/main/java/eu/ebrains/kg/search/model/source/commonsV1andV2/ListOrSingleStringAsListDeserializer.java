@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class ListOrSingleStringAsListDeserializer extends JsonDeserializer<List> {
+public class ListOrSingleStringAsListDeserializer extends JsonDeserializer<List> { //NOSONAR
 
     @Override
     public List<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {

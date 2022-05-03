@@ -114,7 +114,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         List<String> identifiers = IdUtils.getIdentifiersWithPrefix("Contributor", personOrOrganization.getIdentifier());
         identifiers.add(uuid);
         c.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
-        c.setTitle(value(personOrOrganization.getFullName() != null ? personOrOrganization.getFullName() : personOrOrganization.getGivenName()==null ? personOrOrganization.getFamilyName() : String.format("%s, %s", personOrOrganization.getFamilyName(), personOrOrganization.getGivenName())));
+        c.setTitle(value(getTitle(personOrOrganization)));
         if (CollectionUtils.isEmpty(personOrOrganization.getCustodianOfDataset()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfSoftware()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfMetaDataModel())&&
@@ -140,6 +140,15 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         return c;
     }
 
+    private String getTitle(PersonOrOrganizationV3 personOrOrganization) {
+        if(personOrOrganization.getFullName() != null) {
+            return personOrOrganization.getFullName();
+        }
+        if(personOrOrganization.getGivenName()==null) {
+            return personOrOrganization.getFamilyName();
+        }
+        return String.format("%s, %s", personOrOrganization.getFamilyName(), personOrOrganization.getGivenName());
+    }
 
     private List<TargetInternalReference> getReferences(List<ExtendedFullNameRefForResearchProductVersion> references){
         if(references == null){

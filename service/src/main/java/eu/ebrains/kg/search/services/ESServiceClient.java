@@ -293,7 +293,7 @@ public class ESServiceClient {
                 .retrieve()
                 .bodyToMono(ElasticSearchResult.class)
                 .block();
-        ElasticSearchResult.Hits hits = result.getHits();
+        ElasticSearchResult.Hits hits = result == null ? null:result.getHits();
         List<ElasticSearchDocument> documents = hits == null ? Collections.emptyList() : hits.getHits();
         if (documents.isEmpty()) {
             ElasticSearchDocument doc = new ElasticSearchDocument();

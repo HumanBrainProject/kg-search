@@ -44,7 +44,20 @@ public class Value<T extends Comparable<T>> implements Comparable<Value<T>>{
     @Override
     public int compareTo(Value<T> tValue) {
         T otherValue = tValue==null ? null : tValue.getValue();
-        return value == null ? otherValue == null  ? 0 : 1 : otherValue == null ? 1 : value.compareTo(otherValue);
+        return compare(otherValue);
+    }
+
+    private int compare(T otherValue) {
+        if(value == null) {
+            if(otherValue == null) {
+                return 0;
+            }
+            return 1;
+        }
+        if(otherValue == null) {
+            return 1;
+        }
+        return value.compareTo(otherValue);
     }
 
 }

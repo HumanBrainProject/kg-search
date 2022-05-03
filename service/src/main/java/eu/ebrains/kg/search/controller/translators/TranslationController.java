@@ -151,14 +151,14 @@ public class TranslationController {
                                 final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
                                 if (referenceTranslatorModel != null) {
                                     final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
-                                    try {
-                                        reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
-                                    } catch (TranslationException ignored) {}
+                                    reference = translateTargetInstance(dataStage, useSourceType, t, reference, referenceTranslatorModel, referenceQueryId);
                                 }
                             }
                             reset = reference == null;
                             cachedReferences.put(t.getReference(), reset);
-                        } catch (WebClientResponseException ignored){}
+                        } catch (WebClientResponseException ignored){
+                            logger.error("A web client exception occurred - ignoring");
+                        }
                     }
                 }
                 if (reset) {
@@ -166,6 +166,15 @@ public class TranslationController {
                 }
             });
         }
+    }
+
+    private TargetInstance translateTargetInstance(DataStage dataStage, boolean useSourceType, TargetInternalReference t, TargetInstance reference, TranslatorModel<?, ?, ?, ?> referenceTranslatorModel, String referenceQueryId) {
+        try {
+            reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
+        } catch (TranslationException ignored) {
+            logger.error("A translation exception occurred - ignoring");
+        }
+        return reference;
     }
 
 

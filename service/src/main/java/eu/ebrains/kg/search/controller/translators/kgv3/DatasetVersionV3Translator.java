@@ -107,7 +107,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);
         String containerUrl = datasetVersion.getFileRepository() != null ? datasetVersion.getFileRepository().getIri() : null;
-        boolean privateFiles = accessibility != null && accessibility != Accessibility.FREE_ACCESS;
         if (accessibility != null) {
             switch (accessibility) {
                 case CONTROLLED_ACCESS:

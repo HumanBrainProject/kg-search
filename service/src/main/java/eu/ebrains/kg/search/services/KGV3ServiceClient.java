@@ -24,8 +24,6 @@
 package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DataStage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +39,6 @@ import java.util.Map;
 
 @Component
 public class KGV3ServiceClient extends KGServiceClient{
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String kgCoreEndpoint;
 
     public KGV3ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
@@ -82,7 +79,7 @@ public class KGV3ServiceClient extends KGServiceClient{
         }
     }
 
-    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) {
+    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) { //NOSONAR
         String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
         return executeCallForInstance(Map.class, url, asServiceAccount);
     }

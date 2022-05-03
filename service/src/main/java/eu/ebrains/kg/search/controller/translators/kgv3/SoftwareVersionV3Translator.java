@@ -273,10 +273,20 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
         if(!CollectionUtils.isEmpty(softwareVersion.getComponents())){
             s.setComponents(softwareVersion.getComponents().stream().map(c -> {
-                String name = StringUtils.isNotBlank(c.getFullName()) ? c.getFullName() : StringUtils.isNotBlank(c.getFallbackFullName()) ? c.getFallbackFullName() : null;
+                String name = getName(c);
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
             }).collect(Collectors.toList()));
         }
         return s;
+    }
+
+    private String getName(SoftwareVersionV3.Component c) {
+        if(StringUtils.isNotBlank(c.getFullName())) {
+            return c.getFullName();
+        }
+        if(StringUtils.isNotBlank(c.getFallbackFullName())) {
+            return c.getFallbackFullName();
+        }
+        return null;
     }
 }
