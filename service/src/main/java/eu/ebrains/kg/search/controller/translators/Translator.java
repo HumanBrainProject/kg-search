@@ -26,7 +26,6 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -42,7 +41,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<Source>> {
-    public static final String fileProxy = "https://data.kg.ebrains.eu/files";
+    public static final String FILE_PROXY = "https://data.kg.ebrains.eu/files";
 
     public abstract Target translate(Source source, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException;
 

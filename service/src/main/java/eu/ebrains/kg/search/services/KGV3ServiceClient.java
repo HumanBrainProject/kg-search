@@ -79,7 +79,7 @@ public class KGV3ServiceClient extends KGServiceClient{
         }
     }
 
-    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) { //NOSONAR
+    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) { 
         String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
         return executeCallForInstance(Map.class, url, asServiceAccount);
     }

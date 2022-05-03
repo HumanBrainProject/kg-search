@@ -138,7 +138,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                         .map(f ->
                                 new TargetFile(
-                                        f.getPrivateAccess() ? String.format("%s?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
+                                        f.getPrivateAccess() ? String.format("%s?url=%s", Translator.FILE_PROXY, f.getAbsolutePath()) : f.getAbsolutePath(),
                                         f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
                                         f.getHumanReadableSize(),
                                         getFileImage(f.getStaticImageUrl(), false),

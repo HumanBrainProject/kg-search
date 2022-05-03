@@ -51,7 +51,7 @@ public class KGv3 implements KG {
     }
 
     public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
-        final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount); //NOSONAR
+        final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount); 
         if (instance != null) {
             final Object data = instance.get("data");
             if (data instanceof Map) {

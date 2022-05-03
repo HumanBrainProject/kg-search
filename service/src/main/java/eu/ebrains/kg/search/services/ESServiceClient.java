@@ -44,6 +44,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("java:S1192")
 @Component
 public class ESServiceClient {
 

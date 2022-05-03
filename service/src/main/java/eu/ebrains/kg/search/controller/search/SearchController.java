@@ -117,7 +117,7 @@ public class SearchController {
         return result;
     }
 
-    private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) { //NOSONAR
+    private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) { 
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             Map<String, String> aggs = Map.of("patterns", field);
@@ -129,15 +129,15 @@ public class SearchController {
         }
     }
 
-    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) { //NOSONAR
+    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) { 
         return getAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
     }
 
-    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) { //NOSONAR
+    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) { 
         return getAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) { //NOSONAR
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) { 
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);

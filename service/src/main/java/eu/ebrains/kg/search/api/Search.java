@@ -104,7 +104,7 @@ public class Search {
     }
 
     @GetMapping("/groups")
-    public ResponseEntity<?> getGroups(Principal principal) { //NOSONAR
+    public ResponseEntity<?> getGroups(Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             return ResponseEntity.ok(Arrays.asList(
                     Map.of("name", "curated",
@@ -166,7 +166,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/documents/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) { //NOSONAR
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) { 
         String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
@@ -177,7 +177,7 @@ public class Search {
 
 
     @GetMapping("/repositories/{id}/files/live")
-    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId, //NOSONAR
+    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId, 
                                                      @RequestParam(required = false, name = "searchAfter") String searchAfter,
                                                      @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                      @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -199,7 +199,7 @@ public class Search {
     }
 
     @GetMapping("/repositories/{id}/files/formats/live")
-    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId, //NOSONAR
+    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId, 
                                                      Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -214,7 +214,7 @@ public class Search {
     }
 
     @GetMapping("/repositories/{id}/files/groupingTypes/live")
-    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId, //NOSONAR
+    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId, 
                                                      Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -229,7 +229,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files/formats")
-    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String repositoryId) { //NOSONAR
+    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String repositoryId) { 
         if (!MetaModelUtils.isValidUUID(repositoryId)) {
             return ResponseEntity.badRequest().build();
         }
@@ -237,7 +237,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files/formats")
-    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId, //NOSONAR
+    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId, 
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -250,7 +250,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String repositoryId) { //NOSONAR
+    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String repositoryId) { 
         if (!MetaModelUtils.isValidUUID(repositoryId)) {
             return ResponseEntity.badRequest().build();
         }
@@ -258,7 +258,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId, //NOSONAR
+    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId, 
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if (!MetaModelUtils.isValidUUID(repositoryId)) {
@@ -271,7 +271,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id, //NOSONAR
+    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id, 
                                                        @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                        @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -283,7 +283,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id, //NOSONAR
+    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id, 
                                                         @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                         @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                         @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -300,7 +300,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/documents/{type}/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) { //NOSONAR
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) { 
         String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
@@ -310,7 +310,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/documents/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) { //NOSONAR
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             try {
                 String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
@@ -324,7 +324,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/documents/{type}/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) { //NOSONAR
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             try {
                 String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
@@ -338,7 +338,7 @@ public class Search {
     }
 
     @PostMapping("/groups/public/search")
-    public ResponseEntity<?> searchPublic(@RequestBody String payload) throws JsonProcessingException { //NOSONAR
+    public ResponseEntity<?> searchPublic(@RequestBody String payload) throws JsonProcessingException { 
         try {
             return ResponseEntity.ok(searchController.getResult(payload, DataStage.RELEASED));
         } catch (WebClientResponseException e) {
@@ -347,7 +347,7 @@ public class Search {
     }
 
     @PostMapping("/groups/curated/search")
-    public ResponseEntity<?> searchCurated(@RequestBody String payload, Principal principal) throws JsonProcessingException { //NOSONAR
+    public ResponseEntity<?> searchCurated(@RequestBody String payload, Principal principal) throws JsonProcessingException { 
         if (searchController.isInInProgressRole(principal)) {
             try {
                 return ResponseEntity.ok(searchController.getResult(payload, DataStage.IN_PROGRESS));

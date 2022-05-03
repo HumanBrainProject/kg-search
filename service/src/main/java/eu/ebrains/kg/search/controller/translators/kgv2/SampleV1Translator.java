@@ -157,7 +157,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->
                             new TargetFile(
-                                    f.getPrivateAccess() ? String.format("%s?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
+                                    f.getPrivateAccess() ? String.format("%s?url=%s", Translator.FILE_PROXY, f.getAbsolutePath()) : f.getAbsolutePath(),
                                     f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
                                     f.getHumanReadableSize(),
                                     null,

@@ -73,16 +73,16 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
         return targetClass;
     }
 
-    public Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> getV1translator() { //NOSONAR
+    public Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> getV1translator() { 
         return v1translator;
     }
 
 
-    public Translator<v2Input, Output, ? extends ResultsOfKGv2<v2Input>> getV2translator() { //NOSONAR
+    public Translator<v2Input, Output, ? extends ResultsOfKGv2<v2Input>> getV2translator() { 
         return v2translator;
     }
 
-    public TranslatorV3<v3Input, Output, ? extends ResultsOfKGv3<v3Input>> getV3translator() { //NOSONAR
+    public TranslatorV3<v3Input, Output, ? extends ResultsOfKGv3<v3Input>> getV3translator() { 
         return v3translator;
     }
 
