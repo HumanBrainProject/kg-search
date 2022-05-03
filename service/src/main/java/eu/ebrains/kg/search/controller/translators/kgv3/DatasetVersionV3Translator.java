@@ -400,7 +400,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }).collect(Collectors.toList());
 
 
-        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks()) || !CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
             //Service links for file bundles
             previews.addAll(Stream.concat(datasetVersion.getServiceLinks().stream(), datasetVersion.getServiceLinksFromFiles().stream()).map(l -> {
                 if(l.getFile()!=null){
