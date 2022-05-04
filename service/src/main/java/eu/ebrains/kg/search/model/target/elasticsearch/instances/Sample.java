@@ -30,12 +30,15 @@ import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @MetaInfo(name = "Sample")
 public class Sample implements TargetInstance {
     @JsonIgnore
@@ -108,180 +111,8 @@ public class Sample implements TargetInstance {
         return false;
     }
 
-    public Value<String> getCategory() {
-        return category;
-    }
-
-    public void setCategory(Value<String> category) {
-        this.category = category;
-    }
-
-    public Value<String> getDisclaimer() {
-        return disclaimer;
-    }
-
-    public void setDisclaimer(Value<String> disclaimer) {
-        this.disclaimer = disclaimer;
-    }
-
-    @Override
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public void setType(String type) {
-        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public void setEditorId(String editorId) {
-        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
-    }
-
-    public void setTitle(String title) {
-        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
-    }
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    public void setType(Value<String> type) {
-        this.type = type;
-    }
-
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public Value<String> getTitle() {
-        return title;
-    }
-
-    public void setTitle(Value<String> title) {
-        this.title = title;
-    }
-
-    public Value<String> getEditorId() {
-        return editorId;
-    }
-
-    public void setEditorId(Value<String> editorId) {
-        this.editorId = editorId;
-    }
-
-    public Value<String> getWeightPreFixation() {
-        return weightPreFixation;
-    }
-
-    public void setWeightPreFixation(String weightPreFixation) {
-        setWeightPreFixation(StringUtils.isBlank(weightPreFixation) ? null : new Value<>(weightPreFixation));
-    }
-
-    public void setWeightPreFixation(Value<String> weightPreFixation) {
-        this.weightPreFixation = weightPreFixation;
-    }
-
-    public List<Value<String>> getParcellationAtlas() {
-        return parcellationAtlas;
-    }
-
-    public void setParcellationAtlas(List<String> parcellationAtlas) {
-        this.parcellationAtlas = parcellationAtlas == null ? null : parcellationAtlas.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public List<TargetExternalReference> getRegion() {
-        return region;
-    }
-
-    public void setRegion(List<TargetExternalReference> region) {
-        this.region = region;
-    }
-
-    public List<TargetExternalReference> getViewer() {
-        return viewer;
-    }
-
-    public void setViewer(List<TargetExternalReference> viewer) {
-        this.viewer = viewer;
-    }
-
-    public List<Value<String>> getMethods() {
-        return methods;
-    }
-
-    public void setMethods(List<String> methods) {
-        this.methods = methods == null ? null : methods.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public TargetExternalReference getAllFiles() {
-        return allFiles;
-    }
-
-    public void setAllFiles(TargetExternalReference allFiles) {
-        this.allFiles = allFiles;
-    }
-
-    public List<TargetFile> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<TargetFile> files) {
-        this.files =  files;
-    }
-
-    public List<Children<Subject>> getSubject() {
-        return subject;
-    }
-
-    public void setSubject(List<Subject> subject) {
-        this.subject = subject != null ? subject.stream().map(Children::new).collect(Collectors.toList()) : null;
-    }
-
-    public List<Children<Dataset>> getDatasets() {
-        return datasets;
-    }
-
-    public void setDatasets(List<Dataset> datasets) {
-        this.datasets = datasets != null ? datasets.stream().map(Children::new).collect(Collectors.toList()) : null;
-    }
-
-    public ISODateValue getFirstRelease() {
-        return firstRelease;
-    }
-
-    public void setFirstRelease(ISODateValue firstRelease) {
-        this.firstRelease = firstRelease;
-    }
-
-    public void setFirstRelease(Date firstRelease) {
-        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
-    }
-
-    public ISODateValue getLastRelease() {
-        return lastRelease;
-    }
-
-    public void setLastRelease(ISODateValue lastRelease) {
-        this.lastRelease = lastRelease;
-    }
-
-    public void setLastRelease(Date lastRelease) {
-        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
-    }
-
-    public boolean isDatasetExists() {
-        return datasetExists;
-    }
-
-    public void setDatasetExists(boolean datasetExists) {
-        this.datasetExists = datasetExists;
-    }
-
+    @Getter
+    @Setter
     public static class Dataset {
         public Dataset() {
         }
@@ -296,24 +127,10 @@ public class Sample implements TargetInstance {
 
         @FieldInfo
         private List<TargetInternalReference> name;
-
-        public List<Value<String>> getComponent() {
-            return component;
-        }
-
-        public void setComponent(List<Value<String>> component) {
-            this.component = component;
-        }
-
-        public List<TargetInternalReference> getName() {
-            return name;
-        }
-
-        public void setName(List<TargetInternalReference> name) {
-            this.name = name;
-        }
     }
 
+    @Getter
+    @Setter
     public static class Subject {
         public Subject() {
         }
@@ -361,78 +178,6 @@ public class Sample implements TargetInstance {
 
         @FieldInfo(label = "Genotype")
         private Value<String> genotype;
-
-        public TargetInternalReference getSubjectName() {
-            return subjectName;
-        }
-
-        public void setSubjectName(TargetInternalReference subjectName) {
-            this.subjectName = subjectName;
-        }
-
-        public List<Value<String>> getSpecies() {
-            return species;
-        }
-
-        public void setSpecies(List<Value<String>> species) {
-            this.species = species;
-        }
-
-        public List<Value<String>> getSex() {
-            return sex;
-        }
-
-        public void setSex(List<Value<String>> sex) {
-            this.sex = sex;
-        }
-
-        public Value<String> getAge() {
-            return age;
-        }
-
-        public void setAge(Value<String> age) {
-            this.age = age;
-        }
-
-        public List<Value<String>> getAgeCategory() {
-            return ageCategory;
-        }
-
-        public void setAgeCategory(List<Value<String>> ageCategory) {
-            this.ageCategory = ageCategory;
-        }
-
-        public Value<String> getWeight() {
-            return weight;
-        }
-
-        public void setWeight(Value<String> weight) {
-            this.weight = weight;
-        }
-
-        public Value<String> getStrain() {
-            return strain;
-        }
-
-        public void setStrain(Value<String> strain) {
-            this.strain = strain;
-        }
-
-        public Value<String> getGenotype() {
-            return genotype;
-        }
-
-        public void setGenotype(Value<String> genotype) {
-            this.genotype = genotype;
-        }
     }
 
-    @Override
-    public List<String> getAllIdentifiers() {
-        return allIdentifiers;
-    }
-
-    public void setAllIdentifiers(List<String> allIdentifiers) {
-        this.allIdentifiers = allIdentifiers;
-    }
 }

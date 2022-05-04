@@ -41,7 +41,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name = "ModelVersions")
-public class Model implements TargetInstance {
+public class Model implements TargetInstance, HasCitation {
     @JsonIgnore
     private List<String> allIdentifiers;
     @ElasticSearchInfo(type = "keyword")
@@ -66,8 +66,14 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Cite model", markdown = true, layout = "How to cite", labelHidden = true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true)
+    private Value<String> citationHint;
 
     @FieldInfo(label = "DOI", hint = "This is the model DOI representing all the underlying model's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;

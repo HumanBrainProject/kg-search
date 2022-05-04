@@ -109,10 +109,10 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
         // title
         if(StringUtils.isNotBlank(softwareVersion.getFullName())){
-            s.setTitle(softwareVersion.getFullName());
+            s.setTitle(value(softwareVersion.getFullName()));
         }
         else if(software!=null && StringUtils.isNotBlank(software.getFullName())){
-            s.setTitle(software.getFullName());
+            s.setTitle(value(software.getFullName()));
         }
 
         // developers
@@ -129,25 +129,12 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-        String citation = softwareVersion.getHowToCite();
-        String doi = softwareVersion.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            s.setDoi(value(doiWithoutPrefix));
-            if (StringUtils.isNotBlank(citation)) {
-                s.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
-            } else {
-                s.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
-            }
-        } else if (StringUtils.isNotBlank(citation)) {
-            s.setCitation(value(citation));
-        }
-        if(s.getCitation() == null && StringUtils.isNotBlank(softwareVersion.getSwhid())){
-            //TODO resolve SWHID with citation formatter
-            s.setCitation(new Value<>(softwareVersion.getSwhid()));
-        }
 
+        handleCitation(softwareVersion, s);
+        if(s.getCitation() == null && s.getCustomCitation() == null && StringUtils.isNotBlank(softwareVersion.getSwhid())){
+            //TODO resolve SWHID with citation formatter
+            s.setCustomCitation(new Value<>(softwareVersion.getSwhid()));
+        }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getLicense())){
             s.setLicense(softwareVersion.getLicense().stream().map(l -> new TargetExternalReference(l.getUrl(), l.getLabel())).collect(Collectors.toList()));
@@ -186,9 +173,9 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
 
         if (StringUtils.isNotBlank(softwareVersion.getDescription())) {
-            s.setDescription(softwareVersion.getDescription());
+            s.setDescription(value(softwareVersion.getDescription()));
         } else if (software != null) {
-            s.setDescription(software.getDescription());
+            s.setDescription(value(software.getDescription()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getPublications())){

@@ -30,13 +30,15 @@ import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-
+@Getter
+@Setter
 @MetaInfo(name = "DatasetVersions", order = 2)
-public class Dataset implements TargetInstance {
+public class Dataset implements TargetInstance, HasCitation {
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -68,11 +70,10 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-
-    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
 
-    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -99,168 +100,10 @@ public class Dataset implements TargetInstance {
     private ISODateValue lastRelease;
 
     @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
     @JsonIgnore
     public boolean isSearchableInstance() {
         return false;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public void setEditorId(String editorId) {
-        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
-    }
-
-    public void setTitle(String title) {
-        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
-    }
-
-    public void setDescription(String description) {
-        setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
-    }
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public Value<String> getCategory() {
-        return category;
-    }
-
-    public void setCategory(Value<String> category) {
-        this.category = category;
-    }
-
-    public Value<String> getDisclaimer() {
-        return disclaimer;
-    }
-
-    public void setDisclaimer(Value<String> disclaimer) {
-        this.disclaimer = disclaimer;
-    }
-
-    public Value<String> getEditorId() {
-        return editorId;
-    }
-
-    public void setEditorId(Value<String> editorId) {
-        this.editorId = editorId;
-    }
-
-    public Value<String> getDescription() {
-        return description;
-    }
-
-    public void setDescription(Value<String> description) {
-        this.description = description;
-    }
-
-    public Value<String> getCitation() {
-        return citation;
-    }
-
-    public void setCitation(String citation) {
-        setCitation(StringUtils.isBlank(citation) ? null : new Value<>(citation));
-    }
-
-    public void setCitation(Value<String> citation) {
-        this.citation = citation;
-    }
-
-    public Value<String> getCustomCitation() {
-        return customCitation;
-    }
-
-    public void setCustomCitation(String customCitation) {
-        setCustomCitation(StringUtils.isBlank(customCitation) ? null : new Value<>(customCitation));
-    }
-
-    public void setCustomCitation(Value<String> customCitation) {
-        this.customCitation = customCitation;
-    }
-
-    public Value<String> getTitle() {
-        return title;
-    }
-
-    public void setTitle(Value<String> title) {
-        this.title = title;
-    }
-
-    public Value<String> getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        setDoi(StringUtils.isBlank(doi) ? null : new Value<>(doi));
-    }
-
-    public void setDoi(Value<String> doi) {
-        this.doi = doi;
-    }
-
-    public List<TargetInternalReference> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<TargetInternalReference> authors) {
-        this.authors = authors;
-    }
-
-    public TargetExternalReference getHomepage() {
-        return homepage;
-    }
-
-    public void setHomepage(TargetExternalReference homepage) {
-        this.homepage = homepage;
-    }
-
-    public List<TargetInternalReference> getCustodians() {
-        return custodians;
-    }
-
-    public void setCustodians(List<TargetInternalReference> custodians) {
-        this.custodians = custodians;
-    }
-
-    public List<Children<Version>> getDatasets() {
-        return datasets;
-    }
-
-    public void setDatasets(List<Children<Version>> datasets) {
-        this.datasets = datasets;
-    }
-
-    @Override
-    public List<String> getAllIdentifiers() {
-        return allIdentifiers;
-    }
-
-    public void setAllIdentifiers(List<String> allIdentifiers) {
-        this.allIdentifiers = allIdentifiers;
-    }
-
-    public Value<String> getCitationHint() {
-        return citationHint;
-    }
-
-    public void setCitationHint(Value<String> citationHint) {
-        this.citationHint = citationHint;
-    }
 
 }

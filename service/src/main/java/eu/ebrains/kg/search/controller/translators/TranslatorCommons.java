@@ -23,6 +23,8 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.source.IsCiteable;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.HasCitation;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -52,5 +54,6 @@ public class TranslatorCommons {
     public static <T extends Comparable<T>> List<Value<T>> emptyToNullValueList(List<T> list) {
         return CollectionUtils.isEmpty(list) ? null : list.stream().map(Value::new).collect(Collectors.toList());
     }
+
 
 }

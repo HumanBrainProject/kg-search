@@ -42,7 +42,7 @@ import java.util.Map;
 @Setter
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
-public class DatasetVersion implements TargetInstance, VersionedInstance{
+public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation{
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -214,10 +214,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
 
-    @FieldInfo(label = "Cite dataset", layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "Get data", labelHidden = true)

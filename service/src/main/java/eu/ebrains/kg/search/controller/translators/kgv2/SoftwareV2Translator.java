@@ -85,9 +85,9 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
             s.setEditorId(toValue(softwareV2.getEditorId()));
         }
         s.setAppCategoryOld( emptyToNullValueList(version.getApplicationCategory()));
-        s.setTitle(softwareV2.getTitle());
+        s.setTitle(value(softwareV2.getTitle()));
 
-        s.setDescription(softwareV2.getDescription() + (StringUtils.isBlank(version.getDescription())? "": ("\n\n" + version.getDescription())));
+        s.setDescription(value(softwareV2.getDescription() + (StringUtils.isBlank(version.getDescription())? "": ("\n\n" + version.getDescription()))));
 
         if (!CollectionUtils.isEmpty(version.getSourceCode())) {
             s.setSourceCodeOld(version.getSourceCode().stream()
@@ -108,8 +108,8 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
                     .map(h -> new TargetExternalReference(h, h))
                     .collect(Collectors.toList()));
         }
-        s.setFirstRelease(softwareV2.getFirstReleaseAt());
-        s.setLastRelease(softwareV2.getLastReleaseAt());
+        s.setFirstRelease(value(softwareV2.getFirstReleaseAt()));
+        s.setLastRelease(value(softwareV2.getLastReleaseAt()));
         s.setSearchable(true);
         return s;
     }

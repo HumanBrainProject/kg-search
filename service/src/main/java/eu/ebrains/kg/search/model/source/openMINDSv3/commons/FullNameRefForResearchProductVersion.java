@@ -29,11 +29,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class FullNameRefForResearchProductVersion extends FullNameRef {
     private String versionIdentifier;
     private String fallbackName;
-
-
-
 }

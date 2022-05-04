@@ -33,14 +33,16 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Childre
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-// To ensure backwards compatibility for the URLs, we can't just rename this to "Software" - since it's a technical
-// key only anyhow this has no direct impact though
+@Getter
+@Setter
 @MetaInfo(name = "SoftwareVersions")
-public class Software implements TargetInstance {
+public class Software implements TargetInstance, HasCitation {
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -73,8 +75,14 @@ public class Software implements TargetInstance {
     @FieldInfo(label = "Developers", separator = "; ", boost = 10)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(label = "Cite software", markdown = true, layout = "How to cite", labelHidden = true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true)
+    private Value<String> citationHint;
 
     @FieldInfo(label = "DOI", hint = "This is the software DOI representing all the underlying software's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;

@@ -219,18 +219,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-        String doi = datasetVersion.getDoi();
-        String citation = datasetVersion.getHowToCite();
-        if (StringUtils.isNotBlank(citation)) {
-            d.setCustomCitation(value(citation));
-        }
-        if (StringUtils.isNotBlank(doi)) {
-            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            d.setDoi(value(doiWithoutPrefix));
-            if(StringUtils.isBlank(citation)) {
-                d.setCitation(value(doiWithoutPrefix));
-            }
-        }
+
+        handleCitation(datasetVersion, d);
 
         d.setLicenseInfo(link(datasetVersion.getLicense()));
 

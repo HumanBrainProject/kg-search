@@ -30,14 +30,15 @@ import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
-// To ensure backwards compatibility for the URLs, we can't just rename this - since it's a technical key only anyhow this has no direct impact though
 @MetaInfo(name="Software", order=7, searchable=true)
-public class SoftwareVersion implements TargetInstance, VersionedInstance {
+@Getter
+@Setter
+public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCitation {
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -70,8 +71,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(labelHidden = true, markdown = true, icon="quote-left", layout = "How to cite")
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
 
     //Overview
     @FieldInfo(label = "DOI")
@@ -219,22 +223,9 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     private String version;
 
     private List<TargetInternalReference> versions;
-    public Value<String> getCategory() {
-        return category;
-    }
 
-    public void setCategory(Value<String> category) {
-        this.category = category;
-    }
-
-    public Value<String> getDisclaimer() {
-        return disclaimer;
-    }
-
-    public void setDisclaimer(Value<String> disclaimer) {
-        this.disclaimer = disclaimer;
-    }
-
+    @Getter
+    @Setter
     public static class FileFormat {
         @FieldInfo(label = "Name", sort = true)
         private TargetInternalReference name;
@@ -244,32 +235,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
 
         @FieldInfo(label = "Media type", sort = true)
         private Value<String> relatedMediaType;
-
-        public TargetInternalReference getName() {
-            return name;
-        }
-
-        public void setName(TargetInternalReference name) {
-            this.name = name;
-        }
-
-        public List<Value<String>> getFileExtensions() {
-            return fileExtensions;
-        }
-
-        public void setFileExtensions(List<Value<String>> fileExtensions) {
-            this.fileExtensions = fileExtensions;
-        }
-
-        public Value<String> getRelatedMediaType() {
-            return relatedMediaType;
-        }
-
-        public void setRelatedMediaType(Value<String> relatedMediaType) {
-            this.relatedMediaType = relatedMediaType;
-        }
     }
-
 
     @JsonIgnore
     private boolean isSearchable;
@@ -283,374 +249,4 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
         isSearchable = searchable;
     }
 
-    @Override
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public void setTitle(String title){
-        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
-    }
-
-    public void setDescription(String description){
-        setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
-    }
-
-    public Value<String> getEditorId() {
-        return editorId;
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setEditorId(Value<String> editorId) {
-        this.editorId = editorId;
-    }
-
-    public List<Value<String>> getAppCategoryOld() {
-        return appCategoryOld;
-    }
-
-    public List<TargetInternalReference> getCustodians() {
-        return custodians;
-    }
-
-    public void setCustodians(List<TargetInternalReference> custodians) {
-        this.custodians = custodians;
-    }
-
-    public List<TargetInternalReference> getDevelopers() {
-        return developers;
-    }
-
-    public void setDevelopers(List<TargetInternalReference> developers) {
-        this.developers = developers;
-    }
-
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public Value<String> getDescription() {
-        return description;
-    }
-
-    public void setDescription(Value<String> description) {
-        this.description = description;
-    }
-
-    public List<TargetExternalReference> getSourceCodeOld() {
-        return sourceCodeOld;
-    }
-
-    public void setSourceCodeOld(List<TargetExternalReference> sourceCodeOld) {
-        this.sourceCodeOld = sourceCodeOld;
-    }
-
-    public List<Value<String>> getFeaturesOld() {
-        return featuresOld;
-    }
-
-    public List<TargetExternalReference> getDocumentation() {
-        return documentation;
-    }
-
-    public void setDocumentation(List<TargetExternalReference> documentation) {
-        this.documentation =  documentation;
-    }
-
-    public List<Value<String>> getLicenseOld() {
-        return licenseOld;
-    }
-
-    public List<Value<String>> getOperatingSystemOld() {
-        return operatingSystemOld;
-    }
-
-    public Value<String> getVersionOld() {
-        return versionOld;
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setVersionOld(Value<String> versionOld) {
-        this.versionOld = versionOld;
-    }
-
-    public List<TargetExternalReference> getHomepageOld() {
-        return homepageOld;
-    }
-
-    public void setHomepageOld(List<TargetExternalReference> homepageOld) {
-        this.homepageOld = homepageOld;
-    }
-
-    public Value<String> getTitle() { return title; }
-
-    public void setTitle(Value<String> title) {
-        this.title = title;
-    }
-    public ISODateValue getFirstRelease() {
-        return firstRelease;
-    }
-
-    public void setFirstRelease(ISODateValue firstRelease) {
-        this.firstRelease = firstRelease;
-    }
-
-    public void setFirstRelease(Date firstRelease) {
-        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
-    }
-
-    public ISODateValue getLastRelease() {
-        return lastRelease;
-    }
-
-    public void setLastRelease(ISODateValue lastRelease) {
-        this.lastRelease = lastRelease;
-    }
-
-    public void setLastRelease(Date lastRelease) {
-        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
-    }
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    public List<TargetInternalReference> getVersions() { return versions; }
-
-    public Value<String> getCitation() {
-        return citation;
-    }
-
-    public void setCitation(Value<String> citation) {
-        this.citation = citation;
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setLicenseOld(List<Value<String>> licenseOld) {
-        this.licenseOld = licenseOld;
-    }
-
-    public Value<String> getCopyright() {
-        return copyright;
-    }
-
-    public void setCopyright(Value<String> copyright) {
-        this.copyright = copyright;
-    }
-
-    public List<TargetInternalReference> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<TargetInternalReference> projects) {
-        this.projects = projects;
-    }
-
-    public List<Value<String>> getPublications() {
-        return publications;
-    }
-
-    public void setPublications(List<Value<String>> publications) {
-        this.publications = publications;
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setAppCategoryOld(List<Value<String>> appCategoryOld) {
-        this.appCategoryOld = appCategoryOld;
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setOperatingSystemOld(List<Value<String>> operatingSystemOld) {
-        this.operatingSystemOld = operatingSystemOld;
-    }
-
-
-
-    public List<Value<String>> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(List<Value<String>> requirements) {
-        this.requirements = requirements;
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setFeaturesOld(List<Value<String>> featuresOld) {
-        this.featuresOld = featuresOld;
-    }
-
-
-    public List<Value<String>> getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(List<Value<String>> keywords) {
-        this.keywords = keywords;
-    }
-
-    public List<TargetExternalReference> getSupport() {
-        return support;
-    }
-
-    public void setSupport(List<TargetExternalReference> support) {
-        this.support = support;
-    }
-
-    public List<Children<FileFormat>> getInputFormat() {
-        return inputFormat;
-    }
-
-    public void setInputFormat(List<Children<FileFormat>> inputFormat) {
-        this.inputFormat = inputFormat;
-    }
-
-    public List<Children<FileFormat>> getOutputFormats() {
-        return outputFormats;
-    }
-
-    public void setOutputFormats(List<Children<FileFormat>> outputFormats) {
-        this.outputFormats = outputFormats;
-    }
-
-    public List<TargetExternalReference> getLicense() {
-        return license;
-    }
-
-    public void setLicense(List<TargetExternalReference> license) {
-        this.license = license;
-    }
-
-    public List<TargetInternalReference> getAppCategory() {
-        return appCategory;
-    }
-
-    public void setAppCategory(List<TargetInternalReference> appCategory) {
-        this.appCategory = appCategory;
-    }
-
-    public List<TargetInternalReference> getOperatingSystem() {
-        return operatingSystem;
-    }
-
-    public void setOperatingSystem(List<TargetInternalReference> operatingSystem) {
-        this.operatingSystem = operatingSystem;
-    }
-
-    public List<TargetInternalReference> getDevices() {
-        return devices;
-    }
-
-    public void setDevices(List<TargetInternalReference> devices) {
-        this.devices = devices;
-    }
-
-    public List<TargetInternalReference> getProgrammingLanguages() {
-        return programmingLanguages;
-    }
-
-    public void setProgrammingLanguages(List<TargetInternalReference> programmingLanguages) {
-        this.programmingLanguages = programmingLanguages;
-    }
-
-    public List<TargetInternalReference> getFeatures() {
-        return features;
-    }
-
-    public void setFeatures(List<TargetInternalReference> features) {
-        this.features = features;
-    }
-
-    public List<TargetInternalReference> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<TargetInternalReference> languages) {
-        this.languages = languages;
-    }
-
-    public List<TargetInternalReference> getComponents() {
-        return components;
-    }
-
-    public void setComponents(List<TargetInternalReference> components) {
-        this.components = components;
-    }
-
-    public boolean isSearchable() {
-        return isSearchable;
-    }
-
-    public TargetExternalReference getHomepage() {
-        return homepage;
-    }
-
-    public TargetExternalReference getSourceCode() {
-        return sourceCode;
-    }
-
-    public void setSourceCode(TargetExternalReference sourceCode) {
-        this.sourceCode = sourceCode;
-    }
-
-    public void setHomepage(TargetExternalReference homepage) {
-        this.homepage = homepage;
-    }
-
-    public List<Value<String>> getLicenseForFilter() {
-        return licenseForFilter;
-    }
-
-    public void setLicenseForFilter(List<Value<String>> licenseForFilter) {
-        this.licenseForFilter = licenseForFilter;
-    }
-
-    public List<Value<String>> getInputFormatsForFilter() {
-        return inputFormatsForFilter;
-    }
-
-    public void setInputFormatsForFilter(List<Value<String>> inputFormatsForFilter) {
-        this.inputFormatsForFilter = inputFormatsForFilter;
-    }
-
-    public List<Value<String>> getOutputFormatsForFilter() {
-        return outputFormatsForFilter;
-    }
-
-    public void setOutputFormatsForFilter(List<Value<String>> outputFormatsForFilter) {
-        this.outputFormatsForFilter = outputFormatsForFilter;
-    }
-
-    @Override
-    public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
-
-    @Override
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    @Override
-    public List<String> getAllIdentifiers() {
-        return allIdentifiers;
-    }
-
-    public void setAllIdentifiers(List<String> allIdentifiers) {
-        this.allIdentifiers = allIdentifiers;
-    }
-
-    public Value<String> getDoi() {
-        return doi;
-    }
-
-    public void setDoi(Value<String> doi) {
-        this.doi = doi;
-    }
 }

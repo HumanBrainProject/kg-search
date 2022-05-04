@@ -171,20 +171,8 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
             }
         }
 
-        String citation = metadataModelVersionV3.getHowToCite();
-        String doi = metadataModelVersionV3.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            m.setDoi(value(doiWithoutPrefix));
-            if (StringUtils.isNotBlank(citation)) {
-                m.setCitation(value(citation));
-            } else {
-                m.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
-            }
-        } else if (StringUtils.isNotBlank(citation)) {
-            m.setCitation(value(citation));
-        }
+        handleCitation(metadataModelVersionV3, m);
+
         m.setLicenseInfo(link(metadataModelVersionV3.getLicense()));
         List<FullNameRef> projects = null;
         if (metadataModelVersionV3.getProjects() != null && metaDataModel != null && metaDataModel.getProjects() != null) {

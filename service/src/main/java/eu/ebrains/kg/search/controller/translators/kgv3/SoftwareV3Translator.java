@@ -107,14 +107,9 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
                     )).collect(Collectors.toList()));
         }
 
-        String citation = software.getHowToCite();
-        String doi = software.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            s.setDoi(doi);
-            if (StringUtils.isNotBlank(citation)) {
-                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-                s.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
-            }
+        handleCitation(software, s);
+        if(s.getCitation()!=null){
+            s.setCitationHint(value("Using this citation allows you to reference all versions of this software with one citation.\nUsage of version specific software and metadata should be acknowledged by citing the individual software version."));
         }
         return s;
     }
