@@ -87,6 +87,7 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
   let labelCounter = null;
   let valueProps = null;
   let valueComponent = null;
+  let label = mapping.label?mapping.label:null;
 
   if (mapping.isGroupedLinks) { // Grouped Links
 
@@ -98,10 +99,10 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       const singleGroupedLinksLabel = Object.keys(data)[0];
       const singleGroupedLinks = Object.values(data)[0];
 
-      if (mapping.label) {
-        mapping.label = `${mapping.label} in ${singleGroupedLinksLabel}`;
+      if (label) {
+        label = `${label} in ${singleGroupedLinksLabel}`;
       } else {
-        mapping.label = singleGroupedLinksLabel;
+        label = singleGroupedLinksLabel;
       }
 
       valueProps = {
@@ -247,7 +248,7 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
     layout: ["header", "summary"].includes(mapping.layout)?mapping.layout:null,
     style: (mapping.order && !renderUserInteractions) ? { order: mapping.order } : null,
     className: className,
-    label: (mapping.label && (!mapping.labelHidden || !renderUserInteractions))?mapping.label:null,
+    label: (label && (!mapping.labelHidden || !renderUserInteractions))?label:null,
     inlineLabel: !mapping.tagIcon,
     labelCounter: labelCounter,
     hint: (renderUserInteractions && mapping.hint)?mapping.hint:null,
@@ -275,6 +276,4 @@ export const FieldBase = (renderUserInteractions = true) => {
 };
 
 export const Field = FieldBase(true);
-Field.displayName = "Field";
 export const PrintViewField = FieldBase(false);
-PrintViewField.displayName = "PrintViewField";
