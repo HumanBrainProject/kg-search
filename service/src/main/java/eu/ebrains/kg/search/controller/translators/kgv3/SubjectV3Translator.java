@@ -84,15 +84,15 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
 
         s.setAllIdentifiers(subject.getIdentifier());
         s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Subject", subject.getIdentifier()).stream().distinct().collect(Collectors.toList()));
-        s.setAge(subject.getAge());
-        s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
+        s.setAge(value(subject.getAge()));
+        s.setAgeCategory(emptyToNull(value(subject.getAgeCategory())));
 //        s.setDatasetExists(emptyToNull(subject.getDatasetExists()));
-        s.setGenotype(subject.getGenotype());
-        s.setSex(emptyToNull(subject.getSex()));
-        s.setSpecies(emptyToNull(subject.getSpecies()));
-        s.setStrain(subject.getStrain());
-        s.setTitle(subject.getTitle());
-        s.setWeight(subject.getWeight());
+        s.setGenotype(value(subject.getGenotype()));
+        s.setSex(emptyToNull(value(subject.getSex())));
+        s.setSpecies(emptyToNull(value(subject.getSpecies())));
+        s.setStrain(value(subject.getStrain()));
+        s.setTitle(value(subject.getTitle()));
+        s.setWeight(value(subject.getWeight()));
 //        if(!CollectionUtils.isEmpty(subject.getSamples())) {
 //            s.setSamples(subject.getSamples().stream()
 //                    .map(sample ->

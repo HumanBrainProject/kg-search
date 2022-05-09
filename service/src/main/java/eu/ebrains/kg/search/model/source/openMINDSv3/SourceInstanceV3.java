@@ -23,10 +23,14 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.controller.translators.Helpers;
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.HasCitation;
 import eu.ebrains.kg.search.utils.IdUtils;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -43,4 +47,5 @@ public class SourceInstanceV3 implements SourceInstance {
     public List<String> getSimpleIdentifiers(){
         return IdUtils.getUUID(identifier);
     }
+
 }

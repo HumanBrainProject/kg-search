@@ -41,7 +41,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name = "Model", order = 5, searchable=true)
-public class ModelVersion implements TargetInstance, VersionedInstance {
+public class ModelVersion implements TargetInstance, VersionedInstance, HasCitation {
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -137,8 +137,11 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> accessibility;
 
-    @FieldInfo(label = "Cite model", markdown = true, layout = "How to cite", labelHidden = true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
 
     @FieldInfo(layout = "Get model", isFilePreview=true)
     private TargetExternalReference embeddedModelSource;

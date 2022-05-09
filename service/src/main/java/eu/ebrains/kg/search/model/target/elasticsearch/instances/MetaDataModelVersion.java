@@ -42,7 +42,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name = "(Meta)Data Model", order = 6, searchable=true)
-public class MetaDataModelVersion implements TargetInstance, VersionedInstance {
+public class MetaDataModelVersion implements TargetInstance, VersionedInstance, HasCitation {
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -120,8 +120,11 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> accessibility;
 
-    @FieldInfo(label = "Cite (meta)data model", markdown = true, layout = "Cite (meta)data model", labelHidden = true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
 
     @FieldInfo(layout = "Get (meta)data model", isFilePreview=true)
     private TargetExternalReference embeddedModelSource;

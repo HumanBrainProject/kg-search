@@ -29,7 +29,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class PersonOrOrganizationRef extends FullNameRef{
 
     private String familyName;

@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -37,7 +38,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MetadataModelVersionV3 extends SourceInstanceV3 {
+public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteable {
     private String fullName;
     private String versionIdentifier;
     private List<PersonOrOrganizationRef> developer;

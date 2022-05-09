@@ -24,8 +24,10 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.HasCitation;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -209,6 +211,21 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
             }
         }
         return l;
+    }
+
+    protected void handleCitation(IsCiteable source, HasCitation target){
+        String doi = source.getDoi();
+        String citation = source.getHowToCite();
+        if (StringUtils.isNotBlank(citation)) {
+            target.setCustomCitation(value(citation));
+        }
+        if (StringUtils.isNotBlank(doi)) {
+            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
+            target.setDoi(value(doiWithoutPrefix));
+            if(StringUtils.isBlank(citation)) {
+                target.setCitation(value(doiWithoutPrefix));
+            }
+        }
     }
 
 }

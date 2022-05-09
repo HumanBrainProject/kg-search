@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import lombok.*;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class DatasetVersionV3 extends SourceInstanceV3 {
+public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
     private String doi;
     private String howToCite;
     private String description;

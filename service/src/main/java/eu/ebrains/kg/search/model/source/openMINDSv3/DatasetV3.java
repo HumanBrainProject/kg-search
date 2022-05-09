@@ -23,12 +23,17 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-public class DatasetV3 extends SourceInstanceV3 {
+@Getter
+@Setter
+public class DatasetV3 extends SourceInstanceV3 implements IsCiteable {
     private String description;
     private String doi;
     private String howToCite;
@@ -37,68 +42,4 @@ public class DatasetV3 extends SourceInstanceV3 {
     private List<Version> versions;
     private List<PersonOrOrganizationRef> authors;
     private List<PersonOrOrganizationRef> custodians;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
-
-    public String getHowToCite() {
-        return howToCite;
-    }
-
-    public void setHowToCite(String howToCite) {
-        this.howToCite = howToCite;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public List<Version> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(List<Version> versions) {
-        this.versions = versions;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getHomepage() {
-        return homepage;
-    }
-
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
-    }
-
-    public List<PersonOrOrganizationRef> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<PersonOrOrganizationRef> authors) {
-        this.authors = authors;
-    }
-
-    public List<PersonOrOrganizationRef> getCustodians() {
-        return custodians;
-    }
-
-    public void setCustodians(List<PersonOrOrganizationRef> custodians) {
-        this.custodians = custodians;
-    }
 }

@@ -74,19 +74,19 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
         s.setId(subject.getIdentifier());
         List<String> identifiers = createList(subject.getIdentifier(), String.format("Subject/%s", subject.getIdentifier()));
         s.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
-        s.setAge(subject.getAge());
-        s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
+        s.setAge(value(subject.getAge()));
+        s.setAgeCategory(emptyToNull(value(subject.getAgeCategory())));
         if (dataStage == DataStage.IN_PROGRESS) {
-            s.setEditorId(subject.getEditorId());
+            s.setEditorId(value(subject.getEditorId()));
         }
-        s.setFirstRelease(subject.getFirstReleaseAt());
-        s.setLastRelease(subject.getLastReleaseAt());
-        s.setGenotype(subject.getGenotype());
-        s.setSex(emptyToNull(subject.getSex()));
-        s.setSpecies(emptyToNull(subject.getSpecies()));
-        s.setStrain(subject.getStrain() != null ? subject.getStrain() : subject.getStrains());
-        s.setTitle(subject.getTitle());
-        s.setWeight(subject.getWeight());
+        s.setFirstRelease(value(subject.getFirstReleaseAt()));
+        s.setLastRelease(value(subject.getLastReleaseAt()));
+        s.setGenotype(value(subject.getGenotype()));
+        s.setSex(emptyToNull(value(subject.getSex())));
+        s.setSpecies(emptyToNull(value(subject.getSpecies())));
+        s.setStrain(subject.getStrain() != null ? value(subject.getStrain()) : value(subject.getStrains()));
+        s.setTitle(value(subject.getTitle()));
+        s.setWeight(value(subject.getWeight()));
         if(!CollectionUtils.isEmpty(subject.getSamples())) {
             s.setSamples(subject.getSamples().stream()
                     .map(sample ->
@@ -111,7 +111,7 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
                             )
                     ).collect(Collectors.toList());
             s.setDatasetExists(!datasets.isEmpty());
-            s.setDatasets(emptyToNull(datasets));
+            s.setDatasets(emptyToNull(children(datasets)));
         }
         return s;
     }

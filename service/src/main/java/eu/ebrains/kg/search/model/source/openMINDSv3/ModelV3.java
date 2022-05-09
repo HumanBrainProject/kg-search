@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
@@ -33,7 +34,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ModelV3 extends SourceInstanceV3 {
+public class ModelV3 extends SourceInstanceV3  implements IsCiteable {
     private String title;
     private String description;
     private String doi;

@@ -112,21 +112,10 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
                     )).collect(Collectors.toList()));
         }
 
-        String citation = model.getHowToCite();
-        String doi = model.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            m.setDoi(value(doiWithoutPrefix));
-            if (StringUtils.isNotBlank(citation)) {
-                m.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
-            } else {
-                m.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
-            }
-        } else if (StringUtils.isNotBlank(citation)) {
-            m.setCitation(value(citation));
+        handleCitation(model, m);
+        if(m.getCitation()!=null){
+            m.setCitationHint(value("Using this citation allows you to reference all versions of this meta data model with one citation.\nUsage of version specific data and metadata should be acknowledged by citing the individual meta data model version."));
         }
-
         return m;
     }
 }

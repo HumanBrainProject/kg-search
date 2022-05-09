@@ -168,20 +168,8 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             }
         }
 
-        String citation = modelVersion.getHowToCite();
-        String doi = modelVersion.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            m.setDoi(value(doiWithoutPrefix));
-            if (StringUtils.isNotBlank(citation)) {
-                m.setCitation(value(citation));
-            } else {
-                m.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
-            }
-        } else if (StringUtils.isNotBlank(citation)) {
-            m.setCitation(value(citation));
-        }
+        handleCitation(modelVersion, m);
+
         m.setLicenseInfo(link(modelVersion.getLicense()));
         List<FullNameRef> projects = null;
         if (modelVersion.getProjects() != null && model != null && model.getProjects() != null) {

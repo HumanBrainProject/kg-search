@@ -79,15 +79,15 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
         s.setId(sample.getIdentifier());
         s.setIdentifier(createList(sample.getIdentifier(), String.format("Sample/%s", sample.getIdentifier())).stream().distinct().collect(Collectors.toList()));
         String title = sample.getTitle();
-        s.setTitle(title);
-        s.setFirstRelease(sample.getFirstReleaseAt());
-        s.setLastRelease(sample.getLastReleaseAt());
+        s.setTitle(value(title));
+        s.setFirstRelease(value(sample.getFirstReleaseAt()));
+        s.setLastRelease(value(sample.getLastReleaseAt()));
         if (dataStage == DataStage.IN_PROGRESS) {
-            s.setEditorId(sample.getEditorId());
+            s.setEditorId(value(sample.getEditorId()));
         }
-        s.setParcellationAtlas(emptyToNull(sample.getParcellationAtlas()));
-        s.setWeightPreFixation(sample.getWeightPreFixation());
-        s.setMethods(emptyToNull(sample.getMethods()));
+        s.setParcellationAtlas(emptyToNull(value(sample.getParcellationAtlas())));
+        s.setWeightPreFixation(value(sample.getWeightPreFixation()));
+        s.setMethods(emptyToNull(value(sample.getMethods())));
         if (!CollectionUtils.isEmpty(sample.getParcellationRegion())) {
             s.setRegion(sample.getParcellationRegion().stream()
                     .map(r ->
@@ -116,11 +116,11 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
                                             ).collect(Collectors.toList())
                             )
                     ).collect(Collectors.toList());
-            s.setDatasets(datasets);
+            s.setDatasets(children(datasets));
             s.setDatasetExists(!datasets.isEmpty());
         }
         if (!CollectionUtils.isEmpty(sample.getSubjects())) {
-            s.setSubject(sample.getSubjects().stream()
+            s.setSubject(children(sample.getSubjects().stream()
                     .map(d ->
                             new Sample.Subject(
                                     new TargetInternalReference(
@@ -136,7 +136,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
                                     d.getStrain() != null ? d.getStrain() : d.getStrains(),
                                     d.getGenotype()
                             )
-                    ).collect(Collectors.toList()));
+                    ).collect(Collectors.toList())));
         }
         String containerUrl = sample.getContainerUrl();
         if (!hasEmbargoStatus(sample, EMBARGOED) && !StringUtils.isBlank(containerUrl) && !CollectionUtils.isEmpty(sample.getFiles())) {

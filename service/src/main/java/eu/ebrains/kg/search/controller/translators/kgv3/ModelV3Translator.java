@@ -109,21 +109,10 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
                     )).collect(Collectors.toList()));
         }
 
-        String citation = model.getHowToCite();
-        String doi = model.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            m.setDoi(value(doiWithoutPrefix));
-            if (StringUtils.isNotBlank(citation)) {
-                m.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
-            } else {
-                m.setCitation(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, doi, RelatedPublication.PublicationType.DOI)));
-            }
-        } else if (StringUtils.isNotBlank(citation)) {
-            m.setCitation(value(citation));
+        handleCitation(model, m);
+        if(m.getCitation()!=null){
+            m.setCitationHint(value("Using this citation allows you to reference all versions of this model with one citation.\nUsage of version specific models and metadata should be acknowledged by citing the individual model version."));
         }
-
         if (!CollectionUtils.isEmpty(model.getVersions())) {
             List<Version> sortedVersions = Helpers.sort(model.getVersions());                                         //v.getFullName()
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());

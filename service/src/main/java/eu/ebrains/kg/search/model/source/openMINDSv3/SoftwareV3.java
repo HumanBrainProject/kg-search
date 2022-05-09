@@ -23,12 +23,17 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.IsCiteable;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-public class SoftwareV3 extends SourceInstanceV3 {
+@Getter
+@Setter
+public class SoftwareV3 extends SourceInstanceV3 implements IsCiteable {
     private String description;
     private String doi;
     private String howToCite;
@@ -36,60 +41,4 @@ public class SoftwareV3 extends SourceInstanceV3 {
     private List<PersonOrOrganizationRef> developer;
     private List<PersonOrOrganizationRef> custodian;
     private List<Version> versions;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
-
-    public String getHowToCite() {
-        return howToCite;
-    }
-
-    public void setHowToCite(String howToCite) {
-        this.howToCite = howToCite;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public List<PersonOrOrganizationRef> getDeveloper() {
-        return developer;
-    }
-
-    public void setDeveloper(List<PersonOrOrganizationRef> developer) {
-        this.developer = developer;
-    }
-
-    public List<PersonOrOrganizationRef> getCustodian() {
-        return custodian;
-    }
-
-    public void setCustodian(List<PersonOrOrganizationRef> custodian) {
-        this.custodian = custodian;
-    }
-
-    public List<Version> getVersions() {
-        return versions;
-    }
-
-    public void setVersions(List<Version> versions) {
-        this.versions = versions;
-    }
 }
