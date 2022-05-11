@@ -32,19 +32,21 @@ const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSepara
       if(index === (path.length - 1)) { // file
         node.paths[name] = {
           //name: name.replace(/\?.+$/, ""),
-          name: JSONPath(file, nameFieldPath),
+          title: JSONPath(file, nameFieldPath),
           url: fileUrl,
           type: "file",
           thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
-          data: file
+          data: file,
+          key: fileUrl
         };
       } else { // folder
         if(!node.paths[name]) { // is not already created
           node.paths[name] = {
-            name: name,
+            title: name,
             url: `${node.url}${node === rootNode?rootUrlSeparator:"/"}${name}`,
             type: "folder",
-            paths: {}
+            paths: {},
+            key: `${node.url}${node === rootNode?rootUrlSeparator:"/"}${name}`
           };
         }
         node = node.paths[name];
@@ -113,13 +115,14 @@ export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
   const commonPath = getCommonPath(files, urlFieldPath);
   const url = getUrl(commonPath);
   const tree = {
-    name: commonPath[commonPath.length-1],
+    title: commonPath[commonPath.length-1],
     url: `https://data.kg.ebrains.eu/zip?container=${url}`,
     isRootNode: true,
     type: "folder",
     paths: {},
     toggled: true,
-    active: true
+    active: true,
+    key: `https://data.kg.ebrains.eu/zip?container=${url}`
   };
   const nbOfPathToSkip = commonPath.length;
   const rootUrlSeparator = getRootUrlSeparator(commonPath, nbOfPathToSkip);

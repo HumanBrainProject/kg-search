@@ -22,24 +22,31 @@
  */
 
 import React from "react";
-import { Treebeard, decorators } from "react-treebeard";
+// import { Treebeard, decorators } from "react-treebeard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
-import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
-import {faFolder} from "@fortawesome/free-solid-svg-icons/faFolder";
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
+import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
+import { faFolder } from "@fortawesome/free-solid-svg-icons/faFolder";
 
 import Download from "./Download";
 import LinkedInstance from "../../../containers/LinkedInstance";
 import AsyncLinkedInstance from "../../../containers/AsyncLinkedInstance";
 
 import "./HierarchicalFiles.css";
-import theme from "./Theme";
-import Header from "./Header";
+import "rc-tree/assets/index.css";
+
+// import theme from "./Theme";
+// import Header from "./Header";
 
 import { getTreeByFolder } from "./FileTreeByFolderHelper";
-import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper";
+import {
+  getTreeByGroupingType,
+  JSONPath
+} from "./FileTreeByGroupingTypeHelper";
 import * as filters from "./helpers";
 import { debounce } from "lodash";
+
+import Tree from "rc-tree";
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {
@@ -50,31 +57,50 @@ const getFilteredTree = (tree, filter) => {
   return filtered;
 };
 
-const Node = ({node, isRootNode, group, type, hasFilter}) => {
+const Node = ({ node, isRootNode, group, type, hasFilter }) => {
   const isFile = node.type === "file";
-  const icon = isFile?faFile:faFolder;
+  const icon = isFile ? faFile : faFolder;
 
   const getDownloadName = () => {
-    if(isRootNode) {
-      return `Download ${(typeof type === "string"?type.toLowerCase():"Dataset")}`;
+    if (isRootNode) {
+      return `Download ${
+        typeof type === "string" ? type.toLowerCase() : "Dataset"
+      }`;
     }
     return `Download ${node.type}`;
   };
 
   return (
     <div className="kgs-hierarchical-files__details">
-      <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={icon} size="5x"/>}</div>
+      <div>
+        {node.thumbnail ? (
+          <img height="80" src={node.thumbnail} alt={node.url} />
+        ) : (
+          <FontAwesomeIcon icon={icon} size="5x" />
+        )}
+      </div>
       <div className="kgs-hierarchical-files__info">
         <div>
-          <div><strong>Name:</strong> {node.name}</div>
+          <div>
+            <strong>Name:</strong> {node.title}
+          </div>
           {node.url && (isFile || !hasFilter) && (
             <Download name={getDownloadName()} type={type} url={node.url} />
           )}
           {node.type === "file" && (
-            <LinkedInstance data={node.data} group={group} type={node.data?.type?.value || "File"} />
+            <LinkedInstance
+              data={node.data}
+              group={group}
+              type={node.data?.type?.value || "File"}
+            />
           )}
           {node.type === "fileBundle" && node.reference && (
-            <AsyncLinkedInstance id={node.reference} name={node.name} group={group} type="FileBundle" />
+            <AsyncLinkedInstance
+              id={node.reference}
+              name={node.name}
+              group={group}
+              type="FileBundle"
+            />
           )}
         </div>
       </div>
@@ -83,18 +109,23 @@ const Node = ({node, isRootNode, group, type, hasFilter}) => {
 };
 
 class HierarchicalFiles extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       node: {},
-      tree: {},
-      initialTree: {},
+      tree: {
+        children: []
+      },
+      initialTree: {
+        children: []
+      },
       filter: ""
     };
   }
 
   setTree() {
-    const {data, groupingType, hasDataFilter, nameFieldPath, urlFieldPath} = this.props;
+    const { data, groupingType, hasDataFilter, nameFieldPath, urlFieldPath } =
+      this.props;
     if (data && data.length === 1 && !hasDataFilter) {
       const node = {
         data: data[0],
@@ -102,11 +133,13 @@ class HierarchicalFiles extends React.Component {
         url: JSONPath(data[0], urlFieldPath),
         type: "file"
       };
-      this.setState({tree: {}, node: node, initialTree: {} });
+      this.setState({ tree: {}, node: node, initialTree: {} });
     } else {
-      const initialTree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, nameFieldPath, urlFieldPath);
+      const initialTree = groupingType
+        ? getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType)
+        : getTreeByFolder(data, nameFieldPath, urlFieldPath);
       const tree = getFilteredTree(initialTree, this.state.filter);
-      this.setState({tree: tree,  node: tree, initialTree: initialTree });
+      this.setState({ tree: tree, node: tree, initialTree: initialTree });
     }
   }
 
@@ -116,10 +149,12 @@ class HierarchicalFiles extends React.Component {
 
   componentDidUpdate(previousProps) {
     const { data, groupingType, nameFieldPath, urlFieldPath } = this.props;
-    if (data !== previousProps.data
-      || groupingType !== previousProps.groupingType
-      || nameFieldPath !== previousProps.nameFieldPath
-      || urlFieldPath !== previousProps.urlFieldPath) {
+    if (
+      data !== previousProps.data ||
+      groupingType !== previousProps.groupingType ||
+      nameFieldPath !== previousProps.nameFieldPath ||
+      urlFieldPath !== previousProps.urlFieldPath
+    ) {
       this.setTree();
     }
   }
@@ -129,19 +164,27 @@ class HierarchicalFiles extends React.Component {
     if (node.children) {
       node.toggled = toggled;
     }
-    if(node.url !== this.state.node.url || node.reference !== this.state.node.reference) {
+    if (
+      node.url !== this.state.node.url ||
+      node.reference !== this.state.node.reference
+    ) {
       const previousNode = this.state.node;
       previousNode.active = false;
     }
-    this.setState({node: node});
+    this.setState({ node: node });
   };
 
-  onFilterMouseUp = debounce(({target: {value}}) => {
+  onFilterMouseUp = debounce(({ target: { value } }) => {
     const filter = value.trim();
-    this.setState({filter: filter});
+    this.setState({ filter: filter });
     const tree = getFilteredTree(this.state.initialTree, filter);
-    this.setState({tree: tree});
+    this.setState({ tree: tree });
   }, 500);
+
+  onSelect = (selectedKeys, info) => {
+    console.log("selected", selectedKeys,info);
+    this.onToggle(info.node);
+  };
 
   render() {
     const filesLength = this.props.data && this.props.data.length;
@@ -150,32 +193,56 @@ class HierarchicalFiles extends React.Component {
     if (filesLength === 1 && !hasFilter) {
       return (
         <div className="kgs-single-file">
-          <Node node={this.state.node} isRootNode={false} group={this.props.group} type={this.props.type} hasFilter={false} />
+          <Node
+            node={this.state.node}
+            isRootNode={false}
+            group={this.props.group}
+            type={this.props.type}
+            hasFilter={false}
+          />
         </div>
       );
+    }
+    if (this.state.tree.children.length === 0) {
+      return null;
     }
 
     return (
       <>
         {filesLength < 5000 && (
           <div className="kgs-files-search">
-            <FontAwesomeIcon icon={faSearch} className="kgs-files-search-icon" />
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="kgs-files-search-icon"
+            />
             <input
               className="form-control"
               onKeyUp={this.onFilterMouseUp}
               placeholder="Search the files..."
               type="text"
             />
-          </div>)}
+          </div>
+        )}
         <div className="kgs-hierarchical-files">
-          <Treebeard
+          <Tree
+            treeData={[this.state.tree]}
+            defaultExpandedKeys={[this.state.tree.key]}
+            onSelect={this.onSelect}
+          />
+          {/* <Treebeard
             data={this.state.tree}
             onToggle={this.onToggle}
             decorators={{...decorators, Header}}
             style={{...theme}}
-          />
+          /> */}
           {this.state.node.active && (
-            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} type={this.props.type} hasFilter={hasFilter} />
+            <Node
+              node={this.state.node}
+              isRootNode={this.state.node.isRootNode}
+              group={this.props.group}
+              type={this.props.type}
+              hasFilter={hasFilter}
+            />
           )}
         </div>
       </>

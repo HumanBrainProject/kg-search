@@ -22,7 +22,7 @@
  */
 
 
-export const matcher = (filterText, node) =>  node.name.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
+export const matcher = (filterText, node) =>  node.title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 
 export const findNode = (node, filter) => {
   return matcher(filter, node) ||
