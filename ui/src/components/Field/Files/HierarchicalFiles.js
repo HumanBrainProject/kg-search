@@ -22,7 +22,6 @@
  */
 
 import React from "react";
-// import { Treebeard, decorators } from "react-treebeard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
@@ -35,9 +34,6 @@ import AsyncLinkedInstance from "../../../containers/AsyncLinkedInstance";
 import "./HierarchicalFiles.css";
 import "rc-tree/assets/index.css";
 
-// import theme from "./Theme";
-// import Header from "./Header";
-
 import { getTreeByFolder } from "./FileTreeByFolderHelper";
 import {
   getTreeByGroupingType,
@@ -47,6 +43,7 @@ import * as filters from "./helpers";
 import { debounce } from "lodash";
 
 import Tree from "rc-tree";
+// import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {
@@ -108,6 +105,33 @@ const Node = ({ node, isRootNode, group, type, hasFilter }) => {
   );
 };
 
+const addExpandedKeys = (tree, keys) => {
+  if(tree.expanded) {
+    keys.push(tree.key);
+  }
+  if(tree.children) {
+    tree.children.forEach(child => addExpandedKeys(child, keys));
+  }
+};
+
+const Icon = ({type}) => {
+  const isFile = type === "file";
+  const icon = isFile ? faFile : faFolder;
+  return <FontAwesomeIcon icon={icon} />;
+};
+
+
+// const SwitcherIcon = obj => {
+//   console.log(obj);
+//   if (!obj.isLeaf) {
+//     if(obj.expanded) {
+//       return <FontAwesomeIcon icon={faMinus} />;
+//     }
+//     return <FontAwesomeIcon icon={faPlus} />;
+//   }
+//   return null;
+// };
+
 class HierarchicalFiles extends React.Component {
   constructor(props) {
     super(props);
@@ -119,7 +143,8 @@ class HierarchicalFiles extends React.Component {
       initialTree: {
         children: []
       },
-      filter: ""
+      filter: "",
+      expandedKeys: []
     };
   }
 
@@ -139,7 +164,7 @@ class HierarchicalFiles extends React.Component {
         ? getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType)
         : getTreeByFolder(data, nameFieldPath, urlFieldPath);
       const tree = getFilteredTree(initialTree, this.state.filter);
-      this.setState({ tree: tree, node: tree, initialTree: initialTree });
+      this.setState({ tree: tree, node: tree, initialTree: initialTree, expandedKeys: [tree.key] });
     }
   }
 
@@ -159,32 +184,21 @@ class HierarchicalFiles extends React.Component {
     }
   }
 
-  onToggle = (node, toggled) => {
-    node.active = true;
-    if (node.children) {
-      node.toggled = toggled;
-    }
-    if (
-      node.url !== this.state.node.url ||
-      node.reference !== this.state.node.reference
-    ) {
-      const previousNode = this.state.node;
-      previousNode.active = false;
-    }
-    this.setState({ node: node });
-  };
-
   onFilterMouseUp = debounce(({ target: { value } }) => {
     const filter = value.trim();
     this.setState({ filter: filter });
     const tree = getFilteredTree(this.state.initialTree, filter);
-    this.setState({ tree: tree });
+    const expandedKeys = [tree.key];
+    addExpandedKeys(tree, expandedKeys);
+    this.setState({ tree: tree, expandedKeys: expandedKeys });
   }, 500);
 
-  onSelect = (selectedKeys, info) => {
-    console.log("selected", selectedKeys,info);
-    this.onToggle(info.node);
+  onSelect = (_selectedKeys, info) => {
+    info.node.active = true;
+    this.setState({ node: info.node });
   };
+
+  onExpand = expandedKeys => this.setState({ expandedKeys: expandedKeys});
 
   render() {
     const filesLength = this.props.data && this.props.data.length;
@@ -203,6 +217,7 @@ class HierarchicalFiles extends React.Component {
         </div>
       );
     }
+
     if (this.state.tree.children.length === 0) {
       return null;
     }
@@ -226,15 +241,13 @@ class HierarchicalFiles extends React.Component {
         <div className="kgs-hierarchical-files">
           <Tree
             treeData={[this.state.tree]}
-            defaultExpandedKeys={[this.state.tree.key]}
+            defaultSelectedKeys={[this.state.tree.key]}
+            expandedKeys={this.state.expandedKeys}
             onSelect={this.onSelect}
+            onExpand={this.onExpand}
+            icon={Icon}
+            // switcherIcon={SwitcherIcon}
           />
-          {/* <Treebeard
-            data={this.state.tree}
-            onToggle={this.onToggle}
-            decorators={{...decorators, Header}}
-            style={{...theme}}
-          /> */}
           {this.state.node.active && (
             <Node
               node={this.state.node}

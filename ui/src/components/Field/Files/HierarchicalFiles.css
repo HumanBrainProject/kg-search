@@ -43,6 +43,11 @@
     flex-direction: column;
 }
 
+.kgs-hierarchical-files .rc-tree-node-selected {
+    background-color: var(--button-default-background-color);
+    box-shadow: none;
+}
+
 .kgs-hierarchical-files>ul {
     flex: 1;
     width: 100%;

@@ -42,12 +42,12 @@ export const filterTree = (node, filter) => {
 export const expandFilteredNodes = (node, filter) => {
   let children = node.children;
   if (!children || children.length === 0) {
-    return {...node, toggled: false};
+    return {...node, expanded: false};
   }
   const childrenWithMatches = node.children.filter(child => findNode(child, filter));
   const shouldExpand = childrenWithMatches.length > 0;
   if (shouldExpand) {
     children = childrenWithMatches.map(child => expandFilteredNodes(child, filter));
   }
-  return {...node, children: children, toggled: shouldExpand};
+  return {...node, children: children, expanded: shouldExpand};
 };
