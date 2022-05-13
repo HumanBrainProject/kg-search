@@ -64,11 +64,6 @@
     vertical-align: top;
 }
 
-.kgs-hierarchical-files .rc-tree-title {
-    word-break: break-all;
-    white-space: normal;
-}
-
 .kgs-hierarchical-files .kgs-hierarchical-files__details {
     flex: 1;
     position: relative;
@@ -86,12 +81,26 @@
     margin-left: 6px;
 }
 
+.kgs-hierarchical-files .rc-tree .rc-tree-treenode {
+    display: flex;
+}
+
+.kgs-hierarchical-files .rc-tree-switcher {
+    transform: translateY(5px);
+}
+
 .kgs-hierarchical-files .rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
-    display: inline-block;
     color: rgb(157, 165, 171);
     vertical-align: middle;
     min-height: 24px;
     height: auto;
+    width: calc(100% - 40px);
+}
+
+.kgs-hierarchical-files .rc-tree-title {
+    word-break: break-all;
+    white-space: normal;
+    width: calc(100% - 16px);
 }
 
 @media (min-width:992px) {
