@@ -106,20 +106,19 @@ const Node = ({ node, isRootNode, group, type, hasFilter }) => {
 };
 
 const addExpandedKeys = (tree, keys) => {
-  if(tree.expanded) {
+  if (tree.expanded) {
     keys.push(tree.key);
   }
-  if(tree.children) {
+  if (tree.children) {
     tree.children.forEach(child => addExpandedKeys(child, keys));
   }
 };
 
-const Icon = ({type}) => {
+const Icon = ({ type }) => {
   const isFile = type === "file";
   const icon = isFile ? faFile : faFolder;
   return <FontAwesomeIcon icon={icon} />;
 };
-
 
 // const SwitcherIcon = obj => {
 //   console.log(obj);
@@ -164,7 +163,12 @@ class HierarchicalFiles extends React.Component {
         ? getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType)
         : getTreeByFolder(data, nameFieldPath, urlFieldPath);
       const tree = getFilteredTree(initialTree, this.state.filter);
-      this.setState({ tree: tree, node: tree, initialTree: initialTree, expandedKeys: [tree.key] });
+      this.setState({
+        tree: tree,
+        node: tree,
+        initialTree: initialTree,
+        expandedKeys: [tree.key]
+      });
     }
   }
 
@@ -198,7 +202,7 @@ class HierarchicalFiles extends React.Component {
     this.setState({ node: info.node });
   };
 
-  onExpand = expandedKeys => this.setState({ expandedKeys: expandedKeys});
+  onExpand = expandedKeys => this.setState({ expandedKeys: expandedKeys });
 
   render() {
     const filesLength = this.props.data && this.props.data.length;

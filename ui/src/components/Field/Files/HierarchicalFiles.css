@@ -43,12 +43,7 @@
     flex-direction: column;
 }
 
-.kgs-hierarchical-files .rc-tree-node-selected {
-    background-color: var(--button-default-background-color);
-    box-shadow: none;
-}
-
-.kgs-hierarchical-files>ul {
+.kgs-hierarchical-files>.rc-tree {
     flex: 1;
     width: 100%;
     height: calc(100vh - 500px);
@@ -56,6 +51,15 @@
     border: 1px solid var(--default-border-color);
     border-radius: 5px;
     padding: 10px;
+}
+
+.kgs-hierarchical-files .rc-tree-node-selected {
+    background-color: var(--button-default-background-color);
+    box-shadow: none;
+}
+
+.kgs-hierarchical-files .rc-tree-title {
+    word-break: break-all;
 }
 
 .kgs-hierarchical-files .kgs-hierarchical-files__details {
@@ -75,25 +79,10 @@
     margin-left: 6px;
 }
 
-.kgs-hierarchical-files .kgs-hierarchical-files__node {
-    display: flex;
-    cursor: pointer; 
-    position: relative; 
-    padding: 0px 5px;  
-}
-
-.kgs-hierarchical-files .kgs-hierarchical-files__node_wrapper {
+.kgs-hierarchical-files .rc-tree-node-content-wrapper {
     display: inline-block;
     color: rgb(157, 165, 171);
     vertical-align: middle;
-}
-
-.kgs-hierarchical-files .kgs-hierarchical-files__node_name {
-    word-break: break-all;
-}
-
-.kgs-hierarchical-files__icon {
-    transform: translateY(-4px);
 }
 
 @media (min-width:992px) {

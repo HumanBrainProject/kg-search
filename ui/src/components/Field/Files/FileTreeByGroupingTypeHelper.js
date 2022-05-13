@@ -36,7 +36,12 @@ export const JSONPath = (data, path) => {
         const [, prop, index] = current.match(JSONPathRegex);
         const list = data[prop];
         const number = parseInt(index);
-        if (!Array.isArray(list) || isNaN(number) || number < 0 || number >= data.length) {
+        if (
+          !Array.isArray(list) ||
+          isNaN(number) ||
+          number < 0 ||
+          number >= data.length
+        ) {
           return undefined;
         }
         return JSONPath(list[number], next);
@@ -49,8 +54,13 @@ export const JSONPath = (data, path) => {
   return data;
 };
 
-export const getTreeByGroupingType = (files, nameFieldPath, urlFieldPath, groupingType) => {
-  if(!Array.isArray(files)) {
+export const getTreeByGroupingType = (
+  files,
+  nameFieldPath,
+  urlFieldPath,
+  groupingType
+) => {
+  if (!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
   const filesByFileBundles = {};
@@ -64,7 +74,7 @@ export const getTreeByGroupingType = (files, nameFieldPath, urlFieldPath, groupi
               if (typeof fileBundle === "object" && fileBundle.reference) {
                 if (!filesByFileBundles[fileBundle.reference]) {
                   filesByFileBundles[fileBundle.reference] = {
-                    name: fileBundle.value,
+                    title: fileBundle.value,
                     reference: fileBundle.reference,
                     files: []
                   };
@@ -77,30 +87,38 @@ export const getTreeByGroupingType = (files, nameFieldPath, urlFieldPath, groupi
     }
   });
   const tree = {
-    name: groupingType,
+    title: groupingType,
     //url: `https://data.kg.ebrains.eu/zip?container=${groupingType}`,
     type: "folder",
     toggled: true,
-    active: true
+    active: true,
+    key: "fileBundle"
   };
   tree.children = Object.values(filesByFileBundles)
-    .sort((fileBundleA, fileBundleB) => fileBundleA.name.localeCompare(fileBundleB.name))
-    .map((fileBundle) => {
+    .sort((fileBundleA, fileBundleB) =>
+      fileBundleA.title.localeCompare(fileBundleB.title)
+    )
+    .map(fileBundle => {
       const children = fileBundle.files
-        .map(file => ({
-          name: JSONPath(file, nameFieldPath),
-          url: JSONPath(file, urlFieldPath),
-          type: "file",
-          thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
-          data: file
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .map(file => {
+          const url = JSONPath(file, urlFieldPath);
+          return {
+            title: JSONPath(file, nameFieldPath),
+            url: url,
+            type: "file",
+            thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
+            data: file,
+            key: url
+          };
+        })
+        .sort((a, b) => a.title.localeCompare(b.title));
       return {
-        name: fileBundle.name,
+        title: fileBundle.title,
         //url: `${groupingType}/${fileBundle}`,
         type: "fileBundle",
         reference: fileBundle.reference,
-        children: children
+        children: children,
+        key: `${fileBundle.reference}-${fileBundle.title}`
       };
     });
   return tree;
