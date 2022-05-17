@@ -28,6 +28,7 @@ import { ListField, PrintViewListField } from "./ListField";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
 import TableField from "./TableField";
+import HierarchicalTree from "./HierarchicalTree";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 import FilePreview from "../FilePreview/FilePreview";
@@ -160,6 +161,18 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
     }
 
+  } else if (mapping.isHierarchical) { // Hierarchical
+
+    className = "kgs-field__hierarchical";
+
+    valueProps = {
+      mapping: mapping,
+      group: group,
+      type: type,
+      data: data
+    };
+    valueComponent = HierarchicalTree;
+
   } else if (mapping.isHierarchicalFiles) { // Hierarchical Files
 
     className = "kgs-field__hierarchical-files";
@@ -261,7 +274,7 @@ export const FieldBase = (renderUserInteractions = true) => {
 
   const Component = ({ name, data, mapping, group, type }) => {
 
-    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, group, type, renderUserInteractions), [name, data, mapping, group, type, renderUserInteractions]);
+    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, group, type, renderUserInteractions), [name, data, mapping, group, type]);
 
     if (!fieldProps) {
       return null;

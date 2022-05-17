@@ -73,6 +73,7 @@ export const LinkedInstance = connect(
     const mapping = Object.entries((props.type && state.definition.typeMappings[props.type] && state.definition.typeMappings[props.type].fields)?state.definition.typeMappings[props.type].fields:{}).reduce((acc, [name, fieldsMapping]) => {
       if (
         name !== "title" && // filter title as we only want to show the details of the linked instance
+        name !== "label" && // filter label as we only want to show the details of the linked instance
         !fieldsMapping.isAsync && // filter async data in linked instance
         !(props.type === "File" && name === "iri") // filter iri in file linked instance
       ) {

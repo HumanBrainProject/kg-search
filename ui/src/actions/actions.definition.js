@@ -92,6 +92,7 @@ export const loadDefinition = () => {
     field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
     field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);
     field.isHierarchicalFiles = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isHierarchicalFiles", false);
+    field.isHierarchical = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isHierarchical", false);
     field.isAsync = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isAsync", false);
     field.isCitation = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isCitation", false);
     field.isFilePreview = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isFilePreview", false);
