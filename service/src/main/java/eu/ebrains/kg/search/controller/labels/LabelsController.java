@@ -46,10 +46,15 @@ public class LabelsController {
     }
 
     public Map<String, Object> generateLabels() {
-        Map<String, Object> labels = new HashMap<>();
-        for (int i = 0; i < TranslatorModel.MODELS.size(); i++) {
-            Class<?> targetModel = TranslatorModel.MODELS.get(i).getTargetClass();
-            labels.put(MetaModelUtils.getNameForClass(targetModel), generateLabels(targetModel, i + 1));
+        Map<String, Object> labels = new LinkedHashMap<>();
+        for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
+            Class<?> targetModel = model.getTargetClass();
+            labels.put(MetaModelUtils.getNameForClass(targetModel), generateLabels(targetModel, labels.size()));
+            //Also add inner models to the labels
+            Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
+                    .forEachOrdered(innerClass -> {
+                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateLabels(innerClass, labels.size()));
+                    });
         }
         return labels;
     }
@@ -186,6 +191,9 @@ public class LabelsController {
             }
             if (info.isHierarchicalFiles() != defaultFieldInfo.isHierarchicalFiles()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchicalFiles", info.isHierarchicalFiles());
+            }
+            if (info.isHierarchical() != defaultFieldInfo.isHierarchical()) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchical", info.isHierarchical());
             }
             if (info.isCitation() != defaultFieldInfo.isCitation()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isCitation", info.isCitation());

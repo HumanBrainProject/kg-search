@@ -26,6 +26,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.controller.translators.Helpers;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.AllArgsConstructor;
@@ -270,6 +271,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     private List<Value<String>> keywords;
 
+
+    @FieldInfo(layout = "Specimen",  labelHidden = true, isHierarchical = true)
+    private BasicHierarchyElement specimenBySubject;
+
     /**
      * @deprecated  use subjects for openMINDS instead
      */
@@ -493,5 +498,101 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         private Value<String> additionalRemarks;
     }
 
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SubjectGroup")
+    public static class DSVSubjectGroup {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.SubjectGroup");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SubjectGroupState")
+    public static class DSVSubjectGroupState {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.SubjectGroupState");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="Subject")
+    public static class DSVSubject {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.Subject");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SubjectState")
+    public static class DSVSubjectState {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.SubjectState");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSample")
+    public static class DSVTissueSample {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.TissueSample");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSampleState")
+    public static class DSVTissueSampleState {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.TissueSampleState");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSampleCollection")
+    public static class DSVTissueSampleCollection {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.TissueSampleCollection");
+
+        @FieldInfo
+        private Value<String> label;
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSampleCollectionState")
+    public static class DSVTissueSampleCollectionState {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.TissueSampleCollectionState");
+
+        @FieldInfo
+        private Value<String> label;
+    }
 
 }

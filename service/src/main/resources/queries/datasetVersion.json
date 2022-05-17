@@ -102,7 +102,7 @@
         {
           "propertyName": "query:identifier",
           "path": "https://openminds.ebrains.eu/vocab/identifier",
-          "required":  true
+          "required": true
         },
         {
           "propertyName": "query:type",
@@ -2047,6 +2047,119 @@
         },
         "https://openminds.ebrains.eu/vocab/format",
         "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:studiedSpecimen",
+      "path": "https://openminds.ebrains.eu/vocab/studiedSpecimen",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:internalIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
+        },
+        {
+          "propertyName": "query:lookupLabel",
+          "path": "https://openminds.ebrains.eu/vocab/lookupLabel"
+        },
+        {
+          "propertyName": "query:studiedState",
+          "path": "https://openminds.ebrains.eu/vocab/studiedState",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:descendedFrom",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/descendedFrom",
+                "@id"
+              ]
+            },
+            {
+              "propertyName": "query:type",
+              "path": "@type"
+            },
+            {
+              "propertyName": "query:lookupLabel",
+              "path": "https://openminds.ebrains.eu/vocab/lookupLabel"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:subElements",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/isPartOf",
+              "reverse": true
+            }
+          ],
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:lookupLabel",
+              "path": "https://openminds.ebrains.eu/vocab/lookupLabel"
+            },
+            {
+              "propertyName": "query:internalIdentifier",
+              "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
+            },
+            {
+              "propertyName": "query:studiedState",
+              "path": "https://openminds.ebrains.eu/vocab/studiedState",
+              "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
+                {
+                  "propertyName": "query:descendedFrom",
+                  "path": [
+                    "https://openminds.ebrains.eu/vocab/descendedFrom",
+                    "@id"
+                  ]
+                },
+                {
+                  "propertyName": "query:type",
+                  "path": "@type"
+                },
+                {
+                  "propertyName": "query:lookupLabel",
+                  "path": "https://openminds.ebrains.eu/vocab/lookupLabel"
+                }
+              ]
+            },
+            {
+              "propertyName": "query:isPartOf",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/isPartOf",
+                "@id"
+              ]
+            },
+            {
+              "propertyName": "query:type",
+              "path": "@type"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:isPartOf",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/isPartOf",
+            "@id"
+          ]
+        },
+        {
+          "propertyName": "query:type",
+          "path": "@type"
+        }
       ]
     }
   ]

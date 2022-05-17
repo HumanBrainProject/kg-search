@@ -76,6 +76,32 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
     private List<FullNameRef> preparationDesign;
     private List<ServiceLink> serviceLinks;
     private List<ServiceLink> serviceLinksFromFiles;
+    private List<StudiedSpecimen> studiedSpecimen;
+
+
+    @Getter
+    @Setter
+    public static class StudiedSpecimen{
+        private String id;
+        private String internalIdentifier;
+        private String lookupLabel;
+        private List<StudiedState> studiedState;
+        private List<String> isPartOf;
+        private List<String> type;
+        private List<StudiedSpecimen> subElements;
+    }
+
+    @Getter
+    @Setter
+    public static class StudiedState{
+        private String id;
+        private List<String> descendedFrom;
+        private List<String> type;
+        private String lookupLabel;
+        private transient StudiedSpecimen parent;
+    }
+
+
 
 
     @Getter
