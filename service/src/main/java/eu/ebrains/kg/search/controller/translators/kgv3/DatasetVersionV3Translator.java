@@ -588,7 +588,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         el.setKey(parent.getKey());
         //If we can merge an element, it means that there is only a single state and we therefore don't need a "state label" to distinguish. We therefore can just use the parent label.
         el.setTitle(String.format("%s (merged)", parent.getTitle()));
-        el.setColor(parent.getColor());
+        el.setColor(child.getColor());
+        el.setData(child.getData());
         if(parent.getChildren()!=null){
             children.addAll(parent.getChildren().stream().filter(c -> !children.contains(c)).collect(Collectors.toList()));
         }
