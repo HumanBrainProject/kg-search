@@ -87,8 +87,8 @@ public class SpecimenV3Translator extends TranslatorBase {
         final Set<String> allStateIds = collectedSpecimen.stream().map(s -> s.getStudiedState().stream().map(DatasetVersionV3.StudiedState::getId).collect(Collectors.toSet())).flatMap(Collection::stream).collect(Collectors.toSet());
         collectedSpecimen.forEach(s -> s.getStudiedState().forEach(st -> st.getDescendedFrom().removeIf(descFrom -> !allStateIds.contains(descFrom))));
 
-        final Map<String, List<DatasetVersionV3.StudiedState>> descendentStates = collectedSpecimen.stream().map(s -> s.getStudiedState().stream().peek(st -> st.setParent(s)).collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.toMap(DatasetVersionV3.StudiedState::getId, v -> findDescendentStates(v, collectedSpecimen)));
-        final Map<String, List<DatasetVersionV3.StudiedSpecimen>> partOfRelations = collectedSpecimen.stream().collect(Collectors.toMap(DatasetVersionV3.StudiedSpecimen::getId, v -> findPartOfRelations(v, collectedSpecimen)));
+        final Map<String, List<DatasetVersionV3.StudiedState>> descendentStates = collectedSpecimen.stream().map(s -> s.getStudiedState().stream().peek(st -> st.setParent(s)).collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.toMap(DatasetVersionV3.StudiedState::getId, v -> findDescendentStates(v, collectedSpecimen), (s1, s2) -> s1));
+        final Map<String, List<DatasetVersionV3.StudiedSpecimen>> partOfRelations = collectedSpecimen.stream().collect(Collectors.toMap(DatasetVersionV3.StudiedSpecimen::getId, v -> findPartOfRelations(v, collectedSpecimen), (s1, s2) -> s1));
 
         DatasetVersion.DSVSpecimenOverview overviewAggregator = new DatasetVersion.DSVSpecimenOverview();
         //Start the recursive resolution with the root elements (the ones that either don't have states at all or whose states are disconnected)
