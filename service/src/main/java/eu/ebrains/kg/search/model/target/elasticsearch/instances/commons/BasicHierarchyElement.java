@@ -12,6 +12,7 @@ import java.util.Map;
 public class BasicHierarchyElement {
 
     private String key;
+    private String parentRelationType;
     private String title;
     private String color;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,5 +21,4 @@ public class BasicHierarchyElement {
     private Map<String, String> legend;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<? extends BasicHierarchyElement> children;
-
 }
