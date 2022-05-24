@@ -37,6 +37,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -130,7 +131,7 @@ public class ESServiceClient {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        if (aggList.size() == 0) {
+        if (CollectionUtils.isEmpty(aggList)) {
             return null;
         }
 
@@ -154,7 +155,7 @@ public class ESServiceClient {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        if (termList.size() == 0) {
+        if (CollectionUtils.isEmpty(termList)) {
             return "";
         }
 

@@ -108,7 +108,7 @@ public class SearchController {
             ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
             result.put(TOTAL, total.getValue());
             result.put("data", data);
-            if (hits.size() > 0) {
+            if (!CollectionUtils.isEmpty(hits)) {
                 result.put("searchAfter", hits.get(hits.size() - 1).getId());
             }
         } else {

@@ -66,6 +66,9 @@ public class SpecimenV3Translator extends TranslatorBase {
 
 
     public BasicHierarchyElement translateToHierarchy(List<DatasetVersionV3.StudiedSpecimen> studiedSpecimen) {
+        if(CollectionUtils.isEmpty(studiedSpecimen)){
+            return null;
+        }
         BasicHierarchyElement e = new BasicHierarchyElement();
         e.setKey("root");
         e.setTitle("Specimen");
@@ -304,7 +307,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             overviewAggregator.collectStrains(source.getStrain(), this.prefix);
             overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
             overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectAgeCategory(source.getAgeCategory(), this.prefix);
+            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
         }
 
         private void fillSubjectStateInformation(DatasetVersion.DSVSubject sub, DatasetVersionV3.StudiedState state){
@@ -358,7 +361,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             overviewAggregator.collectStrains(source.getStrain(), this.prefix);
             overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
             overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectAgeCategory(source.getAgeCategory(), this.prefix);
+            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
         }
 
         @Override
@@ -466,7 +469,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             overviewAggregator.collectStrains(source.getStrain(), this.prefix);
             overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
             overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectAgeCategory(source.getAgeCategory(), this.prefix);
+            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
         }
 
         @Override
@@ -506,7 +509,7 @@ public class SpecimenV3Translator extends TranslatorBase {
                 final long count = element.getChildren().stream().filter(c -> c.getParentRelationType()!=null && c.getParentRelationType().equals(PART_OF)).count();
                 final String quantity = data.getTissueSamples().getValue();
                 if(quantity!=null && count>0 && !String.valueOf(count).equals(quantity)){
-                    data.setTissueSamples(value(String.format("%d of %s used in this dataset", count, quantity)));
+                    data.setTissueSamples(value(String.format("total: %s, used in this dataset: %d", quantity, count)));
                 }
             }
         }
@@ -518,7 +521,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             overviewAggregator.collectStrains(source.getStrain(), this.prefix);
             overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
             overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectAgeCategory(source.getAgeCategory(), this.prefix);
+            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
         }
 
         @Override

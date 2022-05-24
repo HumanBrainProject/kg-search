@@ -555,7 +555,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks")
+        @FieldInfo(label = "Additional remarks", markdown = true)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -626,7 +626,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks", separator = ", ")
+        @FieldInfo(label = "Additional remarks", separator = ", ", markdown = true)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -702,7 +702,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks")
+        @FieldInfo(label = "Additional remarks", markdown = true)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -784,7 +784,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks")
+        @FieldInfo(label = "Additional remarks", markdown = true)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -832,20 +832,20 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
         private transient Set<String> tissueSampleIds = new HashSet<>();
 
-        @FieldInfo(label = "Species")
+        @FieldInfo(label = "Species", separator = ", ")
         private List<TargetInternalReference> species = new ArrayList<>();
 
-        @FieldInfo(label = "Sex")
+        @FieldInfo(label = "Sex", separator = ", ")
         private List<TargetInternalReference> sex = new ArrayList<>();
 
-        @FieldInfo(label = "Strains")
+        @FieldInfo(label = "Strains", separator = ", ")
         private List<TargetInternalReference> strains = new ArrayList<>();
 
-        @FieldInfo(label = "Age categories")
-        private List<TargetInternalReference> ageCategories = new ArrayList<>();
-
-        @FieldInfo(label = "Genetic strain types")
+        @FieldInfo(label = "Genetic strain types", separator = ", ")
         private List<TargetInternalReference> geneticStrainTypes = new ArrayList<>();
+
+        @FieldInfo(label = "Pathology", separator = ", ")
+        private List<TargetInternalReference> pathology = new ArrayList<>();
 
         private transient Map<String, Map<TargetInternalReference, Map<String, Integer>>> collector = new HashMap<>();
 
@@ -872,16 +872,18 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         private List<TargetInternalReference> flush(String key){
             final Map<TargetInternalReference, Map<String, Integer>> map = collector.computeIfAbsent(key, k -> Collections.emptyMap());
             Stream<TargetInternalReference> stream = map.keySet().stream();
-            if(map.size()>1){
-                //We only show the count if there are more than one entries per key
-                stream = stream.map(k -> {
-                    final Map<String, Integer> count = map.get(k);
-                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
-                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t), t)).collect(Collectors.joining(", "));
-                    targetInternalReference.setValue(String.format("%s (%s)", StringUtils.isNotBlank(k.getValue()) ? k.getValue() : "Undefined", counts));
-                    return targetInternalReference;
-                });
-            }
+            // Disabling the code for now -> we want to clarify first, how we can properly calculate the summary and how to display it accordingly.
+
+//            if(map.size()>1){
+//                //We only show the count if there are more than one entries per key
+//                stream = stream.map(k -> {
+//                    final Map<String, Integer> count = map.get(k);
+//                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
+//                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t), t)).collect(Collectors.joining(", "));
+//                    targetInternalReference.setValue(String.format("%s (%s)", StringUtils.isNotBlank(k.getValue()) ? k.getValue() : "Undefined", counts));
+//                    return targetInternalReference;
+//                });
+//            }
             final List<TargetInternalReference> result = stream.filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList());
             return result.isEmpty() ? null : result;
         }
@@ -901,7 +903,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
                 setNumberOfTissueSampleCollections(new Value<>(String.valueOf(tissueSampleCollectionIds.size())));
             }
 
-            setAgeCategories(flush("ageCategory"));
+            setPathology(flush("pathology"));
             setSpecies(flush("species"));
             setSex(flush("sex"));
             setStrains(flush("strains"));
@@ -909,8 +911,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             return this;
         }
 
-        public void collectAgeCategory(List<TargetInternalReference> references, String type){
-            collect("ageCategory", references, type);
+        public void collectPathology(List<TargetInternalReference> references, String type){
+            collect("pathology", references, type);
         }
 
         public void collectSpecies(List<TargetInternalReference> references, String type){

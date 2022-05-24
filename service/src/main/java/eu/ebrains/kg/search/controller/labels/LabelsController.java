@@ -53,7 +53,7 @@ public class LabelsController {
             //Also add inner models to the labels
             Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
                     .forEachOrdered(innerClass -> {
-                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateLabels(innerClass, labels.size()));
+                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateLabels(innerClass, labels.size()+1));
                     });
         }
         return labels;
