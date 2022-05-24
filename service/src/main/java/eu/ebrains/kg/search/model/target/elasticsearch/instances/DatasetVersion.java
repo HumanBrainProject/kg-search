@@ -838,10 +838,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Sex", separator = ", ")
         private List<TargetInternalReference> sex = new ArrayList<>();
 
-        @FieldInfo(label = "Strains", separator = ", ")
+        @FieldInfo(label = "Strains")
         private List<TargetInternalReference> strains = new ArrayList<>();
 
-        @FieldInfo(label = "Genetic strain types", separator = ", ")
+        @FieldInfo(label = "Genetic strain types")
         private List<TargetInternalReference> geneticStrainTypes = new ArrayList<>();
 
         @FieldInfo(label = "Pathology", separator = ", ")
