@@ -220,4 +220,27 @@ public abstract class TranslatorBase {
         }
     }
 
+    protected List<TargetInternalReference> refAnatomical(List<AnatomicalLocation> anatomicalLocations, boolean sorted) {
+        if (!CollectionUtils.isEmpty(anatomicalLocations)) {
+            Stream<TargetInternalReference> targetInternalReferenceStream = anatomicalLocations.stream().map(this::refAnatomical).filter(Objects::nonNull);
+            if (sorted) {
+                targetInternalReferenceStream = targetInternalReferenceStream.sorted();
+            }
+            return targetInternalReferenceStream.collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    protected TargetInternalReference refAnatomical(AnatomicalLocation a){
+        if(StringUtils.isNotBlank(a.getBrainAtlas())){
+            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(),  a.getBrainAtlas()));
+        }
+        else if(a.getBrainAtlasVersion() != null){
+            String name = String.format("%s %s", StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName(), a.getBrainAtlasVersion().getVersionIdentifier());
+            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(), name));
+        }
+        else{
+            return ref(a);
+        }
+    }
 }

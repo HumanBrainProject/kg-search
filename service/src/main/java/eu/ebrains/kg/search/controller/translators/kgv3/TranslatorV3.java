@@ -47,18 +47,4 @@ public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<So
         return type;
     }
 
-    protected TargetInternalReference refAnatomical(AnatomicalLocation a){
-        if(StringUtils.isNotBlank(a.getBrainAtlas())){
-            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(),  a.getBrainAtlas()));
-        }
-        else if(a.getBrainAtlasVersion() != null){
-            //String name = String.format("%s %s", StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName(), a.getBrainAtlasVersion().getVersionIdentifier());
-            //TODO Currently, the names of the brain atlas versions also contain the version number -> this is expected to be fixed in openMINDS at some point. Once this is done, we need to change the logic here, so we reflect the version identifier instead.
-            String name = StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName();
-            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(), name));
-        }
-        else{
-            return ref(a);
-        }
-    }
 }

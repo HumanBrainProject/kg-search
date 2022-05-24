@@ -114,7 +114,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
         private String additionalRemarks;
         private FullNameRef origin;
         private List<SpeciesOrStrain> species;
-        private List<FullNameRef> anatomicalLocation;
+        private List<AnatomicalLocation> anatomicalLocation;
         private List<FullNameRef> biologicalSex;
         private List<FullNameRef> laterality;
         private FullNameRef tissueSampleType;

@@ -431,7 +431,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             tissueSample.setTissueSampleType(ref(specimen.getTissueSampleType()));
             tissueSample.setServiceLinks(translateServiceLinks(specimen.getServiceLinks(), tissueSample.getServiceLinks()));
             tissueSample.setSex(ref(specimen.getBiologicalSex()));
-            tissueSample.setAnatomicalLocation(ref(specimen.getAnatomicalLocation()));
+            tissueSample.setAnatomicalLocation(refAnatomical(specimen.getAnatomicalLocation(), true));
             tissueSample.setLaterality(ref(specimen.getLaterality()));
             List<FullNameRef> indirectSpecies = specimen.getSpecies() != null ? specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getSpecies).filter(Objects::nonNull).collect(Collectors.toList()) : Collections.emptyList();
             tissueSample.setGeneticStrainType(ref(CollectionUtils.isEmpty(specimen.getSpecies()) ? null : specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getGeneticStrainType).filter(Objects::nonNull).distinct().collect(Collectors.toList())));
@@ -534,7 +534,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             tissueSampleCollection.setTissueSampleType(ref(specimen.getTissueSampleType()));
             tissueSampleCollection.setSex(ref(specimen.getBiologicalSex()));
             tissueSampleCollection.setServiceLinks(translateServiceLinks(specimen.getServiceLinks(), tissueSampleCollection.getServiceLinks()));
-            tissueSampleCollection.setAnatomicalLocation(ref(specimen.getAnatomicalLocation()));
+            tissueSampleCollection.setAnatomicalLocation(refAnatomical(specimen.getAnatomicalLocation(), true));
             tissueSampleCollection.setLaterality(ref(specimen.getLaterality()));
             List<FullNameRef> indirectSpecies = specimen.getSpecies() != null ? specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getSpecies).filter(Objects::nonNull).collect(Collectors.toList()) : Collections.emptyList();
             tissueSampleCollection.setGeneticStrainType(ref(CollectionUtils.isEmpty(specimen.getSpecies()) ? null : specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getGeneticStrainType).filter(Objects::nonNull).distinct().collect(Collectors.toList())));
