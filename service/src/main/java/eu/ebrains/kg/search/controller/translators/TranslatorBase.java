@@ -29,6 +29,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.HasCitation;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ import java.util.stream.Stream;
 public abstract class TranslatorBase {
     public static final String FILE_PROXY = "https://data.kg.ebrains.eu/files";
 
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     protected Value<Integer> value(Integer v) {
         if (v != null) {

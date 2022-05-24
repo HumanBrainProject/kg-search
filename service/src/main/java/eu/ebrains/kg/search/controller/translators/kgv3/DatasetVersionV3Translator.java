@@ -64,7 +64,6 @@ import java.util.stream.Stream;
 
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static class Result extends ResultsOfKGv3<DatasetVersionV3> {
     }
@@ -100,7 +99,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
-
+        logger.debug("Translating {}", datasetVersion.getId());
         d.setCategory(new Value<>("Dataset"));
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
