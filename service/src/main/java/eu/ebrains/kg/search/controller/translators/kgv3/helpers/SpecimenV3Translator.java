@@ -371,10 +371,10 @@ public class SpecimenV3Translator extends TranslatorBase {
 
         @Override
         public void flush(DatasetVersion.DSVSubjectGroup data, BasicHierarchyElement element) {
-            if(!CollectionUtils.isEmpty(element.getChildren())){
+            if(!CollectionUtils.isEmpty(element.getChildren()) && data.getNumberOfSubjects()!=null){
                 final long count = element.getChildren().stream().filter(c -> c.getParentRelationType()!=null && c.getParentRelationType().equals(PART_OF)).count();
                 final String quantity = data.getNumberOfSubjects().getValue();
-                if(count>0 && !String.valueOf(count).equals(quantity)){
+                if(quantity!=null && count>0 && !String.valueOf(count).equals(quantity)){
                     data.setNumberOfSubjects(value(String.format("%d of %s used in this dataset", count, quantity)));
                 }
             }
@@ -502,10 +502,10 @@ public class SpecimenV3Translator extends TranslatorBase {
 
         @Override
         public void flush(DatasetVersion.DSVTissueSampleCollection data, BasicHierarchyElement element) {
-            if(!CollectionUtils.isEmpty(element.getChildren())){
+            if(!CollectionUtils.isEmpty(element.getChildren()) && data.getTissueSamples()!=null){
                 final long count = element.getChildren().stream().filter(c -> c.getParentRelationType()!=null && c.getParentRelationType().equals(PART_OF)).count();
-                if(count>0){
-                    final String quantity = data.getTissueSamples().getValue();
+                final String quantity = data.getTissueSamples().getValue();
+                if(quantity!=null && count>0 && !String.valueOf(count).equals(quantity)){
                     data.setTissueSamples(value(String.format("%d of %s used in this dataset", count, quantity)));
                 }
             }
