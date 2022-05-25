@@ -605,7 +605,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             }
         }
         if(!CollectionUtils.isEmpty(children)){
-            children.sort(Comparator.comparing(BasicHierarchyElement::getTitle));
+            children.sort(Comparator.nullsFirst(Comparator.comparing(BasicHierarchyElement::getTitle)));
             el.setChildren(children);
         }
         if(specimenTranslator!=null && data!=null){
