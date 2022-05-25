@@ -59,42 +59,50 @@ public class TranslationController {
     public <Source, Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
-        Stats stats = getStats(instanceResults, from);
-        logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-        instanceResults.setErrors(new ErrorReport());
-        List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
-                    try {
-                        return translator.translate(s, dataStage, false, doiCitationFormatter);
-                    } catch (TranslationException e) {
-                        if (instanceResults.getErrors().get(e.getIdentifier()) != null) {
-                            instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
-                        } else {
-                            List<String> errors = new ArrayList<>();
-                            errors.add(e.getMessage());
-                            instanceResults.getErrors().put(e.getIdentifier(), errors);
-                        }
-                        return null;
-                    } catch (Exception e){
-                        String id = "unknown";
-                        if(s instanceof SourceInstanceV3){
-                            id = ((SourceInstanceV3)s).getId();
-                        }
-                        else if(s instanceof SourceInstanceV1andV2){
-                            id = ((SourceInstanceV1andV2)s).getIdentifier();
-                        }
-                        instanceResults.getErrors().put(id, Collections.singletonList(String.format("Unexpected exception: %s", e.getMessage())));
-                        logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
-                        return null;
-                    }
-                }
-        ).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
-        result.setTargetInstances(instances);
-        result.setFrom(instanceResults.getFrom());
-        result.setSize(instanceResults.getSize());
-        result.setTotal(instanceResults.getTotal());
-        if (instanceResults.getErrors() != null && !instanceResults.getErrors().isEmpty()) {
-            result.setErrors(instanceResults.getErrors());
+        if (instanceResults==null){
+            logger.info("No results for {}", translator.getSourceType().getSimpleName());
+            result.setTargetInstances(Collections.emptyList());
+            result.setFrom(from);
+            result.setSize(0);
+            result.setTotal(0);
+        }
+        else {
+            Stats stats = getStats(instanceResults, from);
+            logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
+            instanceResults.setErrors(new ErrorReport());
+            List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
+                        try {
+                            return translator.translate(s, dataStage, false, doiCitationFormatter);
+                        } catch (TranslationException e) {
+                            if (instanceResults.getErrors().get(e.getIdentifier()) != null) {
+                                instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
+                            } else {
+                                List<String> errors = new ArrayList<>();
+                                errors.add(e.getMessage());
+                                instanceResults.getErrors().put(e.getIdentifier(), errors);
+                            }
+                            return null;
+                        } catch (Exception e) {
+                            String id = "unknown";
+                            if (s instanceof SourceInstanceV3) {
+                                id = ((SourceInstanceV3) s).getId();
+                            } else if (s instanceof SourceInstanceV1andV2) {
+                                id = ((SourceInstanceV1andV2) s).getIdentifier();
+                            }
+                            instanceResults.getErrors().put(id, Collections.singletonList(String.format("Unexpected exception: %s", e.getMessage())));
+                            logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
+                            return null;
+                        }
+                    }
+            ).filter(Objects::nonNull).collect(Collectors.toList());
+            result.setTargetInstances(instances);
+            result.setFrom(instanceResults.getFrom());
+            result.setSize(instanceResults.getSize());
+            result.setTotal(instanceResults.getTotal());
+            if (instanceResults.getErrors() != null && !instanceResults.getErrors().isEmpty()) {
+                result.setErrors(instanceResults.getErrors());
+            }
         }
         return result;
     }

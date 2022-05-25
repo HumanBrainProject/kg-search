@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,6 +14,12 @@ import reactor.netty.http.client.HttpClient;
 
 @Component
 public class DOICitationFormatter {
+
+    private final boolean resolveDOIs;
+
+    public DOICitationFormatter(@Value("${RESOLVE_DOIS:true}") boolean resolveDOIs) {
+        this.resolveDOIs = resolveDOIs;
+    }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final WebClient webClient = WebClient.builder().clientConnector(new ReactorClientHttpConnector(
@@ -45,26 +52,29 @@ public class DOICitationFormatter {
     }
 
     private String doGetDOICitation(String doi, String style, String contentType) {
-        String value = null;
-        if (isEbrainsDOI(doi)) {
-            //Workaround to fix the datacite issues about citation formatting
-            try{
-                value = getDOICitationViaDataciteAPI(doi, style, contentType);
+        if (resolveDOIs) {
+            String value = null;
+            if (isEbrainsDOI(doi)) {
+                //Workaround to fix the datacite issues about citation formatting
+                try {
+                    value = getDOICitationViaDataciteAPI(doi, style, contentType);
+                } catch (WebClientException e) {
+                    logger.warn("Wasn't able to resolve DOI %s via datacite - trying by contentType negotiation");
+                }
             }
-            catch (WebClientException e){
-                logger.warn("Wasn't able to resolve DOI %s via datacite - trying by contentType negotiation");
+            if (value == null) {
+                try {
+                    logger.info("Doi not present in the cache - fetching from doi.org.");
+                    value = webClient.get().uri(doi).header("Accept", String.format("%s; style=%s", contentType, style)).retrieve().bodyToMono(String.class).block();
+                } catch (WebClientException e) {
+                    return null;
+                }
             }
+            return value != null ? value.trim() : null;
+        } else {
+            logger.info("Skipping DOI resolution for {}", doi);
+            return null;
         }
-        if (value == null) {
-            try {
-                logger.info("Doi not present in the cache - fetching from doi.org.");
-                value = webClient.get().uri(doi).header("Accept", String.format("%s; style=%s", contentType, style)).retrieve().bodyToMono(String.class).block();
-            }
-            catch(WebClientException e){
-                return null;
-            }
-        }
-        return value != null ? value.trim() : null;
     }
 
 }

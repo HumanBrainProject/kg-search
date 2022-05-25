@@ -43,7 +43,7 @@ public class KGV2ServiceClient extends KGServiceClient {
     private final String kgCoreEndpoint;
 
 
-    public KGV2ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint:@null}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
+    public KGV2ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
         super(serviceAccountWebClient, userWebClient);
         this.kgQueryEndpoint = kgQueryEndpoint;
         this.kgCoreEndpoint = kgCoreEndpoint;

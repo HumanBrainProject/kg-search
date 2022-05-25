@@ -20,7 +20,7 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
     public static final List<TranslatorModel<?,?,?,?>> MODELS = Arrays.asList(
             new TranslatorModel<>(Project.class, new ProjectV1Translator(), null, new ProjectV3Translator(), new ProjectMerger(), false, false, 1000),
             new TranslatorModel<>(Dataset.class, null, null, new DatasetV3Translator(), null, false, false, 1000),
-            new TranslatorModel<>(DatasetVersion.class, new DatasetV1Translator(), null, new DatasetVersionV3Translator(), null, false, false, 100),
+            new TranslatorModel<>(DatasetVersion.class, new DatasetV1Translator(), null, new DatasetVersionV3Translator(), null, false, false, 1),
             new TranslatorModel<>(Subject.class, new SubjectV1Translator(), null, new SubjectV3Translator(), null, false, false, 1000),
             new TranslatorModel<>(Sample.class, new SampleV1Translator(), null, null, null, false, false, 1000),
             new TranslatorModel<>(ModelVersion.class, null, null, new ModelVersionV3Translator(), null, false, false, 1000),
