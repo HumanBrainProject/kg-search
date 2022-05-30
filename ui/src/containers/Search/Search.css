@@ -42,6 +42,14 @@
     margin-top: 10px;
 }
 
+.kgs-search .kgs-search__panel .kgs-search__main .kgs-search__knowledge-space {
+    color: var(--color-8);
+}
+
+.kgs-search .kgs-search__panel .kgs-search__main .kgs-search__knowledge-space a{
+    color: var(--link-color-1);
+}
+
 @media (min-width: 576px) {
 
     .kgs-search .kgs-search__panel {

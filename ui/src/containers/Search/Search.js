@@ -37,24 +37,45 @@ import { HitsPanel } from "./Hit/HitsPanel";
 import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
-import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, SearchErrorPanel } from "../Error/ErrorPanel";
-import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
+import {
+  DefinitionErrorPanel,
+  GroupErrorPanel,
+  SearchInstanceErrorPanel,
+  SearchErrorPanel
+} from "../Error/ErrorPanel";
+import {
+  getUpdatedQuery,
+  getLocationSearchFromQuery,
+  searchToObj
+} from "../../helpers/BrowserHelpers";
 
 import "./Search.css";
 
-const SearchComponent = ({ show }) => (
-  <div className="kgs-search-container" >
+const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
+  <div className="kgs-search-container">
     {show && (
       <>
-        <div className="kgs-search" >
+        <div className="kgs-search">
           <SearchPanel />
           <TermsShortNotice className="kgs-search__terms-short-notice" />
-          <div className="kgs-search__panel" >
+          <div className="kgs-search__panel">
             <TypesFilterPanel />
             <FiltersPanel />
-            <div className="kgs-search__main" >
+            <div className="kgs-search__main">
               <ResultsHeader />
               <HitsPanel />
+              {showKnowledgeSpaceLink && (
+                <div className="kgs-search__knowledge-space">
+                  Not found what you&apos;re looking for? Have a look at the&nbsp;
+                  <a
+                    href={`https://knowledge-space.org/search?q=${queryString}`}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Knowledge Space
+                  </a>
+                </div>
+              )}
             </div>
           </div>
           <Footer />
@@ -69,28 +90,33 @@ const SearchComponent = ({ show }) => (
   </div>
 );
 
-
 const calculateFacetList = facets => {
   return facets.reduce((acc, facet) => {
     switch (facet.filterType) {
     case "list":
       if (facet.isHierarchical) {
         facet.keywords.forEach(keyword => {
-          keyword.children && Array.isArray(keyword.children.keywords) && keyword.children.keywords.forEach(child => {
-            acc.push({
-              name: facet.id,
-              value: child.value,
-              checked: Array.isArray(facet.value) ? facet.value.includes(child.value) : false,
-              many: true
+          keyword.children &&
+            Array.isArray(keyword.children.keywords) &&
+            keyword.children.keywords.forEach(child => {
+              acc.push({
+                name: facet.id,
+                value: child.value,
+                checked: Array.isArray(facet.value)
+                  ? facet.value.includes(child.value)
+                  : false,
+                many: true
+              });
             });
-          });
         });
       } else {
         facet.keywords.forEach(keyword => {
           acc.push({
             name: facet.id,
             value: keyword.value,
-            checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+            checked: Array.isArray(facet.value)
+              ? facet.value.includes(keyword.value)
+              : false,
             many: true
           });
         });
@@ -115,7 +141,9 @@ const getUrlParmeters = () => {
   const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
   const query = searchToObj();
   return Object.entries(query).reduce((acc, [key, value]) => {
-    const [, name, count] = regParamWithBrackets.test(key) ? key.match(regParamWithBrackets) : [null, key, null];
+    const [, name, count] = regParamWithBrackets.test(key)
+      ? key.match(regParamWithBrackets)
+      : [null, key, null];
     const val = decodeURIComponent(value);
     if (count) {
       if (!acc[name]) {
@@ -129,9 +157,31 @@ const getUrlParmeters = () => {
   }, {});
 };
 
-
-const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryString, selectedType, facets, sort, page, group, defaultGroup, definitionIsReady, definitionIsLoading, definitionHasError, loadDefinition, shouldLoadGroups, isGroupLoading, isGroupsReady, loadGroups, groupsHasError, searchHasError, search, isUpToDate }) => {
-
+const SearchBase = ({
+  setInitialSearchParams,
+  goBackToInstance,
+  isActive,
+  queryString,
+  selectedType,
+  facets,
+  sort,
+  page,
+  totalPages,
+  group,
+  defaultGroup,
+  definitionIsReady,
+  definitionIsLoading,
+  definitionHasError,
+  loadDefinition,
+  shouldLoadGroups,
+  isGroupLoading,
+  isGroupsReady,
+  loadGroups,
+  groupsHasError,
+  searchHasError,
+  search,
+  isUpToDate
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -143,9 +193,12 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
     setInitialSearchParams(searchParam);
     window.onpopstate = () => {
       const reg = /^#(.+)$/;
-      const [, id] = reg.test(window.location.hash) ? window.location.hash.match(reg) : [null, null];
+      const [, id] = reg.test(window.location.hash)
+        ? window.location.hash.match(reg)
+        : [null, null];
       goBackToInstance(id);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -161,19 +214,60 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
   useEffect(() => {
     if (definitionIsReady && (!shouldLoadGroups || isGroupsReady)) {
       let query = searchToObj();
-      query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
-      query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
+      query = getUpdatedQuery(
+        query,
+        "q",
+        queryString !== "",
+        queryString,
+        false
+      );
+      query = getUpdatedQuery(
+        query,
+        "facet_type[0]",
+        !!selectedType,
+        selectedType,
+        false
+      );
       const list = calculateFacetList(facets);
-      query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), query);
-      query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
+      query = list.reduce(
+        (acc, item) =>
+          getUpdatedQuery(acc, item.name, item.checked, item.value, item.many),
+        query
+      );
+      query = getUpdatedQuery(
+        query,
+        "sort",
+        sort && sort !== "newestFirst",
+        sort,
+        false
+      );
       query = getUpdatedQuery(query, "p", page !== 1, page, false);
-      query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
+      query = getUpdatedQuery(
+        query,
+        "group",
+        group && group !== defaultGroup,
+        group,
+        false
+      );
       const newLocationSearch = getLocationSearchFromQuery(query);
       if (newLocationSearch !== location.search) {
-        navigate(`${location.pathname}${newLocationSearch}`, {replace: !window.location.search}); // replace no type at initialisation
+        navigate(`${location.pathname}${newLocationSearch}`, {
+          replace: !window.location.search
+        }); // replace no type at initialisation
       }
     }
-  }, [definitionIsReady, shouldLoadGroups, isGroupsReady, queryString, selectedType, sort, page, group, facets]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    definitionIsReady,
+    shouldLoadGroups,
+    isGroupsReady,
+    queryString,
+    selectedType,
+    sort,
+    page,
+    group,
+    facets
+  ]);
 
   useEffect(() => {
     if (!definitionIsReady) {
@@ -187,11 +281,33 @@ const SearchBase = ({ setInitialSearchParams, goBackToInstance, isActive, queryS
     } else if (!isUpToDate) {
       search();
     }
-  }, [definitionIsReady, definitionIsLoading, definitionHasError, shouldLoadGroups, isGroupsReady, isGroupLoading, groupsHasError, isUpToDate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    definitionIsReady,
+    definitionIsLoading,
+    definitionHasError,
+    shouldLoadGroups,
+    isGroupsReady,
+    isGroupLoading,
+    groupsHasError,
+    isUpToDate
+  ]);
 
-
+  const showKnowledgeSpaceLink =
+    page === totalPages &&
+    typeof queryString === "string" &&
+    queryString.length > 0;
   return (
-    <SearchComponent show={definitionIsReady && !definitionHasError && !groupsHasError && !searchHasError} />
+    <SearchComponent
+      show={
+        definitionIsReady &&
+        !definitionHasError &&
+        !groupsHasError &&
+        !searchHasError
+      }
+      showKnowledgeSpaceLink={showKnowledgeSpaceLink}
+      queryString={queryString}
+    />
   );
 };
 
@@ -216,10 +332,11 @@ export const Search = connect(
     searchHasError: !!state.search.error,
     queryString: state.search.queryString,
     selectedType: state.search.selectedType,
-    facets: state.search.facets.filter(f =>
-      state.search.selectedType === f.type &&
-      f.count > 0 &&
-      (f.filterType !== "list" || f.keywords.length)
+    facets: state.search.facets.filter(
+      f =>
+        state.search.selectedType === f.type &&
+        f.count > 0 &&
+        (f.filterType !== "list" || f.keywords.length)
     ),
     facetValues: state.search.facets.reduce((acc, facet) => {
       acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
@@ -227,6 +344,7 @@ export const Search = connect(
     }, ""),
     sort: state.search.sort,
     page: state.search.page,
+    totalPages: state.search.totalPages,
     isUpToDate: state.search.isUpToDate
   }),
   dispatch => ({
