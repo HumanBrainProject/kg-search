@@ -294,7 +294,7 @@ const SearchBase = ({
   ]);
 
   const showKnowledgeSpaceLink =
-    page === totalPages &&
+    (!totalPages || page === totalPages) &&
     typeof queryString === "string" &&
     queryString.length > 0;
   return (
