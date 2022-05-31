@@ -149,13 +149,13 @@ public class Search {
 
     @SuppressWarnings("java:S3740") // we keep the generics intentionally
     @GetMapping("/{id}/live")
-    public ResponseEntity<Map> translate(@PathVariable("id") String id) throws TranslationException {
+    public ResponseEntity<Map> translate(@PathVariable("id") String id, @RequestParam(required = false, defaultValue = "false") boolean skipReferenceCheck) throws TranslationException {
         try {
             final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
             final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
             if(translatorModel!=null) {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
-                final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, true);
+                final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, !skipReferenceCheck);
                 if(v!=null) {
                     return queryId == null ? null : ResponseEntity.ok(Map.of(SOURCE, v));
                 }

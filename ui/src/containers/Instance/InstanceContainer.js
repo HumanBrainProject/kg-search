@@ -34,6 +34,7 @@ import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../
 
 import "./InstanceContainer.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Notification from "../../components/Notification/Notification";
 
 const BackLinkButton = ({instance}) => {
 
@@ -72,7 +73,7 @@ const getNavigation = header => {
   return Navigation;
 };
 
-export const InstanceContainer = ({ path, definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, clearAllInstances, getId, goBackToInstance}) => {
+export const InstanceContainer = ({ path, definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, warning, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, clearAllInstances, getId, goBackToInstance}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -130,6 +131,9 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
   return (
     <>
       <div className="kgs-instance-container" >
+        {warning && (
+          <Notification text={warning} show={true} />
+        )}
         {showInstance && (
           <React.Fragment>
             <BackLinkButton instance={previousInstance} />
