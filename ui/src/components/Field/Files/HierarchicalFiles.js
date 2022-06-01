@@ -43,6 +43,7 @@ import * as filters from "./helpers";
 import { debounce } from "lodash";
 
 import Tree from "rc-tree";
+import ReactPiwik from "react-piwik";
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {
@@ -105,15 +106,15 @@ const Node = ({ node, isRootNode, group, type, hasFilter }) => {
 };
 
 const addExpandedKeys = (tree, keys) => {
-  if(tree.expanded) {
+  if (tree.expanded) {
     keys.push(tree.key);
   }
-  if(tree.children) {
+  if (tree.children) {
     tree.children.forEach(child => addExpandedKeys(child, keys));
   }
 };
 
-const Icon = ({type}) => {
+const Icon = ({ type }) => {
   const isFile = type === "file";
   const icon = isFile ? faFile : faFolder;
   return <FontAwesomeIcon icon={icon} />;
@@ -151,7 +152,12 @@ class HierarchicalFiles extends React.Component {
         ? getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType)
         : getTreeByFolder(data, nameFieldPath, urlFieldPath);
       const tree = getFilteredTree(initialTree, this.state.filter);
-      this.setState({ tree: tree, node: tree, initialTree: initialTree, expandedKeys: [tree.key] });
+      this.setState({
+        tree: tree,
+        node: tree,
+        initialTree: initialTree,
+        expandedKeys: [tree.key]
+      });
     }
   }
 
@@ -180,10 +186,12 @@ class HierarchicalFiles extends React.Component {
     this.setState({ tree: tree, expandedKeys: expandedKeys });
   }, 500);
 
-  onSelect = (_selectedKeys, info) => this.setState({ node: info.node });
+  onSelect = (_selectedKeys, info) => {
+    ReactPiwik.push(["trackEvent", "Files", "Clicked", info.node.title]);
+    this.setState({ node: info.node });
+  };
 
-  onExpand = expandedKeys => this.setState({ expandedKeys: expandedKeys});
-
+  onExpand = expandedKeys => this.setState({ expandedKeys: expandedKeys });
 
   render() {
     const filesLength = this.props.data && this.props.data.length;

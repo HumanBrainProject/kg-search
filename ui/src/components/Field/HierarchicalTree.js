@@ -25,6 +25,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import Tree from "rc-tree";
+import ReactPiwik from "react-piwik";
 
 import LinkedInstance from "../../containers/LinkedInstance";
 
@@ -75,7 +76,10 @@ const Legend = ({legend}) => {
 const HierarchicalTree = ({data, group}) => {
   const [node, setNode] = useState(data);
 
-  const onSelect = (_selectedKeys, info) => setNode(info.node);
+  const onSelect = (_selectedKeys, info) => {
+    ReactPiwik.push(["trackEvent", "Specimen", "Clicked", info.node.title]);
+    setNode(info.node);
+  };
 
   return (
     <>
