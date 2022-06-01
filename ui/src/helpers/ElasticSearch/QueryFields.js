@@ -27,11 +27,12 @@ const addQueryFieldsFromFields = (queryFields, fields, parentPath) => {
       const path = `${parentPath}${field}`;
       const name = `${path}.value`;
       queryFields[name] = {
-        boost: mapping.boost??1,
+        boost: mapping.boost ?? 1,
         highlight: [
           "title.value",
           "description.value",
           "contributors.value",
+          "custodians.value",
           "owners.value",
           "component.value",
           "created_at.value",

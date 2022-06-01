@@ -32,6 +32,10 @@
     color: var(--color-36);
 }
 
+.kgs-notification p{
+    margin-bottom: 0;
+}
+
 @media screen and (min-width: 736px) {  
     .kgs-notification {
         margin: 0 var(--site-margin) 30px var(--site-margin);
