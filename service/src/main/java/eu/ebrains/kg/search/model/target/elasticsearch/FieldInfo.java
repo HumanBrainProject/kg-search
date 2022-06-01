@@ -44,6 +44,7 @@ public @interface FieldInfo {
     boolean ignoreForSearch() default false;
     boolean termsOfUse() default false;
     boolean isFilterableFacet() default false;
+    boolean isHierarchical() default false;
     boolean isHierarchicalFiles() default false;
     boolean isCitation() default false;
     boolean groupBy() default false;

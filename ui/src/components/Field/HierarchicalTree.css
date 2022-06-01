@@ -21,31 +21,18 @@
  *
  */
 
- .kgs-files-search {
-    margin-bottom: 5px;
-    margin-top: 5px
- }
-
- .kgs-files-search .kgs-files-search-icon {
-   position: absolute;  
-   margin: 10px;
- }
-
- .kgs-files-search .form-control {
-     border: 1px solid var(--default-border-color);
-     color: var(--color-7);
-     padding-left: 30px;
- }
-
-.kgs-hierarchical-files {
+.kgs-hierarchical {
     display: flex;
     align-items: self-start;
     flex-direction: column;
 }
 
-.kgs-hierarchical-files>.rc-tree {
+.kgs-hierarchical-tree {
     flex: 1;
     width: 100%;
+}
+
+.kgs-hierarchical-tree .rc-tree {
     height: calc(100vh - 500px);
     overflow-y: auto;
     border: 1px solid var(--default-border-color);
@@ -54,42 +41,42 @@
     overflow-x: hidden;
 }
 
-.kgs-hierarchical-files .rc-tree-node-selected {
+.kgs-hierarchical .rc-tree-node-selected {
     background-color: var(--button-default-background-color);
     box-shadow: none;
 }
 
-.kgs-hierarchical-files .rc-tree .rc-tree-treenode span.rc-tree-iconEle  {
+.kgs-hierarchical .rc-tree .rc-tree-treenode span.rc-tree-iconEle  {
     transform: translateY(4px);
     vertical-align: top;
 }
 
-.kgs-hierarchical-files .kgs-hierarchical-files__details {
+.kgs-hierarchical .kgs-hierarchical-details {
     flex: 1;
     position: relative;
     width: 100%;
-    margin: 9px 0 2px;
+    margin: 0 0 2px;
     padding: 10px;
 }
 
-.kgs-hierarchical-files__details > div {
-    margin: 20px 0 30px 0;
+.kgs-hierarchical-details > div {
+    margin: 0 0 30px 0;
     text-align: center;   
 }
 
-.kgs-hierarchical-files__details > div > a {
+.kgs-hierarchical-details > div > a {
     margin-left: 6px;
 }
 
-.kgs-hierarchical-files .rc-tree .rc-tree-treenode {
+.kgs-hierarchical .rc-tree .rc-tree-treenode {
     display: flex;
 }
 
-.kgs-hierarchical-files .rc-tree-switcher {
+.kgs-hierarchical .rc-tree-switcher {
     transform: translateY(5px);
 }
 
-.kgs-hierarchical-files .rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
+.kgs-hierarchical .rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
     color: rgb(157, 165, 171);
     vertical-align: middle;
     min-height: 24px;
@@ -97,65 +84,55 @@
     width: calc(100% - 40px);
 }
 
-.kgs-hierarchical-files .rc-tree-title {
+.kgs-hierarchical .rc-tree-title {
     word-break: break-all;
     white-space: normal;
     width: calc(100% - 16px);
 }
 
 @media (min-width:992px) {
-    .kgs-files-search .form-control {
-        width: 50%;
-    }
-
-    .kgs-hierarchical-files {
+    .kgs-hierarchical {
         flex-direction: row;
     }
 
-    .kgs-hierarchical-files > div {
+    .kgs-hierarchical > div {
         width: unset;
     }
 
-    .kgs-hierarchical-files .kgs-hierarchical-files__details{
+    .kgs-hierarchical .kgs-hierarchical-details{
         width: unset;
     }
 }
 
-.kgs-hierarchical-files__info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.kgs-hierarchical-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: small;
+}
+
+.kgs-hierarchical-info-title {
+    font-size: 1rem;
+}
+
+.kgs-hierarchical-info > div {
+  width: 100%;
+  text-align: center;
+}
+
+.kgs-hierarchical-info > div > div {
+  word-break: break-all;
+  line-height: 1.3em;
+}
+
+ul.kgs-hierarchical-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.kgs-hierarchical-legend li {
+    display: inline-block;
+    margin: 5px;
     font-size: small;
-  }
-  
-  .kgs-hierarchical-files__info > div {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .kgs-hierarchical-files__info > div > div {
-    word-break: break-all;
-    line-height: 1.3em;
-  } 
-  
-  .kgs-single-file {
-    border: 1px solid var(--default-border-color);
-    border-radius: 5px;
-    padding: 10px 20px 0 20px;
-  }
-
-  .kgs-single-file .kgs-hierarchical-files__details > .kgs-hierarchical-files__info {
-      margin-bottom: 10px;
-  }
-
-@media (min-width: 992px) {
-    .kgs-single-file {
-        margin: 0 20% 0 0;
-      }
-}
-
-@media (min-width: 1200px) {
-    .kgs-single-file {
-        margin: 0 40% 0 0;
-      }
 }

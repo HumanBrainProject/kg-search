@@ -180,10 +180,7 @@ class HierarchicalFiles extends React.Component {
     this.setState({ tree: tree, expandedKeys: expandedKeys });
   }, 500);
 
-  onSelect = (_selectedKeys, info) => {
-    info.node.active = true;
-    this.setState({ node: info.node });
-  };
+  onSelect = (_selectedKeys, info) => this.setState({ node: info.node });
 
   onExpand = expandedKeys => this.setState({ expandedKeys: expandedKeys});
 
@@ -235,15 +232,13 @@ class HierarchicalFiles extends React.Component {
             onExpand={this.onExpand}
             icon={Icon}
           />
-          {this.state.node.active && (
-            <Node
-              node={this.state.node}
-              isRootNode={this.state.node.isRootNode}
-              group={this.props.group}
-              type={this.props.type}
-              hasFilter={hasFilter}
-            />
-          )}
+          <Node
+            node={this.state.node}
+            isRootNode={this.state.node.isRootNode}
+            group={this.props.group}
+            type={this.props.type}
+            hasFilter={hasFilter}
+          />
         </div>
       </>
     );

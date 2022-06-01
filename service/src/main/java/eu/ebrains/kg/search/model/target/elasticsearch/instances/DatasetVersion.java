@@ -26,16 +26,18 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.controller.translators.Helpers;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Getter
@@ -270,6 +272,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     private List<Value<String>> keywords;
 
+
+    @FieldInfo(layout = "Specimen",  labelHidden = true, isHierarchical = true)
+    private BasicHierarchyElement specimenBySubject;
+
     /**
      * @deprecated  use subjects for openMINDS instead
      */
@@ -492,6 +498,441 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Additional remarks", separator = ", ")
         private Value<String> additionalRemarks;
     }
+
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SubjectGroup")
+    public static class DSVSubjectGroup {
+
+        public DSVSubjectGroup(){
+            this("Dataset.SubjectGroup");
+        }
+
+        protected DSVSubjectGroup(String type) {
+            this.type = new Value<>(type);
+        }
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type;
+
+        @FieldInfo(ignoreForSearch = true, visible = false)
+        private String id;
+
+        @FieldInfo
+        private Value<String> title;
+
+        @FieldInfo(label = "Subjects")
+        private Value<String> numberOfSubjects;
+
+        @FieldInfo(label = "Species", separator = ", ")
+        private List<TargetInternalReference> species;
+
+        @FieldInfo(label = "Sex", separator = ", ")
+        private List<TargetInternalReference> sex;
+
+        @FieldInfo(label = "Strain")
+        private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Genetic strain type")
+        private List<TargetInternalReference> geneticStrainType;
+
+        @FieldInfo(label = "Age")
+        private Value<String> age;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
+
+        @FieldInfo(label = "Attributes", separator = ", ")
+        private List<TargetInternalReference> attributes;
+
+        @FieldInfo(label = "Handedness")
+        private TargetInternalReference handedness;
+
+        @FieldInfo(label = "Pathology")
+        private List<TargetInternalReference> pathology;
+
+        @FieldInfo(label = "Weight")
+        private Value<String> weight;
+
+        @FieldInfo(label = "Additional remarks", markdown = true)
+        private Value<String> additionalRemarks;
+
+        @FieldInfo(labelHidden = true)
+        private List<TargetExternalReference> serviceLinks = new ArrayList<>();
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SubjectGroupState")
+    public static class DSVSubjectGroupState extends DSVSubjectGroup{
+
+        public DSVSubjectGroupState() {
+            super("Dataset.SubjectGroupState");
+        }
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="Subject")
+    public static class DSVSubject {
+
+        public DSVSubject(){
+            this("Dataset.Subject");
+        }
+
+        protected DSVSubject(String type) {
+            this.type = new Value<>(type);
+        }
+
+        @FieldInfo(ignoreForSearch = true, visible = false)
+        private String id;
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type;
+
+        @FieldInfo
+        private Value<String> title;
+
+        @FieldInfo(label = "Species")
+        private List<TargetInternalReference> species;
+
+        @FieldInfo(label = "Sex", separator = ", ")
+        private List<TargetInternalReference> sex;
+
+        @FieldInfo(label = "Strain")
+        private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Genetic strain type")
+        private List<TargetInternalReference> geneticStrainType;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
+
+        //These properties are only for merged subjects since these are properties of the state
+
+        @FieldInfo(label = "Attributes", separator = ", ")
+        private List<TargetInternalReference> attributes;
+
+        @FieldInfo(label = "Handedness")
+        private TargetInternalReference handedness;
+
+        @FieldInfo(label = "Pathology")
+        private List<TargetInternalReference> pathology;
+
+        @FieldInfo(label = "Age")
+        private Value<String> age;
+
+        @FieldInfo(label = "Weight")
+        private Value<String> weight;
+
+        @FieldInfo(label = "Additional remarks", separator = ", ", markdown = true)
+        private Value<String> additionalRemarks;
+
+        @FieldInfo(labelHidden = true)
+        private List<TargetExternalReference> serviceLinks = new ArrayList<>();
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SubjectState")
+    public static class DSVSubjectState extends DSVSubject{
+
+        public DSVSubjectState() {
+            super("Dataset.SubjectState");
+        }
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSample")
+    public static class DSVTissueSample {
+        public DSVTissueSample() {
+            this("Dataset.TissueSample");
+        }
+
+        public DSVTissueSample(String type) {
+            this.type = new Value<>(type);
+        }
+        @FieldInfo(ignoreForSearch = true, visible = false)
+        private String id;
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type;
+
+        @FieldInfo
+        private Value<String> title;
+
+        @FieldInfo(label = "Sex", separator = ", ")
+        private List<TargetInternalReference> sex;
+
+        @FieldInfo(label = "Anatomical location")
+        private List<TargetInternalReference> anatomicalLocation;
+
+        @FieldInfo(label = "Origin")
+        private TargetInternalReference origin;
+
+        @FieldInfo(label = "Species")
+        private List<TargetInternalReference> species;
+
+        @FieldInfo(label = "Strain")
+        private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Genetic strain type")
+        private List<TargetInternalReference> geneticStrainType;
+
+        @FieldInfo(label = "Laterality")
+        private List<TargetInternalReference> laterality;
+
+        @FieldInfo(label = "Attributes")
+        private List<TargetInternalReference> attributes;
+
+        @FieldInfo(label = "Type")
+        private TargetInternalReference tissueSampleType;
+
+        @FieldInfo(label = "Age")
+        private Value<String> age;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
+
+        @FieldInfo(label = "Pathology")
+        private List<TargetInternalReference> pathology;
+
+        @FieldInfo(label = "Weight")
+        private Value<String> weight;
+
+        @FieldInfo(label = "Additional remarks", markdown = true)
+        private Value<String> additionalRemarks;
+
+        @FieldInfo(labelHidden = true)
+        private List<TargetExternalReference> serviceLinks = new ArrayList<>();
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSampleState")
+    public static class DSVTissueSampleState extends DSVTissueSample{
+
+        public DSVTissueSampleState() {
+           super("Dataset.TissueSampleState");
+        }
+
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSampleCollection")
+    public static class DSVTissueSampleCollection {
+
+        public DSVTissueSampleCollection() {
+            this("Dataset.TissueSampleCollection");
+        }
+
+        protected DSVTissueSampleCollection(String type) {
+            this.type = new Value<>(type);
+        }
+
+        @FieldInfo(ignoreForSearch = true, visible = false)
+        private String id;
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type;
+
+        @FieldInfo
+        private Value<String> title;
+
+        @FieldInfo(label = "Tissue samples")
+        private Value<String> tissueSamples;
+
+        @FieldInfo(label = "Sex", separator = ", ")
+        private List<TargetInternalReference> sex;
+
+        @FieldInfo(label = "Anatomical location")
+        private List<TargetInternalReference> anatomicalLocation;
+
+        @FieldInfo(label = "Origin")
+        private TargetInternalReference origin;
+
+        @FieldInfo(label = "Species")
+        private List<TargetInternalReference> species;
+
+        @FieldInfo(label = "Strain")
+        private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Genetic strain type")
+        private List<TargetInternalReference> geneticStrainType;
+
+        @FieldInfo(label = "Laterality")
+        private List<TargetInternalReference> laterality;
+
+        @FieldInfo(label = "Attributes")
+        private List<TargetInternalReference> attributes;
+
+        @FieldInfo(label = "Type")
+        private TargetInternalReference tissueSampleType;
+
+        @FieldInfo(label = "Age")
+        private Value<String> age;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
+
+        @FieldInfo(label = "Pathology")
+        private List<TargetInternalReference> pathology;
+
+        @FieldInfo(label = "Weight")
+        private Value<String> weight;
+
+        @FieldInfo(label = "Additional remarks", markdown = true)
+        private Value<String> additionalRemarks;
+
+        @FieldInfo(labelHidden = true)
+        private List<TargetExternalReference> serviceLinks = new ArrayList<>();
+
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="TissueSampleCollectionState")
+    public static class DSVTissueSampleCollectionState extends DSVTissueSampleCollection{
+        public DSVTissueSampleCollectionState() {
+            super("Dataset.TissueSampleCollectionState");
+        }
+    }
+
+    @Getter
+    @Setter
+    @MetaInfo(name="SpecimenOverview")
+    public static class DSVSpecimenOverview {
+
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Dataset.SpecimenOverview");
+
+        @FieldInfo
+        private Value<String> title;
+
+        @FieldInfo(label = "Subject groups")
+        private Value<String> numberOfSubjectGroups;
+
+        private transient Set<String> subjectGroupIds = new HashSet<>();
+
+        @FieldInfo(label = "Subjects")
+        private Value<String> numberOfSubjects;
+
+        private transient Set<String> subjectIds = new HashSet<>();
+
+        @FieldInfo(label = "Tissue sample collections")
+        private Value<String> numberOfTissueSampleCollections;
+
+        private transient Set<String> tissueSampleCollectionIds = new HashSet<>();
+
+        @FieldInfo(label = "Tissue samples")
+        private Value<String> numberOfTissueSamples;
+
+        private transient Set<String> tissueSampleIds = new HashSet<>();
+
+        @FieldInfo(label = "Species", separator = ", ")
+        private List<TargetInternalReference> species = new ArrayList<>();
+
+        @FieldInfo(label = "Sex", separator = ", ")
+        private List<TargetInternalReference> sex = new ArrayList<>();
+
+        @FieldInfo(label = "Strains")
+        private List<TargetInternalReference> strains = new ArrayList<>();
+
+        @FieldInfo(label = "Genetic strain types")
+        private List<TargetInternalReference> geneticStrainTypes = new ArrayList<>();
+
+        @FieldInfo(label = "Pathology", separator = ", ")
+        private List<TargetInternalReference> pathology = new ArrayList<>();
+
+        private transient Map<String, Map<TargetInternalReference, Map<String, Integer>>> collector = new HashMap<>();
+
+        private String normalizeTypeName(String type){
+            String typeName = StringUtils.uncapitalize(type);
+            if(!typeName.endsWith("s")){
+                typeName = String.format("%ss", typeName);
+            }
+            return typeName;
+        }
+
+        private void collect(String key, List<TargetInternalReference> references, String type){
+            if(references!=null) {
+                String typeName = normalizeTypeName(type);
+                final Map<TargetInternalReference, Map<String, Integer>> map = collector.computeIfAbsent(key, k -> new HashMap<>());
+                references.forEach(r -> {
+                    final Map<String, Integer> countsPerType = map.computeIfAbsent(r, k -> new HashMap<>());
+                    final Integer count = countsPerType.computeIfAbsent(typeName, k -> 0);
+                    countsPerType.put(typeName, count + 1);
+                });
+            }
+        }
+
+        private List<TargetInternalReference> flush(String key){
+            final Map<TargetInternalReference, Map<String, Integer>> map = collector.computeIfAbsent(key, k -> Collections.emptyMap());
+            Stream<TargetInternalReference> stream = map.keySet().stream();
+            // Disabling the code for now -> we want to clarify first, how we can properly calculate the summary and how to display it accordingly.
+
+//            if(map.size()>1){
+//                //We only show the count if there are more than one entries per key
+//                stream = stream.map(k -> {
+//                    final Map<String, Integer> count = map.get(k);
+//                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
+//                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t), t)).collect(Collectors.joining(", "));
+//                    targetInternalReference.setValue(String.format("%s (%s)", StringUtils.isNotBlank(k.getValue()) ? k.getValue() : "Undefined", counts));
+//                    return targetInternalReference;
+//                });
+//            }
+            final List<TargetInternalReference> result = stream.filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList());
+            return result.isEmpty() ? null : result;
+        }
+
+
+        public DSVSpecimenOverview flush(){
+            if(subjectIds.size()>0) {
+                setNumberOfSubjects(new Value<>(String.valueOf(subjectIds.size())));
+            }
+            if(subjectGroupIds.size()>0) {
+                setNumberOfSubjectGroups(new Value<>(String.valueOf(subjectGroupIds.size())));
+            }
+            if(tissueSampleIds.size()>0) {
+                setNumberOfTissueSamples(new Value<>(String.valueOf(tissueSampleIds.size())));
+            }
+            if(tissueSampleCollectionIds.size()>0) {
+                setNumberOfTissueSampleCollections(new Value<>(String.valueOf(tissueSampleCollectionIds.size())));
+            }
+
+            setPathology(flush("pathology"));
+            setSpecies(flush("species"));
+            setSex(flush("sex"));
+            setStrains(flush("strains"));
+            setGeneticStrainTypes(flush("geneticStrainTypes"));
+            return this;
+        }
+
+        public void collectPathology(List<TargetInternalReference> references, String type){
+            collect("pathology", references, type);
+        }
+
+        public void collectSpecies(List<TargetInternalReference> references, String type){
+            collect("species", references, type);
+        }
+
+        public void collectSex(List<TargetInternalReference> references, String type){
+            collect("sex", references, type);
+        }
+
+        public void collectStrains(List<TargetInternalReference> references, String type){
+            collect("strains", references, type);
+        }
+
+        public void collectGeneticStrainTypes(List<TargetInternalReference> references, String type){
+            collect("geneticStrainTypes", references, type);
+        }
+    }
+
+
 
 
 }

@@ -76,6 +76,73 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
     private List<FullNameRef> preparationDesign;
     private List<ServiceLink> serviceLinks;
     private List<ServiceLink> serviceLinksFromFiles;
+    private List<StudiedSpecimen> studiedSpecimen;
+
+
+    @Getter
+    @Setter
+    @EqualsAndHashCode
+    public static class SpecimenServiceLink{
+        private String openDataIn;
+        private String service;
+        private String name;
+
+        public String displayLabel(){
+            return this.getName()!=null && this.getService() != null ? String.format("Open %s in %s", this.getName(), this.getService()) : null;
+        }
+    }
+
+
+    @Getter
+    @Setter
+    public static class SpecimenServiceLinkCollection{
+        private List<SpecimenServiceLink> fromFileBundle;
+        private List<SpecimenServiceLink> fromFile;
+
+    }
+
+
+
+
+    @Getter
+    @Setter
+    public static class StudiedSpecimen{
+        private String id;
+        private String internalIdentifier;
+        private String lookupLabel;
+        private Long quantity;
+        private String additionalRemarks;
+        private FullNameRef origin;
+        private List<SpeciesOrStrain> species;
+        private List<AnatomicalLocation> anatomicalLocation;
+        private List<FullNameRef> biologicalSex;
+        private List<FullNameRef> laterality;
+        private FullNameRef tissueSampleType;
+        private List<StudiedState> studiedState;
+        private List<String> isPartOf;
+        private List<String> type;
+        private List<StudiedSpecimen> subElements;
+        private List<SpecimenServiceLinkCollection> serviceLinks;
+    }
+
+
+    @Getter
+    @Setter
+    public static class StudiedState{
+        private String id;
+        private List<String> descendedFrom;
+        private List<String> type;
+        private String additionalRemarks;
+        private QuantitativeValueOrRange age;
+        private FullNameRef ageCategory;
+        private List<FullNameRef> attribute;
+        private FullNameRef handedness;
+        private List<FullNameRef> pathology;
+        private QuantitativeValueOrRange weight;
+        private String lookupLabel;
+        private transient StudiedSpecimen parent;
+        private List<SpecimenServiceLinkCollection> serviceLinks;
+    }
 
 
     @Getter
@@ -182,6 +249,14 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
         private FullNameRef species;
         private FullNameRef geneticStrainType;
     }
+
+    @Getter
+    @Setter
+    public static class SpeciesOrStrain extends FullNameRef{
+        private FullNameRef species;
+        private FullNameRef geneticStrainType;
+    }
+
 
 
     @Getter
