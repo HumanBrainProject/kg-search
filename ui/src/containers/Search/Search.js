@@ -332,16 +332,10 @@ export const Search = connect(
     searchHasError: !!state.search.error,
     queryString: state.search.queryString,
     selectedType: state.search.selectedType,
-    facets: state.search.facets.filter(
-      f =>
-        state.search.selectedType === f.type &&
-        f.count > 0 &&
-        (f.filterType !== "list" || f.keywords.length)
-    ),
-    facetValues: state.search.facets.reduce((acc, facet) => {
-      acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
-      return acc;
-    }, ""),
+    facets: Array.isArray(state.search.facets[state.search.selectedType])?state.search.facets[state.search.selectedType].filter(f =>
+      f.count > 0 &&
+      (f.filterType !== "list" || f.keywords.length)
+    ):[],
     sort: state.search.sort,
     page: state.search.page,
     totalPages: state.search.totalPages,

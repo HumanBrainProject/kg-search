@@ -81,9 +81,7 @@ export const loadGroups = () => {
         dispatch(loadGroupsSuccess(response.data));
       })
       .catch(e => {
-        const { response } = e;
-        const { status } = response;
-        switch (status) {
+        switch (e?.response?.status) {
         case 401: // Unauthorized
         case 403: // Forbidden
         case 511: // Network Authentication Required

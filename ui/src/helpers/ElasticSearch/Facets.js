@@ -23,99 +23,66 @@
 const FACET_DEFAULT_SIZE = 10;
 const FACET_ALL_SIZE = 1000000000;
 
-export const getResetFacets = facets => {
-  return facets.map(f => {
-    switch (f.filterType) {
+export const getResetFacets = facets => Object.entries(facets).reduce((acc, [type, list]) => {
+  acc[type] = list.map(facet => {
+    switch (facet.filterType) {
     case "list":
       return {
-        ...f,
+        ...facet,
         value: null,
-        size: (f.isHierarchical || f.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
+        size: (facet.isHierarchical || facet.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
       };
     case "exists":
     default:
       return {
-        ...f,
+        ...facet,
         value: null
       };
     }
   });
-};
+  return acc;
+}, {});
 
-export const constructFacets = definition => {
-  const facets = [];
-  Object.entries(definition).forEach(([type, typeDefinition]) => {
-    Object.entries(typeDefinition.fields).forEach(([name, field]) => {
-      if (field.facet) {
-        facets.push({
-          id: "facet_" + type + "_" + name,
-          name: name,
-          type: type,
-          filterType: field.facet,
-          filterOrder: field.facetOrder,
-          exclusiveSelection: field.facetExclusiveSelection,
-          fieldType: field.type,
-          fieldLabel: field.label,
-          isChild: false,
-          isFilterable: field.isFilterableFacet,
-          count: 0,
-          value: null,
-          keywords: [],
-          size: field.isFilterableFacet?FACET_ALL_SIZE:FACET_DEFAULT_SIZE,
-          defaultSize: field.isFilterableFacet?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
-        });
+export const constructFacets = definition => Object.entries(definition).reduce((acc, [type, typeDefinition]) => {
+  const list = Array.isArray(typeDefinition.facets)?typeDefinition.facets:[];
+  acc[type] = list.map(facet => ({
+    ...facet,
+    count: 0,
+    value: null,
+    keywords: [],
+    size: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE,
+    defaultSize: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
+  }));
+  return acc;
+}, {});
+
+export const getAggregation = (facets, type) => {
+  if (!Array.isArray(facets[type])) {
+    return {};
+  }
+  return facets[type].reduce((acc, facet) => {
+    switch (facet.filterType) {
+    case "list":
+      if (facet.isHierarchical) {
+        acc[facet.id] = {
+          values: facet.value,
+          size: facet.size
+        };
+      } else {
+        acc[facet.id] = {
+          values: facet.value,
+          size: facet.size
+        };
       }
-      if (field.children) {
-        Object.entries(field.children).forEach(([childName, child]) => {
-          if (child.facet) {
-            if (child.isHierarchicalFacet) {
-              facets.push({
-                id: "facet_" + type + "_" + name + ".children." + childName,
-                name: name,
-                type: type,
-                filterType: child.facet,
-                filterOrder: child.facetOrder,
-                exclusiveSelection: field.facetExclusiveSelection,
-                fieldType: child.type,
-                fieldLabel: field.label,
-                isChild: true,
-                isHierarchical: true,
-                isFilterable: false,
-                path: name + ".children",
-                childName: childName,
-                count: 0,
-                value: null,
-                keywords: [],
-                size: FACET_ALL_SIZE,
-                defaultSize: FACET_ALL_SIZE,
-                missingTerm: field.facetMissingTerm?field.facetMissingTerm:"Others"
-              });
-            } else {
-              facets.push({
-                id: "facet_" + type + "_" + name + ".children." + childName,
-                name: name,
-                type: type,
-                filterType: child.facet,
-                filterOrder: child.facetOrder,
-                exclusiveSelection: field.facetExclusiveSelection,
-                fieldType: child.type,
-                fieldLabel: child.label,
-                isChild: true,
-                isHierarchical: false,
-                isFilterable: false,
-                path: name + ".children",
-                childName: childName,
-                count: 0,
-                value: null,
-                keywords: [],
-                size: FACET_DEFAULT_SIZE,
-                defaultSize: FACET_DEFAULT_SIZE
-              });
-            }
-          }
-        });
+      break;
+    case "exists":
+      if (facet.value) {
+        acc[facet.id] = {};
       }
-    });
-  });
-  return facets;
+      break;
+    default:
+      break;
+    }
+    return acc;
+  }, {});
 };

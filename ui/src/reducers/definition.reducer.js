@@ -44,7 +44,7 @@ const loadDefinitionSuccess = (state, action) => {
     ...state,
     isReady: true,
     isLoading: false,
-    typeMappings: action.definition
+    typeMappings: action.typeMappings
   };
 };
 

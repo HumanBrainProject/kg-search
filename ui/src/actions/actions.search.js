@@ -24,8 +24,10 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import ReactPiwik from "react-piwik";
-import { getQueryPayload } from "../helpers/ElasticSearch/Query";
 import { sessionFailure } from "./actions";
+
+import { sanitizeQueryString } from "../helpers/ElasticSearch/QueryString";
+import { getAggregation } from "../helpers/ElasticSearch/Facets";
 
 export const loadSearchBadRequest = error => {
   return {
@@ -130,20 +132,21 @@ export const setInitialSearchParams = params => {
 export const search = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const payload = getQueryPayload(state.search);
+    const { queryString, selectedType, sort, from, hitsPerPage, facets } = state.search;
+    const q = sanitizeQueryString(queryString);
+    const payload = getAggregation(facets, selectedType);
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
     API.axios
-      .post(API.endpoints.search(state.groups.group), payload)
+      .post(API.endpoints.search(state.groups.group, q, selectedType, from, hitsPerPage, sort), payload)
       //.get(API.endpoints.search(state.groups.group), payload)
       .then(response => {
         response.data && response.data.hits && Array.isArray(response.data.hits.hits) && response.data.hits.hits.forEach(hit => hit._group = state.groups.group);
         dispatch(loadSearchResult(response.data));
       })
       .catch(e => {
-        const { response } = e;
-        const { status } = response;
+        const status = e?.response?.status;
         switch (status) {
         case 400: // Bad Request
         {

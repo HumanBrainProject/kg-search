@@ -35,10 +35,10 @@ describe("definition reducer", () => {
   describe("load definition success", () => {
     it("should set current definition", () => {
       const state = undefined;
-      const definition = {a: 1, b: 2, c: 4};
-      const action = actions.loadDefinitionSuccess(definition);
+      const typeMappings = {a: 1, b: 2, c: 4};
+      const action = actions.loadDefinitionSuccess(typeMappings);
       const newState = definitionReducer(state, action);
-      expect(newState.typeMappings).toBe(definition);
+      expect(newState.typeMappings).toBe(typeMappings);
     });
     it("should set is ready to true", () => {
       const state = {isReady: false};

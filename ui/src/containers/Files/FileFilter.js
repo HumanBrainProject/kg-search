@@ -94,29 +94,22 @@ export const FileFilter = ({ title, show, url, value, onSelect, onSessionFailure
         setIsLoading(false);
       })
       .catch(e => {
-        const { response } = e;
-        if (response) {
-          const { status } = response;
-          switch (status) {
-          case 401: // Unauthorized
-          case 403: // Forbidden
-          case 511: // Network Authentication Required
-          {
-            setIsLoading(false);
-            typeof onSessionFailure === "function" && onSessionFailure();
-            break;
-          }
-          case 500:
-          case 404:
-          default:
-          {
-            setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
-            setIsLoading(false);
-          }
-          }
-        } else {
+        switch (e?.response?.status) {
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+        {
+          setIsLoading(false);
+          typeof onSessionFailure === "function" && onSessionFailure();
+          break;
+        }
+        case 500:
+        case 404:
+        default:
+        {
           setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
           setIsLoading(false);
+        }
         }
       });
   };

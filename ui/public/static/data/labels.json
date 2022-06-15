@@ -1,6 +1,6 @@
 {
     "authEndpoint": "https://iam.humanbrainproject.eu/auth",
-    "_source": {
+    "types": {
         "Project": {
             "https://schema.hbp.eu/searchUi/order": 1,
             "https://schema.hbp.eu/searchUi/ribbon": {
@@ -21,8 +21,7 @@
                 },
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/sort": true
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
@@ -30,8 +29,7 @@
                 "description": {
                     "https://schema.hbp.eu/graphQuery/label": "Description",
                     "https://schema.hbp.eu/searchUi/label_hidden": true,
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/boost": 7.5
+                    "https://schema.hbp.eu/searchUi/markdown": true
                 },
                 "dataset": {
                     "https://schema.hbp.eu/graphQuery/label": "Datasets",
@@ -81,8 +79,7 @@
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
                     "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/layout": "header",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
@@ -92,8 +89,7 @@
                     "https://schema.hbp.eu/searchUi/label_hidden": true,
                     "https://schema.hbp.eu/searchUi/type": "text",
                     "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/searchUi/layout": "header",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0
+                    "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "zip": {
                     "https://schema.hbp.eu/graphQuery/label": "Download Dataset",
@@ -126,34 +122,27 @@
                 "license_info": {
                     "https://schema.hbp.eu/graphQuery/label": "License",
                     "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/facet_order": "byvalue"
                 },
                 "component": {
                     "https://schema.hbp.eu/graphQuery/label": "Project",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0,
                     "https://schema.hbp.eu/searchUi/order": 3
                 },
                 "owners": {
                     "https://schema.hbp.eu/graphQuery/label": "Custodians",
                     "https://schema.hbp.eu/searchUi/hint": "A custodian is the person responsible for the data bundle.",
-                    "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0
+                    "https://schema.hbp.eu/searchUi/separator": "; "
                 },
                 "description": {
                     "https://schema.hbp.eu/graphQuery/label": "Description",
                     "https://schema.hbp.eu/searchUi/label_hidden": true,
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/boost": 2.0
+                    "https://schema.hbp.eu/searchUi/markdown": true
                 },
                 "speciesFilter": {
                     "https://schema.hbp.eu/graphQuery/label": "Owners",
                     "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/searchUi/facetMissingTerm": "Others",
                     "children": {
                         "owners": {
-                            "https://schema.hbp.eu/searchUi/visible": false,
-                            "https://schema.hbp.eu/searchUi/facet": "list",
-                            "https://schema.hbp.eu/searchUi/isHierarchicalFacet": true
+                            "https://schema.hbp.eu/searchUi/visible": false
                         }
                     }
                 },
@@ -163,8 +152,7 @@
                 },
                 "embargoForFilter": {
                     "https://schema.hbp.eu/graphQuery/label": "Embargo",
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/visible": false
                 },
                 "embargo": {
                     "https://schema.hbp.eu/graphQuery/label": "Files",
@@ -201,8 +189,7 @@
                 },
                 "modalityForFilter": {
                     "https://schema.hbp.eu/graphQuery/label": "Modality",
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/type": "text"
                 },
                 "methods": {
                     "https://schema.hbp.eu/graphQuery/label": "Methods",
@@ -210,9 +197,7 @@
                     "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 1,
                     "https://schema.hbp.eu/searchUi/layout": "summary",
                     "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
-                    "https://schema.hbp.eu/searchUi/order": 2,
-                    "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/searchUi/isFilterableFacet": true
+                    "https://schema.hbp.eu/searchUi/order": 2
                 },
                 "protocol": {
                     "https://schema.hbp.eu/graphQuery/label": "Keywords",
@@ -220,9 +205,7 @@
                     "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 3,
                     "https://schema.hbp.eu/searchUi/layout": "summary",
                     "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>",
-                    "https://schema.hbp.eu/searchUi/order": 1,
-                    "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/searchUi/isFilterableFacet": true
+                    "https://schema.hbp.eu/searchUi/order": 1
                 },
                 "viewer": {
                     "https://schema.hbp.eu/graphQuery/label": "Viewer",
@@ -288,8 +271,7 @@
                 },
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/sort": true
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
@@ -338,13 +320,10 @@
                         "species": {
                             "https://schema.hbp.eu/graphQuery/label": "Species",
                             "https://schema.hbp.eu/searchUi/overview": true,
-                            "https://schema.hbp.eu/searchUi/type": "text",
-                            "https://schema.hbp.eu/searchUi/facet_order": "bycount",
-                            "https://schema.hbp.eu/searchUi/facet": "list"
+                            "https://schema.hbp.eu/searchUi/type": "text"
                         },
                         "sex": {
-                            "https://schema.hbp.eu/graphQuery/label": "Sex",
-                            "https://schema.hbp.eu/searchUi/facet": "list"
+                            "https://schema.hbp.eu/graphQuery/label": "Sex"
                         },
                         "age": {
                             "https://schema.hbp.eu/graphQuery/label": "Age"
@@ -365,8 +344,7 @@
                 },
                 "datasetExists": {
                     "https://schema.hbp.eu/graphQuery/label": "Datasets",
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/searchUi/facet": "exists"
+                    "https://schema.hbp.eu/searchUi/visible": false
                 },
                 "datasets": {
                     "https://schema.hbp.eu/graphQuery/label": "Datasets",
@@ -407,14 +385,12 @@
                 },
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/sort": true
                 },
                 "description": {
                     "https://schema.hbp.eu/graphQuery/label": "Description",
                     "https://schema.hbp.eu/searchUi/label_hidden": true,
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/boost": 2.0
+                    "https://schema.hbp.eu/searchUi/markdown": true
                 },
                 "version": {
                     "https://schema.hbp.eu/graphQuery/label": "Version",
@@ -425,8 +401,7 @@
                     "https://schema.hbp.eu/searchUi/label_hidden": true,
                     "https://schema.hbp.eu/searchUi/type": "text",
                     "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/searchUi/layout": "header",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0
+                    "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "owners": {
                     "https://schema.hbp.eu/graphQuery/label": "Custodian",
@@ -460,8 +435,7 @@
                 },
                 "brainStructures": {
                     "https://schema.hbp.eu/graphQuery/label": "Brain structure",
-                    "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/layout": "summary"
                 },
                 "cellularTarget": {
                     "https://schema.hbp.eu/graphQuery/label": "(Sub)cellular target",
@@ -473,14 +447,12 @@
                 },
                 "modelScope": {
                     "https://schema.hbp.eu/graphQuery/label": "Model scope",
-                    "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/layout": "summary"
                 },
                 "abstractionLevel": {
                     "https://schema.hbp.eu/graphQuery/label": "Abstraction level",
                     "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/layout": "summary"
                 },
                 "modelFormat": {
                     "https://schema.hbp.eu/graphQuery/label": "Model format",
@@ -510,7 +482,6 @@
                 "license_info": {
                     "https://schema.hbp.eu/graphQuery/label": "License",
                     "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/facet_order": "byvalue"
                 }
             },
             "http://schema.org/name": "Model"
@@ -523,8 +494,7 @@
                 },
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/sort": true
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
@@ -542,22 +512,19 @@
                 "publications": {
                     "https://schema.hbp.eu/graphQuery/label": "Publications",
                     "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/facet": "exists"
+                    "https://schema.hbp.eu/searchUi/layout": "group"
                 },
                 "contributions": {
                     "https://schema.hbp.eu/graphQuery/label": "Contributions",
                     "https://schema.hbp.eu/searchUi/overview": true,
                     "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/facet": "exists"
+                    "https://schema.hbp.eu/searchUi/layout": "group"
                 },
                 "modelContributions": {
                     "https://schema.hbp.eu/graphQuery/label": "Model contributions",
                     "https://schema.hbp.eu/searchUi/overview": true,
                     "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/facet": "exists"
+                    "https://schema.hbp.eu/searchUi/layout": "group"
                 },
                 "first_release": {
                     "https://schema.hbp.eu/graphQuery/label": "First release",
@@ -583,16 +550,14 @@
                 },
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/sort": true
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "description": {
                     "https://schema.hbp.eu/searchUi/label_hidden": true,
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/boost": 2.0
+                    "https://schema.hbp.eu/searchUi/markdown": true
                 },
                 "license": {
                     "https://schema.hbp.eu/graphQuery/label": "License"
@@ -609,8 +574,7 @@
                 "operatingSystem": {
                     "https://schema.hbp.eu/graphQuery/label": "Operating System",
                     "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>"
                 },
                 "homepage": {
                     "https://schema.hbp.eu/graphQuery/label": "Homepage",
@@ -652,8 +616,7 @@
                 },
                 "title": {
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/sort": true
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
@@ -661,13 +624,11 @@
                 "species": {
                     "https://schema.hbp.eu/graphQuery/label": "Species",
                     "https://schema.hbp.eu/searchUi/overview": true,
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/type": "text"
                 },
                 "sex": {
                     "https://schema.hbp.eu/graphQuery/label": "Sex",
-                    "https://schema.hbp.eu/searchUi/overview": true,
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/overview": true
                 },
                 "age": {
                     "https://schema.hbp.eu/graphQuery/label": "Age",
@@ -682,13 +643,11 @@
                 },
                 "strain": {
                     "https://schema.hbp.eu/graphQuery/label": "Strain",
-                    "https://schema.hbp.eu/searchUi/overview": true,
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/overview": true
                 },
                 "genotype": {
                     "https://schema.hbp.eu/graphQuery/label": "Genotype",
-                    "https://schema.hbp.eu/searchUi/overview": true,
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/overview": true
                 },
                 "samples": {
                     "https://schema.hbp.eu/graphQuery/label": "Samples",
@@ -698,8 +657,7 @@
                 },
                 "datasetExists": {
                     "https://schema.hbp.eu/graphQuery/label": "Datasets",
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/searchUi/facet": "exists"
+                    "https://schema.hbp.eu/searchUi/visible": false
                 },
                 "datasets": {
                     "https://schema.hbp.eu/graphQuery/label": "Datasets",

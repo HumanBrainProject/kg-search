@@ -131,9 +131,7 @@ export const getAuthEndpoint = (group=null) => {
         dispatch(authenticate(group));
       })
       .catch(e => {
-        const { response } = e;
-        const { status } = response;
-        switch (status) {
+        switch (e?.response?.status) {
         case 500:
         case 404:
         default:
