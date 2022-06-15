@@ -23,7 +23,8 @@
 
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchAgg;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,18 +32,8 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ElasticSearchDocument {
+public class ElasticSearchFilesResult extends ElasticSearchResult {
 
-    @JsonProperty("_index")
-    private String index;
+    private Map<String, ElasticSearchAgg> aggregations;
 
-    @JsonProperty("_type")
-    private String type;
-
-    @JsonProperty("_id")
-    private String id;
-
-    @JsonProperty("_source")
-    private Map<String, Object> source;
 }
-

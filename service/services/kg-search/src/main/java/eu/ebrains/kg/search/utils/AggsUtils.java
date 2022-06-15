@@ -67,15 +67,15 @@ public class AggsUtils {
         String orderDirection =  facet.getFilterOrder() == FieldInfo.FacetOrder.BYVALUE? "asc" : "desc";
         if (facet.isChild()) {
             if (facet.getIsHierarchical()) {
-                Map<String, Object> aggs = getLeafAggs(facet.getParentPath(), orderDirection, size);
-                Map<String, Object> childAggs = getLeafAggs(facet.getName(), orderDirection, size);
+                Map<String, Object> aggs = getLeafAggs(facet.getParentPath(), orderDirection, size, false);
+                Map<String, Object> childAggs = getLeafAggs(facet.getName(), orderDirection, size, false);
                 aggs.put("aggs", childAggs);
                 return aggs;
             }
-            Map<String, Object> aggs = getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getName()), orderDirection, size);
+            Map<String, Object> aggs = getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getName()), orderDirection, size, false);
             Map<String, Object> childAggs = Map.of(
                     "inner", Map.of(
-                            "aggs", getLeafAggs(facet.getName(), orderDirection, size),
+                            "aggs", getLeafAggs(facet.getName(), orderDirection, size, true),
                             "nested", Map.of(
                                     "path", String.format("%s.children", facet.getPath())
                             )
@@ -84,12 +84,11 @@ public class AggsUtils {
             aggs.put("aggs", childAggs);
             return aggs;
         }
-        return getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getName()), orderDirection, size);
+        return getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getName()), orderDirection, size, false);
     }
 
-    private static Map<String, Object> getLeafAggs(String key, String orderDirection, Integer size) {
+    private static Map<String, Object> getLeafAggs(String key, String orderDirection, Integer size, boolean reverseNested) {
         String name = String.format("%s.value.keyword", key);
-        String count = String.format("%s_count", name);
         Map<String, Object> terms = new HashMap<>();
         if (size != null) {
             terms.put("size", size);
@@ -101,15 +100,23 @@ public class AggsUtils {
             ));
         }
         Map<String, Object> leafAggs = new HashMap<>();
-        leafAggs.put(name, Map.of(
+        leafAggs.put("keywords", Map.of(
                 "terms", terms
         ));
-        leafAggs.put(count, Map.of(
+        leafAggs.put("total", Map.of(
                 "cardinality", Map.of(
                         "field", name
                 )
             )
         );
+        if (reverseNested) {
+            leafAggs.put("aggs", Map.of(
+                "reverse", Map.of(
+                        "reverse_nested", Collections.emptyMap()
+                    )
+                )
+            );
+        }
         return leafAggs;
     }
 

@@ -24,25 +24,41 @@
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchAgg;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
-public class ElasticSearchDocument {
+public class ElasticSearchFacetsResult extends ElasticSearchResult {
 
-    @JsonProperty("_index")
-    private String index;
+    private Map<String, Aggregation> aggregations;
 
-    @JsonProperty("_type")
-    private String type;
+    @Getter
+    @Setter
+    public static class Aggregation {
 
-    @JsonProperty("_id")
-    private String id;
+        private ElasticSearchAgg keywords;
+        private Total total;
+        private Inner inner;
+    }
 
-    @JsonProperty("_source")
-    private Map<String, Object> source;
+    @Getter
+    @Setter
+    public static class Total {
+
+        private Integer value;
+    }
+
+    @Getter
+    @Setter
+    public static class Inner {
+
+        private ElasticSearchAgg keywords;
+    }
 }
-

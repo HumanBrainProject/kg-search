@@ -27,22 +27,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
-public class ElasticSearchDocument {
+public class ElasticSearchAgg {
 
-    @JsonProperty("_index")
-    private String index;
+    @JsonProperty("doc_count_error_upper_bound")
+    private int docCountErrorUpperBound;
 
-    @JsonProperty("_type")
-    private String type;
+    @JsonProperty("sum_other_doc_count")
+    private int sumOtherDocCount;
 
-    @JsonProperty("_id")
-    private String id;
+    private List<Bucket> buckets;
 
-    @JsonProperty("_source")
-    private Map<String, Object> source;
+    @Getter
+    @Setter
+    public static class Bucket {
+
+        private String key;
+
+        @JsonProperty("doc_count")
+        private int docCount;
+
+        private Reverse reverse;
+        private ElasticSearchAgg keywords;
+    }
+
+    @Getter
+    @Setter
+    public static class Reverse {
+
+        @JsonProperty("doc_count")
+        private int docCount;
+    }
 }
-

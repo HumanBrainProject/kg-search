@@ -349,38 +349,6 @@ const loadSearchRequest = state => {
   };
 };
 
-const getKeywords = (keywords, childName) => {
-  if (!keywords || !Array.isArray(keywords.buckets)) {
-    return [];
-  }
-  return keywords.buckets.map(bucket => {
-    const child = childName && bucket[`${childName}.value.keyword`];
-    if (child) {
-      return {
-        value: bucket.key,
-        count: bucket.doc_count,
-        children: {
-          keywords: getKeywords(child),
-          others: getOthers(child)
-        }
-      };
-    } else {
-      return {
-        value: bucket.key,
-        count: bucket.doc_count
-      };
-    }
-  });
-};
-
-const getOthers = keywords => {
-  if (!keywords || !keywords.sum_other_doc_count) {
-    return 0;
-  }
-  const count = Number(keywords.sum_other_doc_count);
-  return isNaN(count) ? 0 : count;
-};
-
 const getTypesComparatorForOrder = order => (a, b) => {
   if (order) {
     if (order[a.type] !== undefined && order[b.type] !== undefined) {
@@ -418,26 +386,6 @@ const getUpdatedTypesFromResults = (instanceTypes, group, groupsSettings, defaul
     .sort(getTypesComparatorForOrder(order));
 };
 
-
-const updateHierarchicalFacetFromResults = (facet, res) => {
-  const keywords = res && res[`${facet.name}.value.keyword`];
-  facet.keywords = getKeywords(keywords, facet.childName);
-  facet.others = getOthers(keywords);
-};
-
-const updateNestedFacetFromResults = (facet, res) => {
-  const name =  `${facet.name}.children.${facet.childName}`;
-  const keywords = res && res.inner && res.inner[`${name}.value.keyword`];
-  facet.keywords = getKeywords(keywords);
-  facet.others = getOthers(keywords);
-};
-
-const updateFacetFromResults = (facet, res) => {
-  const keywords = res && res[`${facet.name}.value.keyword`];
-  facet.keywords = getKeywords(keywords);
-  facet.others = getOthers(keywords);
-};
-
 const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
   const aggs = (results && results.aggregations) ? results.aggregations : {};
   return Object.entries(facets).reduce((acc, [type, list]) => {
@@ -446,18 +394,9 @@ const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
       if (type === selectedType) {
         const res = aggs[facet.id];
         if (facet.filterType === "list") {
-          if (facet.isChild) {
-            if (facet.isHierarchical) {
-              updateHierarchicalFacetFromResults(facet, res);
-            } else { // nested
-              updateNestedFacetFromResults(facet, res);
-            }
-          } else {
-            updateFacetFromResults(facet, res);
-          }
+          facet.keywords = (res?.keywords)?res.keywords:[];
         }
-        const count = (res && res.doc_count) ? res.doc_count : 0;
-        facet.count = count;
+        facet.count = (res?.count)?res.count:0;
       }
       return facet;
     });
@@ -466,7 +405,7 @@ const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
 };
 
 const loadSearchResult = (state, action) => {
-  const total = isNaN(Number(action.results?.hits?.total?.value))?0:Number(action.results.hits.total.value);
+  const total = isNaN(Number(action.results?.total?.value))?0:Number(action.results.total.value);
 
   return {
     ...state,
@@ -475,7 +414,7 @@ const loadSearchResult = (state, action) => {
     isLoading: false,
     facets: getUpdatedFacetsFromResults(state.facets, state.selectedType, action.results),
     types: getUpdatedTypesFromResults(state.types, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
-    hits: Array.isArray(action.results?.hits?.hits) ? action.results.hits.hits : [],
+    hits: Array.isArray(action.results?.hits) ? action.results.hits : [],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage),
     isUpToDate: true

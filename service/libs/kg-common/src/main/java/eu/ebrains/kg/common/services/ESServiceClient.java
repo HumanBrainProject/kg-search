@@ -23,8 +23,9 @@
 
 package eu.ebrains.kg.common.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFacetsResult;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFilesResult;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import lombok.Getter;
@@ -349,7 +350,7 @@ public class ESServiceClient {
                 .block();
     }
 
-    public ElasticSearchResult getAggregationsFromRepo(String index, String fileRepositoryId, Map<String, String> aggs) {
+    public ElasticSearchFilesResult getFilesAggregationsFromRepo(String index, String fileRepositoryId, Map<String, String> aggs) {
         String query = getAggregationsQuery(fileRepositoryId, aggs);
         try {
             return webClient.post()
@@ -357,7 +358,7 @@ public class ESServiceClient {
                     .body(BodyInserters.fromValue(query))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                     .retrieve()
-                    .bodyToMono(ElasticSearchResult.class)
+                    .bodyToMono(ElasticSearchFilesResult.class)
                     .block();
         } catch(WebClientResponseException e){
             if(e.getStatusCode() == HttpStatus.NOT_FOUND){
@@ -398,12 +399,12 @@ public class ESServiceClient {
                 .block();
     }
 
-    public String searchDocuments(String index, JsonNode payload) {
+    public ElasticSearchFacetsResult searchDocuments(String index, Map<String, Object> payload) {
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(payload))
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(ElasticSearchFacetsResult.class)
                 .block();
     }
 

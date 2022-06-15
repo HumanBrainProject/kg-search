@@ -30,12 +30,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
@@ -85,6 +83,11 @@ public class SearchController {
     private final JsonNode parentDocCountObj = objectMapper.readTree(
             String.format("{\"%s\": {\"reverse_nested\": {}}}", parentCountLabel)
     );
+    private Map<String, Object> temp = Map.of(
+            "temporary_parent_doc_count", Map.of(
+                    "reverse_nested", Collections.emptyMap()
+            )
+    );
     private final ESServiceClient esServiceClient;
     private final MetaModelUtils utils;
     private final UserInfoRoles userInfoRoles;
@@ -107,7 +110,7 @@ public class SearchController {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }
 
-    private Map<String, Object> formatAggregation(ElasticSearchResult esResult, String aggregation) {
+    private Map<String, Object> formatFileAggregation(ElasticSearchFilesResult esResult, String aggregation) {
         Map<String, Object> result = new HashMap<>();
         if (StringUtils.isNotBlank(aggregation) &&
                 esResult != null &&
@@ -149,12 +152,12 @@ public class SearchController {
         return result;
     }
 
-    private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) { 
+    private ResponseEntity<?> getFileAggregationFromRepo(DataStage stage, String id, String field) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             Map<String, String> aggs = Map.of("patterns", field);
-            ElasticSearchResult esResult = esServiceClient.getAggregationsFromRepo(fileIndex, id, aggs);
-            Map<String, Object> result = formatAggregation(esResult, "patterns");
+            ElasticSearchFilesResult esResult = esServiceClient.getFilesAggregationsFromRepo(fileIndex, id, aggs);
+            Map<String, Object> result = formatFileAggregation(esResult, "patterns");
             return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -162,11 +165,11 @@ public class SearchController {
     }
 
     public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) { 
-        return getAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
+        return getFileAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
     }
 
     public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) { 
-        return getAggregationFromRepo(stage, id, "format.value.keyword");
+        return getFileAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
     public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) { 
@@ -181,33 +184,175 @@ public class SearchController {
     }
 
 
-    public JsonNode search(String q, String type, int from, int size, String sort, Map<String, FacetValue> facetValues, DataStage dataStage) throws JsonProcessingException {
+    public Map<String, Object> search(String q, String type, int from, int size, String sort, Map<String, FacetValue> facetValues, DataStage dataStage) throws JsonProcessingException {
         String index = ESHelper.getIndexesForSearch(dataStage);
-        ObjectNode esPayload = objectMapper.createObjectNode();
+        Map<String, Object> payload = new HashMap<>();
         ObjectNode esQuery = getEsQuery(q, type);
         if (esQuery != null) {
-            esPayload.set("query", esQuery);
+            payload.put("query", esQuery);
         }
-        esPayload.put("from", from);
-        esPayload.put("size", size);
+        payload.put("from", from);
+        payload.put("size", size);
         ObjectNode esHighlight = getEsHighlight(type);
         if (esHighlight != null) {
-            esPayload.set("highlight", esHighlight);
+            payload.put("highlight", esHighlight);
         }
-        ArrayNode esSort = getEsSort(sort);
+        List<Object> esSort = getEsSort(sort);
         if (esSort != null) {
-            esPayload.set("sort", esSort);
+            payload.put("sort", esSort);
         }
         List<Facet> facets = facetsController.getFacets(type);
         Map<String, Object> activeFilters = FiltersUtils.getActiveFilters(facets, type, facetValues);
         Object esPostFilter = FiltersUtils.getFilter(activeFilters, null);
-        esPayload.set("post_filter", objectMapper.valueToTree(esPostFilter));
+        payload.put("post_filter", esPostFilter);
         Object esAggs =  AggsUtils.getAggs(facets, activeFilters, facetValues);
-        esPayload.set("aggs", objectMapper.valueToTree(esAggs));
-        adaptAggregationForNestedDocument(esPayload);
-        String result = esServiceClient.searchDocuments(index, esPayload);
-        JsonNode resultJson = objectMapper.readTree(result);
-        return updateEsResponseWithNestedDocument(resultJson);
+        payload.put("aggs", esAggs);
+        ElasticSearchFacetsResult result = esServiceClient.searchDocuments(index, payload);
+        Map<String, Object> response = new HashMap<>();
+        response.put("total", (result.getHits() != null && result.getHits().getTotal() != null)?result.getHits().getTotal().getValue():0);
+        response.put("hits", (result.getHits() != null && result.getHits().getHits() != null)?result.getHits().getHits(): Collections.emptyList());
+        response.put("aggregations", getFacetAggregation(facets, result.getAggregations()));
+        return response;
+    }
+
+    private List<Map<String, Object>> getKeywords(List<ElasticSearchAgg.Bucket> buckets) {
+        if (CollectionUtils.isEmpty(buckets)) {
+            return Collections.emptyList();
+        }
+        List<Map<String, Object>> keywords = new ArrayList<>();
+        for (ElasticSearchAgg.Bucket bucket : buckets) {
+            keywords.add(Map.of(
+                "value", bucket.getKey(),
+                "count", bucket.getDocCount()
+            ));
+        }
+        return keywords;
+    }
+
+    private List<Map<String, Object>> getHierarchicalKeywords(List<ElasticSearchAgg.Bucket> buckets) {
+        if (CollectionUtils.isEmpty(buckets)) {
+            return Collections.emptyList();
+        }
+        List<Map<String, Object>> keywords = new ArrayList<>();
+        for (ElasticSearchAgg.Bucket bucket : buckets) {
+            ElasticSearchAgg child = bucket.getKeywords();
+            List<ElasticSearchAgg.Bucket> childBuckets = (child != null)?child.getBuckets():null;
+            if (childBuckets != null) {
+                keywords.add(Map.of(
+                        "value", bucket.getKey(),
+                        "count", bucket.getDocCount(),
+                        "children", Map.of(
+                                "keywords", getKeywords(childBuckets),
+                                "others", getOthers(child)
+                        )
+                ));
+            } else {
+                keywords.add(Map.of(
+                        "value", bucket.getKey(),
+                        "count", bucket.getDocCount()
+                ));
+            }
+        }
+        return keywords;
+    }
+
+    private List<Map<String, Object>> getNestedKeywords(List<ElasticSearchAgg.Bucket> buckets) {
+        if (CollectionUtils.isEmpty(buckets)) {
+            return Collections.emptyList();
+        }
+        List<Map<String, Object>> keywords = new ArrayList<>();
+        for (ElasticSearchAgg.Bucket bucket : buckets) {
+            keywords.add(Map.of(
+                    "value", bucket.getKey(),
+                    "count", (bucket.getReverse() != null)?bucket.getReverse().getDocCount():0
+            ));
+        }
+        return keywords;
+    }
+
+    private int getOthers(ElasticSearchAgg keywords) {
+        if (keywords == null) {
+            return 0;
+        }
+        return keywords.getSumOtherDocCount();
+    }
+
+    private Map<String, Object> getHierarchicalFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg) {
+        ElasticSearchAgg keywords = agg.getKeywords();
+        List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
+        return Map.of(
+                "keywords", getHierarchicalKeywords(buckets),
+                "others", getOthers(keywords),
+                "count", getFacetCount(agg)
+        );
+    }
+
+    private Map<String, Object> getNestedFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg) {
+        ElasticSearchAgg keywords = agg.getInner() != null?agg.getInner().getKeywords():null;
+        List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
+        return Map.of(
+                "keywords", getNestedKeywords(buckets),
+                "others", getOthers(keywords),
+                "count", getNestedFacetCount(agg)
+        );
+    }
+
+    private Map<String, Object> getFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg) {
+        ElasticSearchAgg keywords = agg.getKeywords();
+        List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
+        return Map.of(
+                "keywords", getKeywords(buckets),
+                "others", getOthers(keywords),
+                "count", getFacetCount(agg)
+        );
+    }
+
+    private Map<String, Object> getFacetExists(ElasticSearchFacetsResult.Aggregation agg) {
+        return Map.of(
+            "count", getFacetCount(agg)
+        );
+    }
+
+    private int getFacetCount(ElasticSearchFacetsResult.Aggregation agg) {
+        if (agg == null || agg.getTotal() == null || agg.getTotal().getValue() == null) {
+            return 0;
+        }
+        return agg.getTotal().getValue();
+    }
+
+    private int getNestedFacetCount(ElasticSearchFacetsResult.Aggregation agg) {
+        if (agg == null || agg.getKeywords() == null || agg.getKeywords().getBuckets() == null || agg.getKeywords().getBuckets().isEmpty()) {
+            return 0;
+        }
+        return agg.getKeywords().getBuckets().stream().mapToInt(bucket -> (bucket.getReverse() != null)?bucket.getReverse().getDocCount():0).sum();
+    }
+
+    private Map<String, Object> getFacetAggregation(List<Facet> facets, Map<String, ElasticSearchFacetsResult.Aggregation> aggregations) {
+        if (CollectionUtils.isEmpty(aggregations)) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> res = new HashMap<>();
+        facets.forEach(facet -> {
+            if (aggregations.containsKey(facet.getId())) {
+
+                ElasticSearchFacetsResult.Aggregation agg = aggregations.get(facet.getId());
+
+                if (facet.getFilterType() == FieldInfo.Facet.LIST) {
+                    if (facet.isChild()) {
+                        if (facet.getIsHierarchical()) {
+                            res.put(facet.getId(), getHierarchicalFacetList(facet, agg));
+                        } else { // nested
+                            res.put(facet.getId(), getNestedFacetList(facet, agg));
+                        }
+                    } else {
+                        res.put(facet.getId(), getFacetList(facet, agg));
+                    }
+                } else if (facet.getFilterType() == FieldInfo.Facet.EXISTS) {
+                    res.put(facet.getId(), getFacetExists(agg));
+                }
+            }
+        });
+        return res;
     }
 
     private ObjectNode getEsQuery(String q, String type) {
@@ -247,35 +392,35 @@ public class SearchController {
         return highlight;
     }
 
-    private ArrayNode getEsSort(String sort) {
+    private List<Object> getEsSort(String sort) {
         if (StringUtils.isBlank(sort)) {
             return null;
         }
 
-        ArrayNode fields = objectMapper.createArrayNode();
+        List<Object> fields = new ArrayList<>();
 
         if (sort.equals("newestFirst")) {
 
-            ObjectNode score = objectMapper.createObjectNode();
+            Map<String, String> score = new HashMap<>();
             score.put("order", "desc");
-            ObjectNode first = objectMapper.createObjectNode();
-            first.set("_score", score);
+            Map<String, Object> first = new HashMap<>();
+            first.put("_score", score);
             fields.add(first);
 
-            ObjectNode firstRelease = objectMapper.createObjectNode();
+            Map<String, String> firstRelease = new HashMap<>();
             firstRelease.put("order", "desc");
             firstRelease.put("missing", "_last");
-            ObjectNode second = objectMapper.createObjectNode();
-            second.set("first_release.value", firstRelease);
+            Map<String, Object> second = new HashMap<>();
+            second.put("first_release.value", firstRelease);
             fields.add(second);
 
         } else {
 
-            ObjectNode name = objectMapper.createObjectNode();
+            Map<String, String> name = new HashMap<>();
             name.put("order", "asc");
-            ObjectNode first = objectMapper.createObjectNode();
+            Map<String, Object> first = new HashMap<>();
             String key = String.format("%s.value.keyword", sort);
-            first.set(key, name);
+            first.put(key, name);
             fields.add(first);
 
         }
@@ -403,82 +548,5 @@ public class SearchController {
                 throw new RuntimeException(e);
             }
         });
-    }
-
-    private void adaptAggregationForNestedDocument(JsonNode payload) {
-        JsonNode aggregation = payload.get("aggs");
-        if (aggregation != null) {
-            List<String> paths = findPathForKey(aggregation, "", "nested");
-            if (!CollectionUtils.isEmpty(paths)) {
-                paths.forEach(path -> {
-                    String aggsPath = String.format("%s/aggs", path);
-                    JsonNode aggs = aggregation.at(aggsPath);
-                    if (!aggs.isEmpty()) {
-                        aggs.fields().forEachRemaining(i -> {
-                            if (i.getValue().has("terms")) {
-                                ((ObjectNode) i.getValue()).set("aggs", parentDocCountObj);
-                            }
-                        });
-                    }
-                });
-            }
-        }
-    }
-
-    private JsonNode updateEsResponseWithNestedDocument(JsonNode jsonSrc) {
-        try {
-            JsonNode json = jsonSrc.deepCopy();
-            List<String> innerList = findPathForKey(json, "", parentCountLabel);
-            List<String> buckets = innerList.stream().map(this::trimLastSegment)
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            buckets.forEach(path -> {
-                ArrayNode arrayNode = (ArrayNode) json.at(path);
-                int sum = 0;
-                for (int i = 0; i < arrayNode.size(); i++) {
-                    ObjectNode objectNode = (ObjectNode) arrayNode.get(i);
-                    int count = objectNode.at(String.format("/%s/%s", parentCountLabel, docCountLabel)).asInt();
-                    sum += count;
-                    objectNode.remove(parentCountLabel);
-                    objectNode.set(docCountLabel, new IntNode(count));
-                }
-
-                String inner = trimLastSegment(trimLastSegment(path)); // Remove everything after slash(/) before last
-                ObjectNode innerObject = (ObjectNode) json.at(inner);
-                innerObject.set(docCountLabel, new IntNode(sum));
-            });
-            return json;
-        } catch (Exception e) {
-            logger.info(String.format("Exception in json response update. Error:\n%s\nInput is used:\n%s", e.getMessage(), jsonSrc.asText()));
-            return jsonSrc;
-        }
-    }
-
-    private String trimLastSegment(String path) {
-        int index = path.lastIndexOf('/');
-        return path.substring(0, index);
-    }
-
-    private static List<String> findPathForKey(JsonNode jsonNode, String path, String key) {
-        List<String> result = new ArrayList<>();
-        if (jsonNode.isObject()) {
-            Iterator<Map.Entry<String, JsonNode>> it = jsonNode.fields();
-            while (it.hasNext()) {
-                Map.Entry<String, JsonNode> next = it.next();
-                if (next.getKey().equals(key)) {
-                    result.add(path);
-                }
-                String childPath = String.format("%s/%s", path, next.getKey());
-                result.addAll(findPathForKey(next.getValue(), childPath, key));
-            }
-        } else if (jsonNode.isArray()) {
-            ArrayNode arrayNode = (ArrayNode) jsonNode;
-            for (int i = 0; i < arrayNode.size(); i++) {
-                String childPath = String.format("%s/%s", path, i);
-                result.addAll(findPathForKey(arrayNode.get(i), childPath, key));
-            }
-        }
-        return result;
     }
 }
