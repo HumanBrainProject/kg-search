@@ -124,13 +124,13 @@ public class AggsUtils {
         Object filter = FiltersUtils.getFilter(filters, FACET_TYPE);
         aggs.put(FACET_TYPE, Map.of(
                 "aggs", Map.of(
-                        "type.value", Map.of(
+                        "keywords", Map.of(
                                 "terms", Map.of(
                                         "field", "type.value",
                                         "size", 50
                                 )
                         ),
-                        "type.value_count", Map.of(
+                        "total", Map.of(
                                 "cardinality", Map.of(
                                         "field", "type.value"
                                 )

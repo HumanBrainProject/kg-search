@@ -347,24 +347,15 @@ const getTypesComparatorForOrder = order => (a, b) => {
   return b.count - a.count;
 };
 
-const getUpdatedTypesFromResults = (instanceTypes, facetTypesOrder, results) => {
-
-  const buckets = Array.isArray(results?.aggregations?.facet_type?.["type.value"]?.buckets)?
-    results.aggregations.facet_type["type.value"].buckets : [];
-
-  const counts = buckets.reduce((acc, current) => {
-    const count = Number(current.doc_count);
-    acc[current.key] = isNaN(count) ? 0 : count;
-    return acc;
-  }, {});
-
-  return instanceTypes
-    .map(t => ({
+const getUpdatedTypesFromResults = (instanceTypes, facetTypesOrder, results) => instanceTypes
+  .map(t => {
+    const count = Number(results?.types?.[t.type]?.count);
+    return {
       ...t,
-      count: counts[t.type] ? counts[t.type] : 0
-    }))
-    .sort(getTypesComparatorForOrder(facetTypesOrder));
-};
+      count: isNaN(count)?0:count
+    };
+  })
+  .sort(getTypesComparatorForOrder(facetTypesOrder));
 
 const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
   const aggs = (results && results.aggregations) ? results.aggregations : {};

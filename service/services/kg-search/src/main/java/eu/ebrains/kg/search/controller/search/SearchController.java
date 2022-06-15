@@ -58,6 +58,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static eu.ebrains.kg.search.utils.FacetsUtils.FACET_TYPE;
+
 
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
@@ -211,6 +213,7 @@ public class SearchController {
         response.put("total", (result.getHits() != null && result.getHits().getTotal() != null)?result.getHits().getTotal().getValue():0);
         response.put("hits", (result.getHits() != null && result.getHits().getHits() != null)?result.getHits().getHits(): Collections.emptyList());
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations()));
+        response.put("types", getTypesAggregation(result.getAggregations()));
         return response;
     }
 
@@ -351,6 +354,26 @@ public class SearchController {
                 }
             }
         });
+        return res;
+    }
+
+    private Map<String, Object> getTypesAggregation(Map<String, ElasticSearchFacetsResult.Aggregation> aggregations) {
+        if (CollectionUtils.isEmpty(aggregations) ||
+                !aggregations.containsKey(FACET_TYPE) ||
+                aggregations.get(FACET_TYPE).getKeywords() == null ||
+                CollectionUtils.isEmpty(aggregations.get(FACET_TYPE).getKeywords().getBuckets())
+        ) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> res = new HashMap<>();
+        List<ElasticSearchAgg.Bucket> buckets = aggregations.get(FACET_TYPE).getKeywords().getBuckets();
+        for (ElasticSearchAgg.Bucket bucket : buckets) {
+            if (bucket.getDocCount() > 0) {
+                res.put(bucket.getKey(), Map.of(
+                        "count", bucket.getDocCount()
+                ));
+            }
+        }
         return res;
     }
 
