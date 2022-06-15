@@ -77,21 +77,33 @@
     <cache alias="highlight" uses-template="inmemory">
         <key-type>java.lang.String</key-type>
         <value-type>java.util.List</value-type>
+        <resources>
+            <heap>100</heap>
+        </resources>
     </cache>
 
     <cache alias="queryFields" uses-template="inmemory">
         <key-type>java.lang.String</key-type>
         <value-type>java.util.List</value-type>
+        <resources>
+            <heap>10000</heap>
+        </resources>
     </cache>
 
     <cache alias="facets" uses-template="inmemory">
         <key-type>java.lang.String</key-type>
         <value-type>java.util.Map</value-type>
+        <resources>
+            <heap>1000</heap>
+        </resources>
     </cache>
 
     <cache alias="labels" uses-template="inmemory">
         <key-type>java.lang.String</key-type>
         <value-type>java.util.Map</value-type>
+        <resources>
+            <heap>1</heap>
+        </resources>
     </cache>
 
 </config>
