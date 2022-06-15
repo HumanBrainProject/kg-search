@@ -25,7 +25,7 @@ const FACET_ALL_SIZE = 1000000000;
 
 export const getResetFacets = facets => Object.entries(facets).reduce((acc, [type, list]) => {
   acc[type] = list.map(facet => {
-    switch (facet.filterType) {
+    switch (facet.type) {
     case "list":
       return {
         ...facet,
@@ -61,16 +61,16 @@ export const getAggregation = (facets, type) => {
     return {};
   }
   return facets[type].reduce((acc, facet) => {
-    switch (facet.filterType) {
+    switch (facet.type) {
     case "list":
-      if (facet.isHierarchical) {
+      //if (facet.isHierarchical) {
+      if (Array.isArray(facet.value) && facet.value.length) {
         acc[facet.id] = {
           values: facet.value,
           size: facet.size
         };
       } else {
         acc[facet.id] = {
-          values: facet.value,
           size: facet.size
         };
       }

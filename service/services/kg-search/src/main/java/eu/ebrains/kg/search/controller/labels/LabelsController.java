@@ -31,7 +31,6 @@ import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -117,27 +116,17 @@ public class LabelsController {
             Map<String, Object> facet = new LinkedHashMap<>();
             result.add(facet);
             facet.put("id", f.getId());
-            facet.put("name", f.getName());
-            if (StringUtils.isNotBlank(f.getFieldLabel())) {
-                facet.put("fieldLabel", f.getFieldLabel());
+            if (StringUtils.isNotBlank(f.getLabel())) {
+                facet.put("label", f.getLabel());
             }
-            if (StringUtils.isNotBlank(f.getFilterType().name())) {
-                facet.put("filterType", f.getFilterType().name().toLowerCase());
-            }
-            if (StringUtils.isNotBlank(f.getFilterOrder().name())) {
-                facet.put("filterOrder", f.getFilterOrder().name().toLowerCase());
+            if (StringUtils.isNotBlank(f.getType().name())) {
+                facet.put("type", f.getType().name().toLowerCase());
             }
             if (f.getIsFilterable() != null) {
                 facet.put("isFilterable", f.getIsFilterable());
             }
-            if (f.getExclusiveSelection() != null) {
-                facet.put("exclusiveSelection", f.getExclusiveSelection());
-            }
             if (f.getIsHierarchical() != null) {
                 facet.put("isHierarchical", f.getIsHierarchical());
-            }
-            if (f.isChild()) {
-                facet.put("isChild", true);
             }
         });
         return result;

@@ -29,8 +29,6 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 public class Facet {
@@ -38,19 +36,16 @@ public class Facet {
     private String parentPath;
     private String path;
     private String name;
-    private String type;
-    private FieldInfo.Facet filterType;
-    private FieldInfo.FacetOrder filterOrder = FieldInfo.FacetOrder.BYCOUNT;
-    private String fieldType;
-    private String fieldLabel;
+    private FieldInfo.Facet type;
+    private FieldInfo.FacetOrder order = FieldInfo.FacetOrder.BYCOUNT;
+    private String label;
     private Boolean exclusiveSelection = false;
     private Boolean isHierarchical = false;
     private Boolean isFilterable = false;
     private String missingTerm = "Others";
 
-    public Facet(String type, String parentPath, String path, String name) {
-        this.id = String.format("facet_%s_%s", type, FacetsUtils.getPath(path, name));
-        this.type = type;
+    public Facet(String instanceType, String parentPath, String path, String name) {
+        this.id = String.format("facet_%s_%s", instanceType, FacetsUtils.getPath(path, name));
         this.parentPath = parentPath;
         this.path = path;
         this.name = name;

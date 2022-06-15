@@ -27,7 +27,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
@@ -337,7 +336,7 @@ public class SearchController {
 
                 ElasticSearchFacetsResult.Aggregation agg = aggregations.get(facet.getId());
 
-                if (facet.getFilterType() == FieldInfo.Facet.LIST) {
+                if (facet.getType() == FieldInfo.Facet.LIST) {
                     if (facet.isChild()) {
                         if (facet.getIsHierarchical()) {
                             res.put(facet.getId(), getHierarchicalFacetList(facet, agg));
@@ -347,7 +346,7 @@ public class SearchController {
                     } else {
                         res.put(facet.getId(), getFacetList(facet, agg));
                     }
-                } else if (facet.getFilterType() == FieldInfo.Facet.EXISTS) {
+                } else if (facet.getType() == FieldInfo.Facet.EXISTS) {
                     res.put(facet.getId(), getFacetExists(agg));
                 }
             }

@@ -34,7 +34,7 @@ import "./Facet.css";
 export const Facet = ({ facet, onChange, onViewChange }) => {
   let Component = null;
   let parameters = null;
-  switch (facet.filterType) {
+  switch (facet.type) {
   case "list":
   {
     if (facet.isHierarchical) {
@@ -91,7 +91,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
       if (facet.isFilterable) {
         Component = FilteredList;
         parameters = {
-          label: facet.fieldLabel,
+          label: facet.label,
           items: list,
           ItemComponent: FacetCheckbox,
           itemUniqKeyAttribute: "value",
@@ -117,7 +117,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
     Component = Item;
     parameters = {
       item: {
-        label: `Has ${facet.fieldLabel}`,
+        label: `Has ${facet.label}`,
         count: facet.count,
         checked: !!facet.value
       },
@@ -130,7 +130,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
   }
   if (Component) {
     return ( <div className = "kgs-facet" >
-      <div className = "kgs-facet-title" > { facet.fieldLabel } </div>
+      <div className = "kgs-facet-title" > { facet.label } </div>
       <Component {...parameters }/>
     </div>
     );

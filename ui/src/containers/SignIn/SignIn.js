@@ -86,7 +86,6 @@ export const SignIn = connect(
     onGroupChange: value => {
       dispatch(actionsGroups.setGroup(value));
       dispatch(actionsInstances.clearAllInstances());
-      dispatch(actionsGroups.resetTypeForGroup(value));
       dispatch(actionsSearch.setPage(1));
     }
   })

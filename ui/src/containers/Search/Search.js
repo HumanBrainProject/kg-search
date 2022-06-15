@@ -92,7 +92,7 @@ const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
 
 const calculateFacetList = facets => {
   return facets.reduce((acc, facet) => {
-    switch (facet.filterType) {
+    switch (facet.type) {
     case "list":
       if (facet.isHierarchical) {
         facet.keywords.forEach(keyword => {
@@ -334,7 +334,7 @@ export const Search = connect(
     selectedType: state.search.selectedType,
     facets: Array.isArray(state.search.facets[state.search.selectedType])?state.search.facets[state.search.selectedType].filter(f =>
       f.count > 0 &&
-      (f.filterType !== "list" || f.keywords.length)
+      (f.type !== "list" || f.keywords.length)
     ):[],
     sort: state.search.sort,
     page: state.search.page,

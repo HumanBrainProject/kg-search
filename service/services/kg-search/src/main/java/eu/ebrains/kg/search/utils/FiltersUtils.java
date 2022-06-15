@@ -35,16 +35,6 @@ import static eu.ebrains.kg.search.utils.FacetsUtils.FACET_TYPE;
 
 public class FiltersUtils {
 
-    public static List<Facet> getActiveFacets(List<Facet> facets, Map<String, Object> filters) {
-        List<Facet> activeFacets = new ArrayList<>();
-        facets.forEach(facet -> {
-            if (filters.containsKey(facet.getId())) {
-                activeFacets.add(facet);
-            }
-        });
-        return activeFacets;
-    }
-
     private static List<Object> filterActiveFilters(Map<String, Object> activeFilters, String facetIdToSkip) {
         if (facetIdToSkip == null) {
             return new ArrayList<>(activeFilters.values());
@@ -82,7 +72,7 @@ public class FiltersUtils {
         addTypeFilter(filters, type);
         facets.forEach(facet -> {
             if (values.containsKey(facet.getId())) {
-                if (facet.getFilterType() == FieldInfo.Facet.LIST) {
+                if (facet.getType() == FieldInfo.Facet.LIST) {
                     FacetValue value = values.get(facet.getId());
                     List<String> list = value.getValues();
                     if (!CollectionUtils.isEmpty(list)) {
@@ -92,7 +82,7 @@ public class FiltersUtils {
                             addORListFilter(filters, facet, list);
                         }
                     }
-                } else if (facet.getFilterType() == FieldInfo.Facet.EXISTS) {
+                } else if (facet.getType() == FieldInfo.Facet.EXISTS) {
                     addExistsFilter(filters, facet);
                 }
             }

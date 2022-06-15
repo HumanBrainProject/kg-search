@@ -55,13 +55,13 @@ public class FacetsController {
                 Facet facet = new Facet(rootType, parentPath, path, propertyName);
                 facets.add(facet);
                 if (!info.label().equals(defaultFieldInfo.label())) {
-                    facet.setFieldLabel(info.label());
+                    facet.setLabel(info.label());
                 }
                 if (info.facet() != defaultFieldInfo.facet()) {
-                    facet.setFilterType(info.facet());
+                    facet.setType(info.facet());
                 }
                 if (info.facetOrder() != defaultFieldInfo.facetOrder()) {
-                    facet.setFilterOrder(info.facetOrder());
+                    facet.setOrder(info.facetOrder());
                 }
                 if (info.isFilterableFacet() != defaultFieldInfo.isFilterableFacet()) {
                     facet.setIsFilterable(info.isFilterableFacet());

@@ -90,7 +90,7 @@ export const FiltersPanel = connect(
       show: facets.length > 0,
       facets: facets.filter(f =>
         f.count > 0 &&
-        (f.filterType !== "list" || f.keywords.length)
+        (f.type !== "list" || f.keywords.length)
       )
     };
   },

@@ -53,18 +53,18 @@ public class AggsUtils {
     }
 
     private static Map<String, Object> getFacetAggs(Facet facet, FacetValue value) {
-        if (facet.getFilterType() == FieldInfo.Facet.LIST) {
+        if (facet.getType() == FieldInfo.Facet.LIST) {
             Integer size = (value != null)? value.getSize() : null;
             return getListFacetAggs(facet, size);
         }
-        if (facet.getFilterType() == FieldInfo.Facet.EXISTS) {
+        if (facet.getType() == FieldInfo.Facet.EXISTS) {
             return Collections.emptyMap();
         }
         return null;
     }
 
     private static Map<String, Object> getListFacetAggs(Facet facet, Integer size) {
-        String orderDirection =  facet.getFilterOrder() == FieldInfo.FacetOrder.BYVALUE? "asc" : "desc";
+        String orderDirection =  facet.getOrder() == FieldInfo.FacetOrder.BYVALUE? "asc" : "desc";
         if (facet.isChild()) {
             if (facet.getIsHierarchical()) {
                 Map<String, Object> aggs = getLeafAggs(facet.getParentPath(), orderDirection, size, false);

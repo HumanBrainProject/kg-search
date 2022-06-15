@@ -78,7 +78,7 @@ const resolveFacets = (facets, type, params) => {
   list.forEach(facet => {
     const value = params[facet.id];
     if (value) {
-      switch (facet.filterType) {
+      switch (facet.type) {
       case "list":
         facet.value = Array.isArray(value)?value:[];
         break;
@@ -111,12 +111,10 @@ const initialState = {
   totalPages: 0,
   sortFields: [],
   facetTypesOrder: {},
-  facetDefaultSelectedType: null,
   initialRequestDone: false,
   isLoading: false,
   queryString: "",
   selectedType: null,
-  groupsSettings: {},
   hitsPerPage: 20,
   hits: [],
   total: 0,
@@ -173,7 +171,6 @@ const setupSearch = (state, action) => {
     sortFields: sortFields,
     facetTypesOrder: facetTypesOrder,
     selectedType: selectedType,
-    facetDefaultSelectedType: defaultType,
     page: page,
     from: from
   };
@@ -232,7 +229,7 @@ const updateExistFacet = (facet, action) => ({
 });
 
 const updateFacet = (facet, action) => {
-  switch (facet.filterType) {
+  switch (facet.type) {
   case "list":
   {
     return updateListFacet(facet, action);
@@ -275,7 +272,7 @@ const setFacetSize = (state, action) => {
     facets: Object.entries(state.facets).reduce((acc, [type, list]) => {
       acc[type] = list.map(f => {
         if (type === state.selectedType && f.id === action.id) {
-          switch (f.filterType) {
+          switch (f.type) {
           case "list":
             return {
               ...f,
@@ -326,20 +323,6 @@ const setType = (state, action) => {
   };
 };
 
-const resetTypeForGroup = (state, action) => {
-
-  const getSelectedType = (settings, group, defaultType) => (group && settings && settings[group] && settings[group].facetDefaultSelectedType) ? settings[group].facetDefaultSelectedType : defaultType;
-
-  const selectedType = getSelectedType(state.groupsSettings, action.group, state.facetDefaultSelectedType);
-
-  return {
-    ...state,
-    selectedType: selectedType,
-    facets: getResetFacets(state.facets),
-    isUpToDate: false
-  };
-};
-
 const loadSearchRequest = state => {
   return {
     ...state,
@@ -364,7 +347,7 @@ const getTypesComparatorForOrder = order => (a, b) => {
   return b.count - a.count;
 };
 
-const getUpdatedTypesFromResults = (instanceTypes, group, groupsSettings, defaultOrder, results) => {
+const getUpdatedTypesFromResults = (instanceTypes, facetTypesOrder, results) => {
 
   const buckets = Array.isArray(results?.aggregations?.facet_type?.["type.value"]?.buckets)?
     results.aggregations.facet_type["type.value"].buckets : [];
@@ -375,15 +358,12 @@ const getUpdatedTypesFromResults = (instanceTypes, group, groupsSettings, defaul
     return acc;
   }, {});
 
-  const order = (group && groupsSettings && groupsSettings[group] && groupsSettings[group].facetTypesOrder) ?
-    groupsSettings[group].facetTypesOrder : defaultOrder;
-
   return instanceTypes
     .map(t => ({
       ...t,
       count: counts[t.type] ? counts[t.type] : 0
     }))
-    .sort(getTypesComparatorForOrder(order));
+    .sort(getTypesComparatorForOrder(facetTypesOrder));
 };
 
 const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
@@ -393,7 +373,7 @@ const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
       const facet = {...f};
       if (type === selectedType) {
         const res = aggs[facet.id];
-        if (facet.filterType === "list") {
+        if (facet.type === "list") {
           facet.keywords = (res?.keywords)?res.keywords:[];
         }
         facet.count = (res?.count)?res.count:0;
@@ -413,7 +393,7 @@ const loadSearchResult = (state, action) => {
     initialRequestDone: true,
     isLoading: false,
     facets: getUpdatedFacetsFromResults(state.facets, state.selectedType, action.results),
-    types: getUpdatedTypesFromResults(state.types, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
+    types: getUpdatedTypesFromResults(state.types, state.facetTypesOrder, action.results),
     hits: Array.isArray(action.results?.hits) ? action.results.hits : [],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage),
@@ -472,8 +452,6 @@ export function reducer(state = initialState, action = {}) {
     return setQueryString(state, action);
   case types.SET_TYPE:
     return setType(state, action);
-  case types.RESET_TYPE_FOR_GROUP:
-    return resetTypeForGroup(state, action);
   case types.SET_SORT:
     return setSort(state, action);
   case types.SET_PAGE:

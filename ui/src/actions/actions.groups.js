@@ -65,13 +65,6 @@ export const setGroup = group => {
   };
 };
 
-export const resetTypeForGroup = group => {
-  return {
-    type: types.RESET_TYPE_FOR_GROUP,
-    group: group
-  };
-};
-
 export const loadGroups = () => {
   return dispatch => {
     dispatch(loadGroupsRequest());
