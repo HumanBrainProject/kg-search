@@ -35,16 +35,16 @@ public class AggsUtils {
 
     public static Map<String, Object> getAggs(List<Facet> facets, Map<String, Object> filters, Map<String, FacetValue> facetValues) {
         Map<String, Object> aggs = new HashMap<>();
-        facets.forEach(facet -> setFacet(aggs, facet, filters, facetValues.get(facet.getId())));
+        facets.forEach(facet -> setFacet(aggs, facet, filters, facetValues.get(facet.getName())));
         setTypeFacet(aggs, filters);
         return aggs;
     }
 
     private static void setFacet(Map<String, Object> aggs, Facet facet, Map<String, Object> filters, FacetValue value) {
-        Object filter = FiltersUtils.getFilter(filters, facet.getId());
+        Object filter = FiltersUtils.getFilter(filters, facet.getName());
         Map<String, Object> facetAggs = getFacetAggs(facet, value);
         if (facetAggs != null) {
-            aggs.put(facet.getId(), Map.of(
+            aggs.put(facet.getName(), Map.of(
                     "aggs", facetAggs,
                     "filter", filter
                 )
@@ -68,14 +68,14 @@ public class AggsUtils {
         if (facet.isChild()) {
             if (facet.getIsHierarchical()) {
                 Map<String, Object> aggs = getLeafAggs(facet.getParentPath(), orderDirection, size, false);
-                Map<String, Object> childAggs = getLeafAggs(facet.getName(), orderDirection, size, false);
+                Map<String, Object> childAggs = getLeafAggs(facet.getProperty(), orderDirection, size, false);
                 aggs.put("aggs", childAggs);
                 return aggs;
             }
-            Map<String, Object> aggs = getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getName()), orderDirection, size, false);
+            Map<String, Object> aggs = getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getProperty()), orderDirection, size, false);
             Map<String, Object> childAggs = Map.of(
                     "inner", Map.of(
-                            "aggs", getLeafAggs(facet.getName(), orderDirection, size, true),
+                            "aggs", getLeafAggs(facet.getProperty(), orderDirection, size, true),
                             "nested", Map.of(
                                     "path", String.format("%s.children", facet.getPath())
                             )
@@ -84,7 +84,7 @@ public class AggsUtils {
             aggs.put("aggs", childAggs);
             return aggs;
         }
-        return getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getName()), orderDirection, size, false);
+        return getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getProperty()), orderDirection, size, false);
     }
 
     private static Map<String, Object> getLeafAggs(String key, String orderDirection, Integer size, boolean reverseNested) {

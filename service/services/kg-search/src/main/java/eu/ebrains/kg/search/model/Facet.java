@@ -32,10 +32,10 @@ import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 @Getter
 @Setter
 public class Facet {
-    private String id;
+    private String name;
     private String parentPath;
     private String path;
-    private String name;
+    private String property;
     private FieldInfo.Facet type;
     private FieldInfo.FacetOrder order = FieldInfo.FacetOrder.BYCOUNT;
     private String label;
@@ -44,11 +44,11 @@ public class Facet {
     private Boolean isFilterable = false;
     private String missingTerm = "Others";
 
-    public Facet(String instanceType, String parentPath, String path, String name) {
-        this.id = String.format("facet_%s_%s", instanceType, FacetsUtils.getPath(path, name));
+    public Facet(String parentPath, String path, String property) {
+        this.name = String.format("%s", FacetsUtils.getPath(path, property));
         this.parentPath = parentPath;
         this.path = path;
-        this.name = name;
+        this.property = property;
     }
 
     public boolean isChild() {

@@ -49,6 +49,6 @@ public class ElasticSearchDocument {
     private Map<String, List<String>> highlight;
 
     @JsonProperty("_score")
-    private Map<String, Object> score;
+    private Double score;
 }
 

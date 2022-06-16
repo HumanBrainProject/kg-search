@@ -71,9 +71,9 @@ public class FiltersUtils {
         Map<String, Object> filters = new HashMap<>();
         addTypeFilter(filters, type);
         facets.forEach(facet -> {
-            if (values.containsKey(facet.getId())) {
+            if (values.containsKey(facet.getName())) {
                 if (facet.getType() == FieldInfo.Facet.LIST) {
-                    FacetValue value = values.get(facet.getId());
+                    FacetValue value = values.get(facet.getName());
                     List<String> list = value.getValues();
                     if (!CollectionUtils.isEmpty(list)) {
                         if (facet.getExclusiveSelection()) {
@@ -92,10 +92,10 @@ public class FiltersUtils {
 
     private static void addORListFilter(Map<String, Object> filters, Facet facet, List<String> values) {
         if (values.size() == 1) {
-            filters.put(facet.getId(), getFacetFilter(facet, values.get(0)));
+            filters.put(facet.getName(), getFacetFilter(facet, values.get(0)));
         } else {
             List<Map<String, Object>> list = values.stream().map(v -> getFacetFilter(facet, v)).collect(Collectors.toList());
-            filters.put(facet.getId(), Map.of(
+            filters.put(facet.getName(), Map.of(
                     "bool", Map.of(
                             "should", list
                     )
@@ -105,16 +105,16 @@ public class FiltersUtils {
 
     private static void addANDListFilter(Map<String, Object> filters, Facet facet, List<String> values) {
         List<Map<String, Object>> list = values.stream().map(v -> getFacetFilter(facet, v)).collect(Collectors.toList());
-        filters.put(facet.getId(), list);
+        filters.put(facet.getName(), list);
     }
 
     private static void addExistsFilter(Map<String, Object> filters, Facet facet) {
         Map<String, Object> exists = Map.of(
                 "exists", Map.of(
-                        "field", String.format("%s.value.keyword", FacetsUtils.getPath(facet.getPath(), facet.getName()))
+                        "field", String.format("%s.value.keyword", FacetsUtils.getPath(facet.getPath(), facet.getProperty()))
                 )
         );
-        filters.put(facet.getId(), exists);
+        filters.put(facet.getName(), exists);
     }
 
     private static void addTypeFilter(Map<String, Object> filters, String type) {
@@ -129,7 +129,7 @@ public class FiltersUtils {
     private static Map<String, Object> getFacetFilter(Facet facet, String value) {
 
         Map<String, String> term = Map.of(
-                String.format("%s.value.keyword", FacetsUtils.getPath(facet.getPath(), facet.getName())), value
+                String.format("%s.value.keyword", FacetsUtils.getPath(facet.getPath(), facet.getProperty())), value
         );
 
         if (facet.isChild()) {
@@ -138,7 +138,7 @@ public class FiltersUtils {
            }
            return Map.of(
                 "nested", Map.of(
-                    "path", String.format("%s.children", facet.getName()),
+                    "path", String.format("%s.children", facet.getProperty()),
                     "query", Map.of(
                         "term", term
                     )

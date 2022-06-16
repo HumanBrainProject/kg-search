@@ -50,6 +50,7 @@ export const constructFacets = definition => Object.entries(definition).reduce((
     count: 0,
     value: null,
     keywords: [],
+    others: 0,
     size: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE,
     defaultSize: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
   }));
@@ -65,19 +66,19 @@ export const getAggregation = (facets, type) => {
     case "list":
       //if (facet.isHierarchical) {
       if (Array.isArray(facet.value) && facet.value.length) {
-        acc[facet.id] = {
+        acc[facet.name] = {
           values: facet.value,
           size: facet.size
         };
       } else {
-        acc[facet.id] = {
+        acc[facet.name] = {
           size: facet.size
         };
       }
       break;
     case "exists":
       if (facet.value) {
-        acc[facet.id] = {};
+        acc[facet.name] = {};
       }
       break;
     default:

@@ -52,10 +52,11 @@ public class FacetsController {
             FieldInfo defaultFieldInfo = utils.defaultFieldInfo();
             String propertyName = utils.getPropertyName(f.getField());
             if (info.facet() != defaultFieldInfo.facet()) {
-                Facet facet = new Facet(rootType, parentPath, path, propertyName);
+                Facet facet = new Facet(parentPath, path, propertyName);
                 facets.add(facet);
                 if (!info.label().equals(defaultFieldInfo.label())) {
                     facet.setLabel(info.label());
+                    facet.setName(FacetsUtils.getFacetName(info.label()));
                 }
                 if (info.facet() != defaultFieldInfo.facet()) {
                     facet.setType(info.facet());

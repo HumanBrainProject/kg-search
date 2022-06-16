@@ -100,7 +100,7 @@ const calculateFacetList = facets => {
             Array.isArray(keyword.children.keywords) &&
             keyword.children.keywords.forEach(child => {
               acc.push({
-                name: facet.id,
+                name: facet.name,
                 value: child.value,
                 checked: Array.isArray(facet.value)
                   ? facet.value.includes(child.value)
@@ -112,7 +112,7 @@ const calculateFacetList = facets => {
       } else {
         facet.keywords.forEach(keyword => {
           acc.push({
-            name: facet.id,
+            name: facet.name,
             value: keyword.value,
             checked: Array.isArray(facet.value)
               ? facet.value.includes(keyword.value)
@@ -124,7 +124,7 @@ const calculateFacetList = facets => {
       break;
     case "exists":
       acc.push({
-        name: facet.id,
+        name: facet.name,
         value: !!facet.value,
         checked: !!facet.value,
         many: false
@@ -223,7 +223,7 @@ const SearchBase = ({
       );
       query = getUpdatedQuery(
         query,
-        "facet_type[0]",
+        "category",
         !!selectedType,
         selectedType,
         false

@@ -67,7 +67,7 @@ class FiltersPanelBase extends React.Component {
           {
             facets.map(facet => (
               <Facet
-                key={facet.id}
+                key={facet.name}
                 facet={facet}
                 onChange={onChange}
                 onViewChange={onViewChange}
@@ -95,11 +95,11 @@ export const FiltersPanel = connect(
     };
   },
   dispatch => ({
-    onChange: (id, active, keyword) => {
-      dispatch(actionsSearch.setFacet(id, active, keyword));
+    onChange: (name, active, keyword) => {
+      dispatch(actionsSearch.setFacet(name, active, keyword));
     },
     onViewChange: (id, size) => {
-      dispatch(actionsSearch.setFacetSize(id, size));
+      dispatch(actionsSearch.setFacetSize(name, size));
     },
     onReset: () => {
       dispatch(actionsSearch.resetFacets());

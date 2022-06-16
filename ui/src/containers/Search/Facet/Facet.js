@@ -51,7 +51,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
             hasAnyChildChecked = true;
           }
           return {
-            name: facet.id,
+            name: facet.name,
             label: child.value,
             value: child.value,
             count: child.count,
@@ -59,7 +59,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
           };
         }):[];
         return {
-          name: facet.id,
+          name: facet.name,
           label: keyword.value,
           value: value,
           count: keyword.count,
@@ -78,11 +78,11 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         tree: list,
         ItemComponent: FacetCheckbox,
         itemUniqKeyAttribute: "value",
-        onItemClick: item => onChange(facet.id, !item.checked, item.value)
+        onItemClick: item => onChange(facet.name, !item.checked, item.value)
       };
     } else {
       const list = facet.keywords.map(keyword => ({
-        name: facet.id,
+        name: facet.name,
         label: keyword.value,
         value: keyword.value,
         count: keyword.count,
@@ -95,7 +95,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
           items: list,
           ItemComponent: FacetCheckbox,
           itemUniqKeyAttribute: "value",
-          onItemClick: item => onChange(facet.id, !item.checked, item.value),
+          onItemClick: item => onChange(facet.name, !item.checked, item.value),
         };
       } else {
         Component = PaginatedList;
@@ -103,8 +103,8 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
           items: list,
           ItemComponent: FacetCheckbox,
           itemUniqKeyAttribute: "value",
-          onItemClick: item => onChange(facet.id, !item.checked, item.value),
-          onViewChange: size => onViewChange(facet.id, size),
+          onItemClick: item => onChange(facet.name, !item.checked, item.value),
+          onViewChange: size => onViewChange(facet.name, size),
           size: facet.size,
           defaultSize: facet.defaultSize,
           others: facet.others
@@ -122,7 +122,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         checked: !!facet.value
       },
       ItemComponent: FacetCheckbox,
-      onClick: item => onChange(facet.id, !item.checked)
+      onClick: item => onChange(facet.name, !item.checked)
     };
     break;
   default:

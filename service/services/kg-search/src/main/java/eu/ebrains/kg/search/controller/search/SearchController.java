@@ -335,22 +335,22 @@ public class SearchController {
         }
         Map<String, Object> res = new HashMap<>();
         facets.forEach(facet -> {
-            if (aggregations.containsKey(facet.getId())) {
+            if (aggregations.containsKey(facet.getName())) {
 
-                ElasticSearchFacetsResult.Aggregation agg = aggregations.get(facet.getId());
+                ElasticSearchFacetsResult.Aggregation agg = aggregations.get(facet.getName());
 
                 if (facet.getType() == FieldInfo.Facet.LIST) {
                     if (facet.isChild()) {
                         if (facet.getIsHierarchical()) {
-                            res.put(facet.getId(), getHierarchicalFacetList(facet, agg));
+                            res.put(facet.getName(), getHierarchicalFacetList(facet, agg));
                         } else { // nested
-                            res.put(facet.getId(), getNestedFacetList(facet, agg));
+                            res.put(facet.getName(), getNestedFacetList(facet, agg));
                         }
                     } else {
-                        res.put(facet.getId(), getFacetList(facet, agg));
+                        res.put(facet.getName(), getFacetList(facet, agg));
                     }
                 } else if (facet.getType() == FieldInfo.Facet.EXISTS) {
-                    res.put(facet.getId(), getFacetExists(agg));
+                    res.put(facet.getName(), getFacetExists(agg));
                 }
             }
         });

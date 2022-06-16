@@ -25,27 +25,50 @@ package eu.ebrains.kg.search.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.Normalizer;
+
 public class FacetsUtils {
 
     public final static String FACET_TYPE = "facet_type";
 
-    public static String getPath(String path, String propertyName) {
-        if (propertyName.equals("children")) {
+    public static String getPath(String path, String property) {
+        if (property.equals("children")) {
             return path;
         }
         if (StringUtils.isBlank(path)) {
-            return propertyName;
+            return property;
         }
-        return String.format("%s.%s", path, propertyName);
+        return String.format("%s.%s", path, property);
     }
 
-    public static String getChildPath(String path, String propertyName) {
+    public static String getChildPath(String path, String property) {
         if (StringUtils.isBlank(path)) {
-            return propertyName;
+            return property;
         }
-        if (propertyName.equals("children")) {
-            return String.format("%s.%s", path, propertyName);
+        if (property.equals("children")) {
+            return String.format("%s.%s", path, property);
         }
-        return String.format("%s.%s.children", path, propertyName);
+        return String.format("%s.%s.children", path, property);
+    }
+
+    public static String getFacetName(String label) {
+        String normalized = Normalizer.normalize(label, Normalizer.Form.NFD);
+        String alphanum = normalized.replaceAll("[^A-Za-z0-9 ]", "");
+        return camelCase(alphanum);
+    }
+
+    private static String camelCase(String text) {
+        String[] words = text.split("[\\W_]+");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (i == 0) {
+                word = word.isEmpty() ? word : word.toLowerCase();
+            } else {
+                word = word.isEmpty() ? word : Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase();
+            }
+            builder.append(word);
+        }
+        return builder.toString();
     }
 }

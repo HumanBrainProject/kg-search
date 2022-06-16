@@ -76,7 +76,7 @@ const resolveSort = (sort, sortFields) => {
 const resolveFacets = (facets, type, params) => {
   const list = Array.isArray(facets[type])?facets[type]:[];
   list.forEach(facet => {
-    const value = params[facet.id];
+    const value = params[facet.name];
     if (value) {
       switch (facet.type) {
       case "list":
@@ -158,7 +158,7 @@ const setupSearch = (state, action) => {
     .sort(getTypesComparatorForOrder(facetTypesOrder));
 
   const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
-  const selectedType = resolveType(state.initialParams["facet_type"], instanceTypes, defaultType);
+  const selectedType = resolveType(state.initialParams["category"], instanceTypes, defaultType);
   const sort = resolveSort(state.initialParams["sort"], sortFields);
   const page = resolvePage(state.initialParams["p"]);
   const from = (page -1) * state.hitsPerPage;
@@ -248,7 +248,7 @@ const setFacet = (state, action) => ({
   ...state,
   facets: Object.entries(state.facets).reduce((acc, [type, list]) => {
     acc[type] = list.map(f => {
-      if (type === state.selectedType && f.id === action.id) {
+      if (type === state.selectedType && f.name === action.name) {
         return updateFacet(f, action);
       }
       return f;
@@ -272,7 +272,7 @@ const setFacetSize = (state, action) => {
     ...state,
     facets: Object.entries(state.facets).reduce((acc, [type, list]) => {
       acc[type] = list.map(f => {
-        if (type === state.selectedType && f.id === action.id) {
+        if (type === state.selectedType && f.name === action.name) {
           switch (f.type) {
           case "list":
             return {
@@ -362,9 +362,10 @@ const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
     acc[type] = list.map(f => {
       const facet = {...f};
       if (type === selectedType) {
-        const res = aggs[facet.id];
+        const res = aggs[facet.name];
         if (facet.type === "list") {
           facet.keywords = (res?.keywords)?res.keywords:[];
+          facet.others =  (res?.others)?res.others:0;
         }
         facet.count = (res?.count)?res.count:0;
       }

@@ -96,10 +96,10 @@ export const setPage = value => {
   };
 };
 
-export const setFacet = (id, active, keyword) => {
+export const setFacet = (name, active, keyword) => {
   return {
     type: types.SET_FACET,
-    id: id,
+    name: name,
     active: active,
     keyword: keyword,
   };
@@ -111,11 +111,11 @@ export const resetFacets = () => {
   };
 };
 
-export const setFacetSize = (id, size) => {
+export const setFacetSize = (name, size) => {
   return dispatch => {
     dispatch({
       type: types.SET_FACET_SIZE,
-      id: id,
+      name: name,
       size: size,
     });
     dispatch(search());

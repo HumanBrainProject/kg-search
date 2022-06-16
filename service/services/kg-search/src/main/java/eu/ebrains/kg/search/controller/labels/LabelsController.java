@@ -114,7 +114,7 @@ public class LabelsController {
         facets.forEach(f -> {
             Map<String, Object> facet = new LinkedHashMap<>();
             result.add(facet);
-            facet.put("id", f.getId());
+            facet.put("name", f.getName());
             if (StringUtils.isNotBlank(f.getLabel())) {
                 facet.put("label", f.getLabel());
             }
