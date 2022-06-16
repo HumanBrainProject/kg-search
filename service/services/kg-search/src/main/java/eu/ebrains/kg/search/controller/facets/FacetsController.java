@@ -30,6 +30,12 @@ public class FacetsController {
                 handleChildren(targetModel, type, facets, "", "");
             });
         }
+        Set<String> names = new HashSet<>();
+        facets.forEach(facet -> {
+            String name = FacetsUtils.getUniqueFacetName(facet, names);
+            names.add(name);
+            facet.setName(name);
+        });
         return facets;
     }
 
@@ -56,7 +62,6 @@ public class FacetsController {
                 facets.add(facet);
                 if (!info.label().equals(defaultFieldInfo.label())) {
                     facet.setLabel(info.label());
-                    facet.setName(FacetsUtils.getFacetName(info.label()));
                 }
                 if (info.facet() != defaultFieldInfo.facet()) {
                     facet.setType(info.facet());

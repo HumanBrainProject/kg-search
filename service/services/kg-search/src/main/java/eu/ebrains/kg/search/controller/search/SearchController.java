@@ -79,16 +79,6 @@ public class SearchController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String parentCountLabel = "temporary_parent_doc_count";
-    private final String docCountLabel = "doc_count";
-    private final JsonNode parentDocCountObj = objectMapper.readTree(
-            String.format("{\"%s\": {\"reverse_nested\": {}}}", parentCountLabel)
-    );
-    private Map<String, Object> temp = Map.of(
-            "temporary_parent_doc_count", Map.of(
-                    "reverse_nested", Collections.emptyMap()
-            )
-    );
     private final ESServiceClient esServiceClient;
     private final MetaModelUtils utils;
     private final UserInfoRoles userInfoRoles;

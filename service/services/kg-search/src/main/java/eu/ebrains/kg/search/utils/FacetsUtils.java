@@ -23,9 +23,12 @@
 
 package eu.ebrains.kg.search.utils;
 
+import eu.ebrains.kg.search.model.Facet;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.CaseUtils;
 
 import java.text.Normalizer;
+import java.util.Set;
 
 public class FacetsUtils {
 
@@ -51,24 +54,23 @@ public class FacetsUtils {
         return String.format("%s.%s.children", path, property);
     }
 
-    public static String getFacetName(String label) {
-        String normalized = Normalizer.normalize(label, Normalizer.Form.NFD);
-        String alphanum = normalized.replaceAll("[^A-Za-z0-9 ]", "");
-        return camelCase(alphanum);
+    public static String getUniqueFacetName(Facet facet, Set<String> names) {
+        String name = getFacetName(facet);
+        int count = 1;
+        String nameWithSuffix = name;
+        while (names.contains(nameWithSuffix)) {
+            count+=1;
+            nameWithSuffix = String.format("%s%d", name, count);
+        }
+        return nameWithSuffix;
     }
 
-    private static String camelCase(String text) {
-        String[] words = text.split("[\\W_]+");
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < words.length; i++) {
-            String word = words[i];
-            if (i == 0) {
-                word = word.isEmpty() ? word : word.toLowerCase();
-            } else {
-                word = word.isEmpty() ? word : Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase();
-            }
-            builder.append(word);
+    private static String getFacetName(Facet facet) {
+        if (StringUtils.isNotBlank(facet.getLabel())) {
+            String normalized = Normalizer.normalize(facet.getLabel(), Normalizer.Form.NFD);
+            String alphanum = normalized.replaceAll("[^A-Za-z0-9 ]", "");
+            return CaseUtils.toCamelCase(alphanum, false, ' ');
         }
-        return builder.toString();
+        return facet.getName();
     }
 }
