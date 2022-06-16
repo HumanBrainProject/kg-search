@@ -26,7 +26,7 @@ package eu.ebrains.kg.search.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.ebrains.kg.common.controller.kg.KGv2;
 import eu.ebrains.kg.common.controller.kg.KGv3;
-import eu.ebrains.kg.search.controller.labels.LabelsController;
+import eu.ebrains.kg.search.controller.definition.DefinitionController;
 import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.model.DataStage;
@@ -57,7 +57,7 @@ import java.util.*;
 public class Search {
     private final KGV2ServiceClient KGV2ServiceClient;
     private final ESServiceClient esServiceClient;
-    private final LabelsController labelsController;
+    private final DefinitionController definitionController;
     private final SearchController searchController;
     private final TranslationController translationController;
     private final KGv2 kgV2;
@@ -68,10 +68,10 @@ public class Search {
     @Value("${eu.ebrains.kg.commit}")
     String commit;
 
-    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
+    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, DefinitionController definitionController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
         this.KGV2ServiceClient = KGV2ServiceClient;
         this.esServiceClient = esServiceClient;
-        this.labelsController = labelsController;
+        this.definitionController = definitionController;
         this.searchController = searchController;
         this.translationController = translationController;
         this.kgV3 = kgV3;
@@ -93,11 +93,11 @@ public class Search {
         return doiCitationFormatter.getDOICitation(doi, style, contentType);
     }
 
-    @GetMapping("/labels")
+    @GetMapping("/definition")
     public Map<String, Object> getLabels() {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         Map<String, Object> result = new HashMap<>();
-        result.put("types", labelsController.generateLabels());
+        result.put("typeMappings", definitionController.generateTypeMappings());
         result.put("authEndpoint", authEndpoint);
         if(StringUtils.isNotBlank(commit)){
             result.put("commit", commit);

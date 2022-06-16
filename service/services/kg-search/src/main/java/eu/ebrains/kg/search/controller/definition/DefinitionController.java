@@ -21,7 +21,7 @@
  *
  */
 
-package eu.ebrains.kg.search.controller.labels;
+package eu.ebrains.kg.search.controller.definition;
 
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
@@ -37,7 +37,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
-public class LabelsController {
+public class DefinitionController {
 
     private static final String SEARCH_UI_NAMESPACE = "https://schema.hbp.eu/searchUi/";
     private static final String GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
@@ -45,27 +45,27 @@ public class LabelsController {
     private final MetaModelUtils utils;
     private final FacetsController facetsController;
 
-    public LabelsController(MetaModelUtils utils, FacetsController facetsController) {
+    public DefinitionController(MetaModelUtils utils, FacetsController facetsController) {
         this.utils = utils;
         this.facetsController = facetsController;
     }
 
     //@Cacheable(value = "labels", unless = "#result == null")
-    public Map<String, Object> generateLabels() {
+    public Map<String, Object> generateTypeMappings() {
         Map<String, Object> labels = new LinkedHashMap<>();
         for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
             Class<?> targetModel = model.getTargetClass();
-            labels.put(MetaModelUtils.getNameForClass(targetModel), generateLabels(targetModel, labels.size()));
+            labels.put(MetaModelUtils.getNameForClass(targetModel), generateTypeMappings(targetModel, labels.size()));
             //Also add inner models to the labels
             Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
                     .forEachOrdered(innerClass -> {
-                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateLabels(innerClass, labels.size()+1));
+                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateTypeMappings(innerClass, labels.size()+1));
                     });
         }
         return labels;
     }
 
-    public Map<String, Object> generateLabels(Class<?> clazz, int order) {
+    public Map<String, Object> generateTypeMappings(Class<?> clazz, int order) {
         Map<String, Object> result = new LinkedHashMap<>();
         String type = MetaModelUtils.getNameForClass(clazz);
         result.put("http://schema.org/name", type);

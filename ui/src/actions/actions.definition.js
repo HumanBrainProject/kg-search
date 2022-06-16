@@ -73,7 +73,7 @@ export const loadDefinition = () => {
     API.axios
       .get(API.endpoints.definition())
       .then(({ data }) => {
-        const typeMappings = simplifySemantics(data?.types);
+        const typeMappings = simplifySemantics(data?.typeMappings);
         data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
         data.commit && dispatch(setCommit(data.commit));
         dispatch(loadDefinitionSuccess(typeMappings));

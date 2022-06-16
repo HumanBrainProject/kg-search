@@ -29,7 +29,7 @@ const keycloakClientId = "kg";
 const endpoints = {
   "authEndpoint": () => "/api/auth/endpoint",
   //"definition": () => "/static/data/labels.json",
-  "definition": () => "/api/labels",
+  "definition": () => "/api/definition",
   "groups": () => "/api/groups",
   //"search": () => "/static/data/search.json",
   "search": (group, q, type, from, size, sort) => `/api/groups/${group}/search?${q?("q=" + encodeURIComponent(q) + "&"):""}type=${encodeURIComponent(type)}&from=${from}&size=${size}&sort=${encodeURIComponent(sort)}`,
