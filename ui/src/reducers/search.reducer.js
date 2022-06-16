@@ -22,7 +22,7 @@
  */
 
 import * as types from "../actions/actions.types";
-import { getResetFacets, constructFacets } from "../helpers/ElasticSearch/Facets";
+import { getResetFacets, constructFacets } from "../helpers/Facets";
 
 const getFacetTypesOrder = definition => {
   const facetTypesOrder = {};

@@ -42,6 +42,7 @@ import eu.ebrains.kg.search.model.FacetValue;
 import eu.ebrains.kg.search.utils.AggsUtils;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.utils.FiltersUtils;
+import eu.ebrains.kg.search.utils.QueryStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
@@ -178,7 +179,10 @@ public class SearchController {
     public Map<String, Object> search(String q, String type, int from, int size, String sort, Map<String, FacetValue> facetValues, DataStage dataStage) throws JsonProcessingException {
         String index = ESHelper.getIndexesForSearch(dataStage);
         Map<String, Object> payload = new HashMap<>();
-        ObjectNode esQuery = getEsQuery(q, type);
+        String sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
+        String exactQuery = QueryStringUtils.escapeSpecialCharacters(sanitizedQuery);
+        String fuzzyQuery = QueryStringUtils.fuzzyQueryString(sanitizedQuery);
+        ObjectNode esQuery = getEsQuery(exactQuery, type);
         if (esQuery != null) {
             payload.put("query", esQuery);
         }
