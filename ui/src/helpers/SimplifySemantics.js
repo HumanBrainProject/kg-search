@@ -38,10 +38,10 @@ const simplifySemanticKeysForField = definition => {
     label: getFieldPropertyValue(definition, GRAPHQUERY_NAMESPACE + "label", null),
     sort: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "sort", false),
     markdown: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "markdown", false),
-    labelHidden: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "label_hidden", false),
-    tagIcon: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "tag_icon", null),
+    labelHidden: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "labelHidden", false),
+    tagIcon: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "tagIcon", null),
     icon: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "icon", null),
-    linkIcon: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "link_icon", null),
+    linkIcon: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "linkIcon", null),
     visible: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "visible", true),
     isTable: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "isTable", false),
     isHierarchicalFiles: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "isHierarchicalFiles", false),
@@ -60,10 +60,8 @@ const simplifySemanticKeysForField = definition => {
     order: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "order", null),
     aggregate: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "aggregate", null),
     type: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "type", null),
-    detail_label: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "detail_label", null),
     count: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "count", false),
     collapsible: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "collapsible", false),
-    ignoreForSearch: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "ignoreForSearch", false),
     highlight: getFieldPropertyValue(definition, SEARCHUI_NAMESPACE + "highlight", false)
   };
   if (definition.children instanceof Object && !Array.isArray(definition.children)) {

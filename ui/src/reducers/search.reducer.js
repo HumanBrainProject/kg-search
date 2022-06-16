@@ -110,7 +110,6 @@ const initialState = {
   page: 1,
   totalPages: 0,
   sortFields: [],
-  facetTypesOrder: {},
   initialRequestDone: false,
   isLoading: false,
   queryString: "",
@@ -123,7 +122,7 @@ const initialState = {
 };
 
 
-export const getSortFields = typesDefinition => {
+const getSortFields = typesDefinition => {
   const sortFields = {
     _score: { value: "newestFirst", label: "Relevance" }
   };
@@ -149,11 +148,14 @@ const setupSearch = (state, action) => {
   const facetTypesOrder = getFacetTypesOrder(typeMappings);
   const defaultType = getDefaultSelectedType(typeMappings, facetTypesOrder);
   const facets = constructFacets(typeMappings);
-  const instanceTypes = Object.entries(typeMappings).filter(([, typeDefinition]) => typeDefinition.searchable).map(([type, typeDefinition]) => ({
-    type: type,
-    label: typeDefinition.name,
-    count: 0
-  }));
+  const instanceTypes = Object.entries(typeMappings)
+    .filter(([, typeDefinition]) => typeDefinition.searchable)
+    .map(([type, typeDefinition]) => ({
+      type: type,
+      label: typeDefinition.name,
+      count: 0
+    }))
+    .sort(getTypesComparatorForOrder(facetTypesOrder));
 
   const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
   const selectedType = resolveType(state.initialParams["facet_type"], instanceTypes, defaultType);
@@ -169,7 +171,6 @@ const setupSearch = (state, action) => {
     types: instanceTypes,
     sort: sort,
     sortFields: sortFields,
-    facetTypesOrder: facetTypesOrder,
     selectedType: selectedType,
     page: page,
     from: from
@@ -347,15 +348,13 @@ const getTypesComparatorForOrder = order => (a, b) => {
   return b.count - a.count;
 };
 
-const getUpdatedTypesFromResults = (instanceTypes, facetTypesOrder, results) => instanceTypes
-  .map(t => {
-    const count = Number(results?.types?.[t.type]?.count);
-    return {
-      ...t,
-      count: isNaN(count)?0:count
-    };
-  })
-  .sort(getTypesComparatorForOrder(facetTypesOrder));
+const getUpdatedTypesFromResults = (instanceTypes, results) => instanceTypes.map(t => {
+  const count = Number(results?.types?.[t.type]?.count);
+  return {
+    ...t,
+    count: isNaN(count)?0:count
+  };
+});
 
 const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
   const aggs = (results && results.aggregations) ? results.aggregations : {};
@@ -376,7 +375,7 @@ const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
 };
 
 const loadSearchResult = (state, action) => {
-  const total = isNaN(Number(action.results?.total?.value))?0:Number(action.results.total.value);
+  const total = isNaN(Number(action.results?.total))?0:Number(action.results.total);
 
   return {
     ...state,
@@ -384,7 +383,7 @@ const loadSearchResult = (state, action) => {
     initialRequestDone: true,
     isLoading: false,
     facets: getUpdatedFacetsFromResults(state.facets, state.selectedType, action.results),
-    types: getUpdatedTypesFromResults(state.types, state.facetTypesOrder, action.results),
+    types: getUpdatedTypesFromResults(state.types, action.results),
     hits: Array.isArray(action.results?.hits) ? action.results.hits : [],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage),

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -44,5 +45,10 @@ public class ElasticSearchDocument {
 
     @JsonProperty("_source")
     private Map<String, Object> source;
+
+    private Map<String, List<String>> highlight;
+
+    @JsonProperty("_score")
+    private Map<String, Object> score;
 }
 

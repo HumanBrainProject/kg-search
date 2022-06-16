@@ -97,7 +97,6 @@ public class LabelsController {
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
         Map<String, Object> fields = new LinkedHashMap<>();
         result.put("fields", fields);
-        result.put("facets", listFacets(type));
         allFields.forEach(f -> {
             try {
                 handleField(f, fields);
@@ -171,7 +170,7 @@ public class LabelsController {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "visible", info.visible());
             }
             if (info.labelHidden() != defaultFieldInfo.labelHidden()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "label_hidden", info.labelHidden()); // TODO: change to camelCase (labelHidden)
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "labelHidden", info.labelHidden());
             }
             if (info.markdown() != defaultFieldInfo.markdown()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "markdown", info.markdown());
@@ -181,9 +180,6 @@ public class LabelsController {
             }
             if (info.overviewMaxDisplay() != defaultFieldInfo.overviewMaxDisplay()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "overviewMaxDisplay", info.overviewMaxDisplay());
-            }
-            if (info.ignoreForSearch() != defaultFieldInfo.ignoreForSearch()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "ignoreForSearch", info.ignoreForSearch());
             }
             if (info.type() != defaultFieldInfo.type()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "type", info.type().name().toLowerCase());
@@ -195,10 +191,10 @@ public class LabelsController {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "layout", info.layout());
             }
             if (!info.linkIcon().equals(defaultFieldInfo.linkIcon())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "link_icon", info.linkIcon()); // TODO: change to camelCase (linkIcon)
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "linkIcon", info.linkIcon());
             }
             if (!info.tagIcon().equals(defaultFieldInfo.tagIcon())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "tag_icon", info.tagIcon()); // TODO: change to camelCase (tagIcon)
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "tagIcon", info.tagIcon());
             }
             if (!info.icon().equals(defaultFieldInfo.icon())) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "icon", info.icon());
