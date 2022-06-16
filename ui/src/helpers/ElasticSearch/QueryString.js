@@ -47,6 +47,13 @@ const trimOperators = str => {
   res = res.replace(/^\s*\|\|\s*(.*)$/, "$1"); //NOSONAR
   res = res.replace(/^(.*)\s*&&\s*$/, "$1"); //NOSONAR
   res = res.replace(/^(.*)\s*\|\|\s*$/, "$1"); //NOSONAR
+  res = res.replace(/(.*)\s*&&\s+&&\s*(.*)$/, "$1 && $2"); //NOSONAR
+  res = res.replace(/(.*)\s*\|\|\s+\|\|\s*(.*)$/, "$1 || $2"); //NOSONAR
+  res = res.replace(/(.*)\s*\|\|\s*&&\s*(.*)$/, "$1 || $2"); //NOSONAR
+  res = res.replace(/(.*)\s*&&\s*\|\|\s*(.*)$/, "$1 || $2"); //NOSONAR
+  res = res.replace(/(.*)\s*&&&+\s*(.*)$/, "$1 && $2"); //NOSONAR
+  res = res.replace(/(.*)\s*\|\|\|+\s*(.*)$/, "$1 || $2"); //NOSONAR
+  res = res.replace(/\s+/g, " "); //NOSONAR
   res = res.trim();
   if (res !== str) {
     return trimOperators(res);
