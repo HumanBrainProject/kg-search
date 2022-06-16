@@ -37,13 +37,16 @@ const SortingSelectorComponent = ({show, className, label, value, list, onChange
 };
 
 export const SortingSelector = connect(
-  (state, props) => ({
-    show: state.search.total && state.search.total > 0,
-    className: props.className,
-    label: "Sort by",
-    value: state.search.sort?state.search.sort:null,
-    list: state.search.sortFields
-  }),
+  (state, props) => {
+    const list = Array.isArray(state.search.sortFields[state.search.selectedType])?state.search.sortFields[state.search.selectedType]:[];
+    return {
+      show: state.search.total && state.search.total > 0 && list.length > 0,
+      className: props.className,
+      label: "Sort by",
+      value: state.search.sort?state.search.sort:null,
+      list: list
+    };
+  },
   dispatch => ({
     onChange: value => {
       dispatch(actionsSearch.setSort(value));

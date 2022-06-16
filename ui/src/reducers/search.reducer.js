@@ -62,13 +62,14 @@ const resolveType = (type, list, defaultType) => {
   return defaultType;
 };
 
-const resolveSort = (sort, sortFields) => {
-  const exists = sortFields.some(t => t.value === sort);
+const resolveSort = (sort, sortFields, selectedType) => {
+  const list = Array.isArray(sortFields[selectedType])?sortFields[selectedType]:[];
+  const exists = list.some(t => t.value === sort);
   if (exists) {
     return sort;
   }
-  if (sortFields.length) {
-    return sortFields[0].value;
+  if (list.length) {
+    return list[0].value;
   }
   return null;
 };
@@ -109,7 +110,7 @@ const initialState = {
   sort: null,
   page: 1,
   totalPages: 0,
-  sortFields: [],
+  sortFields: {},
   initialRequestDone: false,
   isLoading: false,
   queryString: "",
@@ -121,21 +122,23 @@ const initialState = {
   isUpToDate: false
 };
 
-
 const getSortFields = typesDefinition => {
-  const sortFields = {
-    _score: { value: "newestFirst", label: "Relevance" }
-  };
+  const sortFields = {};
   if (typeof typesDefinition === "object" && !Array.isArray(typesDefinition)) {
-    Object.values(typesDefinition).forEach(mapping => {
-      Object.entries(mapping.fields).forEach(([name, field]) => {
-        if (field.sort && sortFields[name] === undefined) {
-          sortFields[name] = {value: name, label: field.label};
-        }
+    Object.entries(typesDefinition)
+      .filter(([, typeDefinition]) => typeDefinition.searchable)
+      .forEach(([type, mapping]) => {
+        const list = [{ value: "newestFirst", label: "Relevance" }];
+        Object.entries(mapping.fields).forEach(([name, field]) => {
+          if (field.sort && sortFields[name] === undefined) {
+            console.log(type, name, field.label);
+            list.push({ value: name, label: field.label });
+          }
+        });
+        sortFields[type] = list;
       });
-    });
   }
-  return Object.values(sortFields);
+  return sortFields;
 };
 
 const setupSearch = (state, action) => {
@@ -159,7 +162,7 @@ const setupSearch = (state, action) => {
 
   const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
   const selectedType = resolveType(state.initialParams["category"], instanceTypes, defaultType);
-  const sort = resolveSort(state.initialParams["sort"], sortFields);
+  const sort = resolveSort(state.initialParams["sort"], sortFields, selectedType);
   const page = resolvePage(state.initialParams["p"]);
   const from = (page -1) * state.hitsPerPage;
   resolveFacets(facets, selectedType, state.initialParams);
@@ -293,7 +296,8 @@ const setFacetSize = (state, action) => {
 };
 
 const setSort = (state, action) => {
-  const exists = state.sortFields.some(f => f.value === action.value);
+  const list = Array.isArray(state.sortFields[state.selectedType])?state.sortFields[state.selectedType]:[];
+  const exists = list.some(f => f.value === action.value);
   if (exists) {
     return {
       ...state,
