@@ -130,8 +130,7 @@ const getSortFields = typesDefinition => {
       .forEach(([type, mapping]) => {
         const list = [{ value: "newestFirst", label: "Relevance" }];
         Object.entries(mapping.fields).forEach(([name, field]) => {
-          if (field.sort && sortFields[name] === undefined) {
-            console.log(type, name, field.label);
+          if (field.sort) {
             list.push({ value: name, label: field.label });
           }
         });

@@ -47,9 +47,10 @@ export const loadDefinitionRequest = () => {
   };
 };
 
-export const loadDefinitionSuccess = typeMappings => {
+export const loadDefinitionSuccess = (typesList, typeMappings) => {
   return {
     type: types.LOAD_DEFINITION_SUCCESS,
+    types: typesList,
     typeMappings: typeMappings
   };
 };
@@ -76,7 +77,7 @@ export const loadDefinition = () => {
         const typeMappings = simplifySemantics(data?.typeMappings);
         data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
         data.commit && dispatch(setCommit(data.commit));
-        dispatch(loadDefinitionSuccess(typeMappings));
+        dispatch(loadDefinitionSuccess(data?.types, typeMappings));
       })
       .catch(e => {
         const { response } = e;

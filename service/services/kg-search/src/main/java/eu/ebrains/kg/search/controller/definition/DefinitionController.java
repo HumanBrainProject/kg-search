@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class DefinitionController {
@@ -50,7 +51,7 @@ public class DefinitionController {
         this.facetsController = facetsController;
     }
 
-    //@Cacheable(value = "labels", unless = "#result == null")
+    //@Cacheable(value = "typeMappings", unless = "#result == null")
     public Map<String, Object> generateTypeMappings() {
         Map<String, Object> labels = new LinkedHashMap<>();
         for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
@@ -108,29 +109,6 @@ public class DefinitionController {
         return result;
     }
 
-    private List<Object> listFacets(String type) {
-        List<Facet> facets = facetsController.getFacets(type);
-        List<Object> result = new ArrayList<>();
-        facets.forEach(f -> {
-            Map<String, Object> facet = new LinkedHashMap<>();
-            result.add(facet);
-            facet.put("name", f.getName());
-            if (StringUtils.isNotBlank(f.getLabel())) {
-                facet.put("label", f.getLabel());
-            }
-            if (StringUtils.isNotBlank(f.getType().name())) {
-                facet.put("type", f.getType().name().toLowerCase());
-            }
-            if (f.getIsFilterable() != null) {
-                facet.put("isFilterable", f.getIsFilterable());
-            }
-            if (f.getIsHierarchical() != null) {
-                facet.put("isHierarchical", f.getIsHierarchical());
-            }
-        });
-        return result;
-    }
-
     private Map<String, Object> handleChildren(Type type) {
         Map<String, Object> properties = new LinkedHashMap<>();
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
@@ -143,7 +121,6 @@ public class DefinitionController {
         });
         return properties;
     }
-
 
     private void handleField(MetaModelUtils.FieldWithGenericTypeInfo f, Map<String, Object> fields) throws ClassNotFoundException {
         FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
@@ -237,4 +214,95 @@ public class DefinitionController {
         }
     }
 
+    //@Cacheable(value = "types", unless = "#result == null")
+    public List<Object> generateTypes() {
+        Map<Integer, Object> types = new LinkedHashMap<>();
+        for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
+            Class<?> targetModel = model.getTargetClass();
+            Map<String, Object> type = generateType(targetModel, MetaModelUtils.getNameForClass(targetModel));
+            if (type != null) {
+                types.put(types.size(), type);
+            }
+            //Also add inner models to the types
+            Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
+                    .forEachOrdered(innerClass -> {
+                        Map<String, Object> innerType = generateType(innerClass, String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)));
+                        if (innerType != null) {
+                            types.put(types.size()+1, innerType);
+                        }
+                    });
+        }
+        ArrayList<Map.Entry<Integer, Object>> list = new ArrayList<>(types.entrySet());
+        return list.stream().sorted(new TypeComparator()).map(Map.Entry::getValue).collect(Collectors.toList());
+    }
+
+    private static class TypeComparator implements Comparator<Map.Entry<Integer, Object>> {
+        @Override
+        public int compare(Map.Entry<Integer, Object> a, Map.Entry<Integer, Object> b) {
+            return a.getKey().compareTo(b.getKey());
+        }
+    }
+
+    public Map<String, Object> generateType(Class<?> clazz, String label) {
+        MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
+        if (metaInfo == null || !metaInfo.searchable()) {
+            return null;
+        }
+        String type = MetaModelUtils.getNameForClass(clazz);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("type", type);
+        result.put("label", label);
+        result.put("facets", listFacets(type));
+        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
+        List<Map<String, String>> sortFields = new ArrayList<>();
+        result.put("sortFields", sortFields);
+        sortFields.add(Map.of(
+                "label", "Relevance",
+                "value", "newestFirst"
+        ));
+        allFields.forEach(f -> {
+            try {
+                handleSortField(f, sortFields);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        if (metaInfo.defaultSelection()) {
+            result.put("defaultSelection", true);
+        }
+        return result;
+    }
+
+    private List<Object> listFacets(String type) {
+        List<Facet> facets = facetsController.getFacets(type);
+        List<Object> result = new ArrayList<>();
+        facets.forEach(f -> {
+            Map<String, Object> facet = new LinkedHashMap<>();
+            result.add(facet);
+            facet.put("name", f.getName());
+            if (StringUtils.isNotBlank(f.getLabel())) {
+                facet.put("label", f.getLabel());
+            }
+            if (StringUtils.isNotBlank(f.getType().name())) {
+                facet.put("type", f.getType().name().toLowerCase());
+            }
+            if (f.getIsFilterable() != null) {
+                facet.put("isFilterable", f.getIsFilterable());
+            }
+            if (f.getIsHierarchical() != null) {
+                facet.put("isHierarchical", f.getIsHierarchical());
+            }
+        });
+        return result;
+    }
+
+    private void handleSortField(MetaModelUtils.FieldWithGenericTypeInfo f, List<Map<String, String>> sortFields) throws ClassNotFoundException {
+        FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
+        if (info != null && info.sort()) {
+            sortFields.add(Map.of(
+                    "label", info.label(),
+                    "value", utils.getPropertyName(f.getField())
+            ));
+        }
+    }
 }

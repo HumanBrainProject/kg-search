@@ -94,12 +94,13 @@ public class Search {
     }
 
     @GetMapping("/definition")
-    public Map<String, Object> getLabels() {
+    public Map<String, Object> getDefinition() {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         Map<String, Object> result = new HashMap<>();
+        result.put("types", definitionController.generateTypes());
         result.put("typeMappings", definitionController.generateTypeMappings());
         result.put("authEndpoint", authEndpoint);
-        if(StringUtils.isNotBlank(commit)){
+        if(StringUtils.isNotBlank(commit) && !commit.equals("\"\"")){
             result.put("commit", commit);
         }
         return result;
