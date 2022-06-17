@@ -216,7 +216,7 @@ const filterHighlightFields = (data, excludeFieldNames) => {
 export const Hit = connect(
   (state, { data }) => {
 
-    const type = data?._source?.type?.value; // state.search.selectedType
+    const type = data?._source?.type?.value; // state.search.selectedType?.type
     const source = data && data._source;
     const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
     const group = state.groups.group;

@@ -60,10 +60,10 @@ const TypesFilterPanelBase = ({ types, onClick }) => (
 export const TypesFilterPanel = connect(
   state => ({
     types: state.search.types
-      .filter(t => t.count > 0 || t.type === state.search.selectedType)
+      .filter(t => t.count > 0 || t.type === state.search.selectedType?.type)
       .map(t => ({
         ...t,
-        active: t.type === state.search.selectedType
+        active: t.type === state.search.selectedType?.type
       }))
   }),
   dispatch => ({

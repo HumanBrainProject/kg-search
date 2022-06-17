@@ -38,7 +38,7 @@ const SortingSelectorComponent = ({show, className, label, value, list, onChange
 
 export const SortingSelector = connect(
   (state, props) => {
-    const list = Array.isArray(state.search.sortFields[state.search.selectedType])?state.search.sortFields[state.search.selectedType]:[];
+    const list = Array.isArray(state.search.selectedType?.sortFields)?state.search.selectedType.sortFields:[];
     return {
       show: state.search.total && state.search.total > 0 && list.length > 0,
       className: props.className,

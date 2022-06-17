@@ -23,45 +23,50 @@
 const FACET_DEFAULT_SIZE = 10;
 const FACET_ALL_SIZE = 1000000000;
 
-export const getResetFacets = facets => Object.entries(facets).reduce((acc, [type, list]) => {
-  acc[type] = list.map(facet => {
-    switch (facet.type) {
-    case "list":
-      return {
-        ...facet,
-        value: null,
-        size: (facet.isHierarchical || facet.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
-      };
-    case "exists":
-    default:
-      return {
-        ...facet,
-        value: null
-      };
-    }
-  });
-  return acc;
-}, {});
+export const getResetFacets = facets => facets.map(facet => getResetFacet(facet));
 
-export const constructFacets = definition => Object.entries(definition).reduce((acc, [type, typeDefinition]) => {
-  const list = Array.isArray(typeDefinition.facets)?typeDefinition.facets:[];
-  acc[type] = list.map(facet => ({
-    ...facet,
-    count: 0,
-    value: null,
-    keywords: [],
-    others: 0,
-    size: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE,
-    defaultSize: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
-  }));
-  return acc;
-}, {});
+const getResetFacet = facet => {
+  switch (facet.type) {
+  case "list":
+    return {
+      ...facet,
+      value: null,
+      size: (facet.isHierarchical || facet.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
+    };
+  case "exists":
+  default:
+    return {
+      ...facet,
+      value: null
+    };
+  }
+};
 
-export const getAggregation = (facets, type) => {
-  if (!Array.isArray(facets[type])) {
+export const getActiveFacets = facets => {
+  if (!Array.isArray(facets)) {
+    return [];
+  }
+  return facets.filter(f =>
+    f.count > 0 &&
+    (f.type !== "list" || f.keywords.length)
+  );
+};
+
+export const constructFacet = facet => ({
+  ...facet,
+  count: 0,
+  value: null,
+  keywords: [],
+  others: 0,
+  size: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE,
+  defaultSize: facet.isFilterable?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
+});
+
+export const getAggregation = facets => {
+  if (!Array.isArray(facets)) {
     return {};
   }
-  return facets[type].reduce((acc, facet) => {
+  return facets.reduce((acc, facet) => {
     switch (facet.type) {
     case "list":
       //if (facet.isHierarchical) {

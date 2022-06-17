@@ -48,6 +48,7 @@ import {
   getLocationSearchFromQuery,
   searchToObj
 } from "../../helpers/BrowserHelpers";
+import { getActiveFacets } from "../../helpers/Facets";
 
 import "./Search.css";
 
@@ -331,11 +332,8 @@ export const Search = connect(
     shouldLoadGroups: !!state.auth.accessToken,
     searchHasError: !!state.search.error,
     queryString: state.search.queryString,
-    selectedType: state.search.selectedType,
-    facets: Array.isArray(state.search.facets[state.search.selectedType])?state.search.facets[state.search.selectedType].filter(f =>
-      f.count > 0 &&
-      (f.type !== "list" || f.keywords.length)
-    ):[],
+    selectedType: state.search.selectedType?.type,
+    facets: getActiveFacets(state.search.selectedType?.facets),
     sort: state.search.sort,
     page: state.search.page,
     totalPages: state.search.totalPages,

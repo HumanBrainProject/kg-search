@@ -78,9 +78,6 @@ const simplifySemanticKeyForType = definition => {
   if (definition[SCHEMA_ORG + "name"]) {
     mapping.name = definition[SCHEMA_ORG + "name"];
   }
-  if (definition[SEARCHUI_NAMESPACE + "order"]) {
-    mapping.order = definition[SEARCHUI_NAMESPACE + "order"];
-  }
   if (definition[SEARCHUI_NAMESPACE + "ribbon"]) {
     const ribbon = definition[SEARCHUI_NAMESPACE + "ribbon"];
     const framed = ribbon[SEARCHUI_NAMESPACE + "framed"];
@@ -96,12 +93,6 @@ const simplifySemanticKeyForType = definition => {
         }
       }
     };
-  }
-  if (definition[SEARCHUI_NAMESPACE + "searchable"]) {
-    mapping.searchable = definition[SEARCHUI_NAMESPACE + "searchable"];
-  }
-  if (definition[SEARCHUI_NAMESPACE + "defaultSelection"]) {
-    mapping.defaultSelection = definition[SEARCHUI_NAMESPACE + "defaultSelection"];
   }
   if (definition.fields instanceof Object && !Array.isArray(definition.fields)) {
     mapping.fields = Object.entries(definition.fields).reduce((acc, [field, fieldDefinition]) => {

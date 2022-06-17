@@ -22,61 +22,50 @@
  */
 
 import * as types from "../actions/actions.types";
-import { getResetFacets, constructFacets } from "../helpers/Facets";
+import { getResetFacets, constructFacet } from "../helpers/Facets";
 
-const getFacetTypesOrder = definition => {
-  const facetTypesOrder = {};
-  Object.entries(definition).forEach(([type, typeDefinition]) => {
-    const order = Number(typeDefinition.order);
-    if (!isNaN(order)) {
-      facetTypesOrder[type] = order;
-    }
-  });
-  return facetTypesOrder;
-};
-
-const getDefaultSelectedType = (definition, facetTypesOrder) => {
+const resolveType = (type, types) => {
+  const value = Array.isArray(type)?type[0]:type;
+  let defaultType = null;
   let selectedType = null;
-  let defaultSelectionDefined = false;
-  Object.keys(definition).forEach(type => {
-    const order = Number(definition[type].order);
-    if (!isNaN(order)) {
-      facetTypesOrder[type] = order;
-      if (definition[type].defaultSelection) {
-        selectedType = type;
-        defaultSelectionDefined = true;
-      }
-      if (!defaultSelectionDefined && (!selectedType || facetTypesOrder[type] < facetTypesOrder[selectedType])) {
-        selectedType = type;
-      }
+  types.some(t => {
+    if (!defaultType) {
+      defaultType = t;
     }
+    if (t.defaultSelection) {
+      defaultType = t;
+    }
+    if (t.type === value) {
+      selectedType = t;
+      return true;
+    }
+    return false;
   });
-  return selectedType;
-};
-
-const resolveType = (type, list, defaultType) => {
-  const typeValue = Array.isArray(type)?type[0]:type;
-  if (list.some(t => t.type === typeValue)) {
-    return typeValue;
+  if (selectedType) {
+    return selectedType;
   }
   return defaultType;
 };
 
-const resolveSort = (sort, sortFields, selectedType) => {
-  const list = Array.isArray(sortFields[selectedType])?sortFields[selectedType]:[];
-  const exists = list.some(t => t.value === sort);
+const resolveSort = (sort, sortFields) => {
+  if (!Array.isArray(sortFields)) {
+    return null;
+  }
+  const exists = sortFields.some(t => t.value === sort);
   if (exists) {
     return sort;
   }
-  if (list.length) {
-    return list[0].value;
+  if (sortFields.length) {
+    return sortFields[0].value;
   }
   return null;
 };
 
-const resolveFacets = (facets, type, params) => {
-  const list = Array.isArray(facets[type])?facets[type]:[];
-  list.forEach(facet => {
+const resolveFacets = (facets, params) => {
+  if (!Array.isArray(facets)) {
+    return;
+  }
+  facets.forEach(facet => {
     const value = params[facet.name];
     if (value) {
       switch (facet.type) {
@@ -105,12 +94,10 @@ const initialState = {
   error: null,
   message: "",
   initialParams: {},
-  facets: {},
   types: [],
   sort: null,
   page: 1,
   totalPages: 0,
-  sortFields: {},
   initialRequestDone: false,
   isLoading: false,
   queryString: "",
@@ -122,57 +109,40 @@ const initialState = {
   isUpToDate: false
 };
 
-const getSortFields = typesDefinition => {
-  const sortFields = {};
-  if (typeof typesDefinition === "object" && !Array.isArray(typesDefinition)) {
-    Object.entries(typesDefinition)
-      .filter(([, typeDefinition]) => typeDefinition.searchable)
-      .forEach(([type, mapping]) => {
-        const list = [{ value: "newestFirst", label: "Relevance" }];
-        Object.entries(mapping.fields).forEach(([name, field]) => {
-          if (field.sort) {
-            list.push({ value: name, label: field.label });
-          }
-        });
-        sortFields[type] = list;
-      });
-  }
-  return sortFields;
-};
-
 const setupSearch = (state, action) => {
-  const typeMappings = action.typeMappings;
-  if (!typeMappings) {
+  if (!action.types) {
     return state;
   }
 
-  const sortFields = getSortFields(typeMappings);
-  const facetTypesOrder = getFacetTypesOrder(typeMappings);
-  const defaultType = getDefaultSelectedType(typeMappings, facetTypesOrder);
-  const facets = constructFacets(typeMappings);
-  const instanceTypes = Object.entries(typeMappings)
-    .filter(([, typeDefinition]) => typeDefinition.searchable)
-    .map(([type, typeDefinition]) => ({
-      type: type,
-      label: typeDefinition.name,
+  const instanceTypes = Array.isArray(action.types)?action.types.map(t => {
+    const instanceType = {
+      ...t,
       count: 0
-    }))
-    .sort(getTypesComparatorForOrder(facetTypesOrder));
+    };
+    if (Array.isArray(t.facets)) {
+      instanceType.facets = t.facets.map(f => constructFacet(f));
+    }
+    if (Array.isArray(t.sortFields)) {
+      instanceType.sortFields = t.sortFields.map(f => ({
+        ...f,
+        count: 0
+      }));
+    }
+    return instanceType;
+  }):[];
 
   const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
-  const selectedType = resolveType(state.initialParams["category"], instanceTypes, defaultType);
-  const sort = resolveSort(state.initialParams["sort"], sortFields, selectedType);
+  const selectedType = resolveType(state.initialParams["category"], instanceTypes);
+  const sort = resolveSort(state.initialParams["sort"], selectedType?.sortFields);
   const page = resolvePage(state.initialParams["p"]);
   const from = (page -1) * state.hitsPerPage;
-  resolveFacets(facets, selectedType, state.initialParams);
+  resolveFacets(selectedType?.facets, state.initialParams);
 
   return {
     ...state,
     queryString:  queryString,
-    facets: facets,
     types: instanceTypes,
     sort: sort,
-    sortFields: sortFields,
     selectedType: selectedType,
     page: page,
     from: from
@@ -246,56 +216,89 @@ const updateFacet = (facet, action) => {
   }
 };
 
-const setFacet = (state, action) => ({
-  ...state,
-  facets: Object.entries(state.facets).reduce((acc, [type, list]) => {
-    acc[type] = list.map(f => {
-      if (type === state.selectedType && f.name === action.name) {
-        return updateFacet(f, action);
+const setFacet = (state, action) => {
+  if (Array.isArray(state.selectedType?.facets)) {
+    const types = state.types.map(t => {
+      if (t.type === state.selectedType.type) {
+        return {
+          ...t,
+          facets: state.selectedType.facets.map(f => {
+            if ( f.name === action.name) {
+              return updateFacet(f, action);
+            }
+            return f;
+          })
+        };
       }
-      return f;
+      return t;
     });
-    return acc;
-  }, {}),
-  page: 1,
-  from: 0,
-  isUpToDate: false
-});
+    return {
+      ...state,
+      types: types,
+      selectedType: state.selectedType?types.find(t => t.type === state.selectedType?.type):null,
+      page: 1,
+      from: 0,
+      isUpToDate: false
+    };
+  }
+  return state;
+};
 
-const resetFacets = state => ({
-  ...state,
-  facets: getResetFacets(state.facets),
-  page: 1,
-  isUpToDate: false
-});
-
-const setFacetSize = (state, action) => {
+const resetFacets = state => {
+  const types = state.types.map(t => {
+    if (Array.isArray(t.facets)) {
+      return {
+        ...t,
+        facets: getResetFacets(t.facets),
+      };
+    }
+    return t;
+  });
   return {
     ...state,
-    facets: Object.entries(state.facets).reduce((acc, [type, list]) => {
-      acc[type] = list.map(f => {
-        if (type === state.selectedType && f.name === action.name) {
-          switch (f.type) {
-          case "list":
-            return {
-              ...f,
-              size: action.size
-            };
-          case "exists":
-          default:
-            return f;
-          }
-        }
-        return f;
-      });
-      return acc;
-    }, {}),
+    types: types,
+    selectedType: state.selectedType?types.find(t => t.type === state.selectedType?.type):null,
     isUpToDate: false
   };
 };
 
+const setFacetSize = (state, action) => {
+  if (Array.isArray(state.selectedType?.facets)) {
+    const types = state.types.map(t => {
+      if (t.type === state.selectedType.type) {
+        return {
+          ...t,
+          facets: state.selectedType.facets.map(f => {
+            if (f.name === action.name) {
+              switch (f.type) {
+              case "list":
+                return {
+                  ...f,
+                  size: action.size
+                };
+              case "exists":
+              default:
+                return f;
+              }
+            }
+            return f;
+          })
+        };
+      }
+      return t;
+    });
+    return {
+      ...state,
+      types: types,
+      selectedType: state.selectedType?types.find(t => t.type === state.selectedType?.type):null,
+      isUpToDate: false
+    };
+  }
+  return state;
+};
+
 const setSort = (state, action) => {
-  const list = Array.isArray(state.sortFields[state.selectedType])?state.sortFields[state.selectedType]:[];
+  const list = Array.isArray(state.selectedType?.sortFields)?state.selectedType.sortFields:[];
   const exists = list.some(f => f.value === action.value);
   if (exists) {
     return {
@@ -317,14 +320,18 @@ const setPage = (state, action) => {
 };
 
 const setType = (state, action) => {
-  const selectedType = action.value;
-  return {
-    ...state,
-    selectedType: selectedType,
-    page: 1,
-    from: 0,
-    isUpToDate: false
-  };
+  const selectedType = state.types.find(t => t.type === action.value);
+  if (selectedType) {
+    return {
+      ...state,
+      selectedType: selectedType,
+      sort: (Array.isArray(selectedType?.sortFields) && selectedType.sortFields.length)?selectedType.sortFields[0].value:null,
+      page: 1,
+      from: 0,
+      isUpToDate: false
+    };
+  }
+  return state;
 };
 
 const loadSearchRequest = state => {
@@ -336,58 +343,44 @@ const loadSearchRequest = state => {
   };
 };
 
-const getTypesComparatorForOrder = order => (a, b) => {
-  if (order) {
-    if (order[a.type] !== undefined && order[b.type] !== undefined) {
-      return order[a.type] - order[b.type];
-    }
-    if (order[a.type] !== undefined) {
-      return -1;
-    }
-    if (order[b.type] !== undefined) {
-      return 1;
-    }
-  }
-  return b.count - a.count;
-};
-
-const getUpdatedTypesFromResults = (instanceTypes, results) => instanceTypes.map(t => {
+const getUpdatedTypesFromResults = (instanceTypes, selectedType, results) => instanceTypes.map(t => {
   const count = Number(results?.types?.[t.type]?.count);
-  return {
+  const instanceType = {
     ...t,
     count: isNaN(count)?0:count
   };
+  if (Array.isArray(t.facets)) {
+    instanceType.facets = getUpdatedFacetsFromResults(t.facets, t.type === selectedType, results);
+  }
+  return instanceType;
 });
 
-const getUpdatedFacetsFromResults = (facets, selectedType, results) => {
-  const aggs = (results && results.aggregations) ? results.aggregations : {};
-  return Object.entries(facets).reduce((acc, [type, list]) => {
-    acc[type] = list.map(f => {
-      const facet = {...f};
-      if (type === selectedType) {
-        const res = aggs[facet.name];
-        if (facet.type === "list") {
-          facet.keywords = (res?.keywords)?res.keywords:[];
-          facet.others =  (res?.others)?res.others:0;
-        }
-        facet.count = (res?.count)?res.count:0;
+const getUpdatedFacetsFromResults = (facets, isSelectedType, results) => {
+  const aggs = (results?.aggregations) ? results.aggregations : {};
+  return facets.map(f => {
+    const facet = {...f};
+    if (isSelectedType) {
+      const res = aggs[facet.name];
+      if (facet.type === "list") {
+        facet.keywords = (res?.keywords)?res.keywords:[];
+        facet.others =  (res?.others)?res.others:0;
       }
-      return facet;
-    });
-    return acc;
-  }, {});
+      facet.count = (res?.count)?res.count:0;
+    }
+    return facet;
+  });
 };
 
 const loadSearchResult = (state, action) => {
   const total = isNaN(Number(action.results?.total))?0:Number(action.results.total);
-
+  const types = getUpdatedTypesFromResults(state.types, state.selectedType?.type, action.results);
   return {
     ...state,
     message: "",
     initialRequestDone: true,
     isLoading: false,
-    facets: getUpdatedFacetsFromResults(state.facets, state.selectedType, action.results),
-    types: getUpdatedTypesFromResults(state.types, action.results),
+    types: types,
+    selectedType: state.selectedType?types.find(t => t.type === state.selectedType?.type):null,
     hits: Array.isArray(action.results?.hits) ? action.results.hits : [],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage),

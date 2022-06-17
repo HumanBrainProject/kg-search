@@ -131,13 +131,13 @@ export const setInitialSearchParams = params => {
 export const search = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const { queryString, selectedType, sort, from, hitsPerPage, facets } = state.search;
-    const payload = getAggregation(facets, selectedType);
+    const { queryString, selectedType, sort, from, hitsPerPage } = state.search;
+    const payload = getAggregation(selectedType?.facets);
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
     API.axios
-      .post(API.endpoints.search(state.groups.group, queryString, selectedType, from, hitsPerPage, sort), payload)
+      .post(API.endpoints.search(state.groups.group, queryString, selectedType?.type, from, hitsPerPage, sort), payload)
       //.get(API.endpoints.search(state.groups.group), payload)
       .then(response => {
         response.data && response.data.hits && Array.isArray(response.data.hits.hits) && response.data.hits.hits.forEach(hit => hit._group = state.groups.group);

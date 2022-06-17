@@ -56,30 +56,20 @@ public class DefinitionController {
         Map<String, Object> labels = new LinkedHashMap<>();
         for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
             Class<?> targetModel = model.getTargetClass();
-            labels.put(MetaModelUtils.getNameForClass(targetModel), generateTypeMappings(targetModel, labels.size()));
+            labels.put(MetaModelUtils.getNameForClass(targetModel), generateTypeMappings(targetModel));
             //Also add inner models to the labels
             Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
                     .forEachOrdered(innerClass -> {
-                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateTypeMappings(innerClass, labels.size()+1));
+                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateTypeMappings(innerClass));
                     });
         }
         return labels;
     }
 
-    public Map<String, Object> generateTypeMappings(Class<?> clazz, int order) {
+    public Map<String, Object> generateTypeMappings(Class<?> clazz) {
         Map<String, Object> result = new LinkedHashMap<>();
         String type = MetaModelUtils.getNameForClass(clazz);
         result.put("http://schema.org/name", type);
-        result.put(SEARCH_UI_NAMESPACE + "order", order);
-        MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
-        if (metaInfo != null) {
-            if (metaInfo.defaultSelection()) {
-                result.put(SEARCH_UI_NAMESPACE + "defaultSelection", true);
-            }
-            if (metaInfo.searchable()) {
-                result.put(SEARCH_UI_NAMESPACE + "searchable", true);
-            }
-        }
         RibbonInfo ribbonInfo = clazz.getAnnotation(RibbonInfo.class);
         if (ribbonInfo != null) {
             Map<String, Object> ribbonInfo_result = new HashMap<>();
@@ -105,7 +95,6 @@ public class DefinitionController {
                 throw new RuntimeException(e);
             }
         });
-        result.put("facets", listFacets(type));
         return result;
     }
 
@@ -136,9 +125,6 @@ public class DefinitionController {
             }
             if (!info.hint().equals(defaultFieldInfo.hint())) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "hint", info.hint());
-            }
-            if (info.sort() != defaultFieldInfo.sort()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "sort", info.sort());
             }
             if (info.groupBy() != defaultFieldInfo.groupBy()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "groupby", info.groupBy()); // TODO: change to camelCase (groupBy)
