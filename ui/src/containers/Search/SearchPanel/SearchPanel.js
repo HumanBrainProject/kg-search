@@ -31,6 +31,7 @@ import "./SearchPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import { searchToObj } from "../../../helpers/BrowserHelpers";
 
 const SeachPanelBaseComponent = ({ queryString, onQueryStringChange, isFloating, onHelp }) => {
@@ -73,6 +74,11 @@ const SeachPanelBaseComponent = ({ queryString, onQueryStringChange, isFloating,
 
   const handleSearch = useMemo(() => () => onQueryStringChange(value), [value, onQueryStringChange]);
 
+  const handleReset = () => {
+    setValue("");
+    onQueryStringChange("");
+  };
+
   const handleKeyDown = useMemo(() => e => {
     if (e.key === "Enter") {
       onQueryStringChange(value);
@@ -92,6 +98,11 @@ const SeachPanelBaseComponent = ({ queryString, onQueryStringChange, isFloating,
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             ref={textInput} />
+          {!!value.length && (
+            <button type="button" className="kgs-search-panel-reset__button" title="Clear" onClick={handleReset}>
+              <FontAwesomeIcon icon={faTimes} size="2x" />
+            </button>
+          )}
           <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
             <FontAwesomeIcon icon={faInfoCircle} size="2x" />
           </button>

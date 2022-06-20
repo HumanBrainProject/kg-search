@@ -98,7 +98,7 @@
 .kgs-search-panel input.kg-search-bar {
     display: inline-block;
     width: 100%;
-    padding: 15px 60px 15px 60px;
+    padding: 15px 120px 15px 60px;
     vertical-align: top;
     color: var(--color-11);
     font-size: 24px;
@@ -144,6 +144,32 @@
     background-color: var(--color-37);
 }
 
+.kgs-search-panel button.kgs-search-panel-reset__button {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 60px;
+    width: 60px;
+    height: 60px;
+    margin: 0 ;
+    padding: 16px 0;
+    border: 0;
+    background-color: transparent;
+    color: var(--color-15);
+    opacity: 0;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease-in;
+}
+
+.kgs-search-panel > div > div:hover button.kgs-search-panel-reset__button {
+    opacity: 0.35
+}
+
+.kgs-search-panel button.kgs-search-panel-reset__button:hover {
+    opacity: 1 !important;
+}
+
 .kgs-search-panel button.kgs-search-panel-help__button {
     display: block;
     position: absolute;
@@ -158,12 +184,11 @@
     color: var(--link-highlight-color);
     text-align: center;
     cursor: pointer;
-    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
+    transition: color 0.2s ease-in;
 }
 
-.kgs-search-panel button.kgs-search-panel-help__button i,
-.kgs-search-panel button.kgs-search-panel-help__button:hover i {
-    color: var(--link-highlight-color);
+.kgs-search-panel button.kgs-search-panel-help__button:hover {
+    color: var(--color-37);
 }
 
 .kgs-search-panel .kg-search-bar .sk-spinning-loader {

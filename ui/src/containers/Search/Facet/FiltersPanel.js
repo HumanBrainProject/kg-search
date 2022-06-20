@@ -87,7 +87,7 @@ export const FiltersPanel = connect(
   state => {
     const facets = (state.definition.isReady && Array.isArray(state.search.selectedType?.facets))?state.search.selectedType.facets:[];
     return {
-      show: state.definition.isReady && facets.length > 0,
+      show: state.definition.isReady && state.search.total > 0 && facets.length > 0,
       facets: facets
     };
   },
