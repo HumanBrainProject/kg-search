@@ -230,7 +230,7 @@ public class SearchController {
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
         response.put("hits", (result.getHits() != null && result.getHits().getHits() != null)?result.getHits().getHits(): Collections.emptyList());
-        response.put("aggregations", getFacetAggregation(facets, result.getAggregations()));
+        response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues));
         response.put("types", getTypesAggregation(result.getAggregations()));
 
         if (total == 0 && from == 0 && StringUtils.isNotBlank(sanitizedQuery) && exactQuery.equals(sanitizedQuery)) {
@@ -281,22 +281,35 @@ public class SearchController {
         return suggestions;
     }
 
-    private List<Map<String, Object>> getKeywords(List<ElasticSearchAgg.Bucket> buckets) {
-        if (CollectionUtils.isEmpty(buckets)) {
+    private List<Map<String, Object>> getKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue) {
+        List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues()))?null:facetValue.getValues();
+        if (CollectionUtils.isEmpty(buckets) && CollectionUtils.isEmpty(values)) {
             return Collections.emptyList();
         }
         List<Map<String, Object>> keywords = new ArrayList<>();
+        Set<String> keywordsWithValues = new HashSet<>();
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             keywords.add(Map.of(
                 "value", bucket.getKey(),
                 "count", bucket.getDocCount()
             ));
+            keywordsWithValues.add(bucket.getKey());
+        }
+        if (!CollectionUtils.isEmpty(values)) {
+            for (String keyword : values) {
+                if (!keywordsWithValues.contains(keyword)) {
+                    keywords.add(Map.of(
+                            "value", keyword,
+                            "count", 0
+                    ));
+                }
+            }
         }
         return keywords;
     }
 
-    private List<Map<String, Object>> getHierarchicalKeywords(List<ElasticSearchAgg.Bucket> buckets) {
-        if (CollectionUtils.isEmpty(buckets)) {
+    private List<Map<String, Object>> getHierarchicalKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue) {
+        if (CollectionUtils.isEmpty(buckets) && (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues()))) {
             return Collections.emptyList();
         }
         List<Map<String, Object>> keywords = new ArrayList<>();
@@ -308,7 +321,7 @@ public class SearchController {
                         "value", bucket.getKey(),
                         "count", bucket.getDocCount(),
                         "children", Map.of(
-                                "keywords", getKeywords(childBuckets),
+                                "keywords", getKeywords(childBuckets, facetValue),
                                 "others", getOthers(child)
                         )
                 ));
@@ -322,16 +335,29 @@ public class SearchController {
         return keywords;
     }
 
-    private List<Map<String, Object>> getNestedKeywords(List<ElasticSearchAgg.Bucket> buckets) {
-        if (CollectionUtils.isEmpty(buckets)) {
+    private List<Map<String, Object>> getNestedKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue) {
+        List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues()))?null:facetValue.getValues();
+        if (CollectionUtils.isEmpty(buckets) && CollectionUtils.isEmpty(values)) {
             return Collections.emptyList();
         }
         List<Map<String, Object>> keywords = new ArrayList<>();
+        Set<String> keywordsWithValues = new HashSet<>();
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             keywords.add(Map.of(
                     "value", bucket.getKey(),
                     "count", (bucket.getReverse() != null)?bucket.getReverse().getDocCount():0
             ));
+            keywordsWithValues.add(bucket.getKey());
+        }
+        if (!CollectionUtils.isEmpty(values)) {
+            for (String keyword : values) {
+                if (!keywordsWithValues.contains(keyword)) {
+                    keywords.add(Map.of(
+                            "value", keyword,
+                            "count", 0
+                    ));
+                }
+            }
         }
         return keywords;
     }
@@ -343,31 +369,31 @@ public class SearchController {
         return keywords.getSumOtherDocCount();
     }
 
-    private Map<String, Object> getHierarchicalFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg) {
+    private Map<String, Object> getHierarchicalFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue) {
         ElasticSearchAgg keywords = agg.getKeywords();
         List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
         return Map.of(
-                "keywords", getHierarchicalKeywords(buckets),
+                "keywords", getHierarchicalKeywords(buckets, facetValue),
                 "others", getOthers(keywords),
                 "count", getFacetCount(agg)
         );
     }
 
-    private Map<String, Object> getNestedFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg) {
+    private Map<String, Object> getNestedFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue) {
         ElasticSearchAgg keywords = agg.getInner() != null?agg.getInner().getKeywords():null;
         List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
         return Map.of(
-                "keywords", getNestedKeywords(buckets),
+                "keywords", getNestedKeywords(buckets, facetValue),
                 "others", getOthers(keywords),
                 "count", getNestedFacetCount(agg)
         );
     }
 
-    private Map<String, Object> getFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg) {
+    private Map<String, Object> getFacetList(Facet facet, ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue) {
         ElasticSearchAgg keywords = agg.getKeywords();
         List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
         return Map.of(
-                "keywords", getKeywords(buckets),
+                "keywords", getKeywords(buckets, facetValue),
                 "others", getOthers(keywords),
                 "count", getFacetCount(agg)
         );
@@ -393,7 +419,7 @@ public class SearchController {
         return agg.getKeywords().getBuckets().stream().mapToInt(bucket -> (bucket.getReverse() != null)?bucket.getReverse().getDocCount():0).sum();
     }
 
-    private Map<String, Object> getFacetAggregation(List<Facet> facets, Map<String, ElasticSearchFacetsResult.Aggregation> aggregations) {
+    private Map<String, Object> getFacetAggregation(List<Facet> facets, Map<String, ElasticSearchFacetsResult.Aggregation> aggregations, Map<String, FacetValue> facetValues) {
         if (CollectionUtils.isEmpty(aggregations)) {
             return Collections.emptyMap();
         }
@@ -402,22 +428,51 @@ public class SearchController {
             if (aggregations.containsKey(facet.getName())) {
 
                 ElasticSearchFacetsResult.Aggregation agg = aggregations.get(facet.getName());
-
                 if (facet.getType() == FieldInfo.Facet.LIST) {
+                    FacetValue facetValue = facetValues.get(facet.getName());
                     if (facet.isChild()) {
                         if (facet.getIsHierarchical()) {
-                            res.put(facet.getName(), getHierarchicalFacetList(facet, agg));
+                            res.put(facet.getName(), getHierarchicalFacetList(facet, agg, facetValue));
                         } else { // nested
-                            res.put(facet.getName(), getNestedFacetList(facet, agg));
+                            res.put(facet.getName(), getNestedFacetList(facet, agg, facetValue));
                         }
                     } else {
-                        res.put(facet.getName(), getFacetList(facet, agg));
+                        res.put(facet.getName(), getFacetList(facet, agg, facetValue));
                     }
                 } else if (facet.getType() == FieldInfo.Facet.EXISTS) {
                     res.put(facet.getName(), getFacetExists(agg));
                 }
             }
         });
+        for(Map.Entry<String, FacetValue> entry : facetValues.entrySet()) {
+            String name = entry.getKey();
+            FacetValue value = entry.getValue();
+            List<String> values = value.getValues();
+            if (!res.containsKey(name) && !CollectionUtils.isEmpty(values)) {
+                List<Facet> matchingFacets = facets.stream().filter(facet -> facet.getName().equals(name)).collect(Collectors.toList());
+                if (!matchingFacets.isEmpty()) {
+                    Facet facet = matchingFacets.get(0);
+                    if (facet.getType() == FieldInfo.Facet.LIST) {
+//                        if (facet.isChild() && facet.getIsHierarchical()) {
+//
+//                        } else {
+                            List<Map<String, Object>> keywords = new ArrayList<>();
+                            for (String keyword : values) {
+                                keywords.add(Map.of(
+                                        "count", 0,
+                                        "value", keyword
+                                ));
+                            }
+                            res.put(name, Map.of(
+                                    "count", 0,
+                                    "keywords", keywords,
+                                    "others", 0
+                            ));
+//                        }
+                    }
+                }
+            }
+        }
         return res;
     }
 

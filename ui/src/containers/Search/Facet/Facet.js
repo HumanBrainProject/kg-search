@@ -73,7 +73,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         const removedItems = list.splice(nullValueIdx, 1);
         list.push(removedItems[0]);
       }
-      Component = Tree;
+      Component = list.length?Tree:null;
       parameters = {
         tree: list,
         ItemComponent: FacetCheckbox,
@@ -89,7 +89,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
       }));
       if (facet.isFilterable) {
-        Component = FilteredList;
+        Component = list.length?FilteredList:null;
         parameters = {
           label: facet.label,
           items: list,
@@ -98,7 +98,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
           onItemClick: item => onChange(facet.name, !item.checked, item.value),
         };
       } else {
-        Component = PaginatedList;
+        Component = list.length?PaginatedList:null;
         parameters = {
           items: list,
           ItemComponent: FacetCheckbox,

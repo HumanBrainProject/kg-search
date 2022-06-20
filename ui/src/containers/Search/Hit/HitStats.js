@@ -38,7 +38,7 @@ export const Suggestion =  ({word, isLast=true, onClick}) => {
   const handleOnClick = () => onClick(word, location, navigate);
 
   return (
-    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick}>{word}</button>{isLast?"":" or "}</li>
+    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick} title={`search for ${word}`}>{word}</button>{isLast?"":" or "}</li>
   );
 };
 

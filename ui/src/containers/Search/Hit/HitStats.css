@@ -51,7 +51,10 @@
     margin: 2px 0px;
     padding: 0;
     border: 0;
-    background-color: var(--color-highlight);
-    font-style: italic;
-    color: var(--color-34);
+    color: var(--link-color-1);
+    background-color: transparent;
+}
+
+.kgs-hitStats button.kgs-suggestion__btn:hover, .kgs-hitStats button.kgs-suggestion__btn:focus, .kgs-hitStats button.kgs-suggestion__btn:active {
+    color: var(--link-color-active);
 }
