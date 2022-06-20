@@ -23,9 +23,34 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import ReactPiwik from "react-piwik";
+
+import * as actionsSearch from "../../../actions/actions.search";
+
 import "./HitStats.css";
 
-export const HitStatsBase = ({show, message, hitCount, from, to}) => {
+export const Suggestion =  ({word, isLast=true, onClick}) => {
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleOnClick = () => onClick(word, location, navigate);
+
+  return (
+    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick}>{word}</button>{isLast?"":" or "}</li>
+  );
+};
+
+export const Suggestions =  ({words, onClick}) => (
+  <ul className="kgs-suggestions">
+    {words.map((word, idx) => (
+      <Suggestion key={word} word={word} isLast={idx === words.length -1} onClick={onClick} />
+    ))}
+  </ul>
+);
+
+export const HitStatsBase = ({show, message, suggestions, hitCount, from, to, setQueryString}) => {
   if (!show) {
     return null;
   }
@@ -35,6 +60,11 @@ export const HitStatsBase = ({show, message, hitCount, from, to}) => {
     );
   }
   if (hitCount === 0) {
+    if (suggestions.length) {
+      return (
+        <span className="kgs-hitStats no-hits">No results were found. Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
+      );
+    }
     return (
       <span className="kgs-hitStats no-hits">No results were found. Please refine your search.</span>
     );
@@ -52,9 +82,24 @@ export const HitStats = connect(
     return {
       show: !state.search.isLoading,
       message: state.search.message,
+      suggestions: state.search.suggestions,
       hitCount: state.search.total?state.search.total:0,
       from: from,
       to: to
     };
-  }
+  },
+  dispatch => ({
+    setQueryString: (value, location, navigate) => {
+      ReactPiwik.push(["trackEvent", "Search", "Refine search using suggestion", value]);
+      let to = "/";
+      const find = location.search.split("&").find(p => p.match(/\??q=.*/));
+      if (find) {
+        to = location.search.replace(find, `${find.startsWith("?")?"?":""}q=${encodeURIComponent(value)}`);
+      } else {
+        to = location.search + location.search.endsWith("?")?"q=":"&q=" + encodeURIComponent(value);
+      }
+      navigate(to);
+      dispatch(actionsSearch.setQueryString(value));
+    }
+  })
 )(HitStatsBase);

@@ -35,3 +35,23 @@
     font-weight: bold;
     white-space: nowrap;
 }
+
+.kgs-hitStats ul.kgs-suggestions {
+    list-style-type: none;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.kgs-hitStats ul.kgs-suggestions > li {
+    display: inline;
+}
+
+.kgs-hitStats button.kgs-suggestion__btn {
+    margin: 2px 0px;
+    padding: 0;
+    border: 0;
+    background-color: var(--color-highlight);
+    font-style: italic;
+    color: var(--color-34);
+}

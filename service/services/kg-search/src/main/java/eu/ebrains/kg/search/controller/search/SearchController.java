@@ -24,26 +24,31 @@
 package eu.ebrains.kg.search.controller.search;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
-import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
-import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
+import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
+import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
+import eu.ebrains.kg.search.model.QueryTweaking;
 import eu.ebrains.kg.search.utils.AggsUtils;
-import eu.ebrains.kg.search.controller.facets.FacetsController;
+import eu.ebrains.kg.search.utils.FacetsUtils;
 import eu.ebrains.kg.search.utils.FiltersUtils;
 import eu.ebrains.kg.search.utils.QueryStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,18 +58,24 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.Principal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static eu.ebrains.kg.search.utils.FacetsUtils.FACET_TYPE;
-
 
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class SearchController {
+
+    private final Set<String> PERSON_FIELDS_HIGHLIGHT = Stream.of(
+            "contributors.value",
+            "custodians.value",
+            "owners.value"
+    ).collect(Collectors.toSet());
 
     private final Set<String> FIELDS_TO_HIGHLIGHT = Stream.of(
             "title.value",
@@ -176,16 +187,9 @@ public class SearchController {
     }
 
 
-    public Map<String, Object> search(String q, String type, int from, int size, String sort, Map<String, FacetValue> facetValues, DataStage dataStage) throws JsonProcessingException {
+    public Map<String, Object> search(String q, String type, int from, int size, String sort, Map<String, FacetValue> facetValues, DataStage dataStage) throws JsonProcessingException, IOException {
         String index = ESHelper.getIndexesForSearch(dataStage);
         Map<String, Object> payload = new HashMap<>();
-        String sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
-        String exactQuery = QueryStringUtils.escapeSpecialCharacters(sanitizedQuery);
-        String fuzzyQuery = QueryStringUtils.fuzzyQueryString(sanitizedQuery);
-        ObjectNode esQuery = getEsQuery(exactQuery, type);
-        if (esQuery != null) {
-            payload.put("query", esQuery);
-        }
         payload.put("from", from);
         payload.put("size", size);
         ObjectNode esHighlight = getEsHighlight(type);
@@ -202,13 +206,79 @@ public class SearchController {
         payload.put("post_filter", esPostFilter);
         Object esAggs =  AggsUtils.getAggs(facets, activeFilters, facetValues);
         payload.put("aggs", esAggs);
+        ObjectNode esQuery = null;
+        String sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
+        String exactQuery = null;
+        if (StringUtils.isNotBlank(sanitizedQuery)) {
+            try {
+                Analyzer analyzer = new StandardAnalyzer();
+                new ComplexPhraseQueryParser("", analyzer).parse(sanitizedQuery);
+                exactQuery = sanitizedQuery;
+            } catch (ParseException e) {
+                //Special character is not supported in parser
+                // try minimal replacements:
+                exactQuery = QueryStringUtils.escapeSpecialCharacters(sanitizedQuery);
+            }
+            esQuery = getEsQuery(exactQuery, type);
+        }
+        if (esQuery != null) {
+            payload.put("query", esQuery);
+        }
         ElasticSearchFacetsResult result = esServiceClient.searchDocuments(index, payload);
+        int total = (result.getHits() != null && result.getHits().getTotal() != null)?result.getHits().getTotal().getValue():0;
+
         Map<String, Object> response = new HashMap<>();
-        response.put("total", (result.getHits() != null && result.getHits().getTotal() != null)?result.getHits().getTotal().getValue():0);
+        response.put("total", total);
         response.put("hits", (result.getHits() != null && result.getHits().getHits() != null)?result.getHits().getHits(): Collections.emptyList());
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations()));
         response.put("types", getTypesAggregation(result.getAggregations()));
+
+        if (total == 0 && from == 0 && StringUtils.isNotBlank(sanitizedQuery) && exactQuery.equals(sanitizedQuery)) {
+            String fuzzyQuery = QueryStringUtils.fuzzyQueryString(sanitizedQuery);
+            if (StringUtils.isNotBlank(fuzzyQuery)) {
+                esQuery = getEsQuery(fuzzyQuery, type);
+                if (esQuery != null) {
+                    payload.put("query", esQuery);
+                    ElasticSearchFacetsResult fuzzyResult = esServiceClient.searchDocuments(index, payload);
+                    Set<String> suggestions = getSuggestions(fuzzyResult, type);
+                    if (!suggestions.isEmpty()) {
+                        response.put("suggestions", suggestions);
+                    }
+                }
+            }
+        }
         return response;
+    }
+
+    private Set<String> getSuggestions(ElasticSearchFacetsResult result, String type) {
+        if (result.getHits() == null || result.getHits().getHits() == null) {
+            return Collections.EMPTY_SET;
+        }
+        Pattern pattern = Pattern.compile(".*<em>(.+)</em>.*");
+        Set<String> suggestions = new LinkedHashSet<>();
+        for(ElasticSearchDocument doc : result.getHits().getHits()) {
+            if (doc.getHighlight() != null) {
+                for(Map.Entry<String, List<String>> e : doc.getHighlight().entrySet()) {
+                    boolean toLower = !(PERSON_FIELDS_HIGHLIGHT.contains(e.getKey()) || (type.equals("Contributor") && e.getKey().equals("title.value")));
+                    for(String sentence : e.getValue()) {
+                        Matcher matcher = pattern.matcher(sentence);
+                        if (matcher.matches()) {
+                            for (int i = 1; i <= matcher.groupCount(); i++) {
+                                if (toLower) {
+                                    String term = matcher.group(i).toLowerCase();
+                                    if (!QueryTweaking.EXCLUDED_TERMS.contains(term) && !QueryStringUtils.OPERATORS.contains(term.toUpperCase())) {
+                                        suggestions.add(term);
+                                    }
+                                } else {
+                                    suggestions.add(matcher.group(i));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return suggestions;
     }
 
     private List<Map<String, Object>> getKeywords(List<ElasticSearchAgg.Bucket> buckets) {
@@ -353,14 +423,14 @@ public class SearchController {
 
     private Map<String, Object> getTypesAggregation(Map<String, ElasticSearchFacetsResult.Aggregation> aggregations) {
         if (CollectionUtils.isEmpty(aggregations) ||
-                !aggregations.containsKey(FACET_TYPE) ||
-                aggregations.get(FACET_TYPE).getKeywords() == null ||
-                CollectionUtils.isEmpty(aggregations.get(FACET_TYPE).getKeywords().getBuckets())
+                !aggregations.containsKey(FacetsUtils.FACET_TYPE) ||
+                aggregations.get(FacetsUtils.FACET_TYPE).getKeywords() == null ||
+                CollectionUtils.isEmpty(aggregations.get(FacetsUtils.FACET_TYPE).getKeywords().getBuckets())
         ) {
             return Collections.emptyMap();
         }
         Map<String, Object> res = new HashMap<>();
-        List<ElasticSearchAgg.Bucket> buckets = aggregations.get(FACET_TYPE).getKeywords().getBuckets();
+        List<ElasticSearchAgg.Bucket> buckets = aggregations.get(FacetsUtils.FACET_TYPE).getKeywords().getBuckets();
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             if (bucket.getDocCount() > 0) {
                 res.put(bucket.getKey(), Map.of(

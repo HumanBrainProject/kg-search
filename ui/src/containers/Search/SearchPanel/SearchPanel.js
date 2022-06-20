@@ -33,25 +33,38 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import { searchToObj } from "../../../helpers/BrowserHelpers";
 
-const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) => {
+const SeachPanelBaseComponent = ({ queryString, onQueryStringChange, isFloating, onHelp }) => {
   const textInput = useRef();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(queryString);
 
   useEffect(() => {
+    window.onpopstate = () => {
+      const q = searchToObj()["q"];
+      if (q && q.length) {
+        const query = decodeURIComponent(q);
+        setValue(query);
+        onQueryStringChange(query);
+      }
+    };
 
     const blur = () => textInput && textInput.current && textInput.current.blur();
     window.addEventListener("scroll", blur);
 
     const q = searchToObj()["q"];
     if (q && q.length) {
-      const queryString = decodeURIComponent(q);
-      setValue(queryString);
+      const query = decodeURIComponent(q);
+      setValue(query);
     }
     textInput && textInput.current.focus();
     return () => {
       window.removeEventListener("scroll", blur);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setValue(queryString);
+  }, [queryString]);
 
   const handleChange = e => {
     textInput && textInput.current && textInput.current.focus();
@@ -90,8 +103,8 @@ const SeachPanelBaseComponent = ({ onQueryStringChange, isFloating, onHelp }) =>
 
 };
 
-const SeachPanelComponent = ({ isFloating, relatedElements, onHelp, onQueryStringChange }) => (
-  <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} />
+const SeachPanelComponent = ({ queryString, isFloating, relatedElements, onHelp, onQueryStringChange }) => (
+  <SeachPanelBaseComponent isFloating={isFloating} queryString={queryString} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} />
 );
 
 const SearchPanelContainer = connect(

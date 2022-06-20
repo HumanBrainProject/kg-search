@@ -37,9 +37,7 @@ describe("search reducer", () => {
       const state = undefined;
       const hits = [2123, 1212, 23423];
       const results = {
-        hits: {
-          hits: hits
-        }
+        hits: hits
       };
       const action = actionsSearch.loadSearchResult(results);
       const newState = searchReducer(state, action);

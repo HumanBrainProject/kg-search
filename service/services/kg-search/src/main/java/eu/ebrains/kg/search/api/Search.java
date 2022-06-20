@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -343,14 +344,14 @@ public class Search {
     }
 
     @PostMapping("/groups/public/search")
-    public ResponseEntity<?> searchPublic(
+    public ResponseEntity<?> searchPublic (
             @RequestParam(required = false, defaultValue = "", name = "q") String q,
             @RequestParam(required = false, defaultValue = "", name = "type") String type,
             @RequestParam(required = false, defaultValue = "0", name = "from") int from,
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
             @RequestParam(required = false, defaultValue = "newestFirst", name = "sort") String sort,
             @RequestBody Map<String, FacetValue> facetValues
-    ) throws JsonProcessingException {
+    ) throws JsonProcessingException, IOException {
         try {
             return ResponseEntity.ok(searchController.search(q, type, from, size, sort, facetValues, DataStage.RELEASED));
         } catch (WebClientResponseException e) {
@@ -366,7 +367,7 @@ public class Search {
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
             @RequestParam(required = false, defaultValue = "newestFirst", name = "sort") String sort,
             @RequestBody Map<String, FacetValue> facetValues,
-            Principal principal) throws JsonProcessingException {
+            Principal principal) throws JsonProcessingException, IOException {
         if (searchController.isInInProgressRole(principal)) {
             try {
                 return ResponseEntity.ok(searchController.search(q, type, from, size, sort, facetValues, DataStage.IN_PROGRESS));

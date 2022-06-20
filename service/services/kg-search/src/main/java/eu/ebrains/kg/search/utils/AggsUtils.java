@@ -29,7 +29,7 @@ import eu.ebrains.kg.search.model.FacetValue;
 
 import java.util.*;
 
-import static eu.ebrains.kg.search.utils.FacetsUtils.FACET_TYPE;
+import eu.ebrains.kg.search.utils.FacetsUtils;
 
 public class AggsUtils {
 
@@ -121,8 +121,8 @@ public class AggsUtils {
     }
 
     private static void setTypeFacet(Map<String, Object> aggs, Map<String, Object> filters) {
-        Object filter = FiltersUtils.getFilter(filters, FACET_TYPE);
-        aggs.put(FACET_TYPE, Map.of(
+        Object filter = FiltersUtils.getFilter(filters, FacetsUtils.FACET_TYPE);
+        aggs.put(FacetsUtils.FACET_TYPE, Map.of(
                 "aggs", Map.of(
                         "keywords", Map.of(
                                 "terms", Map.of(
