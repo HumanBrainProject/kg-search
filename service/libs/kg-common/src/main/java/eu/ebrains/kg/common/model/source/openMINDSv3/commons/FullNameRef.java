@@ -37,7 +37,7 @@ public class FullNameRef {
     private String id;
     private String fullName;
 
-    public final static Comparator<FullNameRef> COMPARATOR = Comparator.comparing(FullNameRef::getFullName, Comparator.nullsFirst(String::compareToIgnoreCase));
+    public static final Comparator<FullNameRef> COMPARATOR = Comparator.comparing(FullNameRef::getFullName, Comparator.nullsFirst(String::compareToIgnoreCase));
 
 
 }

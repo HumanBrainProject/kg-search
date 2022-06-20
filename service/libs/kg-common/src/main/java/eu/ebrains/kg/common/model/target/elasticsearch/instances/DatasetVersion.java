@@ -26,7 +26,6 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.common.controller.translators.Helpers;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import lombok.AllArgsConstructor;
@@ -48,8 +47,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @JsonIgnore
     private List<String> allIdentifiers;
 
-    public final static String EMBARGO_MESSAGE =  "This dataset is temporarily under embargo. The data will become available for download after the embargo period.";
-    public final static String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
+    public static final String EMBARGO_MESSAGE =  "This dataset is temporarily under embargo. The data will become available for download after the embargo period.";
+    public static final String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
 
     public static String createEmbargoInProgressMessage(String containerUrl){
         String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replace("api/buckets/", "") : String.format("https://data.kg.ebrains.eu/files/list?url=%s", containerUrl);

@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class FacetsUtils {
 
-    public final static String FACET_TYPE = "facet_type";
+    public static final String FACET_TYPE = "facet_type";
 
     public static String getPath(String path, String property) {
         if (property.equals("children")) {
