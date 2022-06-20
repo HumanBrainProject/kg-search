@@ -26,18 +26,18 @@ package eu.ebrains.kg.search.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.ebrains.kg.common.controller.kg.KGv2;
 import eu.ebrains.kg.common.controller.kg.KGv3;
-import eu.ebrains.kg.search.controller.definition.DefinitionController;
-import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
+import eu.ebrains.kg.common.services.KGV2ServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
-import eu.ebrains.kg.common.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.controller.definition.DefinitionController;
+import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.search.model.FacetValue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +48,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -351,7 +350,7 @@ public class Search {
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
             @RequestParam(required = false, defaultValue = "newestFirst", name = "sort") String sort,
             @RequestBody Map<String, FacetValue> facetValues
-    ) throws JsonProcessingException, IOException {
+    ) {
         try {
             return ResponseEntity.ok(searchController.search(q, type, from, size, sort, facetValues, DataStage.RELEASED));
         } catch (WebClientResponseException e) {
@@ -367,7 +366,7 @@ public class Search {
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
             @RequestParam(required = false, defaultValue = "newestFirst", name = "sort") String sort,
             @RequestBody Map<String, FacetValue> facetValues,
-            Principal principal) throws JsonProcessingException, IOException {
+            Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             try {
                 return ResponseEntity.ok(searchController.search(q, type, from, size, sort, facetValues, DataStage.IN_PROGRESS));
