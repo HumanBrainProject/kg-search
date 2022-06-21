@@ -25,7 +25,6 @@ import React from "react";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { Details } from "../Details/Details";
 import { Text } from "../Text/Text";
-import { CollapsibleText } from "../CollapsibleText/CollapsibleText";
 import { Link } from "../Link/Link";
 import { Tag } from "../Tag/Tag";
 import { Thumbnail } from "../../containers/Thumbnail/Thumbnail";
@@ -56,7 +55,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
     const isTag = !hasAnyLink && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isTag && !!mapping.markdown;
-    const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
     const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
 
     let value = data.value;
@@ -91,12 +89,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       valueProps = {
         icon: mapping.tagIcon,
         value: value
-      };
-    } else if (isCollapsible) {
-      ValueComponent = CollapsibleText;
-      valueProps = {
-        content: value,
-        isMarkdown: isMarkdown
       };
     } else {
       ValueComponent = Text;

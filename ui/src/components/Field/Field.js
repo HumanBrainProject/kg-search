@@ -72,7 +72,7 @@ const FieldComponent = ({ name, layout, style, className, label, inlineLabel=tru
 
 const getFieldProps = (name, data, mapping, group, type, renderUserInteractions = true) => {
 
-  if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
+  if (!mapping || !mapping.visible || !data) {
     return null;
   }
 

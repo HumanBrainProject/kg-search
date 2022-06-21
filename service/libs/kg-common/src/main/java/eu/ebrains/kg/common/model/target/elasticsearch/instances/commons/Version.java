@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class Version {
 
-    @FieldInfo(label = "Version", groupBy = true)
+    @FieldInfo(label = "Version")
     private TargetInternalReference version;
 
     @FieldInfo(label = "Innovation", markdown = true)

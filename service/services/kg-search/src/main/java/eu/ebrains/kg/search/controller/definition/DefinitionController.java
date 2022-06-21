@@ -40,9 +40,6 @@ import java.util.stream.Collectors;
 @Component
 public class DefinitionController {
 
-    private static final String SEARCH_UI_NAMESPACE = "https://schema.hbp.eu/searchUi/";
-    private static final String GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
-
     private final MetaModelUtils utils;
     private final FacetsController facetsController;
 
@@ -69,21 +66,19 @@ public class DefinitionController {
     public Map<String, Object> generateTypeMappings(Class<?> clazz) {
         Map<String, Object> result = new LinkedHashMap<>();
         String type = MetaModelUtils.getNameForClass(clazz);
-        result.put("http://schema.org/name", type);
+        result.put("name", type);
         RibbonInfo ribbonInfo = clazz.getAnnotation(RibbonInfo.class);
         if (ribbonInfo != null) {
-            Map<String, Object> ribbonInfo_result = new HashMap<>();
-            ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "content", ribbonInfo.content());
-            Map<String, Object> framed_result = new HashMap<>();
-            framed_result.put(SEARCH_UI_NAMESPACE + "aggregation", ribbonInfo.aggregation());
-            framed_result.put(SEARCH_UI_NAMESPACE + "dataField", ribbonInfo.dataField());
-            Map<String, Object> suffix_result = new HashMap<>();
-            suffix_result.put(SEARCH_UI_NAMESPACE + "singular", ribbonInfo.singular());
-            suffix_result.put(SEARCH_UI_NAMESPACE + "plural", ribbonInfo.plural());
-            framed_result.put(SEARCH_UI_NAMESPACE + "suffix", suffix_result);
-            ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "framed", framed_result);
-            ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "icon", ribbonInfo.icon());
-            result.put(SEARCH_UI_NAMESPACE + "ribbon", ribbonInfo_result);
+            result.put("ribbon", Map.of(
+                    "framed", Map.of(
+                            "dataField", ribbonInfo.dataField(),
+                            "aggregation", ribbonInfo.aggregation(),
+                            "suffix", Map.of(
+                                "singular", ribbonInfo.singular(),
+                                "plural", ribbonInfo.plural()
+                            )
+                    )
+            ));
         }
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
         Map<String, Object> fields = new LinkedHashMap<>();
@@ -119,82 +114,51 @@ public class DefinitionController {
             String propertyName = utils.getPropertyName(f.getField());
             Map<String, Object> propertyDefinition = new LinkedHashMap<>();
             fields.put(propertyName, propertyDefinition);
-            FieldInfo defaultFieldInfo = utils.defaultFieldInfo();
-            if (!info.label().equals(defaultFieldInfo.label())) {
-                propertyDefinition.put(GRAPHQUERY_NAMESPACE + "label", info.label());
+            if (info.aggregate() != FieldInfo.Aggregate.UNDEFINED) {
+                propertyDefinition.put("aggregate", info.aggregate().name().toLowerCase());
             }
-            if (!info.hint().equals(defaultFieldInfo.hint())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "hint", info.hint());
+            if (StringUtils.isNotBlank(info.hint())) {
+                propertyDefinition.put("hint", info.hint());
             }
-            if (info.groupBy() != defaultFieldInfo.groupBy()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "groupby", info.groupBy()); // TODO: change to camelCase (groupBy)
+            if (StringUtils.isNotBlank(info.icon())) {
+                propertyDefinition.put("icon", info.icon());
             }
-            if (info.visible() != defaultFieldInfo.visible()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "visible", info.visible());
+            propertyDefinition.put("isAsync", info.isAsync());
+            propertyDefinition.put("isCitation", info.isCitation());
+            propertyDefinition.put("isFilePreview", info.isFilePreview());
+            propertyDefinition.put("isGroupedLinks", info.isGroupedLinks());
+            propertyDefinition.put("isHierarchical", info.isHierarchical());
+            propertyDefinition.put("isHierarchicalFiles", info.isHierarchicalFiles());
+            propertyDefinition.put("isTable", info.isTable());
+            if (StringUtils.isNotBlank(info.label())) {
+                propertyDefinition.put("label", info.label());
             }
-            if (info.labelHidden() != defaultFieldInfo.labelHidden()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "labelHidden", info.labelHidden());
+            propertyDefinition.put("labelHidden", info.labelHidden());
+            if (StringUtils.isNotBlank(info.layout())) {
+                propertyDefinition.put("layout", info.layout());
             }
-            if (info.markdown() != defaultFieldInfo.markdown()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "markdown", info.markdown());
+            if (StringUtils.isNotBlank(info.linkIcon())) {
+                propertyDefinition.put("linkIcon", info.linkIcon());
             }
-            if (info.overview() != defaultFieldInfo.overview()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "overview", info.overview());
+            propertyDefinition.put("markdown", info.markdown());
+            if (info.order() != 0) {
+                propertyDefinition.put("order", info.order());
             }
-            if (info.overviewMaxDisplay() != defaultFieldInfo.overviewMaxDisplay()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "overviewMaxDisplay", info.overviewMaxDisplay());
+            propertyDefinition.put("overview", info.overview());
+            if (info.overviewMaxDisplay() != 0) {
+                propertyDefinition.put("overviewMaxDisplay", info.overviewMaxDisplay());
             }
-            if (info.type() != defaultFieldInfo.type()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "type", info.type().name().toLowerCase());
+            if (StringUtils.isNotBlank(info.separator())) {
+                propertyDefinition.put("separator", info.separator());
             }
-            if (!info.separator().equals(defaultFieldInfo.separator())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "separator", info.separator());
+            if (StringUtils.isNotBlank(info.tagIcon())) {
+                propertyDefinition.put("tagIcon", info.tagIcon());
             }
-            if (!Objects.equals(info.layout(), defaultFieldInfo.layout())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "layout", info.layout());
+            propertyDefinition.put("termsOfUse", info.termsOfUse());
+            if (info.type() != FieldInfo.Type.UNDEFINED) {
+                propertyDefinition.put("type", info.type().name().toLowerCase());
             }
-            if (!info.linkIcon().equals(defaultFieldInfo.linkIcon())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "linkIcon", info.linkIcon());
-            }
-            if (!info.tagIcon().equals(defaultFieldInfo.tagIcon())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "tagIcon", info.tagIcon());
-            }
-            if (!info.icon().equals(defaultFieldInfo.icon())) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "icon", info.icon());
-            }
-            if (info.order() != defaultFieldInfo.order()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "order", info.order());
-            }
-            if (info.aggregate() != defaultFieldInfo.aggregate()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "aggregate", info.aggregate().name().toLowerCase());
-            }
-            if (info.isFilePreview() != defaultFieldInfo.isFilePreview()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isFilePreview", info.isFilePreview());
-            }
-            if (info.isHierarchicalFiles() != defaultFieldInfo.isHierarchicalFiles()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchicalFiles", info.isHierarchicalFiles());
-            }
-            if (info.isHierarchical() != defaultFieldInfo.isHierarchical()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchical", info.isHierarchical());
-            }
-            if (info.isCitation() != defaultFieldInfo.isCitation()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isCitation", info.isCitation());
-            }
-            if (info.termsOfUse() != defaultFieldInfo.termsOfUse()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "termsOfUse", info.termsOfUse());
-            }
-            if (info.isTable() != defaultFieldInfo.isTable()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isTable", info.isTable());
-            }
-            if (info.isDirectDownload() != defaultFieldInfo.isDirectDownload()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isDirectDownload", info.isDirectDownload());
-            }
-            if (info.isGroupedLinks() != defaultFieldInfo.isGroupedLinks()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isGroupedLinks", info.isGroupedLinks());
-            }
-            if (info.isAsync() != defaultFieldInfo.isAsync()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isAsync", info.isAsync());
-            }
+            propertyDefinition.put("visible", info.visible());
             Map<String, Object> children = handleChildren(topTypeToHandle);
             propertyDefinition.putAll(children);
         }

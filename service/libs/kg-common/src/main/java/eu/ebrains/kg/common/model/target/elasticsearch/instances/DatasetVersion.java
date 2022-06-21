@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
-@RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
+@RibbonInfo(aggregation = "count", dataField = "files", singular = "file", plural = "files")
 public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation{
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -298,7 +298,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     public static class OldSubject {
 
         @JsonProperty("subject_name")
-        @FieldInfo(label = "Name", groupBy = true) //TODO: convert groupby to groupBy
+        @FieldInfo(label = "Name")
         private TargetInternalReference subjectName;
 
         @FieldInfo(label = "Species")

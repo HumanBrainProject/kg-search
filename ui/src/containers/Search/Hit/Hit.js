@@ -107,11 +107,6 @@ const getTitleField = (group, data, highlight, mapping) => {
 
 const getDescriptionField = (group, data, highlight, mapping) => {
 
-  const fieldMapping = mapping && {
-    ...mapping,
-    collapsible: false
-  };
-
   let fieldData = data;
 
   const value = data && data.value;
@@ -134,7 +129,7 @@ const getDescriptionField = (group, data, highlight, mapping) => {
   return {
     name: "description",
     data: fieldData,
-    mapping: fieldMapping,
+    mapping: mapping,
     group: group
   };
 };
@@ -188,7 +183,7 @@ const getFields = (group, data, highlight, parentMapping) => {
     .filter(([name, mapping]) =>
       mapping
       && (mapping.overview || primaryFields.includes(name))
-      && (mapping.showIfEmpty || (data && data[name]))
+      && (data?.[name])
     )
     .map(([name, mapping]) => getField(group, name, data[name], highlight, mapping));
 };

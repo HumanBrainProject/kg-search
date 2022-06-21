@@ -31,10 +31,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface RibbonInfo {
-    String content();
     String aggregation();
     String dataField();
     String singular();
     String plural();
-    String icon();
 }

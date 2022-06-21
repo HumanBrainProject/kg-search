@@ -66,12 +66,12 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     const fields = Object.entries(mapping.children)
       .filter(([name, childMapping]) =>
         childMapping
-        && (childMapping.showIfEmpty || (data && data[name]))
+        && (data?.[name])
         && childMapping.visible
       )
       .map(([name, childMapping]) => ({
         name: name,
-        data: data && data[name],
+        data: data?.[name],
         mapping: childMapping,
         group: group
       }));

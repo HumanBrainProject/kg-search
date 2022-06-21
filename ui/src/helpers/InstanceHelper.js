@@ -80,7 +80,7 @@ const getHeaderFields = (group, type, data, mapping) => {
     .filter(
       ([name, fieldsMapping]) =>
         fieldsMapping &&
-        (fieldsMapping.showIfEmpty || (data && data[name])) &&
+        data?.[name] &&
         fieldsMapping.layout === "header" &&
         name !== "title"
     )
@@ -100,7 +100,7 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
       ([name, mapping]) =>
         mapping &&
         mapping.visible &&
-        (mapping.showIfEmpty || (data && data[name])) &&
+        data?.[name] &&
         mapping.layout !== "header" &&
         ![
           "id",

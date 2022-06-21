@@ -51,10 +51,7 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
   }
   // END v1 file
   const fields = Object.entries(mapping)
-    .filter(([name, fieldsMapping]) =>
-      fieldsMapping
-      && (fieldsMapping.showIfEmpty || (data && data[name]))
-    )
+    .filter(([name, fieldsMapping]) => fieldsMapping && data?.[name])
     .map(([name, fieldsMapping]) => ({
       name: name,
       data: data[name],

@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,7 +37,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name="Project", order=1, searchable=true)
-@RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="download")
+@RibbonInfo(aggregation="count", dataField="datasets", singular="dataset", plural="datasets")
 public class Project implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;

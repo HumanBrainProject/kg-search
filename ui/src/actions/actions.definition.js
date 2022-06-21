@@ -24,7 +24,6 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
-import { simplifySemantics } from "../helpers/SimplifySemantics";
 
 
 export const setAuthEndpoint = authEndpoint => {
@@ -74,10 +73,9 @@ export const loadDefinition = () => {
     API.axios
       .get(API.endpoints.definition())
       .then(({ data }) => {
-        const typeMappings = simplifySemantics(data?.typeMappings);
         data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
         data.commit && dispatch(setCommit(data.commit));
-        dispatch(loadDefinitionSuccess(data?.types, typeMappings));
+        dispatch(loadDefinitionSuccess(data?.types, data?.typeMappings));
       })
       .catch(e => {
         const { response } = e;
