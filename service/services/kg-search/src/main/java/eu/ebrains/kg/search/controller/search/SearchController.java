@@ -234,6 +234,7 @@ public class SearchController {
                 esQuery = getEsQuery(fuzzyQuery, type);
                 if (esQuery != null) {
                     payload.put("query", esQuery);
+                    payload.remove("aggs");
                     ElasticSearchFacetsResult fuzzyResult = esServiceClient.searchDocuments(index, payload);
                     Set<String> suggestions = getSuggestions(fuzzyResult, type);
                     if (!suggestions.isEmpty()) {

@@ -69,6 +69,11 @@ export const HitStatsBase = ({show, message, suggestions, hitCount, from, to, se
       <span className="kgs-hitStats no-hits">No results were found. Please refine your search.</span>
     );
   }
+  if (from > hitCount) {
+    return (
+      <span className="kgs-hitStats no-hits">No results were found. Only {hitCount} results are availalbe. Please navigate to previous page(s).</span>
+    );
+  }
   return (
     <span className="kgs-hitStats">Viewing <span className="kgs-hitStats-highlight">{from}-{to}</span> of <span className="kgs-hitStats-highlight">{hitCount}</span> results</span>
   );
