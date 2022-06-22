@@ -30,8 +30,8 @@
     <packaging>pom</packaging>
     <version>3.0.0</version>
     <modules>
+        <module>libs/kg-common</module>
         <module>services/kg-search</module>
         <module>services/kg-indexing</module>
-        <module>libs/kg-common</module>
     </modules>
 </project>
