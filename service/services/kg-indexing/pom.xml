@@ -9,7 +9,7 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>eu.ebrains.kg</groupId>
+    <groupId>eu.ebrains.kg.search</groupId>
     <artifactId>indexing</artifactId>
     <version>3.0.0</version>
     <name>KG Indexing</name>
@@ -32,10 +32,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.ebrains.kg</groupId>
+            <groupId>eu.ebrains.kg.search</groupId>
             <artifactId>common</artifactId>
             <version>3.0.0</version>
-            <classifier>library</classifier>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

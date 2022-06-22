@@ -66,42 +66,32 @@ import java.util.stream.Stream;
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class SearchController {
-
     private final Set<String> PERSON_FIELDS_HIGHLIGHT = Stream.of(
             "contributors.value",
             "custodians.value",
             "owners.value"
     ).collect(Collectors.toSet());
 
-    private final Set<String> FIELDS_TO_HIGHLIGHT = Stream.of(
-            "title.value",
-            "description.value",
-            "contributors.value",
-            "custodians.value",
-            "owners.value",
-            "component.value",
-            "created_at.value",
-            "releasedate.value",
-            "activities.value"
-    ).collect(Collectors.toSet());
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ESServiceClient esServiceClient;
-    private final MetaModelUtils utils;
     private final UserInfoRoles userInfoRoles;
     private final FacetsController facetsController;
+
+    private final SearchFieldsController searchFieldsController;
+
     private final static String TOTAL = "total";
 
     public SearchController(
         ESServiceClient esServiceClient,
-        MetaModelUtils utils,
         UserInfoRoles userInfoRoles,
-        FacetsController facetsController
+        FacetsController facetsController,
+        SearchFieldsController searchFieldsController
 ) {
         this.esServiceClient = esServiceClient;
-        this.utils = utils;
         this.userInfoRoles = userInfoRoles;
         this.facetsController = facetsController;
+        this.searchFieldsController = searchFieldsController;
     }
 
     public boolean isInInProgressRole(Principal principal) {
@@ -502,7 +492,7 @@ public class SearchController {
         queryString.put("lenient", true);
         queryString.put("analyze_wildcard", true);
         queryString.put("query", getEsSanitizedQuery(q));
-        List<String> fields = getEsQueryFields(type);
+        List<String> fields = searchFieldsController.getEsQueryFields(type);
         if (!CollectionUtils.isEmpty(fields)) {
             ArrayNode fieldsTree = objectMapper.valueToTree(fields);
             queryString.putArray("fields").addAll(fieldsTree);
@@ -517,7 +507,7 @@ public class SearchController {
     }
 
     private ObjectNode getEsHighlight(String type) {
-        List<String> highlights = getHighlight(type);
+        List<String> highlights = searchFieldsController.getHighlight(type);
         if (CollectionUtils.isEmpty(highlights)) {
             return null;
         }
@@ -564,128 +554,5 @@ public class SearchController {
 
         }
         return fields;
-    }
-
-    @Cacheable(value = "highlight", key = "#type")
-    private List<String> getHighlight(String type) {
-        List<String> highlights = new ArrayList<>();
-        if (StringUtils.isNotBlank(type)) {
-            TranslatorModel.MODELS.stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).forEach(m -> {
-                Class<?> targetModel = m.getTargetClass();
-                addFieldsHighlight(highlights, targetModel);
-            });
-        }
-        return highlights;
-    }
-
-    private void addFieldsHighlight(List<String> highlights, Class<?> clazz) {
-        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
-        allFields.forEach(f -> {
-            try {
-                addFieldHighlight(highlights, f, "");
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private void addFieldHighlight(List<String> highlights, MetaModelUtils.FieldWithGenericTypeInfo f, String parentPath) throws ClassNotFoundException {
-        FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
-        if (info != null && !info.ignoreForSearch()) {
-            String propertyName = utils.getPropertyName(f.getField());
-            String path = String.format("%s%s", parentPath, propertyName);
-            if (!propertyName.equals("children")) { // if (f.getField().getType() != Children.class) { if (f.getField().getDeclaringClass() != Children.class) {
-                if (StringUtils.isBlank(parentPath) || f.getField().getType() == Value.class) {
-                    String valuePath = String.format("%s.value", path);
-                    if (FIELDS_TO_HIGHLIGHT.contains(valuePath)) {
-                        highlights.add(valuePath);
-                    }
-                } else {
-                    if (FIELDS_TO_HIGHLIGHT.contains(path)) {
-                        highlights.add(path);
-                    }
-                }
-            }
-//          Type topTypeToHandle = f.getGenericType() != null ? f.getGenericType() : MetaModelUtils.getTopTypeToHandle(f.getField().getGenericType());
-//          addChildrenFieldHighlight(highlights, topTypeToHandle, String.format("%s.children", path));
-        }
-    }
-
-    // No highlight in the children for now
-//    private void addChildrenFieldHighlight(List<String> highlights, Type type, String parentPath) {
-//        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
-//        allFields.forEach(field -> {
-//            try {
-//                addFieldHighlight(highlights, field, parentPath);
-//            } catch (ClassNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//    }
-
-    @Cacheable(value = "queryFields", key = "#type")
-    private List<String> getEsQueryFields(String type) {
-        Map<String, Double> boosts = new HashMap<>();
-        Class<?> targetModelForType = null;
-        for (int i = 0; i < TranslatorModel.MODELS.size(); i++) {
-            Class<?> targetModel = TranslatorModel.MODELS.get(i).getTargetClass();
-            String targetModelName = MetaModelUtils.getNameForClass(targetModel);
-            if (StringUtils.isNotBlank(type) && targetModelName.equals(type)) {
-                targetModelForType = targetModel;
-            } else {
-                addFieldsBoost(boosts, targetModel);
-            }
-        }
-        //selected type fields override others
-        if (targetModelForType != null) {
-            addFieldsBoost(boosts, targetModelForType);
-        }
-        List<String> fields = boosts.entrySet().stream().map(e -> {
-            String field = e.getKey();
-            double boost = e.getValue() == null?1.0:(double) e.getValue();
-            return String.format("%s^%d", field, (int) boost);
-        }).sorted().collect(Collectors.toList());
-        return fields;
-    }
-
-    private void addFieldsBoost(Map<String, Double> boosts, Class<?> clazz) {
-        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
-        allFields.forEach(f -> {
-            try {
-                addFieldBoost(boosts, f, "");
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private void addFieldBoost(Map<String, Double> boosts, MetaModelUtils.FieldWithGenericTypeInfo f, String parentPath) throws ClassNotFoundException {
-        FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
-        if (info != null && !info.ignoreForSearch()) {
-            String propertyName = utils.getPropertyName(f.getField());
-            String path = String.format("%s%s", parentPath, propertyName);
-            if (!propertyName.equals("children")) { // if (f.getField().getType() != Children.class) { if (f.getField().getDeclaringClass() != Children.class) {
-                if (StringUtils.isBlank(parentPath) || f.getField().getType() == Value.class) {
-                    String valuePath = String.format("%s.value", path);
-                    boosts.put(valuePath, info.boost());
-                } else {
-                    boosts.put(path, info.boost());
-                }
-            }
-
-            Type topTypeToHandle = f.getGenericType() != null ? f.getGenericType() : MetaModelUtils.getTopTypeToHandle(f.getField().getGenericType());
-            addChildrenFieldBoost(boosts, topTypeToHandle, String.format("%s.", path));
-        }
-    }
-
-    private void addChildrenFieldBoost(Map<String, Double> boosts, Type type, String parentPath) {
-        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
-        allFields.forEach(field -> {
-            try {
-                addFieldBoost(boosts, field, parentPath);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 }

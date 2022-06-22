@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -48,7 +49,7 @@ public class DefinitionController {
         this.facetsController = facetsController;
     }
 
-    //@Cacheable(value = "typeMappings", unless = "#result == null")
+    @Cacheable(value = "typeMappings", unless = "#result == null")
     public Map<String, Object> generateTypeMappings() {
         Map<String, Object> labels = new LinkedHashMap<>();
         for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
@@ -164,7 +165,7 @@ public class DefinitionController {
         }
     }
 
-    //@Cacheable(value = "types", unless = "#result == null")
+    @Cacheable(value = "types", unless = "#result == null")
     public List<Object> generateTypes() {
         Map<Integer, Object> types = new LinkedHashMap<>();
         for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {

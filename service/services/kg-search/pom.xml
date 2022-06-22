@@ -9,8 +9,8 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>eu.ebrains.kg</groupId>
-    <artifactId>search</artifactId>
+    <groupId>eu.ebrains.kg.search</groupId>
+    <artifactId>api</artifactId>
     <version>3.0.0</version>
     <name>KG Search</name>
 
@@ -32,10 +32,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.ebrains.kg</groupId>
+            <groupId>eu.ebrains.kg.search</groupId>
             <artifactId>common</artifactId>
             <version>3.0.0</version>
-            <classifier>library</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>

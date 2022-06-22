@@ -21,7 +21,7 @@ public class FacetsController {
         this.utils = utils;
     }
 
-    @Cacheable(value = "facets", unless = "#key == null", key = "#type")
+    @Cacheable(value = "facets", unless = "#type == null", key = "#type")
     public List<Facet> getFacets(String type) {
         List<Facet> facets  = new ArrayList<>();
         if (StringUtils.isNotBlank(type)) {

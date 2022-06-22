@@ -9,11 +9,10 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>eu.ebrains.kg</groupId>
+    <groupId>eu.ebrains.kg.search</groupId>
     <artifactId>common</artifactId>
     <version>3.0.0</version>
     <name>KG Common</name>
-    <packaging>pom</packaging>
 
     <properties>
         <java.version>11</java.version>
