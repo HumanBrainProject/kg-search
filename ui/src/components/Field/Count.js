@@ -21,42 +21,12 @@
  *
  */
 
-import React from "react";
-import ReactPiwik from "react-piwik";
-
-import Count from "../Field/Count";
-
-import "./Link.css";
-
-export const Link = ({ url, label, isAFileLink, isExternalLink, icon, count }) => {
-  if (!url) {
+const Count = ({count}) => {
+  if (count === undefined || count === null) {
     return null;
   }
+  return  ` (${count})`;
 
-  const text = label ? label : url;
-
-  const props = isExternalLink ? {
-    rel: "noopener noreferrer",
-    target: "_blank"
-  } : null;
-
-  const handleClick = () => {
-    if (isAFileLink) {
-      ReactPiwik.push(["trackLink", url, "download"]);
-    } else if (isExternalLink) {
-      ReactPiwik.push(["trackLink", url, "link"]);
-    }
-  };
-
-  return (
-    <span>
-      <a href={url} {...props} onClick={handleClick}>
-        {icon ? <span className="field-value__link_icon" dangerouslySetInnerHTML={{ __html: icon }} /> : null}
-        {text}
-      </a>
-      <Count count={count} />
-    </span>
-  );
 };
 
-export default Link;
+export default Count;

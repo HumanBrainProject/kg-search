@@ -56,6 +56,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isTag = !hasAnyLink && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isTag && !!mapping.markdown;
     const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
+    const count = data.count;
 
     let value = data.value;
 
@@ -73,7 +74,8 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       valueProps = {
         id: instanceIdLink,
         group: group,
-        text: value ? value : instanceIdLink
+        text: value ? value : instanceIdLink,
+        count: count
       };
     } else if (hasLink || isLinkWithIcon) {
       ValueComponent = Link;
@@ -82,7 +84,8 @@ const ValueFieldBase = (renderUserInteractions = true) => {
         label: value,
         isAFileLink: isAFileLink,
         isExternalLink: hasMailToLink || hasExternalLink,
-        icon: mapping.linkIcon
+        icon: mapping.linkIcon,
+        count: count
       };
     } else if (isTag) {
       ValueComponent = Tag;

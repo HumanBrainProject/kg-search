@@ -24,10 +24,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import * as actionsInstances from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
+import Count from "./Count";
 
-const InstanceLinkComponent = ({text, id, group, defaultGroup, context, onClick}) => {
+
+const InstanceLinkComponent = ({text, id, group, defaultGroup, context, onClick, count}) => {
   const navigate = useNavigate();
   const location = useLocation();
   if (!id) {
@@ -50,7 +53,10 @@ const InstanceLinkComponent = ({text, id, group, defaultGroup, context, onClick}
   };
 
   return (
-    <button onClick={handleClick} role="link">{text}</button>
+    <span>
+      <button onClick={handleClick} role="link">{text}</button>
+      <Count count={count} />
+    </span>
   );
 };
 
@@ -58,6 +64,7 @@ export const InstanceLink = connect(
   (state, props) => {
     return {
       text: props.text?props.text:props.id,
+      count: props.count,
       id: props.id,
       group: props.group,
       defaultGroup: state.groups.defaultGroup,
