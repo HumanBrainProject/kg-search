@@ -30,6 +30,8 @@ import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -50,6 +52,8 @@ public class SitemapController {
     private final ESServiceClient esServiceClient;
     private final UserInfoRoles userInfoRoles;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     public SitemapController(ESServiceClient esServiceClient, UserInfoRoles userInfoRoles) {
         this.esServiceClient = esServiceClient;
         this.userInfoRoles = userInfoRoles;
@@ -63,6 +67,7 @@ public class SitemapController {
     public SitemapXML getSitemap() {
         return fetchSitemap();
     }
+
 
     private SitemapXML fetchSitemap() {
         List<SitemapXML.Url> urls = new ArrayList<>();

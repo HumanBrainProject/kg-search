@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.indexing.controller.indexing;
 
+import eu.ebrains.kg.common.configuration.Configuration;
 import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.common.controller.kg.KG;
 import eu.ebrains.kg.common.controller.kg.KGv2;
@@ -64,13 +65,15 @@ public class IndexingController {
     private final TranslationController translationController;
     private final DOICitationFormatter doiCitationFormatter;
 
+    private final Configuration configuration;
+
     private final KGv2 kgV2;
     private final KGv3 kgV3;
 
     private final boolean skipKGv2;
 
 
-    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2) {
+    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
         this.mappingController = mappingController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
@@ -78,9 +81,11 @@ public class IndexingController {
         this.kgV3 = kgV3;
         this.skipKGv2 = skipKGv2;
         this.doiCitationFormatter = doiCitationFormatter;
+        this.configuration = configuration;
     }
 
     private <Source, Target extends TargetInstance> List<Target> getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
+       translator.setConfiguration(configuration);
        return instance.getAllIdentifiers().stream().filter(id -> translator.getQueryIds().stream().anyMatch(id::contains))
                 .map(id -> {
                     final String queryId = translator.getQueryIds().stream().filter(id::contains).findFirst().orElse(null);

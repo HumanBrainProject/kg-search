@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.common.controller.translators;
 
+import eu.ebrains.kg.common.configuration.Configuration;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasCitation;
@@ -44,6 +45,16 @@ public abstract class TranslatorBase {
     public static final String FILE_PROXY = "https://data.kg.ebrains.eu/files";
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private transient Configuration configuration;
+
+    public Configuration getConfiguration() {
+        return configuration != null ? configuration : Configuration.defaultConfiguration();
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     protected Value<Integer> value(Integer v) {
         if (v != null) {

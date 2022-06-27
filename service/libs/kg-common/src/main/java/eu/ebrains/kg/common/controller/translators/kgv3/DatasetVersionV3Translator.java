@@ -250,7 +250,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             Collections.sort(datasetVersion.getKeyword());
             d.setKeywords(value(datasetVersion.getKeyword()));
         }
-        if (!CollectionUtils.isEmpty(datasetVersion.getSubjects())) {
+        if (!CollectionUtils.isEmpty(datasetVersion.getSubjects()) && !getConfiguration().isShowHierarchicalSpecimen()) {
             final Set<String> groupedSubjects = datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getChildren).filter(children -> !CollectionUtils.isEmpty(children)).flatMap(Collection::stream).map(DatasetVersionV3.SubjectOrSubjectGroup::getId).collect(Collectors.toSet());
             final List<DatasetVersion.SubjectGroupOrSingleSubject> subjects = datasetVersion.getSubjects().stream()
                     //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
@@ -275,7 +275,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             }
         }
 
-        if (!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection())) {
+        if (!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection()) && !getConfiguration().isShowHierarchicalSpecimen()) {
 
             final Map<String, String> sampleToGroup = new HashMap<>();
             datasetVersion.getTissueSampleOrCollection().forEach(s -> {
@@ -472,8 +472,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-
-        d.setSpecimenBySubject(new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen()));
+        if(getConfiguration().isShowHierarchicalSpecimen()) {
+            d.setSpecimenBySubject(new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen()));
+        }
         return d;
     }
 

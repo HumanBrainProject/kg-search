@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.common.controller.translators;
 
+import eu.ebrains.kg.common.configuration.Configuration;
 import eu.ebrains.kg.common.controller.kg.KG;
 import eu.ebrains.kg.common.controller.kg.KGv3;
 import eu.ebrains.kg.common.model.DataStage;
@@ -51,9 +52,12 @@ public class TranslationController {
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
 
-    public TranslationController(KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
+    private final Configuration configuration;
+
+    public TranslationController(KGv3 kgV3, DOICitationFormatter doiCitationFormatter, Configuration configuration) {
         this.doiCitationFormatter = doiCitationFormatter;
         this.kgV3 = kgV3;
+        this.configuration = configuration;
     }
 
     public <Source , Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size) {
@@ -69,6 +73,7 @@ public class TranslationController {
         }
         else {
             Stats stats = getStats(instanceResults, from);
+            translator.setConfiguration(configuration);
             logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
             instanceResults.setErrors(new ErrorReport());
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
@@ -131,6 +136,7 @@ public class TranslationController {
         if (source == null) {
             return null;
         }
+        translator.setConfiguration(configuration);
         final Target translateResult = translator.translate(source, dataStage, true, doiCitationFormatter);
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
