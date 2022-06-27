@@ -27,6 +27,12 @@
     flex-direction: column;
 }
 
+.kgs-hierarchical-advise {
+    display: inline-block;
+    padding-bottom: 5px;
+    font-size: small;
+}
+
 .kgs-hierarchical-tree {
     flex: 1;
     width: 100%;
@@ -39,6 +45,10 @@
     border-radius: 5px;
     padding: 10px;
     overflow-x: hidden;
+}
+
+.kgs-hierarchical-tree .rc-tree .rc-tree-treenode:hover .rc-tree-title {
+    color: var(--color-8);
 }
 
 .kgs-hierarchical .rc-tree-node-selected {

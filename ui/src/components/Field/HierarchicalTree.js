@@ -82,7 +82,8 @@ const HierarchicalTree = ({data, group}) => {
   };
 
   return (
-    <>
+    <div>
+      <i className="kgs-hierarchical-advise">Select the items of the tree to get more detail about the individual elements.</i>
       <div className="kgs-hierarchical">
         <div className="kgs-hierarchical-tree">
           <Tree
@@ -99,7 +100,7 @@ const HierarchicalTree = ({data, group}) => {
           group={group}
         />
       </div>
-    </>
+    </div>
   );
 };
 

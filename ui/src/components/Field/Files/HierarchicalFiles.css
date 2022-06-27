@@ -54,6 +54,10 @@
     overflow-x: hidden;
 }
 
+.kgs-hierarchical-files>.rc-tree .rc-tree-treenode:hover .rc-tree-title {
+    color: var(--color-8);
+}
+
 .kgs-hierarchical-files .rc-tree-node-selected {
     background-color: var(--button-default-background-color);
     box-shadow: none;
