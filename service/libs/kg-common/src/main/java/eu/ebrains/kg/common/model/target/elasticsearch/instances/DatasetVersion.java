@@ -814,21 +814,25 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Subject groups")
         private Value<String> numberOfSubjectGroups;
 
+        @JsonIgnore
         private transient Set<String> subjectGroupIds = new HashSet<>();
 
         @FieldInfo(label = "Subjects")
         private Value<String> numberOfSubjects;
 
+        @JsonIgnore
         private transient Set<String> subjectIds = new HashSet<>();
 
         @FieldInfo(label = "Tissue sample collections")
         private Value<String> numberOfTissueSampleCollections;
 
+        @JsonIgnore
         private transient Set<String> tissueSampleCollectionIds = new HashSet<>();
 
         @FieldInfo(label = "Tissue samples")
         private Value<String> numberOfTissueSamples;
 
+        @JsonIgnore
         private transient Set<String> tissueSampleIds = new HashSet<>();
 
         @FieldInfo(label = "Species", separator = ", ")
@@ -847,38 +851,37 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         private List<TargetInternalReference> pathology = new ArrayList<>();
 
         @JsonIgnore
-        private transient Map<String, Map<TargetInternalReference, Map<String, Integer>>> collector = new HashMap<>();
+        private transient Map<String, Map<TargetInternalReference, Map<String, Set<String>>>> collector = new HashMap<>();
 
-        private String normalizeTypeName(String type){
+        private String normalizeTypeName(String type, boolean plural){
             String typeName = StringUtils.uncapitalize(type);
-            if(!typeName.endsWith("s")){
+            if(plural && !typeName.endsWith("s")){
                 typeName = String.format("%ss", typeName);
             }
             return typeName;
         }
 
-        private void collect(String key, List<TargetInternalReference> references, String type){
-            if(references!=null) {
-                String typeName = normalizeTypeName(type);
-                final Map<TargetInternalReference, Map<String, Integer>> map = collector.computeIfAbsent(key, k -> new HashMap<>());
+        private void collect(String sourceId, String key, List<TargetInternalReference> references, String type){
+            if(references!=null && sourceId!=null) {
+                final Map<TargetInternalReference, Map<String, Set<String>>> map = collector.computeIfAbsent(key, k -> new HashMap<>());
                 references.forEach(r -> {
-                    final Map<String, Integer> countsPerType = map.computeIfAbsent(r, k -> new HashMap<>());
-                    final Integer count = countsPerType.computeIfAbsent(typeName, k -> 0);
-                    countsPerType.put(typeName, count + 1);
+                    final Map<String, Set<String>> countsPerType = map.computeIfAbsent(r, k -> new HashMap<>());
+                    final Set<String> ids = countsPerType.computeIfAbsent(type, k -> new HashSet<>());
+                    ids.add(sourceId);
                 });
             }
         }
 
         private List<TargetInternalReference> flush(String key){
-            final Map<TargetInternalReference, Map<String, Integer>> map = collector.computeIfAbsent(key, k -> Collections.emptyMap());
+            final Map<TargetInternalReference, Map<String, Set<String>>> map = collector.computeIfAbsent(key, k -> Collections.emptyMap());
             Stream<TargetInternalReference> stream = map.keySet().stream();
             // Disabling the code for now -> we want to clarify first, how we can properly calculate the summary and how to display it accordingly.
 
             if(!map.isEmpty()){
                 stream = stream.map(k -> {
-                    final Map<String, Integer> count = map.get(k);
+                    final Map<String, Set<String>> count = map.get(k);
                     final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
-                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t), t)).collect(Collectors.joining(", "));
+                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t).size(), normalizeTypeName(t, count.get(t).size()>1))).collect(Collectors.joining(", "));
                     targetInternalReference.setCount(counts);
                     return targetInternalReference;
                 });
@@ -910,24 +913,24 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             return this;
         }
 
-        public void collectPathology(List<TargetInternalReference> references, String type){
-            collect("pathology", references, type);
+        public void collectPathology(String sourceId, List<TargetInternalReference> references, String type){
+            collect(sourceId, "pathology", references, type);
         }
 
-        public void collectSpecies(List<TargetInternalReference> references, String type){
-            collect("species", references, type);
+        public void collectSpecies(String sourceId, List<TargetInternalReference> references, String type){
+            collect(sourceId, "species", references, type);
         }
 
-        public void collectSex(List<TargetInternalReference> references, String type){
-            collect("sex", references, type);
+        public void collectSex(String sourceId, List<TargetInternalReference> references, String type){
+            collect(sourceId, "sex", references, type);
         }
 
-        public void collectStrains(List<TargetInternalReference> references, String type){
-            collect("strains", references, type);
+        public void collectStrains(String sourceId, List<TargetInternalReference> references, String type){
+            collect(sourceId, "strains", references, type);
         }
 
-        public void collectGeneticStrainTypes(List<TargetInternalReference> references, String type){
-            collect("geneticStrainTypes", references, type);
+        public void collectGeneticStrainTypes(String sourceId, List<TargetInternalReference> references, String type){
+            collect(sourceId, "geneticStrainTypes", references, type);
         }
     }
 

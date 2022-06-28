@@ -303,11 +303,11 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public void aggregateOverview(DatasetVersion.DSVSubject source, DatasetVersion.DSVSpecimenOverview overviewAggregator){
             overviewAggregator.getSubjectIds().add(source.getId());
-            overviewAggregator.collectSex(source.getSex(), this.prefix);
-            overviewAggregator.collectStrains(source.getStrain(), this.prefix);
-            overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
-            overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
+            overviewAggregator.collectSex(source.getId(), source.getSex(), this.prefix);
+            overviewAggregator.collectStrains(source.getId(), source.getStrain(), this.prefix);
+            overviewAggregator.collectSpecies(source.getId(), source.getSpecies(), this.prefix);
+            overviewAggregator.collectGeneticStrainTypes(source.getId(), source.getGeneticStrainType(), this.prefix);
+            overviewAggregator.collectPathology(source.getId(), source.getPathology(), this.prefix);
         }
 
         private void fillSubjectStateInformation(DatasetVersion.DSVSubject sub, DatasetVersionV3.StudiedState state){
@@ -357,11 +357,11 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public void aggregateOverview(DatasetVersion.DSVSubjectGroup source, DatasetVersion.DSVSpecimenOverview overviewAggregator) {
             overviewAggregator.getSubjectGroupIds().add(source.getId());
-            overviewAggregator.collectSex(source.getSex(), this.prefix);
-            overviewAggregator.collectStrains(source.getStrain(), this.prefix);
-            overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
-            overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
+            overviewAggregator.collectSex(source.getId(), source.getSex(), this.prefix);
+            overviewAggregator.collectStrains(source.getId(), source.getStrain(), this.prefix);
+            overviewAggregator.collectSpecies(source.getId(), source.getSpecies(), this.prefix);
+            overviewAggregator.collectGeneticStrainTypes(source.getId(), source.getGeneticStrainType(), this.prefix);
+            overviewAggregator.collectPathology(source.getId(), source.getPathology(), this.prefix);
         }
 
         @Override
@@ -465,11 +465,11 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public void aggregateOverview(DatasetVersion.DSVTissueSample source, DatasetVersion.DSVSpecimenOverview overviewAggregator) {
             overviewAggregator.getTissueSampleIds().add(source.getId());
-            overviewAggregator.collectSex(source.getSex(), this.prefix);
-            overviewAggregator.collectStrains(source.getStrain(), this.prefix);
-            overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
-            overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
+            overviewAggregator.collectSex(source.getId(), source.getSex(), this.prefix);
+            overviewAggregator.collectStrains(source.getId(), source.getStrain(), this.prefix);
+            overviewAggregator.collectSpecies(source.getId(), source.getSpecies(), this.prefix);
+            overviewAggregator.collectGeneticStrainTypes(source.getId(), source.getGeneticStrainType(), this.prefix);
+            overviewAggregator.collectPathology(source.getId(), source.getPathology(), this.prefix);
         }
 
         @Override
@@ -517,11 +517,11 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public void aggregateOverview(DatasetVersion.DSVTissueSampleCollection source, DatasetVersion.DSVSpecimenOverview overviewAggregator) {
             overviewAggregator.getTissueSampleCollectionIds().add(source.getId());
-            overviewAggregator.collectSex(source.getSex(), this.prefix);
-            overviewAggregator.collectStrains(source.getStrain(), this.prefix);
-            overviewAggregator.collectSpecies(source.getSpecies(), this.prefix);
-            overviewAggregator.collectGeneticStrainTypes(source.getGeneticStrainType(), this.prefix);
-            overviewAggregator.collectPathology(source.getPathology(), this.prefix);
+            overviewAggregator.collectSex(source.getId(), source.getSex(), this.prefix);
+            overviewAggregator.collectStrains(source.getId(), source.getStrain(), this.prefix);
+            overviewAggregator.collectSpecies(source.getId(), source.getSpecies(), this.prefix);
+            overviewAggregator.collectGeneticStrainTypes(source.getId(), source.getGeneticStrainType(), this.prefix);
+            overviewAggregator.collectPathology(source.getId(), source.getPathology(), this.prefix);
         }
 
         @Override
