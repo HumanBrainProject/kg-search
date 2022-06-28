@@ -57,9 +57,10 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
 
   if (isLoading) {
     return (
-      <div className="spinner-border spinner-border-sm" role="status">
-        <span className="sr-only">Retrieving {title}...</span>
-      </div>
+      <>
+        <div className="spinner-border spinner-border-sm" role="status"></div>
+        &nbsp;Retrieving {title}...
+      </>
     );
   }
 

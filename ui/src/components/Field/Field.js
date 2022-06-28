@@ -139,7 +139,8 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
   } else if (mapping.isFilePreview && data.url) { // File Preview
 
     valueProps = {
-      url: data.url
+      url: data.url,
+      title: "data descriptor"
     };
     valueComponent = FilePreview;
 

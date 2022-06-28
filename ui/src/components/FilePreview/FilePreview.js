@@ -20,10 +20,30 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React from "react";
+import React, { useState } from "react";
 
-const FilePreview = ({ url }) => (
-  <iframe src={url} height="850" style={{width:"100%"}}></iframe>
-);
+const FilePreview = ({ url, title }) => {
+
+  const [loading, setLoading] = useState(true);
+
+  const handleOnLoad = () => setLoading(false);
+
+  const style = {
+    width: "100%",
+    visibility: loading?"hidden":"visible"
+  };
+
+  return (
+    <>
+      {loading && (
+        <>
+          <div className="spinner-border spinner-border-sm" role="status"></div>
+          &nbsp;Retrieving {title?title:"file"}...
+        </>
+      )}
+      <iframe src={url} height="850" style={style} onLoad={handleOnLoad} ></iframe>
+    </>
+  );
+};
 
 export default FilePreview;
