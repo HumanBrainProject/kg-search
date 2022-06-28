@@ -846,6 +846,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Pathology", separator = ", ")
         private List<TargetInternalReference> pathology = new ArrayList<>();
 
+        @JsonIgnore
         private transient Map<String, Map<TargetInternalReference, Map<String, Integer>>> collector = new HashMap<>();
 
         private String normalizeTypeName(String type){
@@ -873,16 +874,15 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             Stream<TargetInternalReference> stream = map.keySet().stream();
             // Disabling the code for now -> we want to clarify first, how we can properly calculate the summary and how to display it accordingly.
 
-//            if(map.size()>1){
-//                //We only show the count if there are more than one entries per key
-//                stream = stream.map(k -> {
-//                    final Map<String, Integer> count = map.get(k);
-//                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
-//                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t), t)).collect(Collectors.joining(", "));
-//                    targetInternalReference.setValue(String.format("%s (%s)", StringUtils.isNotBlank(k.getValue()) ? k.getValue() : "Undefined", counts));
-//                    return targetInternalReference;
-//                });
-//            }
+            if(!map.isEmpty()){
+                stream = stream.map(k -> {
+                    final Map<String, Integer> count = map.get(k);
+                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
+                    final String counts = count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t), t)).collect(Collectors.joining(", "));
+                    targetInternalReference.setCount(counts);
+                    return targetInternalReference;
+                });
+            }
             final List<TargetInternalReference> result = stream.filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList());
             return result.isEmpty() ? null : result;
         }
