@@ -149,7 +149,7 @@ class PaginationComponent extends React.Component {
     }
 
     for (let p = page - pageScope; p <= page + pageScope; p++) {
-      if (p > 0 && p <= totalPages) {
+      if (p > 0 && p < totalPages) {
         pages.push({
           name: "page",
           title: p,
@@ -169,6 +169,14 @@ class PaginationComponent extends React.Component {
         readOnly: true
       });
     }
+
+    pages.push({
+      name: "page",
+      title: totalPages,
+      value:  totalPages,
+      active: page === totalPages,
+      readOnly: false
+    });
 
     pages.push({
       name: "next",
