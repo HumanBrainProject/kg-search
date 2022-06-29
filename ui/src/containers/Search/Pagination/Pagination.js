@@ -131,8 +131,8 @@ class PaginationComponent extends React.Component {
     if (hasFirst) {
       pages.push({
         name: "page",
-        title: "1",
-        value:  0,
+        title: 1,
+        value:  1,
         active: false,
         readOnly: false
       });
@@ -177,6 +177,8 @@ class PaginationComponent extends React.Component {
       active: false,
       readOnly: !hasNext
     });
+
+    console.log(pages);
 
     return (
       <div className="kgs-paging">

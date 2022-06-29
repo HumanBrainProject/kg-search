@@ -315,7 +315,7 @@ const setPage = (state, action) => {
   return {
     ...state,
     page: action.value,
-    from: (action.value -1) * state.hitsPerPage,
+    from: (action.value - 1) * state.hitsPerPage,
     isUpToDate: false
   };
 };
