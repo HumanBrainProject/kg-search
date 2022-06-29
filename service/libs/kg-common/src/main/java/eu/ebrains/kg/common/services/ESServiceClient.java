@@ -23,10 +23,7 @@
 
 package eu.ebrains.kg.common.services;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFacetsResult;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFilesResult;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
+import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

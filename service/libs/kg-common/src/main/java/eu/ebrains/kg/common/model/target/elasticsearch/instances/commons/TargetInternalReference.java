@@ -44,13 +44,6 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
         this.uuid = uuid;
     }
 
-    public TargetInternalReference(String reference, String value, String count, String uuid) {
-        this.reference = reference;
-        this.value = value;
-        this.count = count;
-        this.uuid = uuid;
-    }
-
     @ElasticSearchInfo(ignoreAbove = 256)
     private String reference;
 
@@ -58,7 +51,7 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
     private String value;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String count;
+    private List<String> count;
 
     @ElasticSearchInfo(ignoreAbove = 256)
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -99,11 +92,11 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
         return targetInternalReference==null ? -1 : Comparator.comparing(TargetInternalReference::getLowerCaseValue).compare(this, targetInternalReference);
     }
 
-    public String getCount() {
+    public List<String> getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(List<String> count) {
         this.count = count;
     }
 }

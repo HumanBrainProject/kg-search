@@ -21,12 +21,20 @@
  *
  */
 
+import React from "react";
+
 const Count = ({count}) => {
   if (count === undefined || count === null) {
     return null;
   }
-  return  ` (${count})`;
-
+  if (Array.isArray(count)) {
+    return (
+      <ul>
+        {count.map(c => (<li key={c}>{c}</li>))}
+      </ul>
+    );
+  }
+  return ` (${count})`;
 };
 
 export default Count;

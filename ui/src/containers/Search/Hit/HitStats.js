@@ -30,22 +30,22 @@ import * as actionsSearch from "../../../actions/actions.search";
 
 import "./HitStats.css";
 
-export const Suggestion =  ({word, isLast=true, onClick}) => {
+export const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true, onClick}) => {
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleOnClick = () => onClick(word, location, navigate);
+  const handleOnClick = () => onClick(searchTerm, location, navigate);
 
   return (
-    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick} title={`search for ${word}`}>{word}</button>{isLast?"":" or "}</li>
+    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick} title={`search for ${word}`}>{word}</button>{isSecondLast?" or ":isLast?"":", "}</li>
   );
 };
 
 export const Suggestions =  ({words, onClick}) => (
   <ul className="kgs-suggestions">
-    {words.map((word, idx) => (
-      <Suggestion key={word} word={word} isLast={idx === words.length -1} onClick={onClick} />
+    {Object.keys(words).map((word, idx) => (
+      <Suggestion key={word} word={word} searchTerm={words[word]} isSecondLast={idx === Object.keys(words).length -2} isLast={idx === Object.keys(words).length -1} onClick={onClick} />
     ))}
   </ul>
 );
@@ -59,12 +59,12 @@ export const HitStatsBase = ({show, message, suggestions, hitCount, from, to, se
       <span className="kgs-hitStats">{message}</span>
     );
   }
+  if (Object.keys(suggestions).length>0) {
+    return (
+      <span className="kgs-hitStats">{hitCount === 0 ? 'No results were found. ' : ''}Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
+    );
+  }
   if (hitCount === 0) {
-    if (suggestions.length) {
-      return (
-        <span className="kgs-hitStats no-hits">No results were found. Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
-      );
-    }
     return (
       <span className="kgs-hitStats no-hits">No results were found. Please refine your search.</span>
     );

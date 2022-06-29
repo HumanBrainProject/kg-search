@@ -24,8 +24,10 @@
 package eu.ebrains.kg.common.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.*;
@@ -153,5 +155,15 @@ public class MetaModelUtils {
             return false;
         }
         return UUID_REGEX_PATTERN.matcher(str).matches();
+    }
+
+    public static Class<?> getClassForType(String type){
+        for (int i = 0; i < TranslatorModel.MODELS.size(); i++) {
+            Class<?> targetModel = TranslatorModel.MODELS.get(i).getTargetClass();
+            if (StringUtils.isNotBlank(type) && MetaModelUtils.getNameForClass(targetModel).equals(type)) {
+                return targetModel;
+            }
+        }
+        return null;
     }
 }

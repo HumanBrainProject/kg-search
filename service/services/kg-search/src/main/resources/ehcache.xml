@@ -82,6 +82,14 @@
         </resources>
     </cache>
 
+    <cache alias="suggestFields" uses-template="inmemory">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+        <resources>
+            <heap>10000</heap>
+        </resources>
+    </cache>
+
     <cache alias="queryFields" uses-template="inmemory">
         <key-type>java.lang.String</key-type>
         <value-type>java.util.List</value-type>

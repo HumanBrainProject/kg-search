@@ -33,16 +33,4 @@ public class QueryTweaking {
             "a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"
 
     ).collect(Collectors.toSet());
-
-    public static final class Wildcard {
-        public static final int MAX_NUMBER_OF_TERMS = 2; // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-        public static final int MIN_NUMBER_OF_CHARS = 3; // nb of character under which wildcard is not applied
-    }
-
-    public static final class FuzzySearch {
-        public static final int MAX_NUMBER_OF_TERMS = 3; // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-        public static final int MIN_NUMBER_OF_CHARS = 4; // nb of character under which wildcard is not applied
-    }
-
-    public static final int MIN_NUMBER_OF_TERMS_TRIGGER = 4;
 }

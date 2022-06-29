@@ -61,4 +61,23 @@ public class ElasticSearchFacetsResult extends ElasticSearchResult {
 
         private ElasticSearchAgg keywords;
     }
+
+    private Map<String, List<Suggestion>> suggest;
+
+    @Getter
+    @Setter
+    public static class Suggestion {
+        private String text;
+        private Integer offset;
+        private Integer length;
+        private List<Option> options;
+    }
+
+    @Getter
+    @Setter
+    public static class Option {
+        private String text;
+        private Double score;
+        private Integer freq;
+    }
 }

@@ -104,7 +104,7 @@ const initialState = {
   selectedType: null,
   hitsPerPage: 20,
   hits: [],
-  suggestions: [],
+  suggestions: {},
   total: 0,
   from: 0,
   isUpToDate: false
@@ -383,7 +383,7 @@ const loadSearchResult = (state, action) => {
     types: types,
     selectedType: state.selectedType?types.find(t => t.type === state.selectedType?.type):null,
     hits: Array.isArray(action.results?.hits) ? action.results.hits : [],
-    suggestions: Array.isArray(action.results?.suggestions) ? action.results.suggestions : [],
+    suggestions: action.results.suggestions,
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage),
     isUpToDate: true
@@ -396,7 +396,7 @@ const loadSearchBadRequest = (state, action) => {
     message: action.error,
     isLoading: false,
     hits: [],
-    suggestions: [],
+    suggestions: {},
     from: 0,
     page: 1,
     totalPages: 0
@@ -410,7 +410,7 @@ const loadSearchFail = (state, action) => {
     error: action.error,
     isLoading: false,
     hits: [],
-    suggestions: [],
+    suggestions: {},
     from: 0,
     page: 1,
     totalPages: 0

@@ -49,6 +49,7 @@ public @interface FieldInfo {
     boolean isCitation() default false;
     boolean isTable() default false;
     boolean isGroupedLinks() default false;
+    boolean useForSuggestion() default false;
     Type type() default Type.UNDEFINED;
     String layout() default "";
     String linkIcon() default "";

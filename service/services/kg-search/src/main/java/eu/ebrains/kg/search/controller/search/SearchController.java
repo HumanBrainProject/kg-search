@@ -27,10 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
@@ -38,24 +36,17 @@ import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
-import eu.ebrains.kg.search.model.QueryTweaking;
 import eu.ebrains.kg.search.utils.AggsUtils;
 import eu.ebrains.kg.search.utils.FacetsUtils;
 import eu.ebrains.kg.search.utils.FiltersUtils;
 import eu.ebrains.kg.search.utils.QueryStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.complexPhrase.ComplexPhraseQueryParser;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.lang.reflect.Type;
 import java.security.Principal;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -66,12 +57,6 @@ import java.util.stream.Stream;
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class SearchController {
-    private final Set<String> PERSON_FIELDS_HIGHLIGHT = Stream.of(
-            "contributors.value",
-            "custodians.value",
-            "owners.value"
-    ).collect(Collectors.toSet());
-
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ESServiceClient esServiceClient;
@@ -83,11 +68,11 @@ public class SearchController {
     private final static String TOTAL = "total";
 
     public SearchController(
-        ESServiceClient esServiceClient,
-        UserInfoRoles userInfoRoles,
-        FacetsController facetsController,
-        SearchFieldsController searchFieldsController
-) {
+            ESServiceClient esServiceClient,
+            UserInfoRoles userInfoRoles,
+            FacetsController facetsController,
+            SearchFieldsController searchFieldsController
+    ) {
         this.esServiceClient = esServiceClient;
         this.userInfoRoles = userInfoRoles;
         this.facetsController = facetsController;
@@ -126,7 +111,7 @@ public class SearchController {
         Map<String, Object> result = new HashMap<>();
         if (filesFromRepo != null && filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
             List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
-            List<Object> data = hits.stream().map(e -> e.getSource()).filter(Objects::nonNull).collect(Collectors.toList());
+            List<Object> data = hits.stream().map(ElasticSearchDocument::getSource).filter(Objects::nonNull).collect(Collectors.toList());
             ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
             result.put(TOTAL, total.getValue());
             result.put("data", data);
@@ -152,15 +137,15 @@ public class SearchController {
         }
     }
 
-    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) { 
+    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) {
         return getFileAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
     }
 
-    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) { 
+    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) {
         return getFileAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) { 
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);
@@ -189,86 +174,66 @@ public class SearchController {
         Map<String, Object> activeFilters = FiltersUtils.getActiveFilters(facets, type, facetValues);
         Object esPostFilter = FiltersUtils.getFilter(activeFilters, null);
         payload.put("post_filter", esPostFilter);
-        Object esAggs =  AggsUtils.getAggs(facets, activeFilters, facetValues);
+        Object esAggs = AggsUtils.getAggs(facets, activeFilters, facetValues);
         payload.put("aggs", esAggs);
         ObjectNode esQuery = null;
-        String sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
-        String exactQuery = null;
-        if (StringUtils.isNotBlank(sanitizedQuery)) {
-            try {
-                Analyzer analyzer = new StandardAnalyzer();
-                new ComplexPhraseQueryParser("", analyzer).parse(sanitizedQuery);
-                exactQuery = sanitizedQuery;
-            } catch (ParseException e) {
-                //Special character is not supported in parser
-                // try minimal replacements:
-                exactQuery = QueryStringUtils.escapeSpecialCharacters(sanitizedQuery);
-            }
-            esQuery = getEsQuery(exactQuery, type);
-        }
-        if (esQuery != null) {
-            payload.put("query", esQuery);
+        List<String> sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
+        final ObjectNode query = getEsQuery(QueryStringUtils.prepareQuery(sanitizedQuery), type);
+        if (query != null) {
+            payload.put("query", query);
         }
         ElasticSearchFacetsResult result = esServiceClient.searchDocuments(index, payload);
-        int total = (result.getHits() != null && result.getHits().getTotal() != null)?result.getHits().getTotal().getValue():0;
-
+        int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        response.put("hits", (result.getHits() != null && result.getHits().getHits() != null)?result.getHits().getHits(): Collections.emptyList());
+        response.put("hits", (result.getHits() != null && result.getHits().getHits() != null) ? result.getHits().getHits() : Collections.emptyList());
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
         response.put("types", getTypesAggregation(result.getAggregations()));
+        response.put("suggestions", getSuggestions(sanitizedQuery, dataStage, type));
 
-        if (total == 0 && from == 0 && StringUtils.isNotBlank(sanitizedQuery) && sanitizedQuery.equals(exactQuery)) {
-            String fuzzyQuery = QueryStringUtils.fuzzyQueryString(sanitizedQuery);
-            if (StringUtils.isNotBlank(fuzzyQuery)) {
-                esQuery = getEsQuery(fuzzyQuery, type);
-                if (esQuery != null) {
-                    payload.put("query", esQuery);
-                    payload.remove("aggs");
-                    ElasticSearchFacetsResult fuzzyResult = esServiceClient.searchDocuments(index, payload);
-                    Set<String> suggestions = getSuggestions(fuzzyResult, type);
-                    if (!suggestions.isEmpty()) {
-                        response.put("suggestions", suggestions);
-                    }
-                }
-            }
-        }
         return response;
     }
 
-    private Set<String> getSuggestions(ElasticSearchFacetsResult result, String type) {
-        if (result.getHits() == null || result.getHits().getHits() == null) {
-            return Collections.emptySet();
-        }
-        Pattern pattern = Pattern.compile(".*<em>(.+)</em>.*");
-        Set<String> suggestions = new LinkedHashSet<>();
-        for(ElasticSearchDocument doc : result.getHits().getHits()) {
-            if (doc.getHighlight() != null) {
-                for(Map.Entry<String, List<String>> e : doc.getHighlight().entrySet()) {
-                    boolean toLower = !(PERSON_FIELDS_HIGHLIGHT.contains(e.getKey()) || (type.equals("Contributor") && e.getKey().equals("title.value")));
-                    for(String sentence : e.getValue()) {
-                        Matcher matcher = pattern.matcher(sentence);
-                        if (matcher.matches()) {
-                            for (int i = 1; i <= matcher.groupCount(); i++) {
-                                if (toLower) {
-                                    String term = matcher.group(i).toLowerCase();
-                                    if (!QueryTweaking.EXCLUDED_TERMS.contains(term) && !QueryStringUtils.OPERATORS.contains(term.toUpperCase())) {
-                                        suggestions.add(term);
-                                    }
-                                } else {
-                                    suggestions.add(matcher.group(i));
-                                }
-                            }
-                        }
-                    }
-                }
+    private Map<String, String> getSuggestions(List<String> sanitizedQuery, DataStage dataStage, String type) {
+        Map<String, String> result = new LinkedHashMap<>();
+        if (!sanitizedQuery.isEmpty()) {
+            final String query = String.join(" ", sanitizedQuery);
+            String index = ESHelper.getSearchableIndex(dataStage, MetaModelUtils.getClassForType(type), false);
+            Map<String, Object> payload = new HashMap<>();
+            Map<String, Object> suggest = new HashMap<>();
+            payload.put("suggest", suggest);
+            List<String> fields = searchFieldsController.getSuggestionFields(type);
+            for (String field : fields) {
+                suggest.put(field, Map.of("text", query, "term", Map.of("field", field)));
             }
+            final ElasticSearchFacetsResult elasticSearchFacetsResult = esServiceClient.searchDocuments(index, payload);
+            final Map<String, List<ElasticSearchFacetsResult.Suggestion>> suggestResult = elasticSearchFacetsResult.getSuggest();
+            Map<String, Set<ElasticSearchFacetsResult.Option>> suggestionsPerTerm = new HashMap<>();
+            if (suggestResult != null) {
+                suggestResult.values().stream().flatMap(Collection::stream).forEach(s -> {
+                    final Set<ElasticSearchFacetsResult.Option> options = suggestionsPerTerm.computeIfAbsent(s.getText(), k -> new HashSet<>());
+                    options.addAll(s.getOptions());
+                });
+            }
+            Set<String> handledTerms = new HashSet<>();
+            suggestionsPerTerm.keySet().forEach(k -> {
+                final Set<ElasticSearchFacetsResult.Option> options = suggestionsPerTerm.get(k);
+                final List<ElasticSearchFacetsResult.Option> sortedOptions = options.stream().sorted(Comparator.comparing(ElasticSearchFacetsResult.Option::getText)).collect(Collectors.toList());
+                final List<ElasticSearchFacetsResult.Option> limitedOptions = sortedOptions.size() > 5 ? sortedOptions.subList(0, 5) : sortedOptions;
+                limitedOptions.forEach(o -> {
+                    if (!handledTerms.contains(o.getText())) {
+                        handledTerms.add(o.getText());
+                        result.put(o.getText(), query.replaceAll(k, o.getText()));
+                    }
+                });
+            });
         }
-        return suggestions;
+        return result;
     }
 
+
     private List<Map<String, Object>> getKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue, boolean hasResults) {
-        List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues()))?null:facetValue.getValues();
+        List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues())) ? null : facetValue.getValues();
         if (CollectionUtils.isEmpty(buckets) && (hasResults || CollectionUtils.isEmpty(values))) {
             return Collections.emptyList();
         }
@@ -276,8 +241,8 @@ public class SearchController {
         Set<String> keywordsWithValues = new HashSet<>();
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             keywords.add(Map.of(
-                "value", bucket.getKey(),
-                "count", bucket.getDocCount()
+                    "value", bucket.getKey(),
+                    "count", bucket.getDocCount()
             ));
             keywordsWithValues.add(bucket.getKey());
         }
@@ -301,7 +266,7 @@ public class SearchController {
         List<Map<String, Object>> keywords = new ArrayList<>();
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             ElasticSearchAgg child = bucket.getKeywords();
-            List<ElasticSearchAgg.Bucket> childBuckets = (child != null)?child.getBuckets():null;
+            List<ElasticSearchAgg.Bucket> childBuckets = (child != null) ? child.getBuckets() : null;
             if (childBuckets != null) {
                 keywords.add(Map.of(
                         "value", bucket.getKey(),
@@ -322,7 +287,7 @@ public class SearchController {
     }
 
     private List<Map<String, Object>> getNestedKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue, boolean hasResults) {
-        List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues()))?null:facetValue.getValues();
+        List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues())) ? null : facetValue.getValues();
         if (CollectionUtils.isEmpty(buckets) && (hasResults || CollectionUtils.isEmpty(values))) {
             return Collections.emptyList();
         }
@@ -331,7 +296,7 @@ public class SearchController {
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             keywords.add(Map.of(
                     "value", bucket.getKey(),
-                    "count", (bucket.getReverse() != null)?bucket.getReverse().getDocCount():0
+                    "count", (bucket.getReverse() != null) ? bucket.getReverse().getDocCount() : 0
             ));
             keywordsWithValues.add(bucket.getKey());
         }
@@ -357,7 +322,7 @@ public class SearchController {
 
     private Map<String, Object> getHierarchicalFacetList(ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue, boolean hasResults) {
         ElasticSearchAgg keywords = agg.getKeywords();
-        List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
+        List<ElasticSearchAgg.Bucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
         return Map.of(
                 "keywords", getHierarchicalKeywords(buckets, facetValue, hasResults),
                 "others", getOthers(keywords),
@@ -366,8 +331,8 @@ public class SearchController {
     }
 
     private Map<String, Object> getNestedFacetList(ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue, boolean hasResults) {
-        ElasticSearchAgg keywords = agg.getInner() != null?agg.getInner().getKeywords():null;
-        List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
+        ElasticSearchAgg keywords = agg.getInner() != null ? agg.getInner().getKeywords() : null;
+        List<ElasticSearchAgg.Bucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
         return Map.of(
                 "keywords", getNestedKeywords(buckets, facetValue, hasResults),
                 "others", getOthers(keywords),
@@ -377,7 +342,7 @@ public class SearchController {
 
     private Map<String, Object> getFacetList(ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue, boolean hasResults) {
         ElasticSearchAgg keywords = agg.getKeywords();
-        List<ElasticSearchAgg.Bucket> buckets = (keywords != null)?keywords.getBuckets():null;
+        List<ElasticSearchAgg.Bucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
         return Map.of(
                 "keywords", getKeywords(buckets, facetValue, hasResults),
                 "others", getOthers(keywords),
@@ -387,7 +352,7 @@ public class SearchController {
 
     private Map<String, Object> getFacetExists(ElasticSearchFacetsResult.Aggregation agg) {
         return Map.of(
-            "count", getFacetCount(agg)
+                "count", getFacetCount(agg)
         );
     }
 
@@ -402,7 +367,7 @@ public class SearchController {
         if (agg == null || agg.getKeywords() == null || agg.getKeywords().getBuckets() == null || agg.getKeywords().getBuckets().isEmpty()) {
             return 0;
         }
-        return agg.getKeywords().getBuckets().stream().mapToInt(bucket -> (bucket.getReverse() != null)?bucket.getReverse().getDocCount():0).sum();
+        return agg.getKeywords().getBuckets().stream().mapToInt(bucket -> (bucket.getReverse() != null) ? bucket.getReverse().getDocCount() : 0).sum();
     }
 
     private Map<String, Object> getFacetAggregation(List<Facet> facets, Map<String, ElasticSearchFacetsResult.Aggregation> aggregations, Map<String, FacetValue> facetValues, boolean hasResults) {

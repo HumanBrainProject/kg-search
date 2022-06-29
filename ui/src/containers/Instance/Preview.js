@@ -72,7 +72,7 @@ export const Preview = connect(
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
       watermark: "Preview",
-      warning: "This is a preview of how this card will look like, once its published. Please note, that some elements (like links to other resources such as term definitions, etc.) depend on the publication state of the related instances and might not be available/active in published mode.",
+      warning: "This is a preview of how this card will look like, once it's published. Please note, that some elements (like links to other resources such as term definitions, etc.) depend on the publication state of the related instances and might not be available/active in published mode.",
       searchPage: false,
       getId: getId
     };
