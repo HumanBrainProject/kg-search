@@ -178,8 +178,6 @@ class PaginationComponent extends React.Component {
       readOnly: !hasNext
     });
 
-    console.log(pages);
-
     return (
       <div className="kgs-paging">
         {pages.map((p, index) => (
