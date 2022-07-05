@@ -28,17 +28,14 @@ The Knowledge Graph Search allows you to find and/or to explore the data which i
 ##Full-text search
 As in any other search engine, you have the possibility to search by a specified term. For this, you can enter anything you're looking for in the search bar (e.g. \`brain\`) and the corresponding results will appear in the results list.
 
-###Typo-correction
-Please note, that the search also tries to find results if you have entered typos: You could e.g. write \`crain\` and the search would still return results for \`brain\`. 
-
-###Multi-term queries
+##Multi-term queries
 If you provide multiple terms, the search will treat them as **OR** combinations: if you're looking for \`brain neuroscience\`, results will be provided which contain either \`brain\` or \`neuroscience\` or both. If you rather want to restrict the results to items which contain both words, you can add an **AND** (lower- or uppercase) between your terms. Your query would be \`brain and neuroscience\`.
 
-##Search by type
-The Knowledge Graph Search allows you to find different types of results. If you're e.g. searching by a person's name, your search results will by default contain the person, as well as datasets the person has contributed to as search results. If you already know for what type of result you're looking for, you can restrict your search by clicking on the type selection buttons below the search bar. Please note that this selection list will adapt to your full-text search. If the results of your full-text search don't contain persons, this type will not show up in the selection list anymore.
+##Search by category
+The Knowledge Graph Search allows you to find different categories of results. If you're e.g. searching by a person's name, your search results will only contain matching persons. Please note that the categories will adapt to your full-text search. If the results of your full-text search don't contain persons, this category will not show up in the categories list anymore.
 
-###Faceted filters
-As soon as you have selected a type, you will see a faceted filter panel apear on the left. Faceted filters can be used for restricting your results based on some specific properties of the result sets. The provided filters depend on the type you've chosen, so they will be different if you have chosen persons or datasets.
+##Faceted filters
+As soon as you have selected a cagetory, you will see a faceted filter panel apear on the left. Faceted filters can be used for restricting your results based on some specific properties of the result sets. The provided filters depend on the category you've chosen, so they will be different if you have chosen persons or datasets.
 
 ##Navigate through the result cards
 After selecting one of the presented results, you will be able to see all the details of this item on a result card. Additionally, you will see links to other result cards (e.g. to the contributors of a dataset). If you select one of these links, the result card of the chosen person will be shown including all details like e.g. other datasets the person has contributed to. This allows you to choose any starting point from the search to navigate through and explore the EBRAINS Knowledge Graph. If you would like to return to your original starting point, you can do so by selecting the **Previous** button on the top left corner of the result card.

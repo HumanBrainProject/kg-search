@@ -28,7 +28,7 @@ const keycloakClientId = "kg";
 
 const endpoints = {
   "authEndpoint": () => "/api/auth/endpoint",
-  //"definition": () => "/static/data/labels.json",
+  //"definition": () => "/static/data/definition.json",
   "definition": () => "/api/definition",
   "groups": () => "/api/groups",
   //"search": () => "/static/data/search.json",
