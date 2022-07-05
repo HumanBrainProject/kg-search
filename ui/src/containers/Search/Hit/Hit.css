@@ -47,10 +47,6 @@
     .kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
         margin-top: 0;
     }
-
-    .kgs-hit .ribbon-container.kgs-hit__ribbon + .kgs-hit__body.has-preview .kgs-hit__preview {
-        margin-top: 60px;
-    }
 }
 
 .kgs-hit .kgs-hit__preview img {
