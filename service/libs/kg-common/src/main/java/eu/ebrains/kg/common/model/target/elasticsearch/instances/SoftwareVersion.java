@@ -25,7 +25,6 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
@@ -210,7 +209,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Sub-components", layout = "Sub-components", labelHidden = true)
     private List<TargetInternalReference> components;
 
-    @FieldInfo(labelHidden = true, markdown = true, boost = 2)
+    @FieldInfo(labelHidden = true, markdown = true, boost = 2, overview = true)
     private Value<String> description;
 
     @JsonProperty("first_release")
@@ -224,6 +223,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     private String version;
 
     private List<TargetInternalReference> versions;
+
+    public TargetInternalReference getAllVersionRef() {
+        return null;
+    }
 
     @Getter
     @Setter

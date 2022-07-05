@@ -25,15 +25,14 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -75,7 +74,7 @@ public class ContentType implements TargetInstance {
     private Value<String> title;
 
 
-    @FieldInfo(markdown = true)
+    @FieldInfo(markdown = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "File extensions")

@@ -122,7 +122,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Main contact", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
     private List<TargetInternalReference> mainContact;
 
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)

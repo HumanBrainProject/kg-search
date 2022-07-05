@@ -66,7 +66,7 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "Name", sort = true, layout = "header")
     private Value<String> title;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
+    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)

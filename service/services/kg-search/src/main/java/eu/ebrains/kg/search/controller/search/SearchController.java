@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
@@ -47,12 +48,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.lang.reflect.Field;
 import java.security.Principal;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
@@ -62,6 +63,7 @@ public class SearchController {
     private final ESServiceClient esServiceClient;
     private final UserInfoRoles userInfoRoles;
     private final FacetsController facetsController;
+    private final MetaModelUtils utils;
 
     private final SearchFieldsController searchFieldsController;
 
@@ -71,12 +73,14 @@ public class SearchController {
             ESServiceClient esServiceClient,
             UserInfoRoles userInfoRoles,
             FacetsController facetsController,
-            SearchFieldsController searchFieldsController
+            SearchFieldsController searchFieldsController,
+            MetaModelUtils utils
     ) {
         this.esServiceClient = esServiceClient;
         this.userInfoRoles = userInfoRoles;
         this.facetsController = facetsController;
         this.searchFieldsController = searchFieldsController;
+        this.utils = utils;
     }
 
     public boolean isInInProgressRole(Principal principal) {
@@ -176,7 +180,6 @@ public class SearchController {
         payload.put("post_filter", esPostFilter);
         Object esAggs = AggsUtils.getAggs(facets, activeFilters, facetValues);
         payload.put("aggs", esAggs);
-        ObjectNode esQuery = null;
         List<String> sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
         final ObjectNode query = getEsQuery(QueryStringUtils.prepareQuery(sanitizedQuery), type);
         if (query != null) {
@@ -186,12 +189,182 @@ public class SearchController {
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        response.put("hits", (result.getHits() != null && result.getHits().getHits() != null) ? result.getHits().getHits() : Collections.emptyList());
+        response.put("hits", getHits(result, type, dataStage));
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
         response.put("types", getTypesAggregation(result.getAggregations()));
         response.put("suggestions", getSuggestions(sanitizedQuery, dataStage, type));
 
         return response;
+    }
+
+    private String getGroup(DataStage dataStage) {
+        return dataStage == DataStage.IN_PROGRESS?"curated":"public";
+    }
+
+    private String getStringField(Map<String, Object> source, String fieldName) {
+        if (source.containsKey(fieldName)) {
+            try {
+                String value = (String) source.get(fieldName);
+                return value;
+            } catch (ClassCastException ignored) {}
+        }
+        return null;
+    }
+
+    private String getValueField(Map<String, Object> source, String fieldName) {
+        if (source.containsKey(fieldName)) {
+            try {
+                Map<String, String> field = (Map<String, String>) source.get(fieldName);
+                if (field.containsKey("value")) {
+                    return field.get("value");
+                }
+            } catch (ClassCastException ignored) {}
+        }
+        return null;
+    }
+
+    private List<Object> getListField(Map<String, Object> source, String fieldName) {
+        if (source.containsKey(fieldName)) {
+            try {
+                List<Object> list = (List<Object>) source.get(fieldName);
+                return list;
+            } catch (ClassCastException ignored) {}
+        }
+        return Collections.emptyList();
+    }
+
+    private List<Map<String, Object>> getHits(ElasticSearchFacetsResult result, String type, DataStage dataStage) {
+        if (result.getHits() == null || result.getHits().getHits() == null) {
+            return Collections.emptyList();
+        }
+        List<String> fieldNames = getHitFieldNames(type);
+        return result.getHits().getHits().stream().map(h -> {
+            Map<String, Object> source = h.getSource();
+            Map<String, Object> hit = new HashMap<>();
+            hit.put("id", source.get("id"));
+            hit.put("type", type); // getValueField(source, "type")
+            hit.put("group", getGroup(dataStage));
+            hit.put("category", getValueField(source, "category"));
+            hit.put("title", getValueField(source, "title"));
+            if (h.getHighlight() != null) {
+                hit.put("highlight", h.getHighlight());
+            }
+            hit.put("fields", getFields(source, fieldNames));
+            return hit;
+        }).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getSearchDocument(DataStage dataStage, String id) throws WebClientResponseException {
+        String index = ESHelper.getIndexesForDocument(dataStage);
+        ElasticSearchDocument doc = esServiceClient.getDocument(index, id);
+        if (doc == null || doc.getSource() == null) {
+            return null;
+        }
+
+        Map<String, Object> source = doc.getSource();
+        String type = getValueField(source, "type");
+        Map<String, Object> res = new HashMap<>();
+        res.put("id", source.get("id"));
+        res.put("type", type);
+        res.put("group", getGroup(dataStage));
+        res.put("category", getValueField(source, "category"));
+        res.put("title", getValueField(source, "title"));
+
+        String disclaimer = getValueField(source, "disclaimer");
+        if (StringUtils.isNotBlank(disclaimer)) {
+            res.put("disclaimer", disclaimer);
+        }
+
+        String version = getStringField(source, "version");
+        if (StringUtils.isNotBlank(version)) {
+            res.put("version", version);
+        }
+
+        List<Object> versions = getListField(source, "versions");
+        if (!CollectionUtils.isEmpty(versions)) {
+            res.put("versions", versions);
+        }
+
+        if (source.get("allVersionRef") != null) {
+            res.put("allVersionRef", source.get("allVersionRef"));
+        }
+
+        List<String> fieldNames = getDocumentFieldNames(type);
+        res.put("fields", getFields(source, fieldNames));
+        return res;
+    }
+
+    public Map<String, Object> getLiveDocument(TargetInstance v) {
+        if (v == null) {
+            return null;
+        }
+        Map<String, Object> res = new HashMap<>();
+        res.put("id", v.getId());
+        if (v.getType() != null && StringUtils.isNotBlank(v.getType().getValue())) {
+            res.put("type", v.getType().getValue());
+        }
+        if (v.getCategory() != null && StringUtils.isNotBlank(v.getCategory().getValue())) {
+            res.put("category", v.getCategory().getValue());
+        }
+        if (v.getTitle() != null && StringUtils.isNotBlank(v.getTitle().getValue())) {
+            res.put("title", v.getTitle().getValue());
+        }
+
+        if (v.getDisclaimer() != null && StringUtils.isNotBlank(v.getDisclaimer().getValue())) {
+            res.put("disclaimer", v.getDisclaimer().getValue());
+        }
+
+        if (v instanceof VersionedInstance) {
+            VersionedInstance versioned = (VersionedInstance) v;
+
+            if (StringUtils.isNotBlank(versioned.getVersion())) {
+                res.put("version", versioned.getVersion());
+            }
+            if (!CollectionUtils.isEmpty(versioned.getVersions())) {
+                res.put("versions", versioned.getVersions());
+            }
+            if (versioned.getAllVersionRef() != null) {
+                res.put("allVersionRef", versioned.getAllVersionRef());
+            }
+        }
+
+        res.put("fields", v);
+        return res;
+    }
+
+    private Map<String, Object> getFields(Map<String, Object> source, List<String> fieldNames) {
+        Map<String, Object> fields = new HashMap<>();
+        fieldNames.forEach(name -> {
+            if (source.containsKey(name) && source.get(name) != null) {
+                fields.put(name,  source.get(name));
+            }
+        });
+        return fields;
+    }
+
+    private List<String> getFieldNames(String type, Predicate<FieldInfo> predicate, List<String> except) {
+        List<String> fieldNames = new ArrayList<>();
+
+        Consumer<Field> collect = field -> {
+            FieldInfo info = field.getAnnotation(FieldInfo.class);
+            if (info != null && predicate.test(info)) {
+                String fieldName = utils.getPropertyName(field);
+                if (!except.contains(fieldName)) {
+                    fieldNames.add(utils.getPropertyName(field));
+                }
+            }
+        };
+
+        utils.visitTypeFields(type, collect);
+        return fieldNames;
+    }
+
+    private List<String> getDocumentFieldNames(String type) {
+        return getFieldNames(type, FieldInfo::visible, List.of("title"));
+    }
+
+    private List<String> getHitFieldNames(String type) {
+        return getFieldNames(type, FieldInfo::overview, List.of("title"));
     }
 
     private Map<String, String> getSuggestions(List<String> sanitizedQuery, DataStage dataStage, String type) {

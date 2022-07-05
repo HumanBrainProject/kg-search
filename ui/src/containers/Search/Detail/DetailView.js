@@ -62,7 +62,7 @@ const DetailViewComponent = ({onBack, onClose, clearInstanceCurrentTab, show, da
 export const DetailView = connect(
   state => {
     const previousInstance = state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null;
-    const previousInstanceId = previousInstance?._id;
+    const previousInstanceId = previousInstance?.id;
     return {
       show: !!state.instances.currentInstance,
       data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : [],

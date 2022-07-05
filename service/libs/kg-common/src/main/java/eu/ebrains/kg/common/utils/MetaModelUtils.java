@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,27 @@ public class MetaModelUtils {
         }
     }
 
+    public Type getTypeTargetClass(String type) {
+        List<TranslatorModel<?, ?, ?, ?>> match = TranslatorModel.MODELS.stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).collect(Collectors.toList());
+        if (match.isEmpty()) {
+            return null;
+        }
+        return match.get(0).getTargetClass();
+    }
+
+    public void visitTypeFields(String type, Consumer<Field> consumer) {
+        Type targetClass = getTypeTargetClass(type);
+        if (targetClass != null) {
+            visitTypeFields(targetClass, consumer);
+        }
+    }
+
+    public void visitTypeFields(Type type, Consumer<Field> consumer) {
+        getAllFields(type).forEach(f -> {
+            Field field = f.getField();
+            consumer.accept(field);
+        });
+    }
 
     public List<FieldWithGenericTypeInfo> getAllFields(Type type) {
         if (type == null) {

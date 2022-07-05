@@ -66,9 +66,6 @@ const CustomTableRow = ({row, onCollapseToggle}) => {
 
 const normalizeCells = (fields, data, type, group, level, collectionIndex, isCollectionCollapsed, isCollectionCollapsible, isCollectionASubset) => {
   return Object.entries(fields)
-    .filter(([, field]) =>
-      field && field.visible
-    )
     .map(([name, field]) => ({
       name: name,
       data: data && data[name],

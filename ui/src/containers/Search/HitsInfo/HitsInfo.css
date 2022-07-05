@@ -21,21 +21,40 @@
  *
  */
 
-export class StatsHelpers {
-  static average(values) {
-    if (!Array.isArray(values) || values.length === 0) {
-      return 0;
-    }
-    return values.reduce((sum, value) => sum + value, 0) / values.length;
-  }
-  static standardDeviation(values){
-    if (!Array.isArray(values) || values.length === 0) {
-      return 0;
-    }
+.kgs-hitsInfos {
+    display: inline-block; 
+    font-size: 22px;
+    line-height: 48px;
+    color: var(--color-15);
+    white-space: nowrap;
+    flex: 1;
+}
 
-    const avg = StatsHelpers.average(values);
-    const squareDiffs = values.map(value => value - avg).map(val => val * val);
-    const avgSquareDiff = StatsHelpers.average(squareDiffs);
-    return Math.sqrt(avgSquareDiff);
-  }
+.kgs-hitsInfos .kgs-hitsInfos-highlight {
+    color: var(--color-10);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.kgs-hitsInfos ul.kgs-suggestions {
+    list-style-type: none;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.kgs-hitsInfos ul.kgs-suggestions > li {
+    display: inline;
+}
+
+.kgs-hitsInfos button.kgs-suggestion__btn {
+    margin: 2px 0px;
+    padding: 0;
+    border: 0;
+    color: var(--link-color-1);
+    background-color: transparent;
+}
+
+.kgs-hitsInfos button.kgs-suggestion__btn:hover, .kgs-hitsInfos button.kgs-suggestion__btn:focus, .kgs-hitsInfos button.kgs-suggestion__btn:active {
+    color: var(--link-color-active);
 }

@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.utils;
 
-import eu.ebrains.kg.search.model.QueryTweaking;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -47,6 +46,11 @@ public class QueryStringUtils {
 
     ).collect(Collectors.toSet());
 
+    public static final Set<String> EXCLUDED_TERMS = Stream.of(
+            "a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"
+
+    ).collect(Collectors.toSet());
+
     public static List<String> sanitizeQueryString(String query) {
         if (!StringUtils.isBlank(query)) {
             String text = query.trim().replaceAll("\\s+", " ");
@@ -54,7 +58,7 @@ public class QueryStringUtils {
             final List<String> tokens = Arrays.stream(text.split(" ")).map(item -> {
                 if (CONDITIONAL_OPERATORS.contains(item.toUpperCase()) || LOGICAL_OPERATORS.contains(item.toUpperCase())) {
                     return item.toUpperCase();
-                } else if (QueryTweaking.EXCLUDED_TERMS.contains(item.toLowerCase())) {
+                } else if (EXCLUDED_TERMS.contains(item.toLowerCase())) {
                     return null;
                 } else {
                     return escapeSpecialCharacters(item);

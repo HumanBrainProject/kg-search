@@ -22,7 +22,7 @@
  */
 
 import React from "react";
-import { HitStats } from "../Hit/HitStats";
+import { HitsInfo } from "../HitsInfo/HitsInfo";
 import { SortingSelector } from "../Sort/SortingSelector";
 import "./ResultsHeader.css";
 
@@ -30,7 +30,7 @@ export function ResultsHeader() {
   return (
     <div className="kgs-result-header">
       <div>
-        <HitStats/>
+        <HitsInfo/>
         <SortingSelector className="kgs-sorting-selector"/>
       </div>
     </div>

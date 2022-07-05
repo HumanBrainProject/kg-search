@@ -49,12 +49,8 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
     API.axios
       .get(url)
       .then(response => {
-        if (response.data && response.data._source && !response.data.error) {
-          response.data._id = id;
-          if (!location.pathname.startsWith("/live/")) {
-            response.data._group = group;
-          }
-          setData(response.data._source);
+        if (response.data && !response.data.error) {
+          setData(response.data.fields);
         } else if (response.data && response.data.error) {
           setError(response.data.message ? response.data.message : response.data.error);
         } else {
@@ -73,8 +69,13 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
           onSessionFailure();
           break;
         }
-        case 500:
         case 404:
+        {
+          const errorMessage = `The instance with id ${id} is not available.`;
+          setError(errorMessage);
+          break;
+        }
+        case 500:
         default:
         {
           setError(`The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`);
@@ -112,7 +113,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
   }
 
   return (
-    <LinkedInstance data={data} group={group} type={data.type?.value || type} />
+    <LinkedInstance data={data} group={data.group || group} type={data.type || type} />
   );
 };
 

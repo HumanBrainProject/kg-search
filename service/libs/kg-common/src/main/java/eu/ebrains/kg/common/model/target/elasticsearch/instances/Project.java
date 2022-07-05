@@ -37,7 +37,6 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name="Project", order=1, searchable=true)
-@RibbonInfo(aggregation="count", dataField="datasets", singular="dataset", plural="datasets")
 public class Project implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -63,7 +62,7 @@ public class Project implements TargetInstance {
     @FieldInfo(layout="header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true)
+    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Datasets", layout = "Datasets", labelHidden = true)

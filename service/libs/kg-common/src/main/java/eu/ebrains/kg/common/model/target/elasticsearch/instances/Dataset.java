@@ -25,7 +25,6 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
@@ -86,7 +85,7 @@ public class Dataset implements TargetInstance, HasCitation {
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
+    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Dataset versions", isTable = true, layout = "Dataset versions", labelHidden = true)

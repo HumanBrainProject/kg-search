@@ -34,6 +34,7 @@ import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchical
 import FilePreview from "../FilePreview/FilePreview";
 import MarkDownCitation from "./Citation/MarkDownCitation";
 import DynamicCitation from "./Citation/DynamicCitation";
+import Text from "../Text/Text";
 
 import "./Field.css";
 
@@ -72,7 +73,7 @@ const FieldComponent = ({ name, layout, style, className, label, inlineLabel=tru
 
 const getFieldProps = (name, data, mapping, group, type, renderUserInteractions = true) => {
 
-  if (!mapping || !mapping.visible || !data) {
+  if (!mapping || !data) {
     return null;
   }
 
@@ -118,10 +119,9 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
       const multipleGroupedLinksMapping = {
         ...mapping,
-        visible: true,
         enforceList: true,
         children: Object.keys(data).reduce((acc, service) => {
-          acc[service] = {label: service, visible: true, enforceShowMore: true};
+          acc[service] = {label: service, enforceShowMore: true};
           return acc;
         }, {})
       };
@@ -287,6 +287,19 @@ export const FieldBase = (renderUserInteractions = true) => {
   };
 
   return Component;
+};
+
+export const Title = ({ text }) => {
+  if (!text) {
+    return null;
+  }
+  return (
+    <span className="kgs-field kgs-field__title kgs-field__layout-header ">
+      <div className="field-value">
+        <Text content={text} />
+      </div>
+    </span>
+  );
 };
 
 export const Field = FieldBase(true);

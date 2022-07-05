@@ -33,29 +33,6 @@
     width: 100%;
 }
 
-.kgs-hit .kgs-hit__ribbon {
-    position: absolute;
-    right:0px;
-    min-width: 125px;
-    width: 10%;
-}
-
-.kgs-hit .kgs-hit__ribbon.ribbon-with-icon {
-    min-width: 185px;
-    width: 17%; 
-}
-
-.kgs-hit .kgs-hit__ribbon.ribbon-with-text {
-    min-width: 200px;
-    width: 17%; 
-}
-
-.kgs-hit .kgs-hit__ribbon.ribbon-with-icon.ribbon-with-text {
-    min-width: 200px;
-    width: 17%; 
-}
-
-
 .kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
     margin-top: 20px;
 }
@@ -69,10 +46,6 @@
 
     .kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
         margin-top: 0;
-    }
-
-    .kgs-hit .ribbon-container.kgs-hit__ribbon + .kgs-hit__body.has-preview .kgs-hit__preview {
-        margin-top: 60px;
     }
 }
 
