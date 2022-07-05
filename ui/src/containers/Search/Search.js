@@ -33,7 +33,7 @@ import { SearchPanel } from "./SearchPanel/SearchPanel";
 import { TypesFilterPanel } from "./Facet/TypesFilterPanel";
 import { FiltersPanel } from "./Facet/FiltersPanel";
 import { ResultsHeader } from "./ResultsHeader/ResultsHeader";
-import { HitsPanel } from "./Hit/HitsPanel";
+import { Hits } from "./Hit/Hits";
 import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
@@ -64,7 +64,7 @@ const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
             <FiltersPanel />
             <div className="kgs-search__main">
               <ResultsHeader />
-              <HitsPanel />
+              <Hits />
               {showKnowledgeSpaceLink && (
                 <div className="kgs-search__knowledge-space">
                   Not found what you&apos;re looking for? Have a look at the&nbsp;

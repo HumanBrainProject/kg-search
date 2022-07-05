@@ -28,7 +28,7 @@ import ReactPiwik from "react-piwik";
 
 import * as actionsSearch from "../../../actions/actions.search";
 
-import "./HitStats.css";
+import "./HitsInfo.css";
 
 export const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true, onClick}) => {
 
@@ -50,36 +50,36 @@ export const Suggestions =  ({words, onClick}) => (
   </ul>
 );
 
-export const HitStatsBase = ({show, message, suggestions, hitCount, from, to, setQueryString}) => {
+export const HitsInfoBase = ({show, message, suggestions, hitCount, from, to, setQueryString}) => {
   if (!show) {
     return null;
   }
   if (message) {
     return (
-      <span className="kgs-hitStats">{message}</span>
+      <span className="kgs-hitsInfos">{message}</span>
     );
   }
   if (Object.keys(suggestions).length>0) {
     return (
-      <span className="kgs-hitStats">{hitCount === 0 ? 'No results were found. ' : ''}Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
+      <span className="kgs-hitsInfos">{hitCount === 0 ? "No results were found. " : ""}Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
     );
   }
   if (hitCount === 0) {
     return (
-      <span className="kgs-hitStats no-hits">No results were found. Please refine your search.</span>
+      <span className="kgs-hitsInfos no-hits">No results were found. Please refine your search.</span>
     );
   }
   if (from > hitCount) {
     return (
-      <span className="kgs-hitStats no-hits">No results were found. Only {hitCount} results are availalbe. Please navigate to previous page(s).</span>
+      <span className="kgs-hitsInfos no-hits">No results were found. Only {hitCount} results are availalbe. Please navigate to previous page(s).</span>
     );
   }
   return (
-    <span className="kgs-hitStats">Viewing <span className="kgs-hitStats-highlight">{from}-{to}</span> of <span className="kgs-hitStats-highlight">{hitCount}</span> results</span>
+    <span className="kgs-hitsInfos">Viewing <span className="kgs-hitsInfos-highlight">{from}-{to}</span> of <span className="kgs-hitsInfos-highlight">{hitCount}</span> results</span>
   );
 };
 
-export const HitStats = connect(
+export const HitsInfo = connect(
   state => {
     const from = (state.search.from?state.search.from:0) + 1;
     const count = state.search.hits?state.search.hits.length:0;
@@ -107,4 +107,4 @@ export const HitStats = connect(
       dispatch(actionsSearch.setQueryString(value));
     }
   })
-)(HitStatsBase);
+)(HitsInfoBase);
