@@ -241,7 +241,6 @@ public class SearchController {
         return result.getHits().getHits().stream().map(h -> {
             Map<String, Object> source = h.getSource();
             Map<String, Object> hit = new HashMap<>();
-            hit.put("_score", h.getScore());
             hit.put("id", source.get("id"));
             hit.put("type", type); // getValueField(source, "type")
             hit.put("group", getGroup(dataStage));
