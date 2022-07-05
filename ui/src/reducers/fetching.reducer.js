@@ -82,7 +82,6 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_INSTANCE_FAILURE:
   case types.CLEAR_INSTANCE_ERROR:
   case types.CANCEL_INSTANCE_LOADING:
-  case types.SET_INSTANCE:
   case types.SET_PREVIOUS_INSTANCE:
   case types.CLEAR_ALL_INSTANCES:
   case types.AUTHENTICATE:

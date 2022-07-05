@@ -25,7 +25,6 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
@@ -62,7 +61,7 @@ public class MetaDataModel implements TargetInstance, HasCitation  {
     @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)

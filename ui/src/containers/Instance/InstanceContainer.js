@@ -89,8 +89,8 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
         loadGroups();
       }
     } else if (!instanceIsLoading && !instanceHasError) {
-      if (!currentInstance || currentInstance._id !== id || currentInstance._group !== group) {
-        if (currentInstance && currentInstance._group !== group) {
+      if (!currentInstance || currentInstance.id !== id || currentInstance.group !== group) {
+        if (currentInstance && currentInstance.group !== group) {
           clearAllInstances();
         }
         fetch(group, id);

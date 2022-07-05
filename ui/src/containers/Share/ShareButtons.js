@@ -29,7 +29,7 @@ import { ShareButtons as ShareButtonsComponent } from "../../components/ShareBut
 
 const getUrlToShare = (location, currentInstance, group, defaultGroup) => {
   if (location.pathname === "/" && currentInstance) {
-    const id = currentInstance._id;
+    const id = currentInstance.id;
     if (id) {
       const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
       return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;

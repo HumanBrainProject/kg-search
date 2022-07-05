@@ -63,7 +63,7 @@ public class Project implements TargetInstance {
     @FieldInfo(layout="header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true)
+    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Datasets", layout = "Datasets", labelHidden = true)

@@ -140,7 +140,7 @@ export const search = () => {
       .post(API.endpoints.search(state.groups.group, queryString, selectedType?.type, from, hitsPerPage, sort), payload)
       //.get(API.endpoints.search(state.groups.group), payload)
       .then(response => {
-        response.data && response.data.hits && Array.isArray(response.data.hits.hits) && response.data.hits.hits.forEach(hit => hit._group = state.groups.group);
+        response.data && response.data.hits && Array.isArray(response.data.hits.hits) && response.data.hits.hits.forEach(hit => hit.group = state.groups.group);
         dispatch(loadSearchResult(response.data));
       })
       .catch(e => {

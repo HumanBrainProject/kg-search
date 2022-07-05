@@ -33,7 +33,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.services.KGV2ServiceClient;
-import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.search.controller.definition.DefinitionController;
@@ -63,7 +62,6 @@ public class Search {
     private final KGv2 kgV2;
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
-    private final static String SOURCE = "_source";
 
     @Value("${eu.ebrains.kg.commit}")
     String commit;
@@ -133,14 +131,14 @@ public class Search {
             if(translatorModel!=null){
                 TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV2translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
                 if(v!=null){
-                   return ResponseEntity.ok(Map.of(SOURCE, v));
+                   return ResponseEntity.ok(searchController.getLiveDocument(v));
                 }
             }
             translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV1translator()!=null && m.getV1translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
             if(translatorModel!=null){
                 TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV1translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
                 if(v!=null){
-                    return ResponseEntity.ok(Map.of(SOURCE, v));
+                    return ResponseEntity.ok(searchController.getLiveDocument(v));
                 }
             }
             return ResponseEntity.notFound().build();
@@ -157,9 +155,11 @@ public class Search {
             final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
             if(translatorModel!=null) {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
-                final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, !skipReferenceCheck);
-                if(v!=null) {
-                    return queryId == null ? null : ResponseEntity.ok(Map.of(SOURCE, v));
+                if (queryId != null) {
+                    final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, !skipReferenceCheck);
+                    if (v != null) {
+                        return ResponseEntity.ok(searchController.getLiveDocument(v));
+                    }
                 }
             }
             return ResponseEntity.notFound().build();
@@ -171,10 +171,13 @@ public class Search {
     }
 
     @GetMapping("/groups/public/documents/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) { 
-        String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) {
         try {
-            return ResponseEntity.ok(esServiceClient.getDocument(index, id));
+            Map<String, Object> res = searchController.getSearchDocument(DataStage.RELEASED, id);
+            if (res != null) {
+                return ResponseEntity.ok(res);
+            }
+            return ResponseEntity.notFound().build();
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -305,10 +308,13 @@ public class Search {
     }
 
     @GetMapping("/groups/public/documents/{type}/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) { 
-        String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) {
         try {
-            return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
+            Map<String, Object> res = searchController.getSearchDocument(DataStage.RELEASED, String.format("%s/%s", type, id));
+            if (res != null) {
+                return ResponseEntity.ok(res);
+            }
+            return ResponseEntity.notFound().build();
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -318,8 +324,11 @@ public class Search {
     public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             try {
-                String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
-                return ResponseEntity.ok(esServiceClient.getDocument(index, id));
+                Map<String, Object> res = searchController.getSearchDocument(DataStage.IN_PROGRESS, id);
+                if (res != null) {
+                    return ResponseEntity.ok(res);
+                }
+                return ResponseEntity.notFound().build();
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }
@@ -332,8 +341,11 @@ public class Search {
     public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             try {
-                String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
-                return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
+                Map<String, Object> res = searchController.getSearchDocument(DataStage.IN_PROGRESS, String.format("%s/%s", type, id));
+                if (res != null) {
+                    return ResponseEntity.ok(res);
+                }
+                return ResponseEntity.notFound().build();
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }

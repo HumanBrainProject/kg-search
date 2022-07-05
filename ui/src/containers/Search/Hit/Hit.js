@@ -28,13 +28,16 @@ import { PrintViewField } from "../../../components/Field/Field";
 import { HitRibbon } from "./HitRibbon";
 import { HighlightsField } from "./HighlightsField";
 import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
+import { Title } from "../../../components/Field/Field";
 import "./Hit.css";
 
-export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, fields, preview, highlightsField }) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, title, ribbon, fields, preview, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
     <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
     <div className={`kgs-hit__body ${preview? "has-preview":""}`}>
       <div className="kgs-hit__content">
+        <Title key="title" text={title} />
+        <HighlightsField key="highlights" {...highlightsField}></HighlightsField>
         {insertSearchHightLights(fields, highlightsField)}
       </div>
       {!!preview &&
@@ -58,7 +61,6 @@ const insertSearchHightLights = (fields, highlightsField) => {
   const fieldsComponents = fields.filter(({ name }) => !hasProjectHit || name !== "component").map(({ name, data, mapping, group }) =>
     <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
   );
-  fieldsComponents.splice(1, 0, <HighlightsField key="highlights" {...highlightsField}></HighlightsField>);
   return fieldsComponents;
 };
 
@@ -87,22 +89,11 @@ const replaceMarkdownEscapedChars = (str) => {
   return formatHitForHighlight(str);
 };
 
-const getTitleField = (group, data, highlight, mapping) => {
-  let fieldData = data;
+const getTitle = (text, highlight) => {
   if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
-    const value = replaceMarkdownEscapedChars(highlight["title.value"][0]);
-    fieldData = {
-      ...data,
-      value: value
-    };
+    return replaceMarkdownEscapedChars(highlight["title.value"][0]);
   }
-
-  return {
-    name: "title",
-    data: fieldData,
-    mapping: mapping,
-    group: group
-  };
+  return text;
 };
 
 const getDescriptionField = (group, data, highlight, mapping) => {
@@ -158,8 +149,6 @@ const getComponentField = (group, data, mapping) => {
 
 const getField = (group, name, data, highlight, mapping) => {
   switch (name) {
-  case "title":
-    return getTitleField(group, data, highlight, mapping);
   case "description":
     return getDescriptionField(group, data, highlight, mapping);
   case "component":
@@ -178,11 +167,9 @@ const getFields = (group, data, highlight, parentMapping) => {
   if (!data || !parentMapping) {
     return [];
   }
-  const primaryFields = ["title", "description"];
   return Object.entries(parentMapping.fields || {})
     .filter(([name, mapping]) =>
       mapping
-      && (mapping.overview || primaryFields.includes(name))
       && (data?.[name])
     )
     .map(([name, mapping]) => getField(group, name, data[name], highlight, mapping));
@@ -211,13 +198,13 @@ const filterHighlightFields = (data, excludeFieldNames) => {
 export const Hit = connect(
   (state, { data }) => {
 
-    const type = data?._source?.type?.value; // state.search.selectedType?.type
-    const source = data && data._source;
-    const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
+    const type = data?.type; // state.search.selectedType?.type
+    const fields = data?.fields;
+    const mapping = fields && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
     const group = state.groups.group;
 
     const getPreview = () => {
-      const previews = getPreviews(source);
+      const previews = getPreviews(fields);
       if(previews.length) {
         const preview = previews.find(p => p.staticImageUrl);
         if(preview) {
@@ -227,16 +214,18 @@ export const Hit = connect(
       return null;
     };
 
-    const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
+    const ribbonData = mapping?.ribbon?.framed?.dataField && fields[mapping.ribbon.framed.dataField];
+
     return {
       type: type,
-      hasNoData: !source,
+      hasNoData: !fields,
       hasUnknownData: !mapping,
+      title: getTitle(data?.title, data?.highlight),
       ribbon: getField(group, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-      fields: getFields(group, source, data && data.highlight, mapping),
+      fields: getFields(group, fields, data && data.highlight, mapping),
       preview: getPreview(),
       highlightsField: {
-        fields: filterHighlightFields(data && data.highlight, ["title.value", "description.value"]),
+        fields: filterHighlightFields(data?.highlight, ["title.value", "description.value"]),
         mapping: mapping
       }
     };

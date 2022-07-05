@@ -41,8 +41,7 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
     mapping = {
       size: {
         label: "Size",
-        order: 13,
-        visible: true
+        order: 13
       }
     };
     data.size = {

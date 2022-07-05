@@ -65,7 +65,7 @@ public class BehavioralProtocol implements TargetInstance {
     @FieldInfo(label = "Official abbreviation")
     private Value<String> officialAbbreviation;
 
-    @FieldInfo(markdown = true)
+    @FieldInfo(markdown = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Described in", markdown = true)

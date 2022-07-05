@@ -55,7 +55,7 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
   );
 
   const ObjectField = ({data, mapping, group, type }) => {
-    if (!mapping || !mapping.visible) {
+    if (!mapping) {
       return null;
     }
 
@@ -67,7 +67,6 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
       .filter(([name, childMapping]) =>
         childMapping
         && (data?.[name])
-        && childMapping.visible
       )
       .map(([name, childMapping]) => ({
         name: name,

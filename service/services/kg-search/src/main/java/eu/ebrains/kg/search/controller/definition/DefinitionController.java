@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -106,15 +107,14 @@ public class DefinitionController {
         });
         return properties;
     }
-
+    
     private void handleField(MetaModelUtils.FieldWithGenericTypeInfo f, Map<String, Object> fields) throws ClassNotFoundException {
-        FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
-        Type topTypeToHandle = f.getGenericType() != null ? f.getGenericType() : MetaModelUtils.getTopTypeToHandle(f.getField().getGenericType());
+        Field field = f.getField();
+        FieldInfo info = field.getAnnotation(FieldInfo.class);
 
-        if (info != null) {
-            String propertyName = utils.getPropertyName(f.getField());
+        if (info != null && info.visible()) {
             Map<String, Object> propertyDefinition = new LinkedHashMap<>();
-            fields.put(propertyName, propertyDefinition);
+            fields.put(utils.getPropertyName(field), propertyDefinition);
             if (info.aggregate() != FieldInfo.Aggregate.UNDEFINED) {
                 propertyDefinition.put("aggregate", info.aggregate().name().toLowerCase());
             }
@@ -145,7 +145,6 @@ public class DefinitionController {
             if (info.order() != 0) {
                 propertyDefinition.put("order", info.order());
             }
-            propertyDefinition.put("overview", info.overview());
             if (info.overviewMaxDisplay() != 0) {
                 propertyDefinition.put("overviewMaxDisplay", info.overviewMaxDisplay());
             }
@@ -159,7 +158,7 @@ public class DefinitionController {
             if (info.type() != FieldInfo.Type.UNDEFINED) {
                 propertyDefinition.put("type", info.type().name().toLowerCase());
             }
-            propertyDefinition.put("visible", info.visible());
+            Type topTypeToHandle = f.getGenericType() != null ? f.getGenericType() : MetaModelUtils.getTopTypeToHandle(field.getGenericType());
             Map<String, Object> children = handleChildren(topTypeToHandle);
             propertyDefinition.putAll(children);
         }

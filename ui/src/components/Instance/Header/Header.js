@@ -28,6 +28,7 @@ import { Tags } from "../../Tags/Tags";
 import { Field } from "../../Field/Field";
 import { FieldsPanel } from "../../Field/FieldsPanel";
 import { VersionSelector } from "../../VersionSelector/VersionSelector";
+import { Title } from "../../../components/Field/Field";
 
 import "./Header.css";
 
@@ -43,7 +44,7 @@ export const Header = ({header, NavigationComponent, onVersionChange}) => {
       <div className="kgs-instance__header_fields">
         <Tags tags={tags} />
         <div className="kgs-instance__header_title">
-          <Field {...header.title} />
+          <Title text={header.title} />
           <VersionSelector version={header.version} versions={header.versions} onChange={handleVersionChange} />
         </div>
         <FieldsPanel fields={header.fields} fieldComponent={Field} />

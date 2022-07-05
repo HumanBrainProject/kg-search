@@ -44,7 +44,7 @@ const loadInstanceSuccess = (state, action) => {
   let previousInstances = Array.isArray(state.previousInstances)
     ? [...state.previousInstances]
     : [];
-  if (state.currentInstance && state.currentInstance._id !== action.data._id) {
+  if (state.currentInstance && state.currentInstance.id !== action.data.id) {
     previousInstances = [...previousInstances, state.currentInstance];
   }
   return {
@@ -62,21 +62,6 @@ const loadInstanceFailure = (state, action) => {
     ...state,
     error: action.error,
     isLoading: false,
-    image: null
-  };
-};
-
-const setInstance = (state, action) => {
-  let previousInstances = Array.isArray(state.previousInstances)
-    ? state.previousInstances
-    : [];
-  previousInstances = state.currentInstance
-    ? [...previousInstances, state.currentInstance]
-    : [...previousInstances];
-  return {
-    ...state,
-    currentInstance: action.data,
-    previousInstances: previousInstances,
     image: null
   };
 };
@@ -147,7 +132,7 @@ const goBackToInstance = (state, action) => {
   }
 
   // instance reference url is already matching current instance, do notthing
-  if (instance && instance._id === instanceId) {
+  if (instance && instance.id === instanceId) {
     return state;
   }
 
@@ -166,10 +151,10 @@ const goBackToInstance = (state, action) => {
       ? [...state.previousInstances]
       : [];
   instance = previousInstances.pop() || null;
-  while (previousInstances.length && instance && instance._id !== instanceId) {
+  while (previousInstances.length && instance && instance.id !== instanceId) {
     instance = previousInstances.pop();
   }
-  if (instance && instance._id === instanceId) {
+  if (instance && instance.id === instanceId) {
     return {
       ...state,
       currentInstance: instance,
@@ -207,8 +192,6 @@ export function reducer(state = initialState, action = {}) {
     return loadInstanceSuccess(state, action);
   case types.LOAD_INSTANCE_FAILURE:
     return loadInstanceFailure(state, action);
-  case types.SET_INSTANCE:
-    return setInstance(state, action);
   case types.SET_PREVIOUS_INSTANCE:
     return setPreviousInstance(state);
   case types.CLEAR_ALL_INSTANCES:

@@ -35,15 +35,15 @@ export const getTags = header => {
 };
 
 export const getTitle = (data, id) => {
-  if (data && data._id) {
-    if (data._source?.title?.value) {
-      if (data._source?.version) {
-        return `${data._source.title.value} ${data._source.version}`;
+  if (data?.id) {
+    if (data?.title) {
+      if (data?.version) {
+        return `${data.title} ${data.version}`;
       }
-      return `${data._source.title.value}`;
+      return `${data.title}`;
     }
-    if (data._source?.type?.value) {
-      return `${data._source.type.value} ${data._id}`;
+    if (data?.type) {
+      return `${data.type} ${data.id}`;
     }
   }
   if (!id) {
@@ -57,7 +57,7 @@ const getField = (group, type, name, data, mapping) => {
     return {
       name: "type",
       data: { value: type },
-      mapping: { visible: true },
+      mapping: { },
       group: group,
       type: type
     };
@@ -99,7 +99,6 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
     .filter(
       ([name, mapping]) =>
         mapping &&
-        mapping.visible &&
         data?.[name] &&
         mapping.layout !== "header" &&
         ![
@@ -184,28 +183,28 @@ const getGroupLabel = (groups, name) => {
 export const mapStateToProps = (state, props) => {
   const { data } = props;
 
-  const source = data && data._source;
-  const type = source?.type?.value;
+  const fields = data?.fields;
+  const type = data?.type;
   const mapping =
-    (source &&
+    (fields &&
       state.definition?.typeMappings &&
       state.definition.typeMappings[type]) ??
     {};
   const group = state.groups.group;
-  const version = source && source.version ? source.version : "Current";
+  const version = (data?.version)? data.version : "Current";
   const versions = (
-    source && Array.isArray(source.versions) ? source.versions : []
+    Array.isArray(data?.versions) ? data.versions : []
   ).map(v => ({
     label: v.value ? v.value : "Current",
     value: v.reference
   }));
   const latestVersion = versions && versions.length && version && versions[0];
-  const allVersions = source && source.allVersionRef;
+  const allVersions = data?.allVersionRef;
   return {
-    id: data && data._id,
+    id: data?.id,
     type: type,
     group: group,
-    hasNoData: !source,
+    hasNoData: !fields,
     hasUnknownData: !mapping,
     header: {
       group: group !== state.groups.defaultGroup ? group : null,
@@ -213,22 +212,16 @@ export const mapStateToProps = (state, props) => {
         group !== state.groups.defaultGroup
           ? getGroupLabel(state.groups.groups, group)
           : null,
-      category: source?.category?.value,
-      title: getField(
-        group,
-        type,
-        "title",
-        source && source["title"],
-        mapping && mapping.fields && mapping.fields["title"]
-      ),
-      fields: getHeaderFields(group, type, source, mapping),
+      category: data?.category,
+      title: data?.title,
+      fields: getHeaderFields(group, type, fields, mapping),
       version: version,
       versions: versions
     },
     latestVersion: latestVersion,
     isOutdated: latestVersion && latestVersion.label !== version,
     allVersions: allVersions,
-    tabs: getFieldsByTabs(group, type, source, mapping),
-    disclaimer: source?.disclaimer?.value
+    tabs: getFieldsByTabs(group, type, fields, mapping),
+    disclaimer: data?.disclaimer
   };
 };

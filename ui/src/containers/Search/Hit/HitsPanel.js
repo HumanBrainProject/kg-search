@@ -33,10 +33,10 @@ import { StatsHelpers } from "../../../helpers/StatsHelpers";
 import { useNavigate } from "react-router-dom";
 
 
-const HitsPanelBase = ({ lists, itemComponent, getKey, group, onClick }) => {
+const HitsPanelBase = ({ lists, itemComponent, getKey, group, defaultGroup, onClick }) => {
   const navigate = useNavigate();
 
-  const handleClick = useMemo(() => (data, target) => onClick(data, target, group, navigate), [group]);
+  const handleClick = useMemo(() => (data, target) => onClick(data, target, group, defaultGroup, navigate), [group]);
 
   return (
     <React.Fragment>
@@ -103,22 +103,24 @@ const mapStateToProps = state => {
       }
     ],
     itemComponent: Hit,
-    getKey: data => `${data?._source?.type?.value}/${data._id ? data._id : uniqueId()}`,
-    group: state.groups.group !== state.groups.defaultGroup?state.groups.group:null
+    getKey: data => `${data?.type}/${(data?.id) ? data.id : uniqueId()}`,
+    group: state.groups.group,
+    defaultGroup: state.groups.defaultGroup
   };
 };
 
 export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
-    onClick: (data, target, group, navigate) => {
+    onClick: (data, target, group, defaultGroup, navigate) => {
       if (target === "_blank") {
-        const relativeUrl = `/instances/${data._id}${group?("?group=" + group):""}`;
+        const relativeUrl = `/instances/${data.id}${(group != defaultGroup)?("?group=" + group):""}`;
         ReactPiwik.push(["trackEvent", "Card", "Open in new tab", relativeUrl]);
         window.open(relativeUrl, "_blank");
       } else {
-        dispatch(actionsInstances.setInstance(data));
-        navigate(`/${window.location.search}#${data._id}`);
+        dispatch(actionsInstances.loadInstance(group, data.id, () => {
+          navigate(`/${window.location.search}#${data.id}`);
+        }));
       }
     }
   })

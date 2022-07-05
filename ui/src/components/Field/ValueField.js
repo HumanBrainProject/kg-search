@@ -41,7 +41,7 @@ const getUrlLocation = url => {
 const ValueFieldBase = (renderUserInteractions = true) => {
 
   const ValueField = ({ data, mapping, group }) => {
-    if (!data || !mapping || !mapping.visible) {
+    if (!data || !mapping) {
       return null;
     }
     const regInstanceLink = /^(.+)$/;

@@ -62,7 +62,7 @@ public class Model implements TargetInstance, HasCitation {
     @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)

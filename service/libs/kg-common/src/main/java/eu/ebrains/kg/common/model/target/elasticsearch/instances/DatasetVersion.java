@@ -135,7 +135,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, useForSuggestion = true)
+    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Homepage")

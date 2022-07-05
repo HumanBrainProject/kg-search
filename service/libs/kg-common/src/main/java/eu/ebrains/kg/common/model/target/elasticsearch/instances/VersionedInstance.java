@@ -16,4 +16,8 @@ public interface VersionedInstance {
      */
     void setVersion(String version);
 
+    String getVersion();
+    List<TargetInternalReference> getVersions();
+    TargetInternalReference getAllVersionRef();
+
 }

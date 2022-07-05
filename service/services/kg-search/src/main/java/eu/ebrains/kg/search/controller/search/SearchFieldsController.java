@@ -63,18 +63,18 @@ public class SearchFieldsController {
 
     @Cacheable(value = "highlight", key = "#type")
     public List<String> getHighlight(String type) {
-        List<String> highlights = new ArrayList<>();
         if (StringUtils.isNotBlank(type)) {
-            TranslatorModel.MODELS.stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).forEach(m -> {
-                Class<?> targetModel = m.getTargetClass();
-                addFieldsHighlight(highlights, targetModel);
-            });
+            Type targetModel = utils.getTypeTargetClass(type);
+            if (targetModel != null) {
+                return getFieldsHighlight(targetModel);
+            }
         }
-        return highlights;
+        return Collections.emptyList();
     }
 
-    private void addFieldsHighlight(List<String> highlights, Class<?> clazz) {
-        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
+    private List<String> getFieldsHighlight(Type type) {
+        List<String> highlights = new ArrayList<>();
+        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
         allFields.forEach(f -> {
             try {
                 addFieldHighlight(highlights, f, "");
@@ -82,6 +82,7 @@ public class SearchFieldsController {
                 throw new RuntimeException(e);
             }
         });
+        return highlights;
     }
 
     private void addFieldHighlight(List<String> highlights, MetaModelUtils.FieldWithGenericTypeInfo f, String parentPath) throws ClassNotFoundException {

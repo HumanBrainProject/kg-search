@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.List;
@@ -39,7 +40,9 @@ public interface TargetInstance {
 
     List<String> getIdentifier();
 
+    Value<String> getType();
     Value<String> getCategory();
+    Value<String> getTitle();
     Value<String> getDisclaimer();
 
     /**

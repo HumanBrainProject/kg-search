@@ -67,13 +67,6 @@ export const clearInstanceError = () => {
 };
 
 
-export const setInstance = data => {
-  return {
-    type: types.SET_INSTANCE,
-    data: data
-  };
-};
-
 export const cancelInstanceLoading = () => {
   return {
     type: types.CANCEL_INSTANCE_LOADING
@@ -112,7 +105,6 @@ export const goToSearch = (navigate, group, defaultGroup) => {
 };
 
 const handleLoadInstanceResponse = (dispatch, group, data, onSuccessCallback) => {
-  data._group = group;
   dispatch(loadInstanceSuccess(data));
   typeof onSuccessCallback === "function" && onSuccessCallback();
 };
@@ -165,7 +157,7 @@ const handleLoadPreviewResponse = (dispatch, id, data) => {
       const error = data.message ? data.message : data.error;
       dispatch(loadInstanceFailure(error));
     } else {
-      data._id = id;
+      data.id = id;
       dispatch(loadInstanceSuccess(data));
     }
   } else {
