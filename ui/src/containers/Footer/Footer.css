@@ -199,29 +199,13 @@
       flex-flow: column-reverse;
       line-height: 50px;
     }
-  }
 
-  @media (max-width: 768px) {
     .commit {
       display: none;
     }
   }
 
   @media (min-width: 768px) {
-    .kgs-navbar {
-      height: 100px;
-    }
-  
-    .navbar-right { 
-      margin-top: 25px;
-      margin-bottom: -15px;
-    }
-  
-    .container-fluid>.navbar-collapse {
-      margin-right: -15px;
-      margin-left: -15px; 
-    }
-  
     .site-footer .footer__header {
       display: flex;
     }
@@ -237,10 +221,6 @@
   
     .site-footer .footer__content .footer__menu {
       flex-basis: 20%;
-    }
-  
-    .navbar-header .logo {
-      margin: -15px auto 0 0;
     }
   
     #rootFooter {
