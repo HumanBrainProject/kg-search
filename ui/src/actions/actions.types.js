@@ -51,7 +51,6 @@ export const SET_TOKEN = "SET_TOKEN";
 
 export const SET_QUERY_STRING = "SET_QUERY_STRING";
 export const SET_TYPE = "SET_TYPE";
-export const SET_SORT = "SET_SORT";
 export const SET_FACET = "SET_FACET";
 export const RESET_FACETS = "RESET_FACETS";
 export const SET_FACET_SIZE = "SET_FACET_SIZE";

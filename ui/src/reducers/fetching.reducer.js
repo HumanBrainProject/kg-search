@@ -68,7 +68,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_TOKEN:
   case types.SET_QUERY_STRING:
   case types.SET_TYPE:
-  case types.SET_SORT:
   case types.SET_FACET:
   case types.RESET_FACETS:
   case types.SET_FACET_SIZE:

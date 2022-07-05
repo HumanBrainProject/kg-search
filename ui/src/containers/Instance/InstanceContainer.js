@@ -96,6 +96,7 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
         fetch(group, id);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [definitionIsReady, definitionHasError, groupsHasError, isGroupsReady, group, instanceHasError, id]);
 
   useEffect(() => {
@@ -111,6 +112,7 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
     return () => {
       clearAllInstances();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -123,6 +125,7 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
     if (newLocationSearch !== location.search) {
       navigate(`${location.pathname}${newLocationSearch}`);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [group]);
 
 

@@ -20,7 +20,7 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as actionsInstances from "../../../actions/actions.instances";
@@ -34,21 +34,22 @@ const DetailViewComponent = ({onBack, onClose, clearInstanceCurrentTab, show, da
 
   const navigate = useNavigate();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => clearInstanceCurrentTab(), []);
 
-  const handleOnBack = useMemo(() => () => {
+  const handleOnBack = () => {
     onBack();
     if (previousInstanceId) {
       navigate(`/${window.location.search}#${previousInstanceId}`);
     } else {
       navigate(`/${window.location.search}`);
     }
-  }, [onBack]);
+  };
 
-  const handleOnClose = useMemo(() => () => {
+  const handleOnClose = () => {
     onClose();
     navigate(`/${window.location.search}`);
-  }, [onClose]);
+  };
 
   if (!show || !Array.isArray(data) || !data.length) {
     return null;

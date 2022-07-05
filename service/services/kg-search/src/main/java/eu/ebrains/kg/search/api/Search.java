@@ -360,11 +360,10 @@ public class Search {
             @RequestParam(required = false, defaultValue = "", name = "type") String type,
             @RequestParam(required = false, defaultValue = "0", name = "from") int from,
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
-            @RequestParam(required = false, defaultValue = "newestFirst", name = "sort") String sort,
             @RequestBody Map<String, FacetValue> facetValues
     ) {
         try {
-            return ResponseEntity.ok(searchController.search(q, type, from, size, sort, facetValues, DataStage.RELEASED));
+            return ResponseEntity.ok(searchController.search(q, type, from, size, facetValues, DataStage.RELEASED));
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -376,12 +375,11 @@ public class Search {
             @RequestParam(required = false, defaultValue = "", name = "type") String type,
             @RequestParam(required = false, defaultValue = "0", name = "from") int from,
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
-            @RequestParam(required = false, defaultValue = "newestFirst", name = "sort") String sort,
             @RequestBody Map<String, FacetValue> facetValues,
             Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             try {
-                return ResponseEntity.ok(searchController.search(q, type, from, size, sort, facetValues, DataStage.IN_PROGRESS));
+                return ResponseEntity.ok(searchController.search(q, type, from, size, facetValues, DataStage.IN_PROGRESS));
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }

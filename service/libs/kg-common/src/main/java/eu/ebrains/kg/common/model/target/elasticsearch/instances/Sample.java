@@ -61,7 +61,7 @@ public class Sample implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(label = "Name", sort = true, boost = 20)
+    @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 
     @FieldInfo(layout = "header")

@@ -70,7 +70,7 @@ public class ContentType implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Content type");
 
-    @FieldInfo(label = "Name", sort=true, layout = "header", labelHidden = true)
+    @FieldInfo(label = "Name", layout = "header", labelHidden = true)
     private Value<String> title;
 
 

@@ -103,7 +103,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     //Global
 
-    @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20, useForSuggestion = true)
+    @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     /**
@@ -322,7 +322,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Genotype")
         private Value<String> genotype;
 
-        @FieldInfo(label = "Samples", sort = true)
+        @FieldInfo(label = "Samples")
         private List<TargetInternalReference> samples;
 
     }

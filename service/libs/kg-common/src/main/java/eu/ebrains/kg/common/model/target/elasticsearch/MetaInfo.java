@@ -52,4 +52,6 @@ public @interface MetaInfo {
      * To define which individual instances are actually searchable, please specify {@link TargetInstance#isSearchableInstance()}
      */
     boolean searchable() default false;
+
+    boolean sortByRelevance() default true;
 }

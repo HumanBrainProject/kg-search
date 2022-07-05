@@ -192,17 +192,6 @@ public class DefinitionController {
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
         List<Map<String, String>> sortFields = new ArrayList<>();
         result.put("sortFields", sortFields);
-        sortFields.add(Map.of(
-                "label", "Relevance",
-                "value", "newestFirst"
-        ));
-        allFields.forEach(f -> {
-            try {
-                handleSortField(f, sortFields);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
         if (metaInfo.defaultSelection()) {
             result.put("defaultSelection", true);
         }
@@ -230,15 +219,5 @@ public class DefinitionController {
             }
         });
         return result;
-    }
-
-    private void handleSortField(MetaModelUtils.FieldWithGenericTypeInfo f, List<Map<String, String>> sortFields) throws ClassNotFoundException {
-        FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
-        if (info != null && info.sort()) {
-            sortFields.add(Map.of(
-                    "label", info.label(),
-                    "value", utils.getPropertyName(f.getField())
-            ));
-        }
     }
 }

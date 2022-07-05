@@ -87,7 +87,7 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
 
 
     //Global
-    @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
+    @FieldInfo(label = "Name", layout = "header", boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)

@@ -36,7 +36,6 @@ public @interface FieldInfo {
     String icon() default "";
     boolean isAsync() default false;
     boolean isFilePreview() default false;
-    boolean sort() default false;
     boolean visible() default true;
     boolean labelHidden() default false;
     boolean markdown() default false;

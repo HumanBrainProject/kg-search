@@ -30,7 +30,7 @@ import * as actionsSearch from "../../../actions/actions.search";
 
 import "./HitsInfo.css";
 
-export const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true, onClick}) => {
+const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true, onClick}) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -42,7 +42,13 @@ export const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true, onClic
   );
 };
 
-export const Suggestions =  ({words, onClick}) => (
+const Viewing = ({ hitCount, from, to }) => (
+  <>
+    Viewing <span className="kgs-hitsInfos-highlight">{from}-{to}</span> of <span className="kgs-hitsInfos-highlight">{hitCount}</span> results.
+  </>
+);
+
+const Suggestions =  ({words, onClick}) => (
   <ul className="kgs-suggestions">
     {Object.keys(words).map((word, idx) => (
       <Suggestion key={word} word={word} searchTerm={words[word]} isSecondLast={idx === Object.keys(words).length -2} isLast={idx === Object.keys(words).length -1} onClick={onClick} />
@@ -54,28 +60,35 @@ export const HitsInfoBase = ({show, message, suggestions, hitCount, from, to, se
   if (!show) {
     return null;
   }
+
   if (message) {
     return (
       <span className="kgs-hitsInfos">{message}</span>
     );
   }
+
   if (Object.keys(suggestions).length>0) {
     return (
-      <span className="kgs-hitsInfos">{hitCount === 0 ? "No results were found. " : ""}Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
+      <span className="kgs-hitsInfos">
+        {hitCount === 0?
+          "No results were found. "
+          :
+          <Viewing hitCount={hitCount} from={from} to={to} />
+        }<br/>Did you mean <Suggestions words={suggestions} onClick={setQueryString} />?</span>
     );
   }
   if (hitCount === 0) {
     return (
-      <span className="kgs-hitsInfos no-hits">No results were found. Please refine your search.</span>
+      <span className="kgs-hitsInfos">No results were found. Please refine your search.</span>
     );
   }
   if (from > hitCount) {
     return (
-      <span className="kgs-hitsInfos no-hits">No results were found. Only {hitCount} results are availalbe. Please navigate to previous page(s).</span>
+      <span className="kgs-hitsInfos">No results were found. Only {hitCount} results are availalbe. Please navigate to previous page(s).</span>
     );
   }
   return (
-    <span className="kgs-hitsInfos">Viewing <span className="kgs-hitsInfos-highlight">{from}-{to}</span> of <span className="kgs-hitsInfos-highlight">{hitCount}</span> results</span>
+    <span className="kgs-hitsInfos"><Viewing hitCount={hitCount} from={from} to={to} /></span>
   );
 };
 

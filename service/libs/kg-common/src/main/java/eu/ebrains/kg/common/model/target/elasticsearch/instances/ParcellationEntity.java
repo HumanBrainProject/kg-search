@@ -61,7 +61,7 @@ public class ParcellationEntity implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
+    @FieldInfo(label = "Name", layout = "header", boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Brain atlas")

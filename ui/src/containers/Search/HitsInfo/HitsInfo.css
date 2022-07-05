@@ -23,11 +23,12 @@
 
 .kgs-hitsInfos {
     display: inline-block; 
-    font-size: 22px;
-    line-height: 48px;
+    margin: 15px 0;
+    font-size: 20px;
     color: var(--color-15);
-    white-space: nowrap;
-    flex: 1;
+    line-height: 1.5rem;
+    white-space: normal;
+    text-align: left;
 }
 
 .kgs-hitsInfos .kgs-hitsInfos-highlight {

@@ -49,6 +49,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.security.Principal;
 import java.util.*;
 import java.util.function.Consumer;
@@ -161,7 +162,7 @@ public class SearchController {
     }
 
 
-    public Map<String, Object> search(String q, String type, int from, int size, String sort, Map<String, FacetValue> facetValues, DataStage dataStage) {
+    public Map<String, Object> search(String q, String type, int from, int size, Map<String, FacetValue> facetValues, DataStage dataStage) {
         String index = ESHelper.getIndexesForSearch(dataStage);
         Map<String, Object> payload = new HashMap<>();
         payload.put("from", from);
@@ -170,7 +171,7 @@ public class SearchController {
         if (esHighlight != null) {
             payload.put("highlight", esHighlight);
         }
-        List<Object> esSort = getEsSort(sort);
+        List<Object> esSort = getEsSort(type, StringUtils.isNotBlank(q));
         if (esSort != null) {
             payload.put("sort", esSort);
         }
@@ -659,14 +660,21 @@ public class SearchController {
         return highlight;
     }
 
-    private List<Object> getEsSort(String sort) {
-        if (StringUtils.isBlank(sort)) {
-            return null;
+    private List<Object> getEsSort(String type, boolean forceSortByRelevance) {
+        boolean sortByRelevance = true;
+        if (!forceSortByRelevance) {
+            Type targetClass = utils.getTypeTargetClass(type);
+            if (targetClass != null) {
+                MetaInfo metaInfo = ((Class<?>) targetClass).getAnnotation(MetaInfo.class);
+                if (metaInfo != null && !metaInfo.sortByRelevance()) {
+                    sortByRelevance = false;
+                }
+            }
         }
 
         List<Object> fields = new ArrayList<>();
 
-        if (sort.equals("newestFirst")) {
+        if (sortByRelevance) {
 
             Map<String, String> score = new HashMap<>();
             score.put("order", "desc");
@@ -682,14 +690,11 @@ public class SearchController {
             fields.add(second);
 
         } else {
-
-            Map<String, String> name = new HashMap<>();
-            name.put("order", "asc");
-            Map<String, Object> first = new HashMap<>();
-            String key = String.format("%s.value.keyword", sort);
-            first.put(key, name);
-            fields.add(first);
-
+            fields.add(Map.of(
+                    "title.value.keyword", Map.of(
+                            "order", "asc"
+                    )
+            ));
         }
         return fields;
     }

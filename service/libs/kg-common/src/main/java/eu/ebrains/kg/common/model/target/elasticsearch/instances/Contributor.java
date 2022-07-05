@@ -39,7 +39,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name="Contributor", order=8, searchable=true)
+@MetaInfo(name="Contributor", order=8, searchable=true, sortByRelevance=false)
 
 public class Contributor implements TargetInstance {
     @JsonIgnore
@@ -61,7 +61,7 @@ public class Contributor implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(sort = true, label = "Name", boost = 20)
+    @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 
     @FieldInfo(layout = "header")

@@ -63,7 +63,7 @@ public class Software implements TargetInstance, HasCitation {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(label = "Name", sort = true, layout = "header")
+    @FieldInfo(label = "Name", layout = "header")
     private Value<String> title;
 
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, overview = true)

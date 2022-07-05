@@ -88,7 +88,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
 
     //Global
 
-    @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
+    @FieldInfo(label = "Name", layout = "header", boost = 20)
     private Value<String> title;
 
     /**

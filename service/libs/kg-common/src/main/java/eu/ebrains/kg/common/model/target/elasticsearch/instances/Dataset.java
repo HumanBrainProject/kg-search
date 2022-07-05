@@ -61,7 +61,7 @@ public class Dataset implements TargetInstance, HasCitation {
     @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Name", sort = true, layout = "header")
+    @FieldInfo(label = "Name", layout = "header")
     private Value<String> title;
 
     @FieldInfo(label = "Authors", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, labelHidden = true)

@@ -58,7 +58,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(label = "Name", boost = 20, sort = true)
+    @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 
     /**
@@ -231,13 +231,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @Getter
     @Setter
     public static class FileFormat {
-        @FieldInfo(label = "Name", sort = true)
+        @FieldInfo(label = "Name")
         private TargetInternalReference name;
 
-        @FieldInfo(label = "File extensions", sort = true)
+        @FieldInfo(label = "File extensions")
         private List<Value<String>> fileExtensions;
 
-        @FieldInfo(label = "Media type", sort = true)
+        @FieldInfo(label = "Media type")
         private Value<String> relatedMediaType;
     }
 

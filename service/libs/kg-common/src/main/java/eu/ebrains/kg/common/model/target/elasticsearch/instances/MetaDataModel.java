@@ -58,7 +58,7 @@ public class MetaDataModel implements TargetInstance, HasCitation  {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(label = "Name", sort = true, boost = 20)
+    @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)

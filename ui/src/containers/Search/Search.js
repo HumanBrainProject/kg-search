@@ -32,7 +32,7 @@ import { withTabKeyNavigation } from "../../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./SearchPanel/SearchPanel";
 import { TypesFilterPanel } from "./Facet/TypesFilterPanel";
 import { FiltersPanel } from "./Facet/FiltersPanel";
-import { ResultsHeader } from "./ResultsHeader/ResultsHeader";
+import { HitsInfo } from "./HitsInfo/HitsInfo";
 import { Hits } from "./Hit/Hits";
 import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
@@ -63,7 +63,7 @@ const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
             <TypesFilterPanel />
             <FiltersPanel />
             <div className="kgs-search__main">
-              <ResultsHeader />
+              <HitsInfo />
               <Hits />
               {showKnowledgeSpaceLink && (
                 <div className="kgs-search__knowledge-space">
@@ -165,7 +165,6 @@ const SearchBase = ({
   queryString,
   selectedType,
   facets,
-  sort,
   page,
   totalPages,
   group,
@@ -235,13 +234,6 @@ const SearchBase = ({
           getUpdatedQuery(acc, item.name, item.checked, item.value, item.many),
         query
       );
-      query = getUpdatedQuery(
-        query,
-        "sort",
-        sort && sort !== "newestFirst",
-        sort,
-        false
-      );
       query = getUpdatedQuery(query, "p", page !== 1, page, false);
       query = getUpdatedQuery(
         query,
@@ -264,7 +256,6 @@ const SearchBase = ({
     isGroupsReady,
     queryString,
     selectedType,
-    sort,
     page,
     group,
     facets
@@ -334,7 +325,6 @@ export const Search = connect(
     queryString: state.search.queryString,
     selectedType: state.search.selectedType?.type,
     facets: getActiveFacets(state.search.selectedType?.facets),
-    sort: state.search.sort,
     page: state.search.page,
     totalPages: state.search.totalPages,
     isUpToDate: state.search.isUpToDate

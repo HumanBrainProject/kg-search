@@ -47,20 +47,6 @@ const resolveType = (type, types) => {
   return defaultType;
 };
 
-const resolveSort = (sort, sortFields) => {
-  if (!Array.isArray(sortFields)) {
-    return null;
-  }
-  const exists = sortFields.some(t => t.value === sort);
-  if (exists) {
-    return sort;
-  }
-  if (sortFields.length) {
-    return sortFields[0].value;
-  }
-  return null;
-};
-
 const resolveFacets = (facets, params) => {
   if (!Array.isArray(facets)) {
     return;
@@ -95,7 +81,6 @@ const initialState = {
   message: "",
   initialParams: {},
   types: [],
-  sort: null,
   page: 1,
   totalPages: 0,
   initialRequestDone: false,
@@ -123,18 +108,11 @@ const setupSearch = (state, action) => {
     if (Array.isArray(t.facets)) {
       instanceType.facets = t.facets.map(f => constructFacet(f));
     }
-    if (Array.isArray(t.sortFields)) {
-      instanceType.sortFields = t.sortFields.map(f => ({
-        ...f,
-        count: 0
-      }));
-    }
     return instanceType;
   }):[];
 
   const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
   const selectedType = resolveType(state.initialParams["category"], instanceTypes);
-  const sort = resolveSort(state.initialParams["sort"], selectedType?.sortFields);
   const page = resolvePage(state.initialParams["p"]);
   const from = (page -1) * state.hitsPerPage;
   resolveFacets(selectedType?.facets, state.initialParams);
@@ -143,7 +121,6 @@ const setupSearch = (state, action) => {
     ...state,
     queryString:  queryString,
     types: instanceTypes,
-    sort: sort,
     selectedType: selectedType,
     page: page,
     from: from
@@ -298,19 +275,6 @@ const setFacetSize = (state, action) => {
   return state;
 };
 
-const setSort = (state, action) => {
-  const list = Array.isArray(state.selectedType?.sortFields)?state.selectedType.sortFields:[];
-  const exists = list.some(f => f.value === action.value);
-  if (exists) {
-    return {
-      ...state,
-      sort: action.value,
-      isUpToDate: false
-    };
-  }
-  return state;
-};
-
 const setPage = (state, action) => {
   return {
     ...state,
@@ -326,7 +290,6 @@ const setType = (state, action) => {
     return {
       ...state,
       selectedType: selectedType,
-      sort: (Array.isArray(selectedType?.sortFields) && selectedType.sortFields.length)?selectedType.sortFields[0].value:null,
       page: 1,
       from: 0,
       isUpToDate: false
@@ -443,8 +406,6 @@ export function reducer(state = initialState, action = {}) {
     return setQueryString(state, action);
   case types.SET_TYPE:
     return setType(state, action);
-  case types.SET_SORT:
-    return setSort(state, action);
   case types.SET_PAGE:
     return setPage(state, action);
   case types.SET_FACET:

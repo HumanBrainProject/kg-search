@@ -87,6 +87,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
 
   useEffect(() => {
     fetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, group]);
 
   if (error) {
