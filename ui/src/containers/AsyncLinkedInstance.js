@@ -50,7 +50,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
       .get(url)
       .then(response => {
         if (response.data && !response.data.error) {
-          setData(response.data._source);
+          setData(response.data.fields);
         } else if (response.data && response.data.error) {
           setError(response.data.message ? response.data.message : response.data.error);
         } else {
@@ -113,7 +113,7 @@ const AsyncLinkedInstanceComponent = ({ id, name, group, type, onSessionFailure 
   }
 
   return (
-    <LinkedInstance data={data} group={group} type={data.type?.value || type} />
+    <LinkedInstance data={data} group={data.group || group} type={data.type || type} />
   );
 };
 
