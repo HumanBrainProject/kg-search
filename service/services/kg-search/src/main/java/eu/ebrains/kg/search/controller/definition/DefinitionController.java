@@ -26,7 +26,6 @@ package eu.ebrains.kg.search.controller.definition;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.RibbonInfo;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
@@ -69,19 +68,6 @@ public class DefinitionController {
         Map<String, Object> result = new LinkedHashMap<>();
         String type = MetaModelUtils.getNameForClass(clazz);
         result.put("name", type);
-        RibbonInfo ribbonInfo = clazz.getAnnotation(RibbonInfo.class);
-        if (ribbonInfo != null) {
-            result.put("ribbon", Map.of(
-                    "framed", Map.of(
-                            "dataField", ribbonInfo.dataField(),
-                            "aggregation", ribbonInfo.aggregation(),
-                            "suffix", Map.of(
-                                "singular", ribbonInfo.singular(),
-                                "plural", ribbonInfo.plural()
-                            )
-                    )
-            ));
-        }
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
         Map<String, Object> fields = new LinkedHashMap<>();
         result.put("fields", fields);

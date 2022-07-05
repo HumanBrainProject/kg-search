@@ -25,15 +25,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { getPreviews } from "../../../helpers/InstanceHelper";
 import { PrintViewField } from "../../../components/Field/Field";
-import { HitRibbon } from "./HitRibbon";
 import { HighlightsField } from "./HighlightsField";
 import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
 import { Title } from "../../../components/Field/Field";
 import "./Hit.css";
 
-export const HitBase = ({ type, hasNoData, hasUnknownData, title, ribbon, fields, preview, highlightsField }) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, preview, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
-    <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
     <div className={`kgs-hit__body ${preview? "has-preview":""}`}>
       <div className="kgs-hit__content">
         <Title key="title" text={title} />
@@ -214,14 +212,11 @@ export const Hit = connect(
       return null;
     };
 
-    const ribbonData = mapping?.ribbon?.framed?.dataField && fields[mapping.ribbon.framed.dataField];
-
     return {
       type: type,
       hasNoData: !fields,
       hasUnknownData: !mapping,
       title: getTitle(data?.title, data?.highlight),
-      ribbon: getField(group, "ribbon", ribbonData, null, mapping && mapping.ribbon),
       fields: getFields(group, fields, data && data.highlight, mapping),
       preview: getPreview(),
       highlightsField: {

@@ -37,7 +37,6 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name="Project", order=1, searchable=true)
-@RibbonInfo(aggregation="count", dataField="datasets", singular="dataset", plural="datasets")
 public class Project implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;

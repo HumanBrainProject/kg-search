@@ -42,7 +42,6 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
-@RibbonInfo(aggregation = "count", dataField = "files", singular = "file", plural = "files")
 public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation{
     @JsonIgnore
     private List<String> allIdentifiers;
