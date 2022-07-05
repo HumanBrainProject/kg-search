@@ -36,7 +36,9 @@ export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, previe
       <div className="kgs-hit__content">
         <Title key="title" text={title} />
         <HighlightsField key="highlights" {...highlightsField}></HighlightsField>
-        {insertSearchHightLights(fields, highlightsField)}
+        {fields.map(({ name, data, mapping, group }) =>
+          <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
+        )}
       </div>
       {!!preview &&
         <div className="kgs-hit__preview">
@@ -52,15 +54,6 @@ export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, previe
     )}
   </div>
 );
-
-const insertSearchHightLights = (fields, highlightsField) => {
-  // Removing the project field in the card if there is a Search hit on the project
-  const hasProjectHit = highlightsField && highlightsField["fields"] && highlightsField["fields"] instanceof Object && !Array.isArray(highlightsField["fields"]) && Object.keys(highlightsField["fields"]).includes("component.value");
-  const fieldsComponents = fields.filter(({ name }) => !hasProjectHit || name !== "component").map(({ name, data, mapping, group }) =>
-    <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
-  );
-  return fieldsComponents;
-};
 
 const markdownEscapedChars = {
   "&#x2F;": "\\",
@@ -123,34 +116,10 @@ const getDescriptionField = (group, data, highlight, mapping) => {
   };
 };
 
-const getComponentField = (group, data, mapping) => {
-  let fieldData = data;
-  let fieldMapping = mapping;
-  if (data && data.value) {
-    fieldData = {
-      ...data, // assuming value children are values
-      value: "From the " + data.value + " project"
-    };
-
-  }
-  // remove title
-  fieldMapping = mapping && { ...mapping };
-  fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
-
-  return {
-    name: "component",
-    data: fieldData,
-    mapping: fieldMapping,
-    group: group
-  };
-};
-
 const getField = (group, name, data, highlight, mapping) => {
   switch (name) {
   case "description":
     return getDescriptionField(group, data, highlight, mapping);
-  case "component":
-    return getComponentField(group, data, mapping);
   default:
     return {
       name: name,
