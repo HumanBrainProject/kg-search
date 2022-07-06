@@ -104,20 +104,6 @@
     }
 }
 
-.kgs-search .kgs-hit {
-    height: 100%;
-    overflow: hidden;
-}
-
-@media (min-width: 992px) {
-    .kgs-search .kgs-hits .kgs-hit {
-        height: auto;
-        height: unset;
-        overflow: auto;
-        overflow: unset;
-    }
-}
-
 @media (min-width: 1600px) {
 
     .kgs-search .kgs-hits .kgs-hit[data-type] .kgs-field__protocol{

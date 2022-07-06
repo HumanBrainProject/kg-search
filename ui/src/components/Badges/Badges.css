@@ -1,0 +1,15 @@
+
+.kgs-badges {}
+
+
+.kgs-badge + .kgs-badge {
+  margin-left: 3px;
+}
+
+.kgs-badge-trending {
+  background: var(--bs-teal);
+}
+
+.kgs-badge-new {
+  background: var(--bs-cyan);
+}

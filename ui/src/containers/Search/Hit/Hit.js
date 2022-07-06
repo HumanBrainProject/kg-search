@@ -23,6 +23,8 @@
 
 import React from "react";
 import { connect } from "react-redux";
+
+import { Badges } from "../../../components/Badges/Badges";
 import { getPreviews } from "../../../helpers/InstanceHelper";
 import { PrintViewField } from "../../../components/Field/Field";
 import { HighlightsField } from "./HighlightsField";
@@ -30,10 +32,11 @@ import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
 import { Title } from "../../../components/Field/Field";
 import "./Hit.css";
 
-export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, preview, highlightsField }) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, preview, badges, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
     <div className={`kgs-hit__body ${preview? "has-preview":""}`}>
-      <div className="kgs-hit__content">
+      <div className={`kgs-hit__content ${badges? "has-badges":""}`}>
+        <Badges badges={badges} />
         <Title key="title" text={title} />
         <HighlightsField key="highlights" {...highlightsField}></HighlightsField>
         {fields.map(({ name, data, mapping, group }) =>
@@ -188,6 +191,7 @@ export const Hit = connect(
       title: getTitle(data?.title, data?.highlight),
       fields: getFields(group, fields, data && data.highlight, mapping),
       preview: getPreview(),
+      badges: (data?.badges && Object.keys(data.badges).length)?data.badges:null,
       highlightsField: {
         fields: filterHighlightFields(data?.highlight, ["title.value", "description.value"]),
         mapping: mapping

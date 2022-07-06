@@ -29,12 +29,14 @@
     font-weight: 500;
     line-height: 1.3em;
     color: var(--color-7);
-    margin-bottom: 12px;
+}
+
+.kgs-field + .kgs-field {
+    margin-top: 12px;
 }
 
 .kgs-hit .kgs-field {
     line-height: 1.3em;
-    margin-bottom: 12px;
 }
 
 .kgs-field .field-label {

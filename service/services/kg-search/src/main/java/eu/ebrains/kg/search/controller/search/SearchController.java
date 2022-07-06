@@ -255,7 +255,10 @@ public class SearchController {
             hit.put("group", getGroup(dataStage));
             hit.put("category", getValueField(source, "category"));
             hit.put("title", getValueField(source, "title"));
-            hit.put("badges", getBadges(source, metaInfo));
+            Map<String, Boolean> badges = getBadges(source, metaInfo);
+            if (!CollectionUtils.isEmpty(badges)) {
+                hit.put("badges", badges);
+            }
             if (h.getHighlight() != null) {
                 hit.put("highlight", h.getHighlight());
             }
