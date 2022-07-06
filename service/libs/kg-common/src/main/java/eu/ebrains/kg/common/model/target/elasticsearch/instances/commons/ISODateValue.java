@@ -34,8 +34,10 @@ public class ISODateValue extends  Value<Date>{
         super(value);
     }
 
+    public final static String ISO_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
     @Override
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_DATE_PATTERN)
     public Date getValue() {
         return super.getValue();
     }

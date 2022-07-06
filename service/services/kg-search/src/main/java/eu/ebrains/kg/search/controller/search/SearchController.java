@@ -30,6 +30,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
@@ -51,6 +52,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -171,10 +174,12 @@ public class SearchController {
         if (esHighlight != null) {
             payload.put("highlight", esHighlight);
         }
-        List<Object> esSort = getEsSort(type, StringUtils.isNotBlank(q));
-        if (esSort != null) {
-            payload.put("sort", esSort);
+        Type targetClass = utils.getTypeTargetClass(type);
+        MetaInfo metaInfo = null;
+        if (targetClass != null) {
+            metaInfo = ((Class<?>) targetClass).getAnnotation(MetaInfo.class);
         }
+        payload.put("sort", getEsSort(metaInfo, StringUtils.isNotBlank(q)));
         List<Facet> facets = facetsController.getFacets(type);
         Map<String, Object> activeFilters = FiltersUtils.getActiveFilters(facets, type, facetValues);
         Object esPostFilter = FiltersUtils.getFilter(activeFilters, null);
@@ -190,7 +195,7 @@ public class SearchController {
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        response.put("hits", getHits(result, type, dataStage));
+        response.put("hits", getHits(result, type, dataStage, metaInfo));
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
         response.put("types", getTypesAggregation(result.getAggregations()));
         response.put("suggestions", getSuggestions(sanitizedQuery, dataStage, type));
@@ -199,7 +204,7 @@ public class SearchController {
     }
 
     private String getGroup(DataStage dataStage) {
-        return dataStage == DataStage.IN_PROGRESS?"curated":"public";
+        return dataStage == DataStage.IN_PROGRESS ? "curated" : "public";
     }
 
     private String getStringField(Map<String, Object> source, String fieldName) {
@@ -207,7 +212,8 @@ public class SearchController {
             try {
                 String value = (String) source.get(fieldName);
                 return value;
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return null;
     }
@@ -219,7 +225,8 @@ public class SearchController {
                 if (field.containsKey("value")) {
                     return field.get("value");
                 }
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return null;
     }
@@ -229,12 +236,13 @@ public class SearchController {
             try {
                 List<Object> list = (List<Object>) source.get(fieldName);
                 return list;
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return Collections.emptyList();
     }
 
-    private List<Map<String, Object>> getHits(ElasticSearchFacetsResult result, String type, DataStage dataStage) {
+    private List<Map<String, Object>> getHits(ElasticSearchFacetsResult result, String type, DataStage dataStage, MetaInfo metaInfo) {
         if (result.getHits() == null || result.getHits().getHits() == null) {
             return Collections.emptyList();
         }
@@ -247,12 +255,42 @@ public class SearchController {
             hit.put("group", getGroup(dataStage));
             hit.put("category", getValueField(source, "category"));
             hit.put("title", getValueField(source, "title"));
+            hit.put("badges", getBadges(source, metaInfo));
             if (h.getHighlight() != null) {
                 hit.put("highlight", h.getHighlight());
             }
             hit.put("fields", getFields(source, fieldNames));
             return hit;
         }).collect(Collectors.toList());
+    }
+
+    private Map<String, Boolean> getBadges(Map<String, Object> source, MetaInfo metaInfo) {
+        if(metaInfo == null || !metaInfo.badges()) {
+            return Collections.emptyMap();
+        }
+        Map<String, Boolean> badges = new HashMap<>();
+        String firstRelease = getValueField(source, "first_release");
+        if (isNew(firstRelease)) {
+            badges.put("isNew", true);
+        }
+        return badges;
+    }
+
+
+    private boolean isNew(String firstRelease) {
+        if (StringUtils.isBlank(firstRelease)) {
+            return false;
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(ISODateValue.ISO_DATE_PATTERN);
+            Date firstDate = sdf.parse(firstRelease);
+            Calendar cal = new GregorianCalendar();
+            cal.add(Calendar.DAY_OF_MONTH, -11);
+            Date sevenDaysAgo = cal.getTime();
+            return firstDate.after(sevenDaysAgo);
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     public Map<String, Object> getSearchDocument(DataStage dataStage, String id) throws WebClientResponseException {
@@ -337,7 +375,7 @@ public class SearchController {
         Map<String, Object> fields = new HashMap<>();
         fieldNames.forEach(name -> {
             if (source.containsKey(name) && source.get(name) != null) {
-                fields.put(name,  source.get(name));
+                fields.put(name, source.get(name));
             }
         });
         return fields;
@@ -660,16 +698,10 @@ public class SearchController {
         return highlight;
     }
 
-    private List<Object> getEsSort(String type, boolean forceSortByRelevance) {
+    private List<Object> getEsSort(MetaInfo metaInfo, boolean forceSortByRelevance) {
         boolean sortByRelevance = true;
-        if (!forceSortByRelevance) {
-            Type targetClass = utils.getTypeTargetClass(type);
-            if (targetClass != null) {
-                MetaInfo metaInfo = ((Class<?>) targetClass).getAnnotation(MetaInfo.class);
-                if (metaInfo != null && !metaInfo.sortByRelevance()) {
-                    sortByRelevance = false;
-                }
-            }
+        if (!forceSortByRelevance && metaInfo != null && !metaInfo.sortByRelevance()) {
+            sortByRelevance = false;
         }
 
         List<Object> fields = new ArrayList<>();

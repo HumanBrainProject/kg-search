@@ -39,8 +39,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name="Contributor", order=8, searchable=true, sortByRelevance=false)
-
+@MetaInfo(name="Contributor", order=8, searchable=true, sortByRelevance=false, badges = false)
 public class Contributor implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;
