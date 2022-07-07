@@ -401,10 +401,11 @@
           "We have developed an immunohistochemistry-<em>correlated</em> electron microscopy (EM) method - the &quot;mirror&quot; technique"
         ]
       },
-      "id": "95f44822-6247-4d7a-a232-23a5247dd91d",
+      "id": "b06569ef-3dc2-464a-b5d9-42d6abdd9123",
       "type": "Dataset",
       "category": "Dataset",
-      "title": "Input architecture of cortical parvalbumin interneurons: dendritic synaptome (v1)",
+      "title": "Atlas of muscarinic M2 receptor distributions in the rat brain (v1)",
+      "previewImage": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00007_Atlas-M2-receptor-rat_pub/b842b365-528d-5e6f-8df4-6820d521a486.png",
       "fields": {
         "keywords": [
           { "value": "dendritic synaptome" },

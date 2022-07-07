@@ -33,6 +33,7 @@ const endpoints = {
   "groups": () => "/api/groups",
   //"search": () => "/static/data/search.json",
   "search": (group, q, type, from, size) => `/api/groups/${group}/search?${q?("q=" + encodeURIComponent(q) + "&"):""}type=${encodeURIComponent(type)}&from=${from}&size=${size}`,
+  //"instance": () => "/static/data/instance.json",
   "instance": (group, id) => `/api/groups/${group}/documents/${id}`,
   "preview": id => `/api/${id}/live?skipReferenceCheck=true`,
   "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,

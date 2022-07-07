@@ -1,0 +1,179 @@
+{
+  "previews": [
+    {
+      "previewUrl": {
+        "isAnimated": true,
+        "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00007_Atlas-M2-receptor-rat_pub/b842b365-528d-5e6f-8df4-6820d521a486.mp4"
+      },
+      "staticImageUrl": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00007_Atlas-M2-receptor-rat_pub/b842b365-528d-5e6f-8df4-6820d521a486.png",
+      "label": "hbp-00044_R8_m2_receptor.nii"
+    }
+  ],
+  "id": "b06569ef-3dc2-464a-b5d9-42d6abdd9123",
+  "type": "Dataset",
+  "category": "Dataset",
+  "title": "Atlas of muscarinic M2 receptor distributions in the rat brain (v1)",
+  "fields": {
+    "keywords": [{ "value": "3H-Oxotremorine" }, { "value": "horizontal" }],
+    "citation": { "value": "10.25493/QFN4-BPS" },
+    "ethicsAssessment": { "value": "EU-compliant" },
+    "custodians": [
+      {
+        "reference": "8a047744-5b04-4c2c-abb3-cc2dfbdc12ea",
+        "value": "Zilles, K."
+      },
+      {
+        "reference": "d77176e3-faa9-4c93-8dc0-7f3663c6d2ee",
+        "value": "Palomero-Gallagher, N."
+      }
+    ],
+    "subjectGroupOrSingleSubject": [
+      {
+        "children": {
+          "children": null,
+          "collapsible": false,
+          "label": { "reference": null, "value": "Subject 8" },
+          "numberOfSubjects": null,
+          "species": [{ "reference": null, "value": "Rattus norvegicus" }],
+          "sex": [{ "reference": null, "value": "male" }],
+          "strain": [{ "reference": null, "value": "Wistar" }],
+          "geneticStrainType": [{ "reference": null, "value": "wildtype" }],
+          "age": [{ "value": "3 month" }],
+          "ageCategory": [
+            [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ]
+          ],
+          "attributes": null,
+          "weight": null,
+          "additionalRemarks": null
+        }
+      }
+    ],
+    "description": {
+      "value": "Transmitter receptors are key molecules of signal transmission. They are heterogeneously distributed throughout the brain. Therefore, it is necessary to analyze their spatial organization and the relationship between regional and laminar receptor densities with defined anatomical structures in order to understand the anatomical and molecular organization of the brain. Quantitative in vitro receptor autoradiography is a well-established technique to demonstrate receptor binding sites at a high spatial resolution. To compensate non-linear distortions, autoradiographs visualizing the regional and laminar distribution patterns of muscarinic cholinergic M2 receptors throughout the rat brain were 3D-reconstructed and the ensuing volume was aligned with an undistorted reference volume, the common rat reference template: the Waxholm Space atlas (Papp et al, 2014). Alignment of data to the Waxholm space was done in collaboration with SP5 (Jan Bjaalie)."
+    },
+    "technique": [
+      { "reference": null, "value": "spatial registration" },
+      { "reference": null, "value": "autoradiography" },
+      { "reference": null, "value": "cryosectioning" }
+    ],
+    "studiedBrainRegion": [
+      { "reference": null, "value": "brain (Waxholm Space rat brain atlas)" }
+    ],
+    "preparation": [{ "reference": null, "value": "in vitro" }],
+    "license_info": {
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+      "value": "Creative Commons Attribution-ShareAlike 4.0 International"
+    },
+    "specimenBySubject": {
+      "key": "root",
+      "parentRelationType": null,
+      "title": "Specimen",
+      "color": "#e3dcdc",
+      "data": {
+        "type": { "value": "Dataset.SpecimenOverview" },
+        "title": null,
+        "numberOfSubjectGroups": null,
+        "subjectGroupIds": [],
+        "numberOfSubjects": { "value": "1" },
+        "subjectIds": [
+          "https://kg.ebrains.eu/api/instances/2e865ea4-57ae-49f5-b699-027fc343535e"
+        ],
+        "numberOfTissueSampleCollections": null,
+        "tissueSampleCollectionIds": [],
+        "numberOfTissueSamples": null,
+        "tissueSampleIds": [],
+        "species": [{ "reference": null, "value": "Rattus norvegicus" }],
+        "sex": [{ "reference": null, "value": "male" }],
+        "strains": [{ "reference": null, "value": "Wistar" }],
+        "ageCategories": [{ "reference": null, "value": "adult" }],
+        "geneticStrainTypes": [{ "reference": null, "value": "wildtype" }],
+        "collector": {
+          "geneticStrainTypes": {
+            "eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference@e4c57a0d": {
+              "subjects": 1
+            }
+          },
+          "species": {
+            "eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference@3cd8c0e7": {
+              "subjects": 1
+            }
+          },
+          "sex": {
+            "eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference@bc7d020": {
+              "subjects": 1
+            }
+          },
+          "ageCategory": {
+            "eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference@45ef30ff": {
+              "subjects": 1
+            }
+          },
+          "strains": {
+            "eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference@989712cd": {
+              "subjects": 1
+            }
+          }
+        }
+      },
+      "legend": { "#ffbe00": "Subject" },
+      "children": [
+        {
+          "key": "b454dcfc-6ed2-4414-abca-3eeaab822587",
+          "parentRelationType": null,
+          "title": "Subject 8",
+          "color": "#ffbe00",
+          "data": {
+            "id": "https://kg.ebrains.eu/api/instances/2e865ea4-57ae-49f5-b699-027fc343535e",
+            "type": { "value": "Dataset.Subject" },
+            "title": { "value": "8" },
+            "species": [{ "reference": null, "value": "Rattus norvegicus" }],
+            "sex": [{ "reference": null, "value": "male" }],
+            "strain": [{ "reference": null, "value": "Wistar" }],
+            "geneticStrainType": [{ "reference": null, "value": "wildtype" }],
+            "ageCategory": [{ "reference": null, "value": "adult" }],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": { "value": "3 month" },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null
+          }
+        }
+      ]
+    },
+    "experimentalApproach": [
+      { "reference": null, "value": "anatomy" },
+      { "reference": null, "value": "expression characterization" },
+      { "reference": null, "value": "histology" }
+    ],
+    "contributors": [
+      {
+        "reference": "8a047744-5b04-4c2c-abb3-cc2dfbdc12ea",
+        "value": "Zilles, K."
+      },
+      {
+        "reference": "d77176e3-faa9-4c93-8dc0-7f3663c6d2ee",
+        "value": "Palomero-Gallagher, N."
+      },
+      {
+        "reference": "3b3ad0ec-11be-44b4-bf32-13838cfa7776",
+        "value": "Schubert, N."
+      }
+    ],
+    "filesAsyncUrl": "/api/groups/public/repositories/42fdb9bb-6d62-46a0-882a-065df7a9f6da/files",
+    "doi": { "value": "10.25493/QFN4-BPS" },
+    "publications": [
+      {
+        "value": "Schubert, N., Axer, M., Schober, M., Huynh, A.-M., Huysegoms, M., Palomero-Gallagher, N., Bjaalie, J. G., Leergaard, T. B., Kirlangic, M. E., Amunts, K., & Zilles, K. (2016). 3D Reconstructed Cyto-, Muscarinic M2 Receptor, and Fiber Architecture of the Rat Brain Registered to the Waxholm Space Atlas. Frontiers in Neuroanatomy, 10. https://doi.org/10.3389/fnana.2016.00051\n[DOI: 10.3389/fnana.2016.00051]\n[DOI: 10.3389/fnana.2016.00051]: https://doi.org/10.3389/fnana.2016.00051"
+      }
+    ]
+  },
+  "disclaimer": "Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.",
+  "group": "public"
+}

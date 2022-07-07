@@ -269,11 +269,11 @@ public class SearchController  {
         }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(ISODateValue.ISO_DATE_PATTERN);
-            Date firstDate = sdf.parse(firstRelease);
+            Date firstReleaseDate = sdf.parse(firstRelease);
             Calendar cal = new GregorianCalendar();
-            cal.add(Calendar.DAY_OF_MONTH, -11);
-            Date sevenDaysAgo = cal.getTime();
-            return firstDate.after(sevenDaysAgo);
+            cal.add(Calendar.DAY_OF_MONTH, -32);
+            Date oneMonthAgo = cal.getTime();
+            return firstReleaseDate.after(oneMonthAgo);
         } catch (ParseException e) {
             return false;
         }
@@ -316,7 +316,7 @@ public class SearchController  {
 
         List<Map<String, Object>> previews = getPreviews(source);
         if (!CollectionUtils.isEmpty(previews)) {
-            res.put("previews", source.get("previews"));
+            res.put("previews", previews);
         }
 
         List<String> fieldNames = getDocumentFieldNames(type);
