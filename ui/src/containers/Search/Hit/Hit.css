@@ -33,19 +33,19 @@
     width: 100%;
 }
 
-.kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
+.kgs-hit .kgs-hit__body.has-previewImage .kgs-hit__preview {
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
 @media (min-width: 992px) {
-    .kgs-hit .kgs-hit__body.has-preview {
+    .kgs-hit .kgs-hit__body.has-previewImage {
         display: grid;
         grid-template-columns: 1fr auto;
         grid-column-gap: 10px;
     }
 
-    .kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
+    .kgs-hit .kgs-hit__body.has-previewImage .kgs-hit__preview {
         margin-right: 20px;
     }
 }
@@ -72,7 +72,7 @@
     padding: 12px 20px 10px 20px;
 }
 
-.kgs-hit__body.has-preview .kgs-hit__content {
+.kgs-hit__body.has-previewImage .kgs-hit__content {
     padding-right: 0;
 }
 

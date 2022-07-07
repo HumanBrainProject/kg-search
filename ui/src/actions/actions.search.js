@@ -131,7 +131,7 @@ export const search = () => {
     ReactPiwik.push(["trackPageView"]);
     API.axios
       .post(API.endpoints.search(state.groups.group, queryString, selectedType?.type, from, hitsPerPage), payload)
-      //.get(API.endpoints.search(state.groups.group), payload)
+      //.get(API.endpoints.search(state.groups.group, queryString, selectedType?.type, from, hitsPerPage), payload)
       .then(response => {
         response.data && response.data.hits && Array.isArray(response.data.hits.hits) && response.data.hits.hits.forEach(hit => hit.group = state.groups.group);
         dispatch(loadSearchResult(response.data));

@@ -69,7 +69,7 @@ const normalizeCells = (fields, data, type, group, level, collectionIndex, isCol
     .map(([name, field]) => ({
       name: name,
       data: data && data[name],
-      mapping: {...field, labelHidden:true},
+      mapping: {...field, hideLabel:true},
       type: type,
       group: group,
       level: level,

@@ -89,7 +89,7 @@ const getHeaderFields = (group, type, data, mapping) => {
     );
 };
 
-const getFieldsByTabs = (group, type, data, typeMapping) => {
+const getFieldsByTabs = (group, type, data, typeMapping, previews) => {
   if (!data || !typeMapping) {
     return [];
   }
@@ -101,16 +101,7 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
         mapping &&
         data?.[name] &&
         mapping.layout !== "header" &&
-        ![
-          "id",
-          "identifier",
-          "category",
-          "title",
-          "first_release",
-          "last_release",
-          "previewObjects",
-          "disclaimer"
-        ].includes(name)
+        name !== "title" // title is displayed in the header
     )
     .reduce((acc, [name, mapping]) => {
       const groupName =
@@ -131,7 +122,6 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
     }, {});
 
   if (overviewFields.length) {
-    const previews = getPreviews(data);
     return [
       {
         name: "Overview",
@@ -142,30 +132,6 @@ const getFieldsByTabs = (group, type, data, typeMapping) => {
     ];
   }
   return Object.values(tabs);
-};
-
-export const getPreviews = data => {
-  if (Array.isArray(data.previewObjects)) {
-    return data.previewObjects.map(item => {
-      return {
-        staticImageUrl: item.imageUrl,
-        previewUrl: {
-          url: item.videoUrl ?? item.imageUrl,
-          isAnimated: !!item.videoUrl
-        },
-        label: item?.description,
-        link: item?.link
-      };
-    });
-  }
-  if (Array.isArray(data.filesOld)) {
-    return data.filesOld.map(item => ({
-      staticImageUrl: item?.staticImageUrl?.url,
-      previewUrl: item.previewUrl,
-      label: item?.value
-    }));
-  }
-  return [];
 };
 
 const getGroupLabel = (groups, name) => {
@@ -221,7 +187,7 @@ export const mapStateToProps = (state, props) => {
     latestVersion: latestVersion,
     isOutdated: latestVersion && latestVersion.label !== version,
     allVersions: allVersions,
-    tabs: getFieldsByTabs(group, type, fields, mapping),
+    tabs: getFieldsByTabs(group, type, fields, mapping, data?.previews),
     disclaimer: data?.disclaimer
   };
 };

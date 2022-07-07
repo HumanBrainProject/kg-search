@@ -110,24 +110,42 @@ public class DefinitionController {
             if (StringUtils.isNotBlank(info.icon())) {
                 propertyDefinition.put("icon", info.icon());
             }
-            propertyDefinition.put("isAsync", info.isAsync());
-            propertyDefinition.put("isCitation", info.isCitation());
-            propertyDefinition.put("isFilePreview", info.isFilePreview());
-            propertyDefinition.put("isGroupedLinks", info.isGroupedLinks());
-            propertyDefinition.put("isHierarchical", info.isHierarchical());
-            propertyDefinition.put("isHierarchicalFiles", info.isHierarchicalFiles());
-            propertyDefinition.put("isTable", info.isTable());
+            if (info.isAsync()) {
+                propertyDefinition.put("isAsync", true);
+            }
+            if (info.isCitation()) {
+                propertyDefinition.put("isCitation", true);
+            }
+            if (info.isFilePreview()) {
+                propertyDefinition.put("isFilePreview", true);
+            }
+            if (info.isGroupedLinks()) {
+                propertyDefinition.put("isGroupedLinks", true);
+            }
+            if (info.isHierarchical()) {
+                propertyDefinition.put("isHierarchical", true);
+            }
+            if (info.isHierarchicalFiles()) {
+                propertyDefinition.put("isHierarchicalFiles", true);
+            }
+            if (info.isTable()) {
+                propertyDefinition.put("isTable", true);
+            }
             if (StringUtils.isNotBlank(info.label())) {
                 propertyDefinition.put("label", info.label());
             }
-            propertyDefinition.put("labelHidden", info.labelHidden());
+            if (info.labelHidden()) {
+                propertyDefinition.put("hideLabel", true);
+            }
             if (StringUtils.isNotBlank(info.layout())) {
                 propertyDefinition.put("layout", info.layout());
             }
             if (StringUtils.isNotBlank(info.linkIcon())) {
                 propertyDefinition.put("linkIcon", info.linkIcon());
             }
-            propertyDefinition.put("markdown", info.markdown());
+            if (info.markdown()) {
+                propertyDefinition.put("isMarkdown", true);
+            }
             if (info.order() != 0) {
                 propertyDefinition.put("order", info.order());
             }
@@ -140,7 +158,9 @@ public class DefinitionController {
             if (StringUtils.isNotBlank(info.tagIcon())) {
                 propertyDefinition.put("tagIcon", info.tagIcon());
             }
-            propertyDefinition.put("termsOfUse", info.termsOfUse());
+            if (info.termsOfUse()) {
+                propertyDefinition.put("showTermsOfUse", true);
+            }
             if (info.type() != FieldInfo.Type.UNDEFINED) {
                 propertyDefinition.put("type", info.type().name().toLowerCase());
             }
@@ -211,10 +231,10 @@ public class DefinitionController {
             if (StringUtils.isNotBlank(f.getType().name())) {
                 facet.put("type", f.getType().name().toLowerCase());
             }
-            if (f.getIsFilterable() != null) {
+            if (f.getIsFilterable() != null && f.getIsFilterable()) {
                 facet.put("isFilterable", f.getIsFilterable());
             }
-            if (f.getIsHierarchical() != null) {
+            if (f.getIsHierarchical() != null && f.getIsHierarchical()) {
                 facet.put("isHierarchical", f.getIsHierarchical());
             }
         });

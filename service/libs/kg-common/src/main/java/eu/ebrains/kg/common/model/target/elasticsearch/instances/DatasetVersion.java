@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
-public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation{
+public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews {
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -146,7 +146,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "New in this version", markdown = true, boost = 2, useForSuggestion = true)
     private Value<String> newInThisVersion;
 
-    @FieldInfo(labelHidden = true, boost = 2)
+    @FieldInfo(labelHidden = true, boost = 2, visible = false)
     private List<PreviewObject> previewObjects;
 
     @FieldInfo(label = "View data", isGroupedLinks=true)
@@ -325,21 +325,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Samples")
         private List<TargetInternalReference> samples;
 
-    }
-
-
-    @Getter
-    @Setter
-    public static class PreviewObject implements Comparable<PreviewObject>{
-        private String imageUrl;
-        private String videoUrl;
-        private String description;
-        private TargetExternalReference link;
-
-        @Override
-        public int compareTo(PreviewObject previewObject) {
-            return Comparator.comparing(PreviewObject::getDescription).compare(this, previewObject);
-        }
     }
 
     @Getter

@@ -29,8 +29,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasPreviews;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
@@ -38,10 +40,7 @@ import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
-import eu.ebrains.kg.search.utils.AggsUtils;
-import eu.ebrains.kg.search.utils.FacetsUtils;
-import eu.ebrains.kg.search.utils.FiltersUtils;
-import eu.ebrains.kg.search.utils.QueryStringUtils;
+import eu.ebrains.kg.search.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +60,7 @@ import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
-public class SearchController {
+public class SearchController  {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ESServiceClient esServiceClient;
@@ -207,40 +206,6 @@ public class SearchController {
         return dataStage == DataStage.IN_PROGRESS ? "curated" : "public";
     }
 
-    private String getStringField(Map<String, Object> source, String fieldName) {
-        if (source.containsKey(fieldName)) {
-            try {
-                String value = (String) source.get(fieldName);
-                return value;
-            } catch (ClassCastException ignored) {
-            }
-        }
-        return null;
-    }
-
-    private String getValueField(Map<String, Object> source, String fieldName) {
-        if (source.containsKey(fieldName)) {
-            try {
-                Map<String, String> field = (Map<String, String>) source.get(fieldName);
-                if (field.containsKey("value")) {
-                    return field.get("value");
-                }
-            } catch (ClassCastException ignored) {
-            }
-        }
-        return null;
-    }
-
-    private List<Object> getListField(Map<String, Object> source, String fieldName) {
-        if (source.containsKey(fieldName)) {
-            try {
-                List<Object> list = (List<Object>) source.get(fieldName);
-                return list;
-            } catch (ClassCastException ignored) {
-            }
-        }
-        return Collections.emptyList();
-    }
 
     private List<Map<String, Object>> getHits(ElasticSearchFacetsResult result, String type, DataStage dataStage, MetaInfo metaInfo) {
         if (result.getHits() == null || result.getHits().getHits() == null) {
@@ -253,8 +218,8 @@ public class SearchController {
             hit.put("id", source.get("id"));
             hit.put("type", type); // getValueField(source, "type")
             hit.put("group", getGroup(dataStage));
-            hit.put("category", getValueField(source, "category"));
-            hit.put("title", getValueField(source, "title"));
+            hit.put("category", CastingUtils.getValueField(source, "category"));
+            hit.put("title", CastingUtils.getValueField(source, "title"));
             Map<String, Boolean> badges = getBadges(source, metaInfo);
             if (!CollectionUtils.isEmpty(badges)) {
                 hit.put("badges", badges);
@@ -262,9 +227,27 @@ public class SearchController {
             if (h.getHighlight() != null) {
                 hit.put("highlight", h.getHighlight());
             }
+            String previewImage = getPreviewImage(source);
+            if (StringUtils.isNotBlank(previewImage)) {
+                hit.put("previewImage", previewImage);
+            }
+
             hit.put("fields", getFields(source, fieldNames));
             return hit;
         }).collect(Collectors.toList());
+    }
+
+    private String getPreviewImage(Map<String, Object> source) {
+        List<Map<String, Object>> previews = getPreviews(source);
+        if (!CollectionUtils.isEmpty(previews)) {
+            Optional<Map<String, Object>> preview = previews.stream()
+                    .filter(o -> o.containsKey("staticImageUrl"))
+                    .findFirst();
+            if (preview.isPresent()) {
+                return CastingUtils.getStringField(preview.get(), "staticImageUrl");
+            }
+        }
+        return null;
     }
 
     private Map<String, Boolean> getBadges(Map<String, Object> source, MetaInfo metaInfo) {
@@ -272,7 +255,7 @@ public class SearchController {
             return Collections.emptyMap();
         }
         Map<String, Boolean> badges = new HashMap<>();
-        String firstRelease = getValueField(source, "first_release");
+        String firstRelease = CastingUtils.getValueField(source, "first_release");
         if (isNew(firstRelease)) {
             badges.put("isNew", true);
         }
@@ -304,25 +287,25 @@ public class SearchController {
         }
 
         Map<String, Object> source = doc.getSource();
-        String type = getValueField(source, "type");
+        String type = CastingUtils.getValueField(source, "type");
         Map<String, Object> res = new HashMap<>();
         res.put("id", source.get("id"));
         res.put("type", type);
         res.put("group", getGroup(dataStage));
-        res.put("category", getValueField(source, "category"));
-        res.put("title", getValueField(source, "title"));
+        res.put("category", CastingUtils.getValueField(source, "category"));
+        res.put("title", CastingUtils.getValueField(source, "title"));
 
-        String disclaimer = getValueField(source, "disclaimer");
+        String disclaimer = CastingUtils.getValueField(source, "disclaimer");
         if (StringUtils.isNotBlank(disclaimer)) {
             res.put("disclaimer", disclaimer);
         }
 
-        String version = getStringField(source, "version");
+        String version = CastingUtils.getStringField(source, "version");
         if (StringUtils.isNotBlank(version)) {
             res.put("version", version);
         }
 
-        List<Object> versions = getListField(source, "versions");
+        List<Object> versions = CastingUtils.getListField(source, "versions");
         if (!CollectionUtils.isEmpty(versions)) {
             res.put("versions", versions);
         }
@@ -331,9 +314,67 @@ public class SearchController {
             res.put("allVersionRef", source.get("allVersionRef"));
         }
 
+        List<Map<String, Object>> previews = getPreviews(source);
+        if (!CollectionUtils.isEmpty(previews)) {
+            res.put("previews", source.get("previews"));
+        }
+
         List<String> fieldNames = getDocumentFieldNames(type);
         res.put("fields", getFields(source, fieldNames));
         return res;
+    }
+
+    private List<Map<String, Object>> getPreviews(Map<String, Object> source) {
+        List<Map<String, Object>> previews = new ArrayList<>();
+        if (source.containsKey("previewObjects")) {
+            try {
+                List<Map<String, Object>> previewObjects = (List<Map<String, Object>>) source.get("previewObjects");
+                if (!CollectionUtils.isEmpty(previewObjects)) {
+                    previewObjects.forEach(o -> {
+                        Map<String, Object> preview = getPreviewFromPreviewObject(o);
+                        if (!CollectionUtils.isEmpty(preview)) {
+                            previews.add(preview);
+                        }
+                    });
+                }
+
+            } catch (ClassCastException ignored) {
+            }
+        }
+        if (source.containsKey("filesOld")) {
+            try {
+                List<Map<String, Object>> oldFiles = (List<Map<String, Object>>) source.get("filesOld");
+                if (!CollectionUtils.isEmpty(oldFiles)) {
+                    oldFiles.forEach(o -> {
+                        Map<String, Object> preview = getPreviewFromOldFile(o);
+                        if (!CollectionUtils.isEmpty(preview)) {
+                            previews.add(preview);
+                        }
+                    });
+                }
+
+            } catch (ClassCastException ignored) {
+            }
+        }
+        return previews;
+    }
+
+    private Map<String, Object> getPreviewFromPreviewObject(Map<String, Object> previewObject) {
+        String description = CastingUtils.getStringField(previewObject, "description");
+        String imageUrl = CastingUtils.getStringField(previewObject, "imageUrl");
+        String videoUrl = CastingUtils.getStringField(previewObject, "videoUrl");
+        Object link = previewObject.get("link");
+        return getPreview(description, link, imageUrl, videoUrl, true);
+    }
+
+    @Deprecated(forRemoval = true)
+    private  Map<String, Object> getPreviewFromOldFile(Map<String, Object> oldFile) {
+        Map<String, Object> preview = new HashMap<>();
+        String value = CastingUtils.getStringField(oldFile, "value");
+        String staticImageUrl = CastingUtils.getObjectFieldStringProperty(oldFile, "staticImageUrl", "url");
+        String previewUrl = CastingUtils.getObjectFieldStringProperty(oldFile, "previewUrl", "url");
+        boolean isAnimated = CastingUtils.getObjectFieldBooleanProperty(oldFile, "previewUrl", "isAnimated");
+        return getPreview(value, null, staticImageUrl, previewUrl, StringUtils.isNotBlank(previewUrl) && isAnimated);
     }
 
     public Map<String, Object> getLiveDocument(TargetInstance v) {
@@ -370,8 +411,57 @@ public class SearchController {
             }
         }
 
+        if (v instanceof HasPreviews) {
+            HasPreviews hasPreviews = (HasPreviews) v;
+            List<Map<String, Object>> previews = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(hasPreviews.getPreviewObjects())) {
+                hasPreviews.getPreviewObjects().forEach(o -> {
+                    previews.add(getPreview(o.getDescription(), o.getLink(), o.getImageUrl(), o.getVideoUrl(), true));
+                });
+            };
+            if (!CollectionUtils.isEmpty(hasPreviews.getFilesOld())) {
+                hasPreviews.getFilesOld().forEach(o -> {
+                    previews.add(getPreview(o.getValue(), o.getStaticImageUrl(), o.getPreviewUrl()));
+                });
+            }
+            if (!CollectionUtils.isEmpty(previews)) {
+                res.put("previews", previews);
+            }
+        }
+
         res.put("fields", v);
         return res;
+    }
+
+    private Map<String, Object> getPreview(String label, TargetFile.FileImage staticImageUrl, TargetFile.FileImage previewUrl) {
+        String imageUrl = staticImageUrl != null?staticImageUrl.getUrl():null;
+        String videoUrl = previewUrl != null?previewUrl.getUrl():null;
+        return getPreview(
+                label,
+                null,
+                imageUrl,
+                videoUrl,
+                previewUrl != null && previewUrl.getIsAnimated()
+        );
+    }
+
+    private Map<String, Object> getPreview(String label, Object link, String imageUrl, String videoUrl, boolean isVideoAnimated) {
+        Map<String, Object> preview = new HashMap<>();
+        preview.put("label", label);
+        if (link != null) {
+            preview.put("link", link);
+        }
+        if (StringUtils.isNotBlank(imageUrl)) {
+            preview.put("staticImageUrl", imageUrl);
+        }
+        if (StringUtils.isNotBlank(videoUrl) || StringUtils.isNotBlank(imageUrl)) {
+            boolean isAnimated = isVideoAnimated && StringUtils.isNotBlank(videoUrl);
+            preview.put("previewUrl", Map.of(
+                    "url", isAnimated?videoUrl:imageUrl,
+                    "isAnimated", isAnimated
+            ));
+        }
+        return preview;
     }
 
     private Map<String, Object> getFields(Map<String, Object> source, List<String> fieldNames) {

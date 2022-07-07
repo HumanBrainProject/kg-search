@@ -262,7 +262,7 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
     layout: ["header", "summary"].includes(mapping.layout)?mapping.layout:null,
     style: (mapping.order && !renderUserInteractions) ? { order: mapping.order } : null,
     className: className,
-    label: (label && (!mapping.labelHidden || !renderUserInteractions))?label:null,
+    label: (label && (!mapping.hideLabel || !renderUserInteractions))?label:null,
     inlineLabel: !mapping.tagIcon,
     labelCounter: labelCounter,
     hint: (renderUserInteractions && mapping.hint)?mapping.hint:null,

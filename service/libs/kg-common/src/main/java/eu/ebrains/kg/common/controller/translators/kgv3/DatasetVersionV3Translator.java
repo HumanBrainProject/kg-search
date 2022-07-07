@@ -30,24 +30,20 @@ import eu.ebrains.kg.common.controller.translators.kgv3.helpers.SpecimenV3Transl
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 //Test ids
@@ -374,8 +370,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         final Map<String, File> previewImagesByFileNameWithoutExtension = previewImages.stream().collect(Collectors.toMap(this::stripFileExtension, v -> v));
 
 
-        List<DatasetVersion.PreviewObject> previews = previewFiles.stream().filter(f -> videoExtensions.stream().anyMatch(e -> f.getIri().toLowerCase().endsWith(e))).map(f -> {
-            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
+        List<PreviewObject> previews = previewFiles.stream().filter(f -> videoExtensions.stream().anyMatch(e -> f.getIri().toLowerCase().endsWith(e))).map(f -> {
+            PreviewObject o = new PreviewObject();
             o.setVideoUrl(f.getIri());
             final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(f));
             if (staticPreviewImage != null) {
@@ -395,7 +391,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 if (l.getFile() != null) {
                     final File staticPreviewImage = previewImagesByFileNameWithoutExtension.get(stripFileExtension(l.getFile()));
                     if (staticPreviewImage != null) {
-                        DatasetVersion.PreviewObject previewObject = new DatasetVersion.PreviewObject();
+                        PreviewObject previewObject = new PreviewObject();
                         if (l.getUrl() != null) {
                             previewObject.setLink(new TargetExternalReference(l.getUrl(), l.displayLabel()));
                         }
@@ -423,7 +419,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         previews.addAll(previewImages.stream().map(i -> {
-            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
+            PreviewObject o = new PreviewObject();
             o.setImageUrl(i.getIri());
             if (StringUtils.isNotBlank(i.getContentDescription())) {
                 o.setDescription(i.getContentDescription());

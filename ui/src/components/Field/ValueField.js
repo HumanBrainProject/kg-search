@@ -54,7 +54,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const hasAnyLink = hasInstanceLink || hasMailToLink || hasLink;
     const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
     const isTag = !hasAnyLink && !!mapping.tagIcon;
-    const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isTag && !!mapping.markdown;
+    const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isTag && !!mapping.isMarkdown;
     const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
     const count = data.count;
 
@@ -114,7 +114,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
         {isAFileLink && data.fileSize ?
           <span className="field-filesize">({data.fileSize})</span>
           : null}
-        {!!mapping.termsOfUse && (
+        {!!mapping.showTermsOfUse && (
           <Details toggleLabel="Terms of use" content={termsOfUse} />
         )}
       </div>

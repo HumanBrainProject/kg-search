@@ -25,16 +25,15 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { Badges } from "../../../components/Badges/Badges";
-import { getPreviews } from "../../../helpers/InstanceHelper";
 import { PrintViewField } from "../../../components/Field/Field";
 import { HighlightsField } from "./HighlightsField";
 import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
 import { Title } from "../../../components/Field/Field";
 import "./Hit.css";
 
-export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, preview, badges, highlightsField }) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, previewImage, badges, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
-    <div className={`kgs-hit__body ${preview? "has-preview":""}`}>
+    <div className={`kgs-hit__body ${previewImage? "has-previewImage":""}`}>
       <div className={`kgs-hit__content ${badges? "has-badges":""}`}>
         <Badges badges={badges} />
         <Title key="title" text={title} />
@@ -43,9 +42,9 @@ export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, previe
           <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
         )}
       </div>
-      {!!preview &&
+      {!!previewImage &&
         <div className="kgs-hit__preview">
-          <img src={preview} alt={preview}/>
+          <img src={previewImage} alt={previewImage}/>
         </div>
       }
     </div>
@@ -173,24 +172,13 @@ export const Hit = connect(
     const mapping = fields && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
     const group = state.groups.group;
 
-    const getPreview = () => {
-      const previews = getPreviews(fields);
-      if(previews.length) {
-        const preview = previews.find(p => p.staticImageUrl);
-        if(preview) {
-          return preview.staticImageUrl;
-        }
-      }
-      return null;
-    };
-
     return {
       type: type,
       hasNoData: !fields,
       hasUnknownData: !mapping,
       title: getTitle(data?.title, data?.highlight),
       fields: getFields(group, fields, data && data.highlight, mapping),
-      preview: getPreview(),
+      previewImage: data?.previewImage,
       badges: (data?.badges && Object.keys(data.badges).length)?data.badges:null,
       highlightsField: {
         fields: filterHighlightFields(data?.highlight, ["title.value", "description.value"]),
