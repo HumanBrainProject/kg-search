@@ -24,8 +24,6 @@
 package eu.ebrains.kg.search.controller.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
@@ -169,7 +167,7 @@ public class SearchController  {
         Map<String, Object> payload = new HashMap<>();
         payload.put("from", from);
         payload.put("size", size);
-        ObjectNode esHighlight = getEsHighlight(type);
+        Map<String,Object> esHighlight = getEsHighlight(type);
         if (esHighlight != null) {
             payload.put("highlight", esHighlight);
         }
@@ -186,7 +184,7 @@ public class SearchController  {
         Object esAggs = AggsUtils.getAggs(facets, activeFilters, facetValues);
         payload.put("aggs", esAggs);
         List<String> sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
-        final ObjectNode query = getEsQuery(QueryStringUtils.prepareQuery(sanitizedQuery), type);
+        Object query = getEsQuery(QueryStringUtils.prepareQuery(sanitizedQuery), type);
         if (query != null) {
             payload.put("query", query);
         }
@@ -754,41 +752,30 @@ public class SearchController  {
         return res;
     }
 
-    private ObjectNode getEsQuery(String q, String type) {
+    private Map<String,Object> getEsQuery(String q, String type) {
         if (StringUtils.isBlank(q)) {
             return null;
         }
-        ObjectNode queryString = objectMapper.createObjectNode();
+        Map<String,Object> queryString = new HashMap<>();
         queryString.put("lenient", true);
         queryString.put("analyze_wildcard", true);
-        queryString.put("query", getEsSanitizedQuery(q));
+        queryString.put("query", q);
         List<String> fields = searchFieldsController.getEsQueryFields(type);
         if (!CollectionUtils.isEmpty(fields)) {
-            ArrayNode fieldsTree = objectMapper.valueToTree(fields);
-            queryString.putArray("fields").addAll(fieldsTree);
+            queryString.put("fields", fields);
         }
-        ObjectNode query = objectMapper.createObjectNode();
-        query.set("query_string", queryString);
-        return query;
+        return Map.of("query_string", queryString);
     }
 
-    private String getEsSanitizedQuery(String query) {
-        return query;
-    }
-
-    private ObjectNode getEsHighlight(String type) {
+    private Map<String,Object> getEsHighlight(String type) {
         List<String> highlights = searchFieldsController.getHighlight(type);
         if (CollectionUtils.isEmpty(highlights)) {
             return null;
         }
-        ObjectNode highlight = objectMapper.createObjectNode();
-        highlight.put("encoder", "html");
-        ObjectNode fields = objectMapper.createObjectNode();
-        highlights.forEach(h -> {
-            fields.set(h, objectMapper.createObjectNode());
-        });
-        highlight.set("fields", fields);
-        return highlight;
+        return Map.of(
+                "encoder", "html",
+                "fields", highlights
+        );
     }
 
     private List<Object> getEsSort(MetaInfo metaInfo, boolean forceSortByRelevance) {
