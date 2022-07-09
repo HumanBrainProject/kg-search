@@ -41,7 +41,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name = "Model", order = 5, searchable=true)
-public class ModelVersion implements TargetInstance, VersionedInstance, HasCitation {
+public class ModelVersion implements TargetInstance, VersionedInstance, HasCitation, HasMetrics {
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -189,5 +189,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
 
     @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
     private List<TargetInternalReference> producedDataset;
+
+    private int last30DaysViews;
 
 }

@@ -33,6 +33,17 @@ public class CastingUtils {
         return defaultValue;
     }
 
+    public static int getIntField(Map<String, Object> source, String fieldName) {
+        if (source.containsKey(fieldName)) {
+            try {
+                int value = (int) source.get(fieldName);
+                return value;
+            } catch (ClassCastException ignored) {
+            }
+        }
+        return 0;
+    }
+
     public static String getObjectFieldStringProperty(Map<String, Object> source, String fieldName, String propertyName) {
         if (source.containsKey(fieldName)) {
             try {
@@ -63,10 +74,10 @@ public class CastingUtils {
         return defaultValue;
     }
 
-    public static String getValueField(Map<String, Object> source, String fieldName) {
+    public static Object getValueField(Map<String, Object> source, String fieldName) {
         if (source.containsKey(fieldName)) {
             try {
-                Map<String, String> field = (Map<String, String>) source.get(fieldName);
+                Map<String, Object> field = (Map<String, Object>) source.get(fieldName);
                 if (!CollectionUtils.isEmpty(field) && field.containsKey("value")) {
                     return field.get("value");
                 }
@@ -74,6 +85,30 @@ public class CastingUtils {
             }
         }
         return null;
+    }
+
+    public static String getStringValueField(Map<String, Object> source, String fieldName) {
+        Object o = getValueField(source, fieldName);
+        if (o != null) {
+            try {
+                String value = (String) o;
+                return value;
+            } catch (ClassCastException ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static int getIntValueField(Map<String, Object> source, String fieldName) {
+        Object o = getValueField(source, fieldName);
+        if (o != null) {
+            try {
+                int value = (int) o;
+                return value;
+            } catch (ClassCastException ignored) {
+            }
+        }
+        return 0;
     }
 
     public static List<Object> getListField(Map<String, Object> source, String fieldName) {

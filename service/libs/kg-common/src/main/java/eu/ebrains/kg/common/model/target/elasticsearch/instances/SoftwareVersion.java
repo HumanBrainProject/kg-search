@@ -38,7 +38,7 @@ import java.util.List;
 @MetaInfo(name="Software", order=7, searchable=true)
 @Getter
 @Setter
-public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCitation {
+public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCitation, HasMetrics {
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -228,6 +228,20 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
         return null;
     }
 
+    @JsonIgnore
+    private boolean isSearchable;
+
+    @Override
+    public boolean isSearchableInstance() {
+        return isSearchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        isSearchable = searchable;
+    }
+
+    private int last30DaysViews;
+
     @Getter
     @Setter
     public static class FileFormat {
@@ -239,18 +253,6 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
 
         @FieldInfo(label = "Media type")
         private Value<String> relatedMediaType;
-    }
-
-    @JsonIgnore
-    private boolean isSearchable;
-
-    @Override
-    public boolean isSearchableInstance() {
-        return isSearchable;
-    }
-
-    public void setSearchable(boolean searchable) {
-        isSearchable = searchable;
     }
 
 }

@@ -23,10 +23,10 @@
 
 package eu.ebrains.kg.search.controller.search;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasMetrics;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasPreviews;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
@@ -34,6 +34,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetF
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
+import eu.ebrains.kg.search.Metrics.MetricsController;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
@@ -59,14 +60,13 @@ import java.util.stream.Collectors;
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class SearchController  {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+;
     private final ESServiceClient esServiceClient;
     private final UserInfoRoles userInfoRoles;
     private final FacetsController facetsController;
-    private final MetaModelUtils utils;
-
+    private final MetricsController metricsController;
     private final SearchFieldsController searchFieldsController;
+    private final MetaModelUtils utils;
 
     private final static String TOTAL = "total";
 
@@ -75,18 +75,21 @@ public class SearchController  {
             UserInfoRoles userInfoRoles,
             FacetsController facetsController,
             SearchFieldsController searchFieldsController,
+            MetricsController metricsController,
             MetaModelUtils utils
     ) {
         this.esServiceClient = esServiceClient;
         this.userInfoRoles = userInfoRoles;
         this.facetsController = facetsController;
         this.searchFieldsController = searchFieldsController;
+        this.metricsController = metricsController;
         this.utils = utils;
     }
 
     public boolean isInInProgressRole(Principal principal) {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }
+
 
     private Map<String, Object> formatFileAggregation(ElasticSearchFilesResult esResult, String aggregation) {
         Map<String, Object> result = new HashMap<>();
@@ -163,7 +166,6 @@ public class SearchController  {
 
 
     public Map<String, Object> search(String q, String type, int from, int size, Map<String, FacetValue> facetValues, DataStage dataStage) {
-        String index = ESHelper.getIndexesForSearch(dataStage);
         Map<String, Object> payload = new HashMap<>();
         payload.put("from", from);
         payload.put("size", size);
@@ -184,15 +186,18 @@ public class SearchController  {
         Object esAggs = AggsUtils.getAggs(facets, activeFilters, facetValues);
         payload.put("aggs", esAggs);
         List<String> sanitizedQuery = QueryStringUtils.sanitizeQueryString(q);
-        Object query = getEsQuery(QueryStringUtils.prepareQuery(sanitizedQuery), type);
+        final Object query = getEsQuery(QueryStringUtils.prepareQuery(sanitizedQuery), type);
         if (query != null) {
             payload.put("query", query);
         }
+        String index = ESHelper.getIndexesForSearch(dataStage);
         ElasticSearchFacetsResult result = esServiceClient.searchDocuments(index, payload);
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        response.put("hits", getHits(result, type, dataStage, metaInfo));
+        boolean includeMetrics = dataStage == DataStage.RELEASED && targetClass != null && HasMetrics.class.isAssignableFrom((Class<?>) targetClass);
+        final Integer trendThreshold = includeMetrics?metricsController.getTrendThreshold((Class<?>) targetClass, type):null;
+        response.put("hits", getHits(result, type, dataStage, metaInfo, trendThreshold));
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
         response.put("types", getTypesAggregation(result.getAggregations()));
         response.put("suggestions", getSuggestions(sanitizedQuery, dataStage, type));
@@ -205,7 +210,7 @@ public class SearchController  {
     }
 
 
-    private List<Map<String, Object>> getHits(ElasticSearchFacetsResult result, String type, DataStage dataStage, MetaInfo metaInfo) {
+    private List<Map<String, Object>> getHits(ElasticSearchFacetsResult result, String type, DataStage dataStage, MetaInfo metaInfo, Integer trendThreshold) {
         if (result.getHits() == null || result.getHits().getHits() == null) {
             return Collections.emptyList();
         }
@@ -216,9 +221,9 @@ public class SearchController  {
             hit.put("id", source.get("id"));
             hit.put("type", type); // getValueField(source, "type")
             hit.put("group", getGroup(dataStage));
-            hit.put("category", CastingUtils.getValueField(source, "category"));
-            hit.put("title", CastingUtils.getValueField(source, "title"));
-            Map<String, Boolean> badges = getBadges(source, metaInfo);
+            hit.put("category", CastingUtils.getStringValueField(source, "category"));
+            hit.put("title", CastingUtils.getStringValueField(source, "title"));
+            Map<String, Boolean> badges = getBadges(source, metaInfo, trendThreshold);
             if (!CollectionUtils.isEmpty(badges)) {
                 hit.put("badges", badges);
             }
@@ -248,18 +253,28 @@ public class SearchController  {
         return null;
     }
 
-    private Map<String, Boolean> getBadges(Map<String, Object> source, MetaInfo metaInfo) {
+    private Map<String, Boolean> getBadges(Map<String, Object> source, MetaInfo metaInfo, Integer trendThreshold) {
         if(metaInfo == null || !metaInfo.badges()) {
             return Collections.emptyMap();
         }
         Map<String, Boolean> badges = new HashMap<>();
-        String firstRelease = CastingUtils.getValueField(source, "first_release");
+
+        String firstRelease = CastingUtils.getStringValueField(source, "first_release");
         if (isNew(firstRelease)) {
             badges.put("isNew", true);
         }
+
+        if (trendThreshold != null && trendThreshold > 0) {
+            int last30DaysViews = CastingUtils.getIntField(source, "last30DaysViews");
+            if (last30DaysViews > 0) {
+                if (last30DaysViews >= trendThreshold) {
+                    badges.put("isTrending", true);
+                }
+            }
+        }
+
         return badges;
     }
-
 
     private boolean isNew(String firstRelease) {
         if (StringUtils.isBlank(firstRelease)) {
@@ -285,15 +300,15 @@ public class SearchController  {
         }
 
         Map<String, Object> source = doc.getSource();
-        String type = CastingUtils.getValueField(source, "type");
+        String type = CastingUtils.getStringValueField(source, "type");
         Map<String, Object> res = new HashMap<>();
         res.put("id", source.get("id"));
         res.put("type", type);
         res.put("group", getGroup(dataStage));
-        res.put("category", CastingUtils.getValueField(source, "category"));
-        res.put("title", CastingUtils.getValueField(source, "title"));
+        res.put("category", CastingUtils.getStringValueField(source, "category"));
+        res.put("title", CastingUtils.getStringValueField(source, "title"));
 
-        String disclaimer = CastingUtils.getValueField(source, "disclaimer");
+        String disclaimer = CastingUtils.getStringValueField(source, "disclaimer");
         if (StringUtils.isNotBlank(disclaimer)) {
             res.put("disclaimer", disclaimer);
         }
@@ -535,7 +550,8 @@ public class SearchController  {
     }
 
 
-    private List<Map<String, Object>> getKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue, boolean hasResults) {
+
+    private List<Map<String, Object>> getKeywords(List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets, FacetValue facetValue, boolean hasResults) {
         List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues())) ? null : facetValue.getValues();
         if (CollectionUtils.isEmpty(buckets) && (hasResults || CollectionUtils.isEmpty(values))) {
             return Collections.emptyList();
@@ -562,14 +578,14 @@ public class SearchController  {
         return keywords;
     }
 
-    private List<Map<String, Object>> getHierarchicalKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue, boolean hasResults) {
+    private List<Map<String, Object>> getHierarchicalKeywords(List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets, FacetValue facetValue, boolean hasResults) {
         if (CollectionUtils.isEmpty(buckets) && (hasResults || facetValue == null || CollectionUtils.isEmpty(facetValue.getValues()))) {
             return Collections.emptyList();
         }
         List<Map<String, Object>> keywords = new ArrayList<>();
-        for (ElasticSearchAgg.Bucket bucket : buckets) {
-            ElasticSearchAgg child = bucket.getKeywords();
-            List<ElasticSearchAgg.Bucket> childBuckets = (child != null) ? child.getBuckets() : null;
+        for (ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket bucket : buckets) {
+            ElasticSearchFacetsResult.KeywordsAgg child = bucket.getKeywords();
+            List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> childBuckets = (child != null) ? child.getBuckets() : null;
             if (childBuckets != null) {
                 keywords.add(Map.of(
                         "value", bucket.getKey(),
@@ -589,14 +605,14 @@ public class SearchController  {
         return keywords;
     }
 
-    private List<Map<String, Object>> getNestedKeywords(List<ElasticSearchAgg.Bucket> buckets, FacetValue facetValue, boolean hasResults) {
+    private List<Map<String, Object>> getNestedKeywords(List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets, FacetValue facetValue, boolean hasResults) {
         List<String> values = (facetValue == null || CollectionUtils.isEmpty(facetValue.getValues())) ? null : facetValue.getValues();
         if (CollectionUtils.isEmpty(buckets) && (hasResults || CollectionUtils.isEmpty(values))) {
             return Collections.emptyList();
         }
         List<Map<String, Object>> keywords = new ArrayList<>();
         Set<String> keywordsWithValues = new HashSet<>();
-        for (ElasticSearchAgg.Bucket bucket : buckets) {
+        for (ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket bucket : buckets) {
             keywords.add(Map.of(
                     "value", bucket.getKey(),
                     "count", (bucket.getReverse() != null) ? bucket.getReverse().getDocCount() : 0
@@ -617,15 +633,15 @@ public class SearchController  {
     }
 
     private int getOthers(ElasticSearchAgg keywords) {
-        if (keywords == null) {
+        if (keywords == null || keywords.getSumOtherDocCount() == null) {
             return 0;
         }
-        return keywords.getSumOtherDocCount();
+        return (int) keywords.getSumOtherDocCount();
     }
 
     private Map<String, Object> getHierarchicalFacetList(ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue, boolean hasResults) {
-        ElasticSearchAgg keywords = agg.getKeywords();
-        List<ElasticSearchAgg.Bucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
+        ElasticSearchFacetsResult.KeywordsAgg keywords = agg.getKeywords();
+        List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
         return Map.of(
                 "keywords", getHierarchicalKeywords(buckets, facetValue, hasResults),
                 "others", getOthers(keywords),
@@ -634,8 +650,8 @@ public class SearchController  {
     }
 
     private Map<String, Object> getNestedFacetList(ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue, boolean hasResults) {
-        ElasticSearchAgg keywords = agg.getInner() != null ? agg.getInner().getKeywords() : null;
-        List<ElasticSearchAgg.Bucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
+        ElasticSearchFacetsResult.KeywordsAgg keywords = agg.getInner() != null ? agg.getInner().getKeywords() : null;
+        List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
         return Map.of(
                 "keywords", getNestedKeywords(buckets, facetValue, hasResults),
                 "others", getOthers(keywords),
@@ -644,8 +660,8 @@ public class SearchController  {
     }
 
     private Map<String, Object> getFacetList(ElasticSearchFacetsResult.Aggregation agg, FacetValue facetValue, boolean hasResults) {
-        ElasticSearchAgg keywords = agg.getKeywords();
-        List<ElasticSearchAgg.Bucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
+        ElasticSearchFacetsResult.KeywordsAgg keywords = agg.getKeywords();
+        List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets = (keywords != null) ? keywords.getBuckets() : null;
         return Map.of(
                 "keywords", getKeywords(buckets, facetValue, hasResults),
                 "others", getOthers(keywords),
@@ -741,7 +757,7 @@ public class SearchController  {
             return Collections.emptyMap();
         }
         Map<String, Object> res = new HashMap<>();
-        List<ElasticSearchAgg.Bucket> buckets = aggregations.get(FacetsUtils.FACET_TYPE).getKeywords().getBuckets();
+        List<ElasticSearchFacetsResult.KeywordsAgg.KeywordsBucket> buckets = aggregations.get(FacetsUtils.FACET_TYPE).getKeywords().getBuckets();
         for (ElasticSearchAgg.Bucket bucket : buckets) {
             if (bucket.getDocCount() > 0) {
                 res.put(bucket.getKey(), Map.of(
@@ -772,9 +788,13 @@ public class SearchController  {
         if (CollectionUtils.isEmpty(highlights)) {
             return null;
         }
+        Map<String, Object> fields = new HashMap<>();
+        for (String h: highlights) {
+            fields.put(h, Collections.emptyMap());
+        }
         return Map.of(
                 "encoder", "html",
-                "fields", highlights
+                "fields", fields
         );
     }
 

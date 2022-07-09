@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,27 +30,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ElasticSearchAgg {
-
-    @JsonProperty("doc_count_error_upper_bound")
-    private int docCountErrorUpperBound;
-
-    @JsonProperty("sum_other_doc_count")
-    private int sumOtherDocCount;
+public class ElasticSearchValueAgg extends ElasticSearchAgg {
 
     private List<Bucket> buckets;
-
-    @Getter
-    @Setter
-    public static class Bucket {
-
-        @JsonProperty("key")
-        private String key;
-
-        @JsonProperty("key")
-        private Integer integerKey;
-
-        @JsonProperty("doc_count")
-        private int docCount;
-    }
 }

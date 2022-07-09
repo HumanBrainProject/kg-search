@@ -487,4 +487,28 @@ public class ESServiceClient {
         return result;
     }
 
+    public ElasticSearchFacetsResult getMetrics(String index) {
+        String query = "{\n" +
+                "  \"size\": 0,\n" +
+                "  \"aggs\": {\n" +
+                "    \"last30DaysViews\":  {\n" +
+                "      \"terms\": {\n" +
+                "        \"size\": 10000,\n" +
+                "        \"field\": \"last30DaysViews\",\n" +
+                "        \"order\": {\n" +
+                "          \"_key\": \"desc\"\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        ElasticSearchFacetsResult result = webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(query))
+                .retrieve()
+                .bodyToMono(ElasticSearchFacetsResult.class)
+                .block();
+        return result;
+    }
 }

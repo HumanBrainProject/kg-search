@@ -471,6 +471,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(getConfiguration().isShowHierarchicalSpecimen()) {
             d.setSpecimenBySubject(new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen()));
         }
+
+        if (datasetVersion.getLast30DaysViews() != null) {
+            d.setLast30DaysViews(datasetVersion.getLast30DaysViews());
+        }
+
         return d;
     }
 

@@ -23,8 +23,6 @@
 
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchAgg;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +32,6 @@ import java.util.Map;
 @Setter
 public class ElasticSearchFilesResult extends ElasticSearchResult {
 
-    private Map<String, ElasticSearchAgg> aggregations;
+    private Map<String, ElasticSearchFacetsResult.Aggregation> aggregations;
 
 }

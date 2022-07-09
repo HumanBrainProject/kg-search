@@ -27,7 +27,6 @@ import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SoftwareVersionV3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
@@ -266,6 +265,11 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
             }).collect(Collectors.toList()));
         }
+
+        if (softwareVersion.getLast30DaysViews() != null) {
+            s.setLast30DaysViews(softwareVersion.getLast30DaysViews());
+        }
+
         return s;
     }
 

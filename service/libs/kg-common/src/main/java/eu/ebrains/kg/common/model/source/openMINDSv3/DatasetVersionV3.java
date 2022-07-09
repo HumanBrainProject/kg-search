@@ -25,10 +25,13 @@ package eu.ebrains.kg.common.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -38,7 +41,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
+public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics {
     private String doi;
     private String howToCite;
     private String description;
@@ -77,7 +80,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable {
     private List<ServiceLink> serviceLinks;
     private List<ServiceLink> serviceLinksFromFiles;
     private List<StudiedSpecimen> studiedSpecimen;
-
+    private Integer last30DaysViews;
 
     @Getter
     @Setter

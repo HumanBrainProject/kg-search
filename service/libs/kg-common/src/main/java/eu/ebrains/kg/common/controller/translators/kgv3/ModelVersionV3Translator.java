@@ -215,6 +215,10 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             }
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
         }
+
+        if (modelVersion.getLast30DaysViews() != null) {
+            m.setLast30DaysViews(modelVersion.getLast30DaysViews());
+        }
         return m;
     }
 }

@@ -1,8 +1,6 @@
 package eu.ebrains.kg.common.model.source;
 
-public interface IsCiteable {
+public interface HasMetrics {
 
-    String getDoi();
-
-    String getHowToCite();
+    Integer getLast30DaysViews();
 }

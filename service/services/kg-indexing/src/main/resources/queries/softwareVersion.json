@@ -575,6 +575,17 @@
           ]
         }
       ]
+    },
+    {
+      "propertyName": "query:last30DaysViews",
+      "singleValue": "FIRST",
+      "path": [
+        {
+          "@id": "https://core.kg.ebrains.eu/vocab/metricOf",
+          "reverse": true
+        },
+        "https://core.kg.ebrains.eu/vocab/last30daysViews"
+      ]
     }
   ]
 }

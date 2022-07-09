@@ -106,6 +106,14 @@
         </resources>
     </cache>
 
+    <cache alias="trendThresholdByType" uses-template="inmemory">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Integer</value-type>
+        <resources>
+            <heap>1000</heap>
+        </resources>
+    </cache>
+
     <cache alias="typeMappings" uses-template="inmemory">
         <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
         <value-type>java.util.Map</value-type>

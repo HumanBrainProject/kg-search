@@ -24,9 +24,6 @@
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchAgg;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,11 +38,34 @@ public class ElasticSearchFacetsResult extends ElasticSearchResult {
 
     @Getter
     @Setter
-    public static class Aggregation {
+    public static class Aggregation extends ElasticSearchValueAgg {
 
-        private ElasticSearchAgg keywords;
+        private KeywordsAgg keywords;
         private Total total;
         private Inner inner;
+    }
+
+    @Getter
+    @Setter
+    public static class KeywordsAgg extends ElasticSearchAgg {
+
+        private List<KeywordsBucket> buckets;
+
+        @Getter
+        @Setter
+        public static class KeywordsBucket extends Bucket {
+
+            private Reverse reverse;
+            private KeywordsAgg keywords;
+        }
+
+        @Getter
+        @Setter
+        public static class Reverse {
+
+            @JsonProperty("doc_count")
+            private int docCount;
+        }
     }
 
     @Getter
@@ -59,7 +79,7 @@ public class ElasticSearchFacetsResult extends ElasticSearchResult {
     @Setter
     public static class Inner {
 
-        private ElasticSearchAgg keywords;
+        private KeywordsAgg keywords;
     }
 
     private Map<String, List<Suggestion>> suggest;

@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
-public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews {
+public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews, HasMetrics {
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -289,6 +289,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
+
+    private int last30DaysViews;
 
     @Getter
     @Setter
@@ -916,8 +918,5 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             collect(sourceId, "geneticStrainTypes", references, type);
         }
     }
-
-
-
 
 }
