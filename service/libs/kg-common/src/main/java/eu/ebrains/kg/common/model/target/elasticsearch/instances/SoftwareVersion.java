@@ -240,6 +240,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
         isSearchable = searchable;
     }
 
+    @ElasticSearchInfo(type = "integer")
     private int last30DaysViews;
 
     @Getter

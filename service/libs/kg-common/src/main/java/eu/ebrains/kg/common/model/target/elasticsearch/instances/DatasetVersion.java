@@ -26,7 +26,10 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.common.controller.translators.Helpers;
-import eu.ebrains.kg.common.model.target.elasticsearch.*;
+import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
+import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -290,6 +293,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
 
+    @ElasticSearchInfo(type = "integer")
     private int last30DaysViews;
 
     @Getter
