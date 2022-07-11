@@ -24,11 +24,11 @@
 package eu.ebrains.kg.search.controller.sitemap;
 
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
-import eu.ebrains.kg.search.model.SitemapXML;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
+import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
+import eu.ebrains.kg.search.model.SitemapXML;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +73,7 @@ public class SitemapController {
         List<SitemapXML.Url> urls = new ArrayList<>();
         String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
         try {
-            List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+            List<Document> documents = esServiceClient.getDocuments(index);
             documents.forEach(doc -> {
                 SitemapXML.Url url = new SitemapXML.Url();
                 url.setLoc(String.format("%s/instances/%s", ebrainsUrl, doc.getId()));

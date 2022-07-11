@@ -21,17 +21,16 @@
  *
  */
 
-package eu.ebrains.kg.common.model.target.elasticsearch;
+package eu.ebrains.kg.common.model.elasticsearch;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
-public class ElasticSearchFilesResult extends ElasticSearchResult {
+public class ValueAgg extends Agg {
 
-    private Map<String, ElasticSearchFacetsResult.Aggregation> aggregations;
-
+    private List<Bucket> buckets;
 }

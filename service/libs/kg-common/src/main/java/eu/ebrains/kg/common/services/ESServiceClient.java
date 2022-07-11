@@ -23,10 +23,8 @@
 
 package eu.ebrains.kg.common.services;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFacetsResult;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFilesResult;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchResult;
+import eu.ebrains.kg.common.model.elasticsearch.Document;
+import eu.ebrains.kg.common.model.elasticsearch.Result;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,6 +61,21 @@ public class ESServiceClient {
     private final WebClient webClient;
 
     private final String elasticSearchEndpoint;
+
+    private final String METRICS_QUERY = "{\n" +
+            "  \"size\": 0,\n" +
+            "  \"aggs\": {\n" +
+            "    \"last30DaysViews\":  {\n" +
+            "      \"terms\": {\n" +
+            "        \"size\": 10000,\n" +
+            "        \"field\": \"last30DaysViews\",\n" +
+            "        \"order\": {\n" +
+            "          \"_key\": \"desc\"\n" +
+            "        }\n" +
+            "      }\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
 
     public ESServiceClient(WebClient webClient, @Value("${es.endpoint}") String elasticSearchEndpoint) {
         this.webClient = webClient;
@@ -288,35 +301,35 @@ public class ESServiceClient {
     }
 
 
-    public ElasticSearchDocument getDocument(String index, String id) {
-        ElasticSearchResult result = webClient.post()
+    public Document getDocument(String index, String id) {
+        Result result = webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(BodyInserters.fromValue(getQuery(id)))
                 .retrieve()
-                .bodyToMono(ElasticSearchResult.class)
+                .bodyToMono(Result.class)
                 .block();
-        ElasticSearchResult.Hits hits = result == null ? null:result.getHits();
-        List<ElasticSearchDocument> documents = hits == null ? Collections.emptyList() : hits.getHits();
+        Result.Hits hits = result == null ? null:result.getHits();
+        List<Document> documents = hits == null ? Collections.emptyList() : hits.getHits();
         if (documents.isEmpty()) {
-            ElasticSearchDocument doc = new ElasticSearchDocument();
+            Document doc = new Document();
             doc.setId(id);
             doc.setType("_doc");
             doc.setIndex(index);
             return doc;
         }
-        ElasticSearchDocument doc = documents.get(0);
+        Document doc = documents.get(0);
         doc.setId(id);
         return doc;
     }
 
-    public List<ElasticSearchDocument> getDocuments(String index) {
-        List<ElasticSearchDocument> result = new ArrayList<>();
+    public List<Document> getDocuments(String index) {
+        List<Document> result = new ArrayList<>();
         String searchAfter = null;
         boolean continueSearch = true;
         while (continueSearch) {
-            ElasticSearchResult documents = getPaginatedDocuments(index, searchAfter);
-            List<ElasticSearchDocument> hits = documents.getHits().getHits();
+            Result documents = getPaginatedDocuments(index, searchAfter);
+            List<Document> hits = documents.getHits().getHits();
             result.addAll(hits);
             searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
             continueSearch = searchAfter != null;
@@ -329,8 +342,8 @@ public class ESServiceClient {
         String searchAfter = null;
         boolean continueSearch = true;
         while (continueSearch) {
-            ElasticSearchResult documents = getPaginatedDocumentIds(index, searchAfter, type);
-            List<ElasticSearchDocument> hits = documents.getHits().getHits();
+            Result documents = getPaginatedDocumentIds(index, searchAfter, type);
+            List<Document> hits = documents.getHits().getHits();
             hits.forEach(hit -> result.add(hit.getId()));
             searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
             continueSearch = searchAfter != null;
@@ -339,18 +352,18 @@ public class ESServiceClient {
     }
 
 
-    private ElasticSearchResult getPaginatedDocuments(String index, String searchAfter) {
+    private Result getPaginatedDocuments(String index, String searchAfter) {
         String paginatedQuery = getPaginatedQuery(searchAfter);
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .retrieve()
-                .bodyToMono(ElasticSearchResult.class)
+                .bodyToMono(Result.class)
                 .block();
     }
 
-    public ElasticSearchFilesResult getFilesAggregationsFromRepo(String index, String fileRepositoryId, Map<String, String> aggs) {
+    public Result getFilesAggregationsFromRepo(String index, String fileRepositoryId, Map<String, String> aggs) {
         String query = getAggregationsQuery(fileRepositoryId, aggs);
         try {
             return webClient.post()
@@ -358,7 +371,7 @@ public class ESServiceClient {
                     .body(BodyInserters.fromValue(query))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                     .retrieve()
-                    .bodyToMono(ElasticSearchFilesResult.class)
+                    .bodyToMono(Result.class)
                     .block();
         } catch(WebClientResponseException e){
             if(e.getStatusCode() == HttpStatus.NOT_FOUND){
@@ -369,7 +382,7 @@ public class ESServiceClient {
         }
     }
 
-    public ElasticSearchResult getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size, String format, String groupingType) {
+    public Result getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size, String format, String groupingType) {
         String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size, format, groupingType);
         try {
             return webClient.post()
@@ -377,7 +390,7 @@ public class ESServiceClient {
                     .body(BodyInserters.fromValue(paginatedQuery))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                     .retrieve()
-                    .bodyToMono(ElasticSearchResult.class)
+                    .bodyToMono(Result.class)
                     .block();
         } catch(WebClientResponseException e){
             if(e.getStatusCode() == HttpStatus.NOT_FOUND){
@@ -388,23 +401,23 @@ public class ESServiceClient {
         }
     }
 
-    private ElasticSearchResult getPaginatedDocumentIds(String index, String searchAfter, Class<?> type) {
+    private Result getPaginatedDocumentIds(String index, String searchAfter, Class<?> type) {
         String paginatedQuery = getIdsOfPaginatedQuery(searchAfter, MetaModelUtils.getNameForClass(type));
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .retrieve()
-                .bodyToMono(ElasticSearchResult.class)
+                .bodyToMono(Result.class)
                 .block();
     }
 
-    public ElasticSearchFacetsResult searchDocuments(String index, Map<String, Object> payload) {
+    public Result searchDocuments(String index, Map<String, Object> payload) {
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(payload))
                 .retrieve()
-                .bodyToMono(ElasticSearchFacetsResult.class)
+                .bodyToMono(Result.class)
                 .block();
     }
 
@@ -466,12 +479,12 @@ public class ESServiceClient {
                             Map.of(IDENTIFIER, identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
                     ),
                     "_source", Collections.singletonList(IDENTIFIER));
-            ElasticSearchResult r = webClient.post()
+            Result r = webClient.post()
                     .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, pageSize))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .body(BodyInserters.fromValue(query))
                     .retrieve()
-                    .bodyToMono(ElasticSearchResult.class)
+                    .bodyToMono(Result.class)
                     .block();
             if(r!=null && r.getHits()!=null && r.getHits().getHits()!=null){
                 r.getHits().getHits().forEach(esDocument -> {
@@ -487,28 +500,13 @@ public class ESServiceClient {
         return result;
     }
 
-    public ElasticSearchFacetsResult getMetrics(String index) {
-        String query = "{\n" +
-                "  \"size\": 0,\n" +
-                "  \"aggs\": {\n" +
-                "    \"last30DaysViews\":  {\n" +
-                "      \"terms\": {\n" +
-                "        \"size\": 10000,\n" +
-                "        \"field\": \"last30DaysViews\",\n" +
-                "        \"order\": {\n" +
-                "          \"_key\": \"desc\"\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
-        ElasticSearchFacetsResult result = webClient.post()
+    public Result getMetrics(String index) {
+        return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(BodyInserters.fromValue(query))
+                .body(BodyInserters.fromValue(METRICS_QUERY))
                 .retrieve()
-                .bodyToMono(ElasticSearchFacetsResult.class)
+                .bodyToMono(Result.class)
                 .block();
-        return result;
     }
 }

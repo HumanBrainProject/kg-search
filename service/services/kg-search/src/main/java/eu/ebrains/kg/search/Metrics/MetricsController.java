@@ -24,7 +24,7 @@
 package eu.ebrains.kg.search.Metrics;
 
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchFacetsResult;
+import eu.ebrains.kg.common.model.elasticsearch.Result;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import org.springframework.cache.annotation.Cacheable;
@@ -50,7 +50,7 @@ public class MetricsController {
     public Integer getTrendThreshold(Class<?> clazz, String type) { // type is use as key for @Cachable
         try {
             String index = ESHelper.getSearchableIndex(DataStage.RELEASED, clazz, false);
-            ElasticSearchFacetsResult result = esServiceClient.getMetrics(index);
+            Result result = esServiceClient.getMetrics(index);
 
             if (
                     result == null ||
@@ -75,7 +75,7 @@ public class MetricsController {
             if (list.size() >= 10) {
                 return list.get(9);
             }
-            return list.get(list.size()-1);
+            return 0;
         } catch (WebClientResponseException e) {
             return null;
         }
