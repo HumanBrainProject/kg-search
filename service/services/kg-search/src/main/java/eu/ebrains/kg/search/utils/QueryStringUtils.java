@@ -106,7 +106,7 @@ public class QueryStringUtils {
             regex.append(String.format("\\%s", character));
         }
         regex.append("])");
-        return str.replaceAll(regex.toString(), "\\\\\\\\$1");
+        return str.replaceAll(regex.toString(), "\\\\$1");
     }
 
     public static String prepareQuery(List<String> tokens) {
