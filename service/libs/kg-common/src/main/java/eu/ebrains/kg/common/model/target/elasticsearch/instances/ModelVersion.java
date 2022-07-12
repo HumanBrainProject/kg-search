@@ -190,7 +190,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
     private List<TargetInternalReference> producedDataset;
 
-    @ElasticSearchInfo(type = "integer")
     private int last30DaysViews;
 
 }

@@ -271,10 +271,8 @@ public class SearchController extends FacetAggregationUtils {
 
         if (trendThreshold != null && trendThreshold > 0) {
             int last30DaysViews = CastingUtils.getIntField(source, "last30DaysViews");
-            if (last30DaysViews > 0) {
-                if (last30DaysViews >= trendThreshold) {
-                    badges.put("isTrending", true);
-                }
+            if (last30DaysViews >= trendThreshold) {
+                badges.put("isTrending", true);
             }
         }
 

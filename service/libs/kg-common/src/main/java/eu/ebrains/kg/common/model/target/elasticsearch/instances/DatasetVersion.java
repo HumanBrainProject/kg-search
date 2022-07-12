@@ -293,7 +293,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
 
-    @ElasticSearchInfo(type = "integer")
     private int last30DaysViews;
 
     @Getter

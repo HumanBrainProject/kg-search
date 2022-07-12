@@ -135,6 +135,8 @@ public class MappingController {
                     fieldDefinition.put("type", "date");
                 } else if (topTypeToHandle == Boolean.class || topTypeToHandle == boolean.class) {
                     fieldDefinition.put("type", "boolean");
+                } else if (topTypeToHandle == Integer.class || topTypeToHandle == int.class) {
+                    fieldDefinition.put("type", "integer");
                 } else {
                     Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
                     fieldDefinition.put(PROPERTIES, otherType);
