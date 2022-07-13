@@ -33,11 +33,15 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 public class MetricsController {
 
+    public final int MAX_NUMBER_OF_TRENDING_INSTANCES = 10;
+    public final int MINIMAL_NUMBER_OF_VISITS_TO_BE_REGARDED_TRENDING = 10;
     private final ESServiceClient esServiceClient;
 
     public MetricsController(
@@ -50,32 +54,36 @@ public class MetricsController {
     public Integer getTrendThreshold(Class<?> clazz, String type) { // type is use as key for @Cachable
         try {
             String index = ESHelper.getSearchableIndex(DataStage.RELEASED, clazz, false);
-            Result result = esServiceClient.getMetrics(index);
-
-            if (
-                    result == null ||
-                    CollectionUtils.isEmpty(result.getAggregations()) ||
-                            !result.getAggregations().containsKey("last30DaysViews") ||
-                            CollectionUtils.isEmpty(result.getAggregations().get("last30DaysViews").getBuckets())
-
-            ) {
+            Result result = esServiceClient.getMetrics(index, MAX_NUMBER_OF_TRENDING_INSTANCES+1); //We need one instance more to check if it's exactly the limit or less
+            if (result == null || result.getHits() == null || CollectionUtils.isEmpty(result.getHits().getHits())) {
                 return null;
             }
-            List<Integer> list = result.getAggregations().get("last30DaysViews").getBuckets().stream().map(b -> {
-                if (b.getKey() != null) {
-                    try {
-                        return Integer.parseInt(b.getKey());
-
-                    } catch (NumberFormatException ignored) {
+            final List<Integer> last30dayViews = result.getHits().getHits().stream().map(d -> {
+                final Map<String, Object> fields = d.getFields();
+                if(fields!=null && fields.get("last30DaysViews") instanceof List){
+                    final List<?> last30DaysViews = (List<?>) fields.get("last30DaysViews");
+                    if(!last30DaysViews.isEmpty() && last30DaysViews.get(0) instanceof Integer){
+                        return (Integer)last30DaysViews.get(0);
                     }
                 }
-                return 0;
-            }).collect(Collectors.toList());
-
-            if (list.size() >= 10) {
-                return list.get(9);
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            if(last30dayViews.size()==MAX_NUMBER_OF_TRENDING_INSTANCES+1){
+                //The result is complete (we have equal or more instances than the set limit
+                if(last30dayViews.get(MAX_NUMBER_OF_TRENDING_INSTANCES).equals(last30dayViews.get(MAX_NUMBER_OF_TRENDING_INSTANCES-1))){
+                    //We can ignore the last item
+                    last30dayViews.remove(MAX_NUMBER_OF_TRENDING_INSTANCES);
+                }
             }
-            return 0;
+            final List<Integer> distinctSortedList = last30dayViews.stream().sorted().distinct().collect(Collectors.toList());
+            if(distinctSortedList.size()>1){
+                //We're interested in the second smallest number of the list.
+                final Integer threshold = distinctSortedList.get(1);
+                if(threshold>=MINIMAL_NUMBER_OF_VISITS_TO_BE_REGARDED_TRENDING){
+                    return threshold;
+                }
+            }
+            return null;
         } catch (WebClientResponseException e) {
             return null;
         }

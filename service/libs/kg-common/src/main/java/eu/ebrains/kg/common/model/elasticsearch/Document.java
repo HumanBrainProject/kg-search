@@ -46,6 +46,9 @@ public class Document {
     @JsonProperty("_source")
     private Map<String, Object> source;
 
+    @JsonProperty("fields")
+    private Map<String, Object> fields;
+
     private Map<String, List<String>> highlight;
 
     @JsonProperty("_score")

@@ -62,20 +62,22 @@ public class ESServiceClient {
 
     private final String elasticSearchEndpoint;
 
-    private final String METRICS_QUERY = "{\n" +
-            "  \"size\": 0,\n" +
-            "  \"aggs\": {\n" +
-            "    \"last30DaysViews\":  {\n" +
-            "      \"terms\": {\n" +
-            "        \"size\": 10000,\n" +
-            "        \"field\": \"last30DaysViews\",\n" +
-            "        \"order\": {\n" +
-            "          \"_key\": \"desc\"\n" +
-            "        }\n" +
-            "      }\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+
+
+
+
+    private static String metricsQuery(int size){
+        return "{\n" +
+                "  \"fields\": [\n" +
+                "    \"last30DaysViews\"\n" +
+                "  ],\n" +
+                "  \"sort\": {\n" +
+                "    \"last30DaysViews\": \"desc\"\n" +
+                "  },\n" +
+                "  \"size\": "+size+",\n" +
+                "  \"_source\": false\n" +
+                "}";
+    }
 
     public ESServiceClient(WebClient webClient, @Value("${es.endpoint}") String elasticSearchEndpoint) {
         this.webClient = webClient;
@@ -500,11 +502,11 @@ public class ESServiceClient {
         return result;
     }
 
-    public Result getMetrics(String index) {
+    public Result getMetrics(String index, int size) {
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(BodyInserters.fromValue(METRICS_QUERY))
+                .body(BodyInserters.fromValue(metricsQuery(size)))
                 .retrieve()
                 .bodyToMono(Result.class)
                 .block();

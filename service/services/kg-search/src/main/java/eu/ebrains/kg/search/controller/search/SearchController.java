@@ -210,13 +210,13 @@ public class SearchController extends FacetAggregationUtils {
         if (query != null) {
             payload.put("query", query);
         }
+        boolean includeMetrics = dataStage == DataStage.RELEASED && targetClass != null && HasMetrics.class.isAssignableFrom((Class<?>) targetClass);
+        final Integer trendThreshold = includeMetrics?metricsController.getTrendThreshold((Class<?>) targetClass, type):null;
         String index = ESHelper.getIndexesForSearch(dataStage);
         Result result = esServiceClient.searchDocuments(index, payload);
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        boolean includeMetrics = dataStage == DataStage.RELEASED && targetClass != null && HasMetrics.class.isAssignableFrom((Class<?>) targetClass);
-        final Integer trendThreshold = includeMetrics?metricsController.getTrendThreshold((Class<?>) targetClass, type):null;
         response.put("hits", getHits(result, type, dataStage, metaInfo, trendThreshold));
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
         response.put("types", getTypesAggregation(result.getAggregations()));
