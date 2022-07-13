@@ -23,7 +23,9 @@
 
 package eu.ebrains.kg.search.controller.search;
 
+import eu.ebrains.kg.common.controller.kg.KGv3;
 import eu.ebrains.kg.common.model.DataStage;
+import eu.ebrains.kg.common.model.elasticsearch.Bucket;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
 import eu.ebrains.kg.common.model.elasticsearch.Suggestion;
@@ -39,7 +41,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetF
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
-import eu.ebrains.kg.search.Metrics.MetricsController;
+import eu.ebrains.kg.search.controller.metrics.MetricsController;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
@@ -73,6 +75,8 @@ public class SearchController extends FacetAggregationUtils {
     private final SearchFieldsController searchFieldsController;
     private final MetaModelUtils utils;
 
+    private final KGv3 kg;
+
     private final static String TOTAL = "total";
 
     public SearchController(
@@ -81,7 +85,8 @@ public class SearchController extends FacetAggregationUtils {
             FacetsController facetsController,
             SearchFieldsController searchFieldsController,
             MetricsController metricsController,
-            MetaModelUtils utils
+            MetaModelUtils utils,
+            KGv3 kg
     ) {
         this.esServiceClient = esServiceClient;
         this.userInfoRoles = userInfoRoles;
@@ -89,10 +94,20 @@ public class SearchController extends FacetAggregationUtils {
         this.searchFieldsController = searchFieldsController;
         this.metricsController = metricsController;
         this.utils = utils;
+        this.kg = kg;
     }
 
     public boolean isInInProgressRole(Principal principal) {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
+    }
+
+    public boolean canReadLiveFiles(Principal principal, UUID fileRepositoryId){
+        return isInInProgressRole(principal) || isInvitedForFileRepository(fileRepositoryId);
+    }
+
+    public boolean isInvitedForFileRepository(UUID fileRepositoryId){
+        final Set<UUID> invitationsFromKG = kg.getInvitationsFromKG();
+        return invitationsFromKG.contains(fileRepositoryId);
     }
 
 
@@ -106,7 +121,7 @@ public class SearchController extends FacetAggregationUtils {
                 esResult.getAggregations().get(aggregation).getBuckets() != null) {
 
             List<String> formats = esResult.getAggregations().get(aggregation).getBuckets().stream()
-                    .map(bucket -> bucket.getKey())
+                    .map(Bucket::getKey)
                     .filter(Objects::nonNull)
                     .sorted()
                     .collect(Collectors.toList());
@@ -138,7 +153,7 @@ public class SearchController extends FacetAggregationUtils {
         return result;
     }
 
-    private ResponseEntity<?> getFileAggregationFromRepo(DataStage stage, String id, String field) {
+    private ResponseEntity<?> getFileAggregationFromRepo(DataStage stage, UUID id, String field) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             Map<String, String> aggs = Map.of("patterns", field);
@@ -150,15 +165,15 @@ public class SearchController extends FacetAggregationUtils {
         }
     }
 
-    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) {
+    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, UUID id) {
         return getFileAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
     }
 
-    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) {
+    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, UUID id) {
         return getFileAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) {
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, UUID id, UUID searchAfter, int size, String format, String groupingType) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             Result filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);
@@ -584,10 +599,7 @@ public class SearchController extends FacetAggregationUtils {
     }
 
     private List<Object> getEsSort(MetaInfo metaInfo, boolean forceSortByRelevance) {
-        boolean sortByRelevance = true;
-        if (!forceSortByRelevance && metaInfo != null && !metaInfo.sortByRelevance()) {
-            sortByRelevance = false;
-        }
+        boolean sortByRelevance = forceSortByRelevance || metaInfo == null || metaInfo.sortByRelevance();
 
         List<Object> fields = new ArrayList<>();
 

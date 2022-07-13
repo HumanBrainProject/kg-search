@@ -27,9 +27,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.services.KGV3ServiceClient;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Component
@@ -50,13 +48,19 @@ public class KGv3 implements KG {
         return kgServiceClient.executeQueryForInstance(clazz, dataStage, queryId, id, asServiceAccount);
     }
 
+    public Set<UUID> getInvitationsFromKG(){
+        //TODO can we cache this?
+        return kgServiceClient.getInvitationsFromKG();
+    }
+
+
     @SuppressWarnings("java:S3740") // we keep the generics intentionally
     public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
-        final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount); 
+        final Map<?, ?> instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount);
         if (instance != null) {
             final Object data = instance.get("data");
             if (data instanceof Map) {
-                final Object type = ((Map) data).get("@type");
+                final Object type = ((Map<?, ?>) data).get("@type");
                 return getType(type);
             }
         }

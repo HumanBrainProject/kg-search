@@ -201,7 +201,7 @@ public class ESServiceClient {
         return "{\n" + StringUtils.join(list, ",\n ") + "\n}";
     }
 
-    private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size, String format, String groupingType) {
+    private String getPaginatedFilesQuery(UUID fileRepositoryId, UUID searchAfter, int size, String format, String groupingType) {
 
         String sizeValue = String.format("%d", size);
 
@@ -211,7 +211,7 @@ public class ESServiceClient {
             "]";
 
         String searchAfterValue = "";
-        if (StringUtils.isNotBlank(searchAfter)) {
+        if (searchAfter != null) {
             searchAfterValue = String.format(
                 "  [\n" +
                 "    \"%s\"\n" +
@@ -219,7 +219,7 @@ public class ESServiceClient {
         }
 
         Map<String, String> terms = Map.of(
-                "fileRepository", fileRepositoryId,
+                "fileRepository", fileRepositoryId.toString(),
                 "format.value.keyword", format,
                 "groupingTypes.name.keyword", groupingType
         );
@@ -236,12 +236,12 @@ public class ESServiceClient {
         return getPayload(parameters);
     }
 
-    private String getAggregationsQuery(String fileRepositoryId, Map<String, String> aggs) {
+    private String getAggregationsQuery(UUID fileRepositoryId, Map<String, String> aggs) {
 
         String aggsValue = getAggs(aggs);
 
         Map<String, String> terms = Map.of(
-                "fileRepository", fileRepositoryId
+                "fileRepository", fileRepositoryId.toString()
         );
         String queryValue = getQuery(terms);
 
@@ -363,7 +363,7 @@ public class ESServiceClient {
                 .block();
     }
 
-    public Result getFilesAggregationsFromRepo(String index, String fileRepositoryId, Map<String, String> aggs) {
+    public Result getFilesAggregationsFromRepo(String index, UUID fileRepositoryId, Map<String, String> aggs) {
         String query = getAggregationsQuery(fileRepositoryId, aggs);
         try {
             return webClient.post()
@@ -382,7 +382,7 @@ public class ESServiceClient {
         }
     }
 
-    public Result getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size, String format, String groupingType) {
+    public Result getFilesFromRepo(String index, UUID fileRepositoryId, UUID searchAfter, int size, String format, String groupingType) {
         String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size, format, groupingType);
         try {
             return webClient.post()

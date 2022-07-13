@@ -24,7 +24,7 @@
 package eu.ebrains.kg.common.services;
 
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.services.KGServiceClient;
+import eu.ebrains.kg.common.utils.MetaModelUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +36,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class KGV3ServiceClient extends KGServiceClient {
@@ -45,6 +46,26 @@ public class KGV3ServiceClient extends KGServiceClient {
     public KGV3ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
         super(serviceAccountWebClient, userWebClient);
         this.kgCoreEndpoint = kgCoreEndpoint;
+    }
+
+    public Set<UUID> getInvitationsFromKG(){
+        String url = String.format("%s/users/me/roles", kgCoreEndpoint);
+        final Map<?,?> result = userWebClient.get()
+                .uri(url)
+                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        if(result!=null) {
+            final Object data = result.get("data");
+            if (data instanceof Map) {
+                final Object invitations = ((Map<?, ?>) data).get("invitations");
+                if (invitations instanceof List) {
+                    return ((List<?>) invitations).stream().filter(i -> i instanceof String).map(i -> MetaModelUtils.castToUUID((String) i)).filter(Objects::nonNull).collect(Collectors.toSet());
+                }
+            }
+        }
+        return Collections.emptySet();
     }
 
     public <T> T executeQueryForIndexing(String queryId, DataStage dataStage, Class<T> clazz) {

@@ -21,7 +21,7 @@
  *
  */
 
-package eu.ebrains.kg.search.Metrics;
+package eu.ebrains.kg.search.controller.metrics;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
