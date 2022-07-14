@@ -103,7 +103,7 @@ public class KGV3ServiceClient extends KGServiceClient {
 
     @SuppressWarnings("java:S3740")
     public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) { 
-        String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
+        String url = String.format("%s/instances/%s?stage=%s", kgCoreEndpoint, id, dataStage);
         return executeCallForInstance(Map.class, url, asServiceAccount);
     }
 
