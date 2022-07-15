@@ -41,9 +41,9 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetF
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
-import eu.ebrains.kg.search.controller.metrics.MetricsController;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
+import eu.ebrains.kg.search.controller.metrics.MetricsController;
 import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
 import eu.ebrains.kg.search.utils.*;
@@ -548,7 +548,7 @@ public class SearchController extends FacetAggregationUtils {
             if (suggestResult != null) {
                 suggestResult.values().stream().flatMap(Collection::stream).forEach(s -> {
                     final Set<Suggestion.Option> options = suggestionsPerTerm.computeIfAbsent(s.getText(), k -> new HashSet<>());
-                    options.addAll(s.getOptions());
+                        options.addAll(s.getOptions());
                 });
             }
             Set<String> handledTerms = new HashSet<>();

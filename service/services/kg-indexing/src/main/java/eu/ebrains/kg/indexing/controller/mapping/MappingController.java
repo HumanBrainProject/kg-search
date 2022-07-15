@@ -131,6 +131,9 @@ public class MappingController {
                             keyword.put("ignore_above", esInfo.ignoreAbove());
                         }
                     }
+                    if(esInfo != null && StringUtils.isNotBlank(esInfo.searchAnalyzer())) {
+                        fieldDefinition.put("analyzer", esInfo.searchAnalyzer());
+                    }
                 } else if (topTypeToHandle == Date.class) {
                     fieldDefinition.put("type", "date");
                 } else if (topTypeToHandle == Boolean.class || topTypeToHandle == boolean.class) {

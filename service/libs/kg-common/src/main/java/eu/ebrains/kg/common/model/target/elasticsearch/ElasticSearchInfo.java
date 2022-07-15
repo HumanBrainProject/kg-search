@@ -31,8 +31,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ElasticSearchInfo {
+
+    String SEARCH_ANALYZER = "custom_search_analyzer";
+
     boolean mapping() default true;
     int ignoreAbove() default -1;
     String type() default "";
-
+    String searchAnalyzer() default "";
 }

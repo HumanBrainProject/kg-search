@@ -24,11 +24,9 @@
 package eu.ebrains.kg.indexing.controller.indexing;
 
 import eu.ebrains.kg.common.configuration.Configuration;
-import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.common.controller.kg.KG;
 import eu.ebrains.kg.common.controller.kg.KGv2;
 import eu.ebrains.kg.common.controller.kg.KGv3;
-import eu.ebrains.kg.indexing.controller.mapping.MappingController;
 import eu.ebrains.kg.common.controller.translators.TargetInstancesResult;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.controller.translators.Translator;
@@ -43,6 +41,9 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
+import eu.ebrains.kg.indexing.controller.mapping.MappingController;
+import eu.ebrains.kg.indexing.controller.settings.SettingsController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,7 @@ public class IndexingController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final MappingController mappingController;
+    private final SettingsController settingsController;
     private final ElasticSearchController elasticSearchController;
     private final TranslationController translationController;
     private final DOICitationFormatter doiCitationFormatter;
@@ -73,8 +75,9 @@ public class IndexingController {
     private final boolean skipKGv2;
 
 
-    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
+    public IndexingController(MappingController mappingController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
         this.mappingController = mappingController;
+        this.settingsController = settingsController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
         this.kgV2 = kgV2;
@@ -248,8 +251,8 @@ public class IndexingController {
 
     public void recreateIdentifiersIndex(DataStage dataStage) {
         Map<String, Object> mapping = mappingController.generateIdentifierMapping();
-        Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateIdentifiersIndex(mappingResult, dataStage);
+        Map<String, Object> payload = Map.of("mappings", mapping);
+        elasticSearchController.recreateIdentifiersIndex(payload, dataStage);
     }
 
 
@@ -260,12 +263,16 @@ public class IndexingController {
 
     public void recreateIndex(DataStage dataStage, Class<? extends TargetInstance> clazz, boolean autorelease, boolean temporary){
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
-        Map<String, Object> mappingResult = Map.of("mappings", mapping);
         if(autorelease){
-            elasticSearchController.recreateAutoReleasedIndex(dataStage, mappingResult, clazz, temporary);
+            Map<String, Object> payload = Map.of("mappings", mapping);
+            elasticSearchController.recreateAutoReleasedIndex(dataStage, payload, clazz, temporary);
         }
         else {
-            elasticSearchController.recreateSearchIndex(mappingResult, clazz, dataStage, temporary);
+            Map<String, Object> settings = settingsController.generateSearchIndexSettings();
+            Map<String, Object> payload = Map.of(
+                    "mappings", mapping,
+                    "settings", settings);
+            elasticSearchController.recreateSearchIndex(payload, clazz, dataStage, temporary);
         }
     }
 

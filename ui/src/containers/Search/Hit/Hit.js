@@ -58,7 +58,8 @@ export const HitBase = ({ type, hasNoData, hasUnknownData, title, fields, previe
 );
 
 const markdownEscapedChars = {
-  "&#x2F;": "\\",
+  "&#92;": "\\",
+  "&#x2F;": "/",
   "&#x60;": "`",
   "&#x2a;": "*",
   "&#x5f;": "_",
@@ -84,7 +85,7 @@ const replaceMarkdownEscapedChars = (str) => {
 
 const getTitle = (text, highlight) => {
   if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
-    return replaceMarkdownEscapedChars(highlight["title.value"][0]);
+    return formatHitForHighlight(highlight["title.value"][0]);
   }
   return text;
 };

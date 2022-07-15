@@ -58,6 +58,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
+    @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
     @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 
@@ -209,6 +210,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Sub-components", layout = "Sub-components", labelHidden = true)
     private List<TargetInternalReference> components;
 
+    @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
     @FieldInfo(labelHidden = true, markdown = true, boost = 2, overview = true)
     private Value<String> description;
 
