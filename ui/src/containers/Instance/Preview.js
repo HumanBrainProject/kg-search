@@ -40,7 +40,7 @@ const getId = ({org, domain, schema, version, id}) => {
   return id;
 };
 
-export const Preview = connect(
+const Preview = connect(
   state => {
     const instanceProps = state.instances.currentInstance?
       {
@@ -95,3 +95,5 @@ export const Preview = connect(
     }
   })
 )(InstanceContainer);
+
+export default Preview;

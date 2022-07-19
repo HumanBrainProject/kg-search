@@ -309,7 +309,7 @@ export const SearchWithTabKeyNavigation = withTabKeyNavigation(
   ".kgs-instance"
 )(SearchBase);
 
-export const Search = connect(
+const Search = connect(
   state => ({
     isActive: !state.instances.currentInstance && !state.application.info,
     definitionIsReady: state.definition.isReady,
@@ -347,3 +347,5 @@ export const Search = connect(
     }
   })
 )(SearchWithTabKeyNavigation);
+
+export default Search;

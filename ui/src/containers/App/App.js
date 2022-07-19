@@ -21,23 +21,26 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { connect } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import * as actions from "../../actions/actions";
 import { Notification } from "../Notification/Notification";
-import { Search } from "../Search/Search";
-import { Instance } from "../Instance/Instance";
-import { NotFound } from "../../components/NotFound/NotFound";
-import { Preview } from "../Instance/Preview";
+
 import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
-import "./App.css";
 import { SessionExpiredErrorPanel } from "../Error/ErrorPanel";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import Theme from "../Theme/Theme";
+
+const Search = React.lazy(() => import("../Search/Search"));
+const Instance = React.lazy(() => import("../Instance/Instance"));
+const Preview = React.lazy(() => import("../Instance/Preview"));
+const NotFound = React.lazy(() => import("../../components/NotFound/NotFound"));
+
+import "./App.css";
 
 const App = ({ initialize, isReady }) => {
   const location = useLocation();
@@ -45,6 +48,7 @@ const App = ({ initialize, isReady }) => {
 
   useEffect(() => {
     initialize(location, navigate);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -55,14 +59,16 @@ const App = ({ initialize, isReady }) => {
       <main>
         <Notification />
         {isReady && (
-          <Routes>
-            <Route path="/" element={<Search />} />
-            <Route path="/instances/:id" element={<Instance />} />
-            <Route path="/instances/:type/:id" element={<Instance />} />
-            <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-            <Route path="/live/:id" element={<Preview />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense>
+            <Routes>
+              <Route path="/" element={<Search />} />
+              <Route path="/instances/:id" element={<Instance />} />
+              <Route path="/instances/:type/:id" element={<Instance />} />
+              <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
+              <Route path="/live/:id" element={<Preview />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         )}
         <FetchingPanel />
         <SessionExpiredErrorPanel />

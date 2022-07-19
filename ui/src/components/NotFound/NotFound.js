@@ -26,7 +26,7 @@ import { Link } from "react-router-dom";
 
 import "./NotFound.css";
 
-export const NotFound = () => (
+const NotFound = () => (
   <div className="kgs-notFound">
     <h3>Page not found</h3>
     <div>
@@ -34,3 +34,5 @@ export const NotFound = () => (
     </div>
   </div>
 );
+
+export default NotFound;

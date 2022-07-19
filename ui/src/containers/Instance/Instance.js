@@ -34,7 +34,7 @@ const path = "/instances/";
 
 const getId = ({type, id}) => type?`${type}/${id}`:id;
 
-export const Instance = connect(
+const Instance = connect(
   state => {
     const instanceProps = state.instances.currentInstance?
       {
@@ -88,3 +88,5 @@ export const Instance = connect(
     }
   })
 )(InstanceContainer);
+
+export default Instance;
