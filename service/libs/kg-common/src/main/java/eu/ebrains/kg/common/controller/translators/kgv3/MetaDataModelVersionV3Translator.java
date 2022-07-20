@@ -87,7 +87,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         MetadataModelVersionV3.MetaDataModelVersions metaDataModel = metadataModelVersionV3.getMetaDataModel();
         Accessibility accessibility = Accessibility.fromPayload(metadataModelVersionV3);
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
-        m.setFirstRelease(value(metadataModelVersionV3.getReleaseDate() != null ? metadataModelVersionV3.getReleaseDate() : metadataModelVersionV3.getFirstReleasedAt()));
+        m.setFirstRelease(value(metadataModelVersionV3.getReleaseDate() != null && metadataModelVersionV3.getReleaseDate().before(new Date()) ? metadataModelVersionV3.getReleaseDate() : metadataModelVersionV3.getFirstReleasedAt()));
         m.setLastRelease(value(metadataModelVersionV3.getLastReleasedAt()));
         m.setAllIdentifiers(metadataModelVersionV3.getIdentifier());
         m.setIdentifier(IdUtils.getUUID(metadataModelVersionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
