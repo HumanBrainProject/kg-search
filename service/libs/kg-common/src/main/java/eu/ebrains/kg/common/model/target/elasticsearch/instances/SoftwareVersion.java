@@ -59,7 +59,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     private Value<String> disclaimer;
 
     @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
-    @FieldInfo(label = "Name", boost = 20)
+    @FieldInfo(label = "Name", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     /**
@@ -69,7 +69,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @Deprecated(forRemoval = true)
     private Value<String> editorId;
 
-    @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
+    @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> developers;
 
     @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
@@ -96,10 +96,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Copyright", type = FieldInfo.Type.TEXT)
     private Value<String> copyright;
 
-    @FieldInfo(label = "Project", boost = 10, order = 3)
+    @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> custodians;
 
     /**
@@ -147,13 +147,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Features", layout = "summary", tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     private List<Value<String>> featuresOld;
 
-    @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<TargetInternalReference> features;
 
-    @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> inputFormatsForFilter;
 
-    @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> outputFormatsForFilter;
 
     @FieldInfo(label = "Input formats", layout = "Input formats", isTable = true, labelHidden = true)
@@ -169,7 +169,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Application Category", layout = "summary", separator = ", ", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> appCategoryOld;
 
-    @FieldInfo(label = "Application Category", layout = "summary", separator = ", ", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Application Category", layout = "summary", separator = ", ", facet = FieldInfo.Facet.LIST, useForSuggestion = true)
     private List<TargetInternalReference> appCategory;
 
 
@@ -180,38 +180,38 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Operating System", layout = "summary", facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
     private List<Value<String>> operatingSystemOld;
 
-    @FieldInfo(label = "Operating System", layout = "summary", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Operating System", layout = "summary", facet = FieldInfo.Facet.LIST, useForSuggestion = true)
     private List<TargetInternalReference> operatingSystem;
 
-    @FieldInfo(label = "Devices", layout = "summary", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Devices", layout = "summary", facet = FieldInfo.Facet.LIST, useForSuggestion = true)
     private List<TargetInternalReference> devices;
 
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, visible = false, facetOrder = FieldInfo.FacetOrder.BYCOUNT, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> licenseForFilter;
 
 
-    @FieldInfo(label = "Programming languages", layout = "summary", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Programming languages", layout = "summary", facet = FieldInfo.Facet.LIST, useForSuggestion = true)
     private List<TargetInternalReference> programmingLanguages;
 
-    @FieldInfo(label = "Requirements")
+    @FieldInfo(label = "Requirements", useForSuggestion = true)
     private List<Value<String>> requirements;
 
 
-    @FieldInfo(label = "Languages", layout = "summary")
+    @FieldInfo(label = "Languages", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> languages;
 
     /**
      * @deprecated keywords are - although existing in openMINDS - not very suitable for Software. Additionally, they would be TargetInternalReferences if there would be any. Therefore, this field is used for the old structure only.
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>", useForSuggestion = true)
     private List<Value<String>> keywords;
 
     @FieldInfo(label = "Sub-components", layout = "Sub-components", labelHidden = true)
     private List<TargetInternalReference> components;
 
     @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
-    @FieldInfo(labelHidden = true, markdown = true, boost = 2, overview = true)
+    @FieldInfo(labelHidden = true, markdown = true, boost = 2, overview = true, useForSuggestion = true)
     private Value<String> description;
 
     @JsonProperty("first_release")

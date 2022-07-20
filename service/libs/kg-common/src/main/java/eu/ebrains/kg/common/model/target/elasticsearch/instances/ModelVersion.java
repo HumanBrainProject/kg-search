@@ -89,7 +89,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     //Global
 
     @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
-    @FieldInfo(label = "Name", layout = "header", boost = 20)
+    @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     /**
@@ -99,7 +99,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @Deprecated(forRemoval = true)
     private Value<String> editorId;
 
-    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> contributors;
 
     //Overview
@@ -111,10 +111,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     private List<TargetExternalReference> licenseInfo;
 
 
-    @FieldInfo(label = "Project", boost = 10, order = 3)
+    @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", useForSuggestion = true, type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> custodians;
 
     @FieldInfo(label = "Homepage")
@@ -124,16 +124,16 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     private List<TargetInternalReference> mainContact;
 
     @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
     private Value<String> description;
 
-    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
+    @FieldInfo(label = "New in this version", markdown = true, boost = 2, useForSuggestion = true)
     private Value<String> newInThisVersion;
 
-    @FieldInfo(label = "Studied brain region", layout = "summary")
+    @FieldInfo(label = "Studied brain region", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> studiedBrainRegion;
 
-    @FieldInfo(label = "Study targets", layout = "summary")
+    @FieldInfo(label = "Study targets", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> studyTargets;
 
     @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
@@ -168,22 +168,22 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(layout = "Publications", markdown = true, labelHidden = true)
     private List<Value<String>> publications;
 
-    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>", useForSuggestion = true)
     private List<Value<String>> keywords;
 
-    @FieldInfo(label = "Brain structure", layout = "summary", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Brain structure", layout = "summary", facet = FieldInfo.Facet.LIST, useForSuggestion = true)
     private List<TargetInternalReference> brainStructures;
 
-    @FieldInfo(label = "(Sub)cellular target", layout = "summary")
+    @FieldInfo(label = "(Sub)cellular target", layout = "summary", useForSuggestion = true)
     private List<Value<String>> cellularTarget;
 
-    @FieldInfo(label = "Model scope", layout = "summary", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Model scope", layout = "summary", facet = FieldInfo.Facet.LIST, useForSuggestion = true)
     private List<TargetInternalReference> modelScope;
 
     @FieldInfo(label = "Abstraction level", layout = "summary", separator = "; ", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> abstractionLevel;
 
-    @FieldInfo(label = "Model format", layout = "summary", separator = "; ")
+    @FieldInfo(label = "Model format", layout = "summary", separator = "; ", useForSuggestion = true)
     private List<TargetInternalReference> modelFormat;
 
     @FieldInfo(label = "Used datasets", layout = "Used datasets", labelHidden = true)
