@@ -48,19 +48,22 @@ const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, s
   useEffect(() => {
     const isLive = location.pathname.startsWith("/live/");
     const group = searchToObj()["group"];
-    const hasGroup = group === "public" || group === "curated";
-    const hasAuthSession = getHashKey("session_state");
+    const hasGroup = !isLive && (group === "public" || group === "curated");
+    const hasAuthSession = !!getHashKey("session_state");
+
+    // search with instance + refresh
+    const instance = !hasAuthSession && location.pathname === "/" && location.hash.substr(1);
+    if (instance) {
+      const url = `/instances/${instance}${hasGroup?("?group=" + group):""}`;
+      navigate(url, {replace: true});
+    }
+
     const authMode = hasAuthSession || isLive || hasGroup;
     const useGroups = hasAuthSession && !isLive;
     if(hasGroup) {
       setInitialGroup(group);
     }
-    const instance = !authMode && location.hash.substr(1);
-    if (instance && location.pathname === "/") {
-      const url = `/instances/${instance}${hasGroup?("?group=" + group):""}`;
-      setTimeout(() => navigate(url, {replace: true}), 0);
-      setApplicationReady();
-    } else if (authMode) {
+    if (authMode) {
       if (useGroups) {
         setUseGroups();
       }
