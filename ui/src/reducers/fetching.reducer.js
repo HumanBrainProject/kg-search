@@ -32,7 +32,7 @@ export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_SETTINGS_REQUEST:
     return {
-      message: "Initializing...",
+      message: "Retrieving settings...",
       active: true
     };
   case types.LOAD_GROUPS_REQUEST:
