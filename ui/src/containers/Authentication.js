@@ -28,7 +28,7 @@ import * as actionsAuth from "../actions/actions.auth";
 import * as actionsGroups from "../actions/actions.groups";
 
 import { BgError } from "../components/BgError/BgError";
-import View from "./View";
+import Groups from "./Groups";
 
 const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isloginOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, aut
 
   if (!isloginOut && (!authenticatedMode || isAuthenticated)) {
     return (
-      <View />
+      <Groups />
     );
   }
 

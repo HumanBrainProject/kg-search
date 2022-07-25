@@ -25,7 +25,6 @@ import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
-import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsSettings from "../../actions/actions.settings";
 import * as actionsInstances from "../../actions/actions.instances";
 import { withTabKeyNavigation } from "../../helpers/withTabKeyNavigation";
@@ -39,7 +38,6 @@ import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
 import {
   SettingsErrorPanel,
-  GroupErrorPanel,
   SearchInstanceErrorPanel,
   SearchErrorPanel
 } from "../Error/ErrorPanel";
@@ -85,7 +83,6 @@ const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
       </>
     )}
     <SettingsErrorPanel />
-    <GroupErrorPanel />
     <SearchErrorPanel />
     <SearchInstanceErrorPanel />
   </div>
@@ -173,11 +170,6 @@ const SearchBase = ({
   settingsIsLoading,
   settingsHasError,
   loadSettings,
-  shouldLoadGroups,
-  isGroupLoading,
-  isGroupsReady,
-  loadGroups,
-  groupsHasError,
   searchHasError,
   search,
   isUpToDate
@@ -212,7 +204,7 @@ const SearchBase = ({
   }, [isActive]);
 
   useEffect(() => {
-    if (settingsIsReady && (!shouldLoadGroups || isGroupsReady)) {
+    if (settingsIsReady) {
       let query = searchToObj();
       query = getUpdatedQuery(
         query,
@@ -252,8 +244,6 @@ const SearchBase = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     settingsIsReady,
-    shouldLoadGroups,
-    isGroupsReady,
     queryString,
     selectedType,
     page,
@@ -266,10 +256,6 @@ const SearchBase = ({
       if (!settingsIsLoading && !settingsHasError) {
         loadSettings();
       }
-    } else if (shouldLoadGroups && !isGroupsReady) {
-      if (!isGroupLoading && !groupsHasError) {
-        loadGroups();
-      }
     } else if (!isUpToDate) {
       search();
     }
@@ -278,10 +264,6 @@ const SearchBase = ({
     settingsIsReady,
     settingsIsLoading,
     settingsHasError,
-    shouldLoadGroups,
-    isGroupsReady,
-    isGroupLoading,
-    groupsHasError,
     isUpToDate
   ]);
 
@@ -294,7 +276,6 @@ const SearchBase = ({
       show={
         settingsIsReady &&
         !settingsHasError &&
-        !groupsHasError &&
         !searchHasError
       }
       showKnowledgeSpaceLink={showKnowledgeSpaceLink}
@@ -317,10 +298,6 @@ const Search = connect(
     settingsHasError: !!state.settings.error,
     group: state.groups.group,
     defaultGroup: state.groups.defaultGroup,
-    groupsHasError: !!state.groups.error,
-    isGroupsReady: state.groups.isReady,
-    isGroupLoading: state.groups.isLoading,
-    shouldLoadGroups: !!state.auth.isAuthenticated,
     searchHasError: !!state.search.error,
     queryString: state.search.queryString,
     selectedType: state.search.selectedType?.type,
@@ -335,9 +312,6 @@ const Search = connect(
     },
     loadSettings: () => {
       dispatch(actionsSettings.loadSettings());
-    },
-    loadGroups: () => {
-      dispatch(actionsGroups.loadGroups());
     },
     search: () => {
       dispatch(actionsSearch.search());

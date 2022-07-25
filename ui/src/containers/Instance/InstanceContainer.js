@@ -29,7 +29,7 @@ import { getTags, getTitle } from "../../helpers/InstanceHelper";
 import { ShareButtons } from "../Share/ShareButtons";
 import { Instance } from "../../components/Instance/Instance";
 import { Tags } from "../../components/Tags/Tags";
-import { SettingsErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
+import { SettingsErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
@@ -77,8 +77,6 @@ export const InstanceContainer = ({
   path,
   settingsIsReady,
   settingsHasError,
-  isGroupsReady,
-  groupsHasError,
   group,
   instanceHasError,
   currentInstance,
@@ -90,9 +88,6 @@ export const InstanceContainer = ({
   defaultGroup,
   settingsIsLoading,
   loadSettings,
-  shouldLoadGroups,
-  isGroupLoading,
-  loadGroups,
   instanceIsLoading,
   previousInstance,
   clearAllInstances,
@@ -109,10 +104,6 @@ export const InstanceContainer = ({
       if (!settingsIsLoading && !settingsHasError) {
         loadSettings();
       }
-    } else if (shouldLoadGroups && !isGroupsReady) {
-      if (!isGroupLoading && !groupsHasError) {
-        loadGroups();
-      }
     } else if (!instanceIsLoading && !instanceHasError) {
       if (!currentInstance || currentInstance.id !== id || currentInstance.group !== group) {
         if (currentInstance && currentInstance.group !== group) {
@@ -122,7 +113,7 @@ export const InstanceContainer = ({
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settingsIsReady, settingsHasError, groupsHasError, isGroupsReady, group, instanceHasError, id]);
+  }, [settingsIsReady, settingsHasError, group, instanceHasError, id]);
 
   useEffect(() => {
     window.onpopstate = () => {
@@ -175,7 +166,6 @@ export const InstanceContainer = ({
         )}
       </div>
       <SettingsErrorPanel />
-      <GroupErrorPanel />
       <InstanceErrorPanel />
     </>
   );

@@ -55,10 +55,6 @@ const Instance = connect(
       settingsIsReady: state.settings.isReady,
       settingsIsLoading: state.settings.isLoading,
       settingsHasError: !!state.settings.error,
-      groupsHasError: !!state.groups.error,
-      isGroupsReady: state.groups.isReady,
-      isGroupLoading: state.groups.isLoading,
-      shouldLoadGroups: !!state.auth.isAuthenticated,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
@@ -72,9 +68,6 @@ const Instance = connect(
   dispatch => ({
     loadSettings: () => {
       dispatch(actionsSettings.loadSettings());
-    },
-    loadGroups: () => {
-      dispatch(actionsGroups.loadGroups());
     },
     fetch: (group, id) => {
       dispatch(actionsInstances.loadInstance(group, id));

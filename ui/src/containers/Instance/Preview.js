@@ -23,7 +23,6 @@
 
 import { connect } from "react-redux";
 
-import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsSettings from "../../actions/actions.settings";
 import { ImagePopup } from "../Image/ImagePopup";
@@ -61,10 +60,6 @@ const Preview = connect(
       settingsIsReady: state.settings.isReady,
       settingsIsLoading: state.settings.isLoading,
       settingsHasError: !!state.settings.error,
-      groupsHasError: !!state.groups.error,
-      isGroupsReady: state.groups.isReady,
-      isGroupLoading: state.groups.isLoading,
-      shouldLoadGroups: false,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
@@ -80,9 +75,6 @@ const Preview = connect(
   dispatch => ({
     loadSettings: () => {
       dispatch(actionsSettings.loadSettings());
-    },
-    loadGroups: () => {
-      dispatch(actionsGroups.loadGroups());
     },
     fetch: (_, id) => {
       dispatch(actionsInstances.loadPreview(id));
