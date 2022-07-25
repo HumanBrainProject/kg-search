@@ -24,11 +24,11 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
-import * as actionsAuth from "../../actions/actions.auth";
-import * as actionsGroups from "../../actions/actions.groups";
+import * as actionsAuth from "../actions/actions.auth";
+import * as actionsGroups from "../actions/actions.groups";
 
-import { BgError } from "../../components/BgError/BgError";
-import View from "../View";
+import { BgError } from "../components/BgError/BgError";
+import View from "./View";
 
 const Authentication = ({ defaultGroup, authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isloginOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
   const navigate = useNavigate();

@@ -20,12 +20,12 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import * as types from "../actions/actions.types";
 
 const DEFAULT_GROUP = "public";
 
 const initialState = {
+  useGroups: false,
   isReady: false,
   isLoading: false,
   error: null,
@@ -41,6 +41,13 @@ const setInitialGroup = (state, action) => {
     ...state,
     initialGroup: action.group,
     hasInitialGroup: true
+  };
+};
+
+const setUseGroups = state => {
+  return {
+    ...state,
+    useGroups: true
   };
 };
 
@@ -90,6 +97,7 @@ const loadGroupsFailure = (state, action) => ({
 
 const resetGroups = state => ({
   ...state,
+  useGroups: false,
   groups: [],
   group: DEFAULT_GROUP
 });
@@ -107,6 +115,8 @@ export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_INITIAL_GROUP:
     return setInitialGroup(state, action);
+  case types.SET_USE_GROUPS:
+    return setUseGroups(state);
   case types.SET_GROUP:
     return setGroup(state, action);
   case types.LOAD_GROUPS_REQUEST:
@@ -115,7 +125,9 @@ export function reducer(state = initialState, action = {}) {
     return loadGroupsSuccess(state, action);
   case types.LOAD_GROUPS_FAILURE:
     return loadGroupsFailure(state, action);
-  case types.LOGOUT:
+  case types.LOGOUT_SUCCESS:
+  case types.SESSION_EXPIRED:
+  case types.SESSION_FAILURE:
     return resetGroups(state);
   case types.CLEAR_GROUPS_ERROR:
     return clearGroupsError(state);

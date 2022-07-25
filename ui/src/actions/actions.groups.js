@@ -65,6 +65,12 @@ export const setGroup = group => {
   };
 };
 
+export const setUseGroups = () => {
+  return {
+    type: types.SET_USE_GROUPS
+  };
+};
+
 export const loadGroups = () => {
   return dispatch => {
     dispatch(loadGroupsRequest());

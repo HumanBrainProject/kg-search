@@ -31,7 +31,7 @@ import * as actionsGroups from "../../actions/actions.groups";
 
 import { searchToObj, getHashKey } from "../../helpers/BrowserHelpers";
 import { Notification } from "../Notification/Notification";
-import Authentication from "../Authentication/Authentication";
+import Authentication from "../Authentication";
 import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
 import Footer from "../Footer/Footer";
@@ -40,31 +40,34 @@ import Theme from "../Theme/Theme";
 
 import "./App.css";
 
-const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setApplicationReady }) => {
+const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, setApplicationReady }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
+    const isLive = location.pathname.startsWith("/live/");
     const group = searchToObj()["group"];
-    if(group) {
+    const hasGroup = group === "public" || group === "curated";
+    const hasAuthSession = getHashKey("session_state");
+    const authMode = hasAuthSession || isLive || hasGroup;
+    const useGroups = hasAuthSession && !isLive;
+    if(hasGroup) {
       setInitialGroup(group);
     }
-    const hasAuthSession = getHashKey("session_state");
-    if (hasAuthSession) {
+    const instance = !authMode && location.hash.substr(1);
+    if (instance && location.pathname === "/") {
+      const url = `/instances/${instance}${hasGroup?("?group=" + group):""}`;
+      setTimeout(() => navigate(url, {replace: true}), 0);
+      setApplicationReady();
+    } else if (authMode) {
+      if (useGroups) {
+        setUseGroups();
+      }
       setAuthMode();
       setApplicationReady();
     } else {
-      const instance = location.hash.substr(1);
-      if (location.pathname === "/" && instance) {
-        const url = `/instances/${instance}${group?("?group=" + group):""}`;
-        setTimeout(() => navigate(url, {replace: true}), 0);
-      } else {
-        if(group === "public" || group === "curated" || location.pathname.startsWith("/live/")) {
-          setAuthMode();
-        }
-        setApplicationReady();
-      }
+      setApplicationReady();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -93,8 +96,17 @@ export default connect(
     isApplicationReady: state.application.isReady
   }),
   dispatch => ({
-    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
-    setAuthMode: () => dispatch(actionsAuth.setAuthMode()),
-    setApplicationReady: () => dispatch(actions.setApplicationReady())
+    setInitialGroup: group => {
+      dispatch(actionsGroups.setInitialGroup(group));
+    },
+    setUseGroups: () => {
+      dispatch(actionsGroups.setUseGroups());
+    },
+    setAuthMode: () => {
+      dispatch(actionsAuth.setAuthMode());
+    },
+    setApplicationReady: () => {
+      dispatch(actions.setApplicationReady());
+    }
   })
 )(App);

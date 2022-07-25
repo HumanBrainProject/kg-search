@@ -58,7 +58,7 @@ const Instance = connect(
       groupsHasError: !!state.groups.error,
       isGroupsReady: state.groups.isReady,
       isGroupLoading: state.groups.isLoading,
-      shouldLoadGroups: state.groups.isAuthenticated,
+      shouldLoadGroups: !!state.auth.isAuthenticated,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
