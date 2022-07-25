@@ -29,7 +29,7 @@ import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 
 import API from "../services/API";
-import { sessionFailure } from "../actions/actions";
+import { sessionFailure } from "../actions/actions.auth";
 import LinkedInstance from "./LinkedInstance";
 
 import "./AsyncLinkedInstance.css";

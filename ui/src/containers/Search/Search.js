@@ -26,7 +26,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
 import * as actionsGroups from "../../actions/actions.groups";
-import * as actionsDefinition from "../../actions/actions.definition";
+import * as actionsSettings from "../../actions/actions.settings";
 import * as actionsInstances from "../../actions/actions.instances";
 import { withTabKeyNavigation } from "../../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./SearchPanel/SearchPanel";
@@ -38,7 +38,7 @@ import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
 import {
-  DefinitionErrorPanel,
+  SettingsErrorPanel,
   GroupErrorPanel,
   SearchInstanceErrorPanel,
   SearchErrorPanel
@@ -84,7 +84,7 @@ const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
         <DetailView />
       </>
     )}
-    <DefinitionErrorPanel />
+    <SettingsErrorPanel />
     <GroupErrorPanel />
     <SearchErrorPanel />
     <SearchInstanceErrorPanel />
@@ -169,10 +169,10 @@ const SearchBase = ({
   totalPages,
   group,
   defaultGroup,
-  definitionIsReady,
-  definitionIsLoading,
-  definitionHasError,
-  loadDefinition,
+  settingsIsReady,
+  settingsIsLoading,
+  settingsHasError,
+  loadSettings,
   shouldLoadGroups,
   isGroupLoading,
   isGroupsReady,
@@ -212,7 +212,7 @@ const SearchBase = ({
   }, [isActive]);
 
   useEffect(() => {
-    if (definitionIsReady && (!shouldLoadGroups || isGroupsReady)) {
+    if (settingsIsReady && (!shouldLoadGroups || isGroupsReady)) {
       let query = searchToObj();
       query = getUpdatedQuery(
         query,
@@ -251,7 +251,7 @@ const SearchBase = ({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    definitionIsReady,
+    settingsIsReady,
     shouldLoadGroups,
     isGroupsReady,
     queryString,
@@ -262,9 +262,9 @@ const SearchBase = ({
   ]);
 
   useEffect(() => {
-    if (!definitionIsReady) {
-      if (!definitionIsLoading && !definitionHasError) {
-        loadDefinition();
+    if (!settingsIsReady) {
+      if (!settingsIsLoading && !settingsHasError) {
+        loadSettings();
       }
     } else if (shouldLoadGroups && !isGroupsReady) {
       if (!isGroupLoading && !groupsHasError) {
@@ -275,9 +275,9 @@ const SearchBase = ({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    definitionIsReady,
-    definitionIsLoading,
-    definitionHasError,
+    settingsIsReady,
+    settingsIsLoading,
+    settingsHasError,
     shouldLoadGroups,
     isGroupsReady,
     isGroupLoading,
@@ -292,8 +292,8 @@ const SearchBase = ({
   return (
     <SearchComponent
       show={
-        definitionIsReady &&
-        !definitionHasError &&
+        settingsIsReady &&
+        !settingsHasError &&
         !groupsHasError &&
         !searchHasError
       }
@@ -312,15 +312,15 @@ export const SearchWithTabKeyNavigation = withTabKeyNavigation(
 const Search = connect(
   state => ({
     isActive: !state.instances.currentInstance && !state.application.info,
-    definitionIsReady: state.definition.isReady,
-    definitionIsLoading: state.definition.isLoading,
-    definitionHasError: !!state.definition.error,
+    settingsIsReady: state.settings.isReady,
+    settingsIsLoading: state.settings.isLoading,
+    settingsHasError: !!state.settings.error,
     group: state.groups.group,
     defaultGroup: state.groups.defaultGroup,
     groupsHasError: !!state.groups.error,
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,
-    shouldLoadGroups: !!state.auth.accessToken,
+    shouldLoadGroups: !!state.auth.isAuthenticated,
     searchHasError: !!state.search.error,
     queryString: state.search.queryString,
     selectedType: state.search.selectedType?.type,
@@ -333,8 +333,8 @@ const Search = connect(
     setInitialSearchParams: params => {
       dispatch(actionsSearch.setInitialSearchParams(params));
     },
-    loadDefinition: () => {
-      dispatch(actionsDefinition.loadDefinition());
+    loadSettings: () => {
+      dispatch(actionsSettings.loadSettings());
     },
     loadGroups: () => {
       dispatch(actionsGroups.loadGroups());

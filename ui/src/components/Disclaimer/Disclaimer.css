@@ -10,3 +10,7 @@
 .kgs-instance-disclaimer a {
   color: var(--link-color-1)
 }
+
+.kgs-instance-disclaimer a:hover {
+  color: var(--link-color-2);
+}

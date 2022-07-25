@@ -24,7 +24,7 @@ import { connect } from "react-redux";
 
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
-import * as actionsDefinition from "../../actions/actions.definition";
+import * as actionsSettings from "../../actions/actions.settings";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
@@ -52,13 +52,13 @@ const Instance = connect(
       path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
-      definitionIsReady: state.definition.isReady,
-      definitionIsLoading: state.definition.isLoading,
-      definitionHasError: !!state.definition.error,
+      settingsIsReady: state.settings.isReady,
+      settingsIsLoading: state.settings.isLoading,
+      settingsHasError: !!state.settings.error,
       groupsHasError: !!state.groups.error,
       isGroupsReady: state.groups.isReady,
       isGroupLoading: state.groups.isLoading,
-      shouldLoadGroups: !!state.auth.accessToken,
+      shouldLoadGroups: state.groups.isAuthenticated,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
@@ -70,8 +70,8 @@ const Instance = connect(
     };
   },
   dispatch => ({
-    loadDefinition: () => {
-      dispatch(actionsDefinition.loadDefinition());
+    loadSettings: () => {
+      dispatch(actionsSettings.loadSettings());
     },
     loadGroups: () => {
       dispatch(actionsGroups.loadGroups());

@@ -21,36 +21,57 @@
  *
  */
 
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import * as actions from "../../actions/actions";
-import { Notification } from "../Notification/Notification";
+import * as actionsAuth from "../../actions/actions.auth";
+import * as actionsGroups from "../../actions/actions.groups";
 
+import { searchToObj, getHashKey } from "../../helpers/BrowserHelpers";
+import { Notification } from "../Notification/Notification";
+import Authentication from "../Authentication/Authentication";
 import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
-import { SessionExpiredErrorPanel } from "../Error/ErrorPanel";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import Theme from "../Theme/Theme";
 
-const Search = React.lazy(() => import("../Search/Search"));
-const Instance = React.lazy(() => import("../Instance/Instance"));
-const Preview = React.lazy(() => import("../Instance/Preview"));
-const NotFound = React.lazy(() => import("../../components/NotFound/NotFound"));
-
 import "./App.css";
 
-const App = ({ initialize, isReady }) => {
+const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setApplicationReady }) => {
+
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    initialize(location, navigate);
+    const group = searchToObj()["group"];
+    if(group) {
+      setInitialGroup(group);
+    }
+    const hasAuthSession = getHashKey("session_state");
+    if (hasAuthSession) {
+      setAuthMode();
+      setApplicationReady();
+    } else {
+      const instance = location.hash.substr(1);
+      if (location.pathname === "/" && instance) {
+        const url = `/instances/${instance}${group?("?group=" + group):""}`;
+        setTimeout(() => navigate(url, {replace: true}), 0);
+      } else {
+        if(group === "public" || group === "curated" || location.pathname.startsWith("/live/")) {
+          setAuthMode();
+        }
+        setApplicationReady();
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (!isApplicationReady) {
+    return null;
+  }
 
   return (
     <>
@@ -58,20 +79,8 @@ const App = ({ initialize, isReady }) => {
       <Header />
       <main>
         <Notification />
-        {isReady && (
-          <Suspense>
-            <Routes>
-              <Route path="/" element={<Search />} />
-              <Route path="/instances/:id" element={<Instance />} />
-              <Route path="/instances/:type/:id" element={<Instance />} />
-              <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-              <Route path="/live/:id" element={<Preview />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        )}
+        <Authentication />
         <FetchingPanel />
-        <SessionExpiredErrorPanel />
         <InfoPanel />
       </main>
       <Footer />
@@ -81,11 +90,11 @@ const App = ({ initialize, isReady }) => {
 
 export default connect(
   state => ({
-    isReady: state.application.isReady && !state.auth.error
+    isApplicationReady: state.application.isReady
   }),
   dispatch => ({
-    initialize: (location, navigate) => {
-      dispatch(actions.initialize(location, navigate));
-    }
+    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
+    setAuthMode: () => dispatch(actionsAuth.setAuthMode()),
+    setApplicationReady: () => dispatch(actions.setApplicationReady())
   })
 )(App);

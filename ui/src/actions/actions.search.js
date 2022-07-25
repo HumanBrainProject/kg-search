@@ -24,7 +24,7 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import ReactPiwik from "react-piwik";
-import { sessionFailure } from "./actions";
+import { sessionFailure } from "./actions.auth";
 
 import { getAggregation } from "../helpers/Facets";
 

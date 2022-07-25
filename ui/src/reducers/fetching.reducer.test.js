@@ -21,7 +21,7 @@
  *
  */
 
-import * as actionsDefinition from "../actions/actions.definition";
+import * as actionsSettings from "../actions/actions.settings";
 import * as actionsGroups from "../actions/actions.groups";
 import * as actionsSearch from "../actions/actions.search";
 import * as actionsInstances from "../actions/actions.instances";
@@ -35,18 +35,18 @@ describe("confirguration reducer", () => {
       expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
     });
   });
-  describe("load definition request", () => {
+  describe("load settings request", () => {
     it("should set is active to true", () => {
       const state = {active: false};
-      const action = actionsDefinition.loadDefinitionRequest();
+      const action = actionsSettings.loadSettingsRequest();
       const newState = fetchingReducer(state, action);
       expect(newState.active).toBe(true);
     });
   });
-  describe("load definition failure", () => {
+  describe("load settings failure", () => {
     it("should set is active to false", () => {
       const state = {active: true};
-      const action = actionsDefinition.loadDefinitionFailure("error");
+      const action = actionsSettings.loadSettingsFailure("error");
       const newState = fetchingReducer(state, action);
       expect(newState.active).toBe(false);
     });

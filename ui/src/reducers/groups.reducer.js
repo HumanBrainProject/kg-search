@@ -32,13 +32,15 @@ const initialState = {
   groups: [],
   group: DEFAULT_GROUP,
   defaultGroup: DEFAULT_GROUP,
-  initialGroup: DEFAULT_GROUP
+  initialGroup: DEFAULT_GROUP,
+  hasInitialGroup: false
 };
 
 const setInitialGroup = (state, action) => {
   return {
     ...state,
-    initialGroup: action.group
+    initialGroup: action.group,
+    hasInitialGroup: true
   };
 };
 

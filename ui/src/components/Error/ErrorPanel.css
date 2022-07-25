@@ -48,6 +48,18 @@
     position: relative;
 }
 
+.kgs-error-message a {
+    color: var(--link-color-1) !important;
+}
+
+.kgs-error-message a:hover {
+    color: var(--link-color-2) !important;
+}
+
+.kgs-error-message a{
+    color: var(--link-color-1) !important;
+}
+
 .kgs-error-navigation {
     position: relative;
     width: 100%;
@@ -57,14 +69,26 @@
 .kgs-error-navigation button {
     display: inline-block;
     margin: 15px 20px 0px 20px;
-    border-radius: 3px;
-    padding: 4px 16px;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
     color: #555;
-    font-weight: 400;
+    font-weight: 700;
     cursor: pointer;
 }
 
 .kgs-error-navigation button:hover {
-    color: var(--color-8);    
-    box-shadow: 3px 3px 6px var(--box-shadow-2);
+    background-color: #e6e6e6; 
+}
+
+.kgs-error-navigation button.primary {
+    color: #fff;
+    background-color: var(--button-primary-background-color);
+    border-color: var(--button-primary-border-color);
+}
+
+.kgs-error-navigation button.primary:hover {
+    color: #fff;
+    background-color: var(--button-primary-background-color-hover);
+    border-color: var(--button-primary-border-color-hover);
 }

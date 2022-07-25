@@ -170,7 +170,7 @@ export const Hit = connect(
 
     const type = data?.type; // state.search.selectedType?.type
     const fields = data?.fields;
-    const mapping = fields && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
+    const mapping = fields && state.settings && state.settings.typeMappings && state.settings.typeMappings[type];
     const group = state.groups.group;
 
     return {

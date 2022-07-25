@@ -9,23 +9,12 @@ exports[`ErrorPanel component renders initially 1`] = `
   >
     <span
       className="kgs-error-message"
-    >
-      some message
-    </span>
-    <div
-      className="kgs-error-navigation"
-    >
-      <button
-        onClick={[Function]}
-      >
-        cancel label
-      </button>
-      <button
-        onClick={[Function]}
-      >
-        retry label
-      </button>
-    </div>
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "<p>some message</p>",
+        }
+      }
+    />
   </div>
 </div>
 `;

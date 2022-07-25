@@ -23,7 +23,7 @@ export const Header = ({ SignInComponent, theme }) => {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            {location.pathname.startsWith("/instances") && <li className="nav-item"><Link to={"/"} >Search</Link></li>}
+            {(location.pathname.startsWith("/instances") || location.pathname.startsWith("/logout")) && <li className="nav-item"><Link to={"/"} >Search</Link></li>}
             <li className="nav-item">
               <a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
             </li>

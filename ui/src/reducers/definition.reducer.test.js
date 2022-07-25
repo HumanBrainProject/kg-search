@@ -21,37 +21,37 @@
  *
  */
 
-import * as actions from "../actions/actions.definition";
-import { reducer as definitionReducer} from "./definition.reducer";
-describe("definition reducer", () => {
+import * as actions from "../actions/actions.settings";
+import { reducer as settingsReducer} from "./settings.reducer";
+describe("settings reducer", () => {
   describe("unknown action", () => {
     it("should return same state", () => {
       const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
       const action = {type: "ABCDEFGH"};
-      const newState = definitionReducer(state, action);
+      const newState = settingsReducer(state, action);
       expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
     });
   });
-  describe("load definition success", () => {
-    it("should set current definition", () => {
+  describe("load settings success", () => {
+    it("should set current settings", () => {
       const state = undefined;
       const typeMappings = {a: 1, b: 2, c: 4};
-      const action = actions.loadDefinitionSuccess([], typeMappings);
-      const newState = definitionReducer(state, action);
+      const action = actions.loadSettingsSuccess([], typeMappings);
+      const newState = settingsReducer(state, action);
       expect(newState.typeMappings).toBe(typeMappings);
     });
     it("should set is ready to true", () => {
       const state = {isReady: false};
-      const action = actions.loadDefinitionSuccess([], null);
-      const newState = definitionReducer(state, action);
+      const action = actions.loadSettingsSuccess([], null);
+      const newState = settingsReducer(state, action);
       expect(newState.isReady).toBe(true);
     });
   });
-  describe("load definition failure", () => {
+  describe("load settings failure", () => {
     it("should set ready to false", () => {
       const state = {error: null};
-      const action = actions.loadDefinitionFailure("error");
-      const newState = definitionReducer(state, action);
+      const action = actions.loadSettingsFailure("error");
+      const newState = settingsReducer(state, action);
       expect(newState.error).toBe("error");
     });
   });

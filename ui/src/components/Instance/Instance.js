@@ -42,7 +42,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
   useEffect(() => {
     const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
     ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
-  }, [id, hasNoData, group]);
+  }, [id, hasNoData, group, defaultGroup, path]);
 
   const onVersionChange = useMemo(() => version => {
     if(searchPage) {
@@ -50,17 +50,17 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
     } else {
       navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`);
     }
-  }, [fetch, path, group, defaultGroup]);
+  }, [fetch, path, group, defaultGroup, navigate, searchPage]);
 
   if (hasNoData) {
     return(
-      <BgError show={true} message="This data is currently not available." />
+      <BgError message="This data is currently not available." />
     );
   }
 
   if (hasUnknownData) {
     return(
-      <BgError show={true} message="This type of data is currently not supported." />
+      <BgError message="This type of data is currently not supported." />
     );
   }
 

@@ -66,7 +66,7 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
 
 export const LinkedInstance = connect(
   (state, props) => {
-    const mapping = Object.entries((props.type && state.definition.typeMappings[props.type] && state.definition.typeMappings[props.type].fields)?state.definition.typeMappings[props.type].fields:{}).reduce((acc, [name, fieldsMapping]) => {
+    const mapping = Object.entries((props.type && state.settings.typeMappings[props.type] && state.settings.typeMappings[props.type].fields)?state.settings.typeMappings[props.type].fields:{}).reduce((acc, [name, fieldsMapping]) => {
       if (
         name !== "title" && // filter title as we only want to show the details of the linked instance
         name !== "label" && // filter label as we only want to show the details of the linked instance

@@ -184,6 +184,13 @@ const clearInstanceCurrentTab = state => ({
   currentTabByInstance: {}
 });
 
+const abortLoadInstance = state => {
+  return {
+    ...state,
+    isLoading: false
+  };
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_INSTANCE_REQUEST:
@@ -206,6 +213,9 @@ export function reducer(state = initialState, action = {}) {
     return clearInstanceCurrentTab(state);
   case types.SET_INSTANCE_CURRENT_TAB:
     return setInstanceCurrentTab(state, action);
+  case types.SESSION_EXPIRED:
+  case types.SESSION_FAILURE:
+    return abortLoadInstance(state, action);
   default:
     return state;
   }

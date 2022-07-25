@@ -23,15 +23,6 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { sessionFailure } from "./actions";
-
-
-export const setAuthEndpoint = authEndpoint => {
-  return {
-    type: types.SET_AUTH_ENDPOINT,
-    authEndpoint: authEndpoint
-  };
-};
 
 export const setCommit = commit => {
   return {
@@ -40,61 +31,45 @@ export const setCommit = commit => {
   };
 };
 
-export const loadDefinitionRequest = () => {
+export const loadSettingsRequest = () => {
   return {
-    type: types.LOAD_DEFINITION_REQUEST
+    type: types.LOAD_SETTINGS_REQUEST
   };
 };
 
-export const loadDefinitionSuccess = (typesList, typeMappings) => {
+export const loadSettingsSuccess = (typesList, typeMappings) => {
   return {
-    type: types.LOAD_DEFINITION_SUCCESS,
+    type: types.LOAD_SETTINGS_SUCCESS,
     types: typesList,
     typeMappings: typeMappings
   };
 };
 
-export const loadDefinitionFailure = error => {
+export const loadSettingsFailure = error => {
   return {
-    type: types.LOAD_DEFINITION_FAILURE,
+    type: types.LOAD_SETTINGS_FAILURE,
     error: error
   };
 };
 
-export const clearDefinitionError = () => {
+export const clearSettingsError = () => {
   return {
-    type: types.CLEAR_DEFINITION_ERROR
+    type: types.CLEAR_SETTINGS_ERROR
   };
 };
 
-export const loadDefinition = () => {
+export const loadSettings = () => {
   return dispatch => {
-    dispatch(loadDefinitionRequest());
+    dispatch(loadSettingsRequest());
     API.axios
-      .get(API.endpoints.definition())
+      .get(API.endpoints.settings())
       .then(({ data }) => {
-        data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
         data.commit && dispatch(setCommit(data.commit));
-        dispatch(loadDefinitionSuccess(data?.types, data?.typeMappings));
+        dispatch(loadSettingsSuccess(data?.types, data?.typeMappings));
       })
       .catch(e => {
-        const { response } = e;
-        const status  = response?.status;
-        switch (status) {
-        case 401: // Unauthorized
-        case 403: // Forbidden
-        case 511: // Network Authentication Required
-        {
-          const error = "Your session has expired. Please login again.";
-          dispatch(sessionFailure(error));
-          break;
-        }
-        default:
-        {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
-          dispatch(loadDefinitionFailure(error));
-        }
-        }
+        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+        dispatch(loadSettingsFailure(error));
       });
   };
 };

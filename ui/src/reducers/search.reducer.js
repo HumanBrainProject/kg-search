@@ -397,11 +397,18 @@ const logout = state => {
   };
 };
 
+const abortLoadSearch = state => {
+  return {
+    ...state,
+    isLoading: false
+  };
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_INITIAL_SEARCH_PARAMS:
     return setInitialSearchParams(state, action);
-  case types.LOAD_DEFINITION_SUCCESS:
+  case types.LOAD_SETTINGS_SUCCESS:
     return setupSearch(state, action);
   case types.SET_QUERY_STRING:
     return setQueryString(state, action);
@@ -427,6 +434,9 @@ export function reducer(state = initialState, action = {}) {
     return loadSearchFail(state, action);
   case types.LOGOUT:
     return logout(state);
+  case types.SESSION_EXPIRED:
+  case types.SESSION_FAILURE:
+    return abortLoadSearch(state, action);
   default:
     return state;
   }

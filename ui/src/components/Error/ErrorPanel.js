@@ -23,29 +23,29 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
+
+const converter = new showdown.Converter({extensions: [xssFilter]});
+
 import "./ErrorPanel.css";
 
-export const ErrorPanel = ({ cancelAction, retryAction, onAction, show, message, retryLabel, cancelLabel  }) => {
-  const onRetry = () => typeof onAction === "function" && onAction(retryAction);
-
-  const onCancel = () => typeof onAction === "function" && onAction(cancelAction);
-
-  if (!show) {
-    return null;
-  }
-
+export const ErrorPanel = ({ message, cancelLabel="Cancel", onCancelClick, retryLabel="Retry", onRetryClick }) => {
+  const html = converter.makeHtml(message);
   return (
     <div className="kgs-error-container">
       <div className="kgs-error-panel">
-        <span className="kgs-error-message">{message}</span>
-        <div className="kgs-error-navigation">
-          {cancelLabel && (
-            <button onClick={onCancel}>{cancelLabel}</button>
-          )}
-          {retryLabel && (
-            <button onClick={onRetry}>{retryLabel}</button>
-          )}
-        </div>
+        <span className="kgs-error-message" dangerouslySetInnerHTML={{__html:html}} />
+        {(typeof onCancelClick === "function" || typeof onRetryClick === "function") && (
+          <div className="kgs-error-navigation">
+            {typeof onCancelClick === "function" && (
+              <button onClick={onCancelClick}>{cancelLabel}</button>
+            )}
+            {typeof onRetryClick === "function" && (
+              <button onClick={onRetryClick}>{retryLabel}</button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -54,12 +54,12 @@ export const ErrorPanel = ({ cancelAction, retryAction, onAction, show, message,
 ErrorPanel.propTypes = {
   show: PropTypes.bool,
   cancelLabel: PropTypes.string,
-  cancelAction: PropTypes.oneOfType([
+  onCancelClick: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.object
   ]),
   retryLabel: PropTypes.string,
-  retryAction: PropTypes.oneOfType([
+  onRetryClick: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.object
   ]),

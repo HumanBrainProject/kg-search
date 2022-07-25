@@ -35,7 +35,7 @@ import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.services.KGV2ServiceClient;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
-import eu.ebrains.kg.search.controller.definition.DefinitionController;
+import eu.ebrains.kg.search.controller.settings.SettingsController;
 import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.search.model.FacetValue;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +56,7 @@ import java.util.*;
 public class Search {
     private final KGV2ServiceClient KGV2ServiceClient;
     private final ESServiceClient esServiceClient;
-    private final DefinitionController definitionController;
+    private final SettingsController definitionController;
     private final SearchController searchController;
     private final TranslationController translationController;
     private final KGv2 kgV2;
@@ -66,7 +66,7 @@ public class Search {
     @Value("${eu.ebrains.kg.commit}")
     String commit;
 
-    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, DefinitionController definitionController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
+    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
         this.KGV2ServiceClient = KGV2ServiceClient;
         this.esServiceClient = esServiceClient;
         this.definitionController = definitionController;
@@ -91,13 +91,11 @@ public class Search {
         return doiCitationFormatter.getDOICitation(doi, style, contentType);
     }
 
-    @GetMapping("/definition")
-    public Map<String, Object> getDefinition() {
-        String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
+    @GetMapping("/settings")
+    public Map<String, Object> getSettings() {
         Map<String, Object> result = new HashMap<>();
         result.put("types", definitionController.generateTypes());
         result.put("typeMappings", definitionController.generateTypeMappings());
-        result.put("authEndpoint", authEndpoint);
         if(StringUtils.isNotBlank(commit) && !commit.equals("\"\"")){
             result.put("commit", commit);
         }

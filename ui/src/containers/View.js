@@ -21,18 +21,26 @@
  *
  */
 
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 
-import "./NotFound.css";
+const Search = React.lazy(() => import("./Search/Search"));
+const Instance = React.lazy(() => import("./Instance/Instance"));
+const Preview = React.lazy(() => import("./Instance/Preview"));
 
-const NotFound = () => (
-  <div className="kgs-notFound">
-    <h3>Page not found</h3>
-    <div>
-      <Link to="/">Go back to search</Link>
-    </div>
-  </div>
-);
+const View = () => {
+  return (
+    <Suspense>
+      <Routes>
+        <Route path="/" element={<Search />} />
+        <Route path="/instances/:id" element={<Instance />} />
+        <Route path="/instances/:type/:id" element={<Instance />} />
+        <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
+        <Route path="/live/:id" element={<Preview />} />
+        <Route path="*" element={<Navigate to="/" replace={true} />} />
+      </Routes>
+    </Suspense>
+  );
+};
 
-export default NotFound;
+export default View;

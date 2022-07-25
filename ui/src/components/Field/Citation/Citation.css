@@ -29,6 +29,10 @@
    color: var(--link-color-1);
  }
 
+ .kgs-citation a:hover {
+   color: var(--link-color-2);
+ }
+ 
 .kgs-citation .kgs-citation-download {
     float: right;
     padding-top: 10px;

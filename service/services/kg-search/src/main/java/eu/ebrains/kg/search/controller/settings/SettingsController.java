@@ -21,7 +21,7 @@
  *
  */
 
-package eu.ebrains.kg.search.controller.definition;
+package eu.ebrains.kg.search.controller.settings;
 
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
@@ -39,12 +39,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class DefinitionController {
+public class SettingsController {
 
     private final MetaModelUtils utils;
     private final FacetsController facetsController;
 
-    public DefinitionController(MetaModelUtils utils, FacetsController facetsController) {
+    public SettingsController(MetaModelUtils utils, FacetsController facetsController) {
         this.utils = utils;
         this.facetsController = facetsController;
     }

@@ -21,33 +21,29 @@
  *
  */
 
-import { store } from "../store";
 import axios from "axios";
-
-const keycloakClientId = "kg";
 
 const endpoints = {
   "authEndpoint": () => "/api/auth/endpoint",
-  //"definition": () => "/static/data/definition.json",
-  "definition": () => "/api/definition",
+  //"settings": () => "/static/data/settings.json",
+  "settings": () => "/api/settings",
   "groups": () => "/api/groups",
   //"search": () => "/static/data/search.json",
   "search": (group, q, type, from, size) => `/api/groups/${group}/search?${q?("q=" + encodeURIComponent(q) + "&"):""}type=${encodeURIComponent(type)}&from=${from}&size=${size}`,
   //"instance": () => "/static/data/instance.json",
   "instance": (group, id) => `/api/groups/${group}/documents/${id}`,
   "preview": id => `/api/${id}/live?skipReferenceCheck=true`,
-  "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,
   "citation": (doi, citationStyle, contentType) => `/api/citation?doi=${encodeURIComponent(doi)}&style=${citationStyle}&contentType=${contentType}`
 };
 
 class API {
   constructor() {
     this._axios = axios.create({});
+    this._keycloak = null;
     this._axios.interceptors.request.use(config => {
-      const state = store.getState();
       const header = config.headers[config.method];
-      if (state.auth.accessToken && config.url && !config.url.endsWith("/labels") && !config.url.startsWith("/api/citation")) {
-        header.Authorization = "Bearer " + state.auth.accessToken;
+      if (this._keycloak && this._keycloak.token && config.url && !config.url.endsWith("/settings") && !config.url.startsWith("/api/citation")) {
+        header.Authorization = "Bearer " + this._keycloak.token;
       }
       return Promise.resolve(config);
     });
@@ -55,6 +51,24 @@ class API {
 
   get axios() {
     return this._axios;
+  }
+
+  get accessToken() {
+    return this._keycloak?.token;
+  }
+
+  setKeycloak(keycloak) {
+    this._keycloak = keycloak;
+  }
+
+  login() {
+    this._keycloak && this._keycloak.login();
+  }
+
+  async logout() {
+    if (this._keycloak) {
+      await this._keycloak.logout({redirectUri: `${window.location.protocol}//${window.location.host}/logout`});
+    }
   }
 
   get endpoints() {

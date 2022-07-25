@@ -23,7 +23,7 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { sessionFailure } from "./actions";
+import { sessionFailure } from "./actions.auth";
 
 export const loadGroupsRequest = () => {
   return {

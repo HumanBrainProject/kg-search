@@ -29,7 +29,7 @@ import { getTags, getTitle } from "../../helpers/InstanceHelper";
 import { ShareButtons } from "../Share/ShareButtons";
 import { Instance } from "../../components/Instance/Instance";
 import { Tags } from "../../components/Tags/Tags";
-import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
+import { SettingsErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
@@ -73,16 +73,41 @@ const getNavigation = header => {
   return Navigation;
 };
 
-export const InstanceContainer = ({ path, definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, currentInstance, showInstance, instanceProps, watermark, warning, fetch, defaultGroup, definitionIsLoading, loadDefinition, shouldLoadGroups, isGroupLoading, loadGroups, instanceIsLoading, previousInstance, clearAllInstances, getId, goBackToInstance}) => {
+export const InstanceContainer = ({
+  path,
+  settingsIsReady,
+  settingsHasError,
+  isGroupsReady,
+  groupsHasError,
+  group,
+  instanceHasError,
+  currentInstance,
+  showInstance,
+  instanceProps,
+  watermark,
+  warning,
+  fetch,
+  defaultGroup,
+  settingsIsLoading,
+  loadSettings,
+  shouldLoadGroups,
+  isGroupLoading,
+  loadGroups,
+  instanceIsLoading,
+  previousInstance,
+  clearAllInstances,
+  getId,
+  goBackToInstance
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const id = getId(useParams());
 
   useEffect(() => {
-    if (!definitionIsReady) {
-      if (!definitionIsLoading && !definitionHasError) {
-        loadDefinition();
+    if (!settingsIsReady) {
+      if (!settingsIsLoading && !settingsHasError) {
+        loadSettings();
       }
     } else if (shouldLoadGroups && !isGroupsReady) {
       if (!isGroupLoading && !groupsHasError) {
@@ -97,7 +122,7 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [definitionIsReady, definitionHasError, groupsHasError, isGroupsReady, group, instanceHasError, id]);
+  }, [settingsIsReady, settingsHasError, groupsHasError, isGroupsReady, group, instanceHasError, id]);
 
   useEffect(() => {
     window.onpopstate = () => {
@@ -138,10 +163,10 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
           <Notification text={warning} show={true} />
         )}
         {showInstance && (
-          <React.Fragment>
+          <>
             <BackLinkButton instance={previousInstance} />
             <Instance {...instanceProps} NavigationComponent={NavigationComponent} fetch={fetch} />
-          </React.Fragment>
+          </>
         )}
         {watermark && (
           <div className="kgs-instance-editor__watermark">
@@ -149,7 +174,7 @@ export const InstanceContainer = ({ path, definitionIsReady, definitionHasError,
           </div>
         )}
       </div>
-      <DefinitionErrorPanel />
+      <SettingsErrorPanel />
       <GroupErrorPanel />
       <InstanceErrorPanel />
     </>

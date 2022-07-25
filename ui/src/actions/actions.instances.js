@@ -24,7 +24,7 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { clearGroupError } from "./actions.groups";
-import { sessionFailure, logout } from "./actions";
+import { sessionFailure, logout } from "./actions.auth";
 
 export const setInstanceCurrentTab = (instanceId, tabName) => {
   return {

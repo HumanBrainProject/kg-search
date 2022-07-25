@@ -30,7 +30,7 @@ const initialState = {
   typeMappings: {}
 };
 
-const loadDefinitionRequest = state => {
+const loadSettingsRequest = state => {
   return {
     ...state,
     isReady: false,
@@ -39,7 +39,7 @@ const loadDefinitionRequest = state => {
   };
 };
 
-const loadDefinitionSuccess = (state, action) => {
+const loadSettingsSuccess = (state, action) => {
   return {
     ...state,
     isReady: true,
@@ -48,7 +48,7 @@ const loadDefinitionSuccess = (state, action) => {
   };
 };
 
-const loadDefinitionFailure = (state, action) => {
+const loadSettingsFailure = (state, action) => {
   return {
     ...state,
     isLoading: false,
@@ -56,7 +56,7 @@ const loadDefinitionFailure = (state, action) => {
   };
 };
 
-const clearDefinitionError = state => {
+const clearSettingsError = state => {
   return {
     ...state,
     error: null
@@ -72,14 +72,14 @@ const setCommit = (state, action) => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_DEFINITION_REQUEST:
-    return loadDefinitionRequest(state);
-  case types.LOAD_DEFINITION_SUCCESS:
-    return loadDefinitionSuccess(state, action);
-  case types.LOAD_DEFINITION_FAILURE:
-    return loadDefinitionFailure(state, action);
-  case types.CLEAR_DEFINITION_ERROR:
-    return clearDefinitionError(state);
+  case types.LOAD_SETTINGS_REQUEST:
+    return loadSettingsRequest(state);
+  case types.LOAD_SETTINGS_SUCCESS:
+    return loadSettingsSuccess(state, action);
+  case types.LOAD_SETTINGS_FAILURE:
+    return loadSettingsFailure(state, action);
+  case types.CLEAR_SETTINGS_ERROR:
+    return clearSettingsError(state);
   case types.SET_COMMIT:
     return setCommit(state, action);
   default:

@@ -25,101 +25,120 @@ import React from "react";
 import { connect } from "react-redux";
 import { ErrorPanel as  Component } from "../../components/Error/ErrorPanel";
 import { BgError } from "../../components/BgError/BgError";
-import * as actions from "../../actions/actions";
 import * as actionsSearch from "../../actions/actions.search";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
-import * as actionsDefinition from "../../actions/actions.definition";
+import * as actionsSettings from "../../actions/actions.settings";
 import { useNavigate } from "react-router-dom";
 
-const mapDispatchToProps = dispatch => ({
-  onAction:  action => {
-    dispatch(action);
+const BaseSettingsErrorPanel = ({ error, onRetry }) => {
+  if (!error) {
+    return null;
   }
-});
 
-export const DefinitionErrorPanel = connect(
-  state => ({
-    show: !!state.definition.error,
-    message: state.definition.error,
-    retryLabel: "Retry",
-    retryAction: actionsDefinition.clearDefinitionError(),
-    retryStyle: "primary"
-  }),
-  mapDispatchToProps
-)(BgError);
-
-const GroupErrorPanelContainer = connect(
-  (state, props) => ({
-    show: !!state.groups.error,
-    message: state.groups.error,
-    cancelLabel: "Back to search",
-    cancelAction: actionsInstances.goToSearch(props.navigate),
-    retryLabel: "Retry",
-    retryAction: actionsGroups.clearGroupError(),
-    retryStyle: "primary"
-  }),
-  mapDispatchToProps
-)(BgError);
-
-
-export const GroupErrorPanel = () => {
-  const navigate = useNavigate();
   return (
-    <GroupErrorPanelContainer navigate={navigate} />
+    <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
   );
 };
 
-
-const InstanceErrorPanelContainer = connect(
-  (state, props) => ({
-    show: !!state.instances.error,
-    message: state.instances.error,
-    cancelLabel: "Back to search",
-    cancelAction: actionsInstances.goToSearch(props.navigate, state.groups.group, state.groups.defaultGroup),
-    retryLabel: "Retry",
-    retryAction: actionsInstances.clearInstanceError(),
-    retryStyle: "primary"
+export const SettingsErrorPanel = connect(
+  state => ({
+    error: state.settings.error
   }),
-  mapDispatchToProps
-)(BgError);
+  dispatch => ({
+    onRetry:  () => dispatch(actionsSettings.clearSettingsError())
+  })
+)(BaseSettingsErrorPanel);
 
-export const InstanceErrorPanel = () => {
+
+const BaseGroupErrorPanel = ({ error, onRetry, onCancel }) => {
+
   const navigate = useNavigate();
+
+  const handleOnCancelClick = () => onCancel(navigate);
+
+  if (!error) {
+    return null;
+  }
+
   return (
-    <InstanceErrorPanelContainer navigate={navigate} />
+    <BgError message={error} cancelLabel="Cancel authentication" onCancelClick={handleOnCancelClick} onRetryClick={onRetry} retryVariant="primary" />
+  );
+};
+
+export const GroupErrorPanel = connect(
+  state => ({
+    error: state.groups.error
+  }),
+  dispatch => ({
+    onCancel: navigate => dispatch(actionsInstances.goToSearch(navigate)),
+    onRetry: () => dispatch(actionsGroups.clearGroupError())
+  })
+)(BaseGroupErrorPanel);
+
+const BaseInstanceErrorPanel = ({ error, onRetry, onCancel, group, defaultGroup }) => {
+
+  const navigate = useNavigate();
+
+  const handleOnCancelClick = () => onCancel(navigate, group, defaultGroup);
+
+  if (!error) {
+    return null;
+  }
+
+  return (
+    <BgError message={error} cancelLabel="Back to search" onCancelClick={handleOnCancelClick} onRetryClick={onRetry} retryVariant="primary" />
+  );
+};
+
+export const InstanceErrorPanel = connect(
+  state => ({
+    error: state.instances.error,
+    group: state.groups.group,
+    defaultGroup: state.groups.defaultGroup
+  }),
+  dispatch => ({
+    onCancel: (navigate, group, defaultGroup) => dispatch(actionsInstances.goToSearch(navigate, group, defaultGroup)),
+    onRetry: () => dispatch(actionsInstances.clearInstanceError())
+  })
+)(BaseInstanceErrorPanel);
+
+
+const BaseSearchInstanceErrorPanel  = ({ error, onRetry }) => {
+  if (!error) {
+    return null;
+  }
+
+  return (
+    <Component message={error} onRetryClick={onRetry} retryLabel="Ok" retryVariant="primary" />
   );
 };
 
 export const SearchInstanceErrorPanel = connect(
   state => ({
-    show: !!state.instances.error,
-    message: state.instances.error,
-    retryLabel: "Ok",
-    retryAction: actionsInstances.clearInstanceError(),
-    retryStyle: "primary"
+    error: state.instances.error
   }),
-  mapDispatchToProps
-)(Component);
+  dispatch => ({
+    onRetry: () => dispatch(actionsInstances.clearInstanceError())
+  })
+)(BaseSearchInstanceErrorPanel);
+
+
+const BaseSearchErrorPanel = ({ error, onRetry }) => {
+  if (!error) {
+    return null;
+  }
+
+  return (
+    <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
+  );
+};
 
 export const SearchErrorPanel = connect(
   state => ({
-    show: !!state.search.error,
-    message: state.search.error,
-    retryLabel: "Retry",
-    retryAction: actionsSearch.search(),
-    retryStyle: "primary"
+    error: state.search.error
   }),
-  mapDispatchToProps
-)(BgError);
-
-export const SessionExpiredErrorPanel = connect(
-  state => ({
-    show: !!state.auth.error,
-    message: state.auth.error,
-    retryLabel: state.auth.authEndpoint ? "Login": "Retry",
-    retryAction: state.auth.authEndpoint ? actions.authenticate(): actionsDefinition.loadDefinition(),
-    retryStyle: "primary"
-  }),
-  mapDispatchToProps
-)(BgError);
+  dispatch => ({
+    onRetry: () => dispatch(actionsSearch.search())
+  })
+)(BaseSearchErrorPanel);

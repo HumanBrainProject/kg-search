@@ -153,8 +153,8 @@ export const mapStateToProps = (state, props) => {
   const type = data?.type;
   const mapping =
     (fields &&
-      state.definition?.typeMappings &&
-      state.definition.typeMappings[type]) ??
+      state.settings?.typeMappings &&
+      state.settings.typeMappings[type]) ??
     {};
   const group = state.groups.group;
   const version = (data?.version)? data.version : "Current";

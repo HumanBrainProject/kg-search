@@ -29,7 +29,7 @@ import { faSyncAlt } from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 import { FileFilter } from "./FileFilter";
 import HierarchicalFiles from "../../components/Field/Files/HierarchicalFiles";
 import API from "../../services/API";
-import { sessionFailure } from "../../actions/actions";
+import { sessionFailure } from "../../actions/actions.auth";
 
 const showMoreStyle = {
   display: "inline",

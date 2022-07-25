@@ -40,7 +40,8 @@
     box-sizing: border-box;
     background-color: var(--background-color-2);
     transition: margin-top 0.25s ease-in;
-    box-shadow: 3px 3px 6px var(--box-shadow-2);
+    box-shadow: 1px 1px 2px var(--box-shadow-2);
     text-align: center;
+    font-size: 16px;
     transform: translate(-50%, -50%);
 }

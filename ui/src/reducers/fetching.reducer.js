@@ -30,8 +30,7 @@ const initialState = {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_AUTH_ENDPOINT_REQUEST:
-  case types.LOAD_DEFINITION_REQUEST:
+  case types.LOAD_SETTINGS_REQUEST:
     return {
       message: "Initializing...",
       active: true
@@ -51,21 +50,41 @@ export function reducer(state = initialState, action = {}) {
       message: "Loading instance...",
       active: true
     };
+  case types.AUTH_INITIALIZE:
+    return {
+      message: "Initalizing authentication...",
+      active: true
+    };
+  case types.LOGIN:
+    return {
+      message: "Authenicating..",
+      active: true
+    };
+  case types.LOGOUT:
+    return {
+      message: "Login out..",
+      active: true
+    };
+  case types.LOAD_AUTH_ENDPOINT_REQUEST:
+    return {
+      message: "Retrieving authentication endpoint..",
+      active: true
+    };
+  case types.SET_AUTH_ENDPOINT:
+  case types.CLEAR_AUTH_ENDPOINT_ERROR:
+  case types.LOAD_AUTH_ENDPOINT_FAILURE:
   case types.SET_APPLICATION_READY:
   case types.AGREE_TERMS_SHORT_NOTICE:
   case types.SET_INFO:
   case types.SHOW_IMAGE:
-  case types.LOAD_AUTH_ENDPOINT_SUCCESS:
-  case types.LOAD_AUTH_ENDPOINT_FAILURE:
-  case types.LOAD_DEFINITION_FAILURE:
-  case types.CLEAR_DEFINITION_ERROR:
+  case types.LOAD_SETTINGS_FAILURE:
+  case types.CLEAR_SETTINGS_ERROR:
   case types.LOAD_GROUPS_SUCCESS:
   case types.LOAD_GROUPS_FAILURE:
   case types.CLEAR_GROUPS_ERROR:
   case types.SET_INITIAL_SEARCH_PARAMS:
   case types.SET_INITIAL_GROUP:
   case types.SET_GROUP:
-  case types.SET_TOKEN:
   case types.SET_QUERY_STRING:
   case types.SET_TYPE:
   case types.SET_FACET:
@@ -75,7 +94,6 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SUCCESS:
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
-  case types.SESSION_FAILURE:
   case types.CANCEL_SEARCH:
   case types.LOAD_INSTANCE_SUCCESS:
   case types.LOAD_INSTANCE_FAILURE:
@@ -83,9 +101,11 @@ export function reducer(state = initialState, action = {}) {
   case types.CANCEL_INSTANCE_LOADING:
   case types.SET_PREVIOUS_INSTANCE:
   case types.CLEAR_ALL_INSTANCES:
-  case types.AUTHENTICATE:
-  case types.AUTHENTICATING:
-  case types.LOGOUT:
+  case types.LOGIN_SUCCESS:
+  case types.LOGOUT_SUCCESS:
+  case types.SESSION_EXPIRED:
+  case types.SESSION_FAILURE:
+  case types.AUTH_INIALIZATION_FAILURE:
     return {
       message: null,
       active: false
