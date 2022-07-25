@@ -62,7 +62,7 @@ export function reducer(state = initialState, action = {}) {
     };
   case types.LOGOUT:
     return {
-      message: "Login out..",
+      message: "Loging out..",
       active: true
     };
   case types.LOAD_AUTH_ENDPOINT_REQUEST:
