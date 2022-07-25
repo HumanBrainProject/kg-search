@@ -26,7 +26,6 @@ import { connect } from "react-redux";
 import { ErrorPanel as  Component } from "../../components/Error/ErrorPanel";
 import { BgError } from "../../components/BgError/BgError";
 import * as actionsSearch from "../../actions/actions.search";
-import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsSettings from "../../actions/actions.settings";
 import { useNavigate } from "react-router-dom";
@@ -50,31 +49,6 @@ export const SettingsErrorPanel = connect(
   })
 )(BaseSettingsErrorPanel);
 
-
-const BaseGroupErrorPanel = ({ error, onRetry, onCancel }) => {
-
-  const navigate = useNavigate();
-
-  const handleOnCancelClick = () => onCancel(navigate);
-
-  if (!error) {
-    return null;
-  }
-
-  return (
-    <BgError message={error} cancelLabel="Cancel authentication" onCancelClick={handleOnCancelClick} onRetryClick={onRetry} retryVariant="primary" />
-  );
-};
-
-export const GroupErrorPanel = connect(
-  state => ({
-    error: state.groups.error
-  }),
-  dispatch => ({
-    onCancel: navigate => dispatch(actionsInstances.goToSearch(navigate)),
-    onRetry: () => dispatch(actionsGroups.clearGroupError())
-  })
-)(BaseGroupErrorPanel);
 
 const BaseInstanceErrorPanel = ({ error, onRetry, onCancel, group, defaultGroup }) => {
 
