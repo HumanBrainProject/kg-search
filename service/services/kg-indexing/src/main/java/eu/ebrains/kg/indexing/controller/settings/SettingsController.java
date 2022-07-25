@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo.SEARCH_ANALYZER;
+import static eu.ebrains.kg.indexing.controller.mapping.MappingController.SEARCH_ANALYZER;
 
 @Component
 public class SettingsController {

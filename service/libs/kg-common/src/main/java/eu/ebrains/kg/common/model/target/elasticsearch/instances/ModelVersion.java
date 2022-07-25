@@ -88,7 +88,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
 
     //Global
 
-    @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
     @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
@@ -123,7 +122,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Main contact", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
     private List<TargetInternalReference> mainContact;
 
-    @ElasticSearchInfo(searchAnalyzer=ElasticSearchInfo.SEARCH_ANALYZER)
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
     private Value<String> description;
 

@@ -28,6 +28,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.ErrorReportResult;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,7 @@ public class Indexing {
     }
 
     @PostMapping
+    @Operation(summary="Full replacement")
     public ResponseEntity<ErrorReportResult> fullReplacement(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             indexingController.recreateIdentifiersIndex(dataStage);
@@ -82,6 +84,7 @@ public class Indexing {
     }
 
     @PostMapping("categories/{category}")
+    @Operation(summary="Full replacement by type")
     public ResponseEntity<ErrorReportResult> fullReplacementByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> m.getTargetClass().getSimpleName().equals(category)).map(m -> {
@@ -101,6 +104,7 @@ public class Indexing {
     }
 
     @PostMapping("/autorelease")
+    @Operation(summary="full replacement auto release")
     public ResponseEntity<ErrorReportResult> fullReplacementAutoRelease(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
@@ -117,6 +121,7 @@ public class Indexing {
     }
 
     @PutMapping
+    @Operation(summary="incremental update")
     public ResponseEntity<ErrorReportResult> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).map(m -> {
@@ -131,6 +136,7 @@ public class Indexing {
     }
 
     @PutMapping("categories/{category}")
+    @Operation(summary="incremental update by type")
     public ResponseEntity<ErrorReportResult> incrementalUpdateByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).map(m -> {
@@ -145,6 +151,7 @@ public class Indexing {
     }
 
     @PutMapping("/autorelease")
+    @Operation(summary="incremental auto release")
     public ResponseEntity<ErrorReportResult> incrementalUpdateAutoRelease(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {

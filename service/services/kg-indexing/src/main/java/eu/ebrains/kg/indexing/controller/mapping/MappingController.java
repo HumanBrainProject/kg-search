@@ -39,6 +39,7 @@ import java.util.*;
 public class MappingController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MetaModelUtils utils;
+    public final static String SEARCH_ANALYZER = "custom_search_analyzer";
     private final static String KEYWORD = "keyword";
     private final static String PROPERTIES = "properties";
 
@@ -112,10 +113,10 @@ public class MappingController {
                     Map<String,  Object> fields = new LinkedHashMap<>();
                     value.put("fields", fields);
                     value.put("type", "text");
+                    value.put("analyzer", SEARCH_ANALYZER);
                     Map<String,  Object> keyword= new LinkedHashMap<>();
                     fields.put(KEYWORD, keyword);
                     keyword.put("type",KEYWORD);
-
                 }
                 else if (topTypeToHandle == String.class) {
                     if(esInfo != null && StringUtils.isNotBlank(esInfo.type())) {
@@ -130,9 +131,7 @@ public class MappingController {
                         if (esInfo != null && esInfo.ignoreAbove() > 0) {
                             keyword.put("ignore_above", esInfo.ignoreAbove());
                         }
-                    }
-                    if(esInfo != null && StringUtils.isNotBlank(esInfo.searchAnalyzer())) {
-                        fieldDefinition.put("analyzer", esInfo.searchAnalyzer());
+                        fieldDefinition.put("analyzer", SEARCH_ANALYZER);
                     }
                 } else if (topTypeToHandle == Date.class) {
                     fieldDefinition.put("type", "date");
