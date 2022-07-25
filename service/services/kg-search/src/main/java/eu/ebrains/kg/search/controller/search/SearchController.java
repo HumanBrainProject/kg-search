@@ -302,9 +302,9 @@ public class SearchController extends FacetAggregationUtils {
             SimpleDateFormat sdf = new SimpleDateFormat(ISODateValue.ISO_DATE_PATTERN);
             Date firstReleaseDate = sdf.parse(firstRelease);
             Calendar cal = new GregorianCalendar();
-            cal.add(Calendar.DAY_OF_MONTH, -32);
-            Date oneMonthAgo = cal.getTime();
-            return firstReleaseDate.after(oneMonthAgo);
+            cal.add(Calendar.DAY_OF_MONTH, -8);
+            Date daysAgo = cal.getTime();
+            return firstReleaseDate.after(daysAgo);
         } catch (ParseException e) {
             return false;
         }
