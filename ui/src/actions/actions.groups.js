@@ -45,6 +45,12 @@ export const loadGroupsFailure = error => {
   };
 };
 
+export const resetGroups = () => {
+  return {
+    type: types.RESET_GROUPS
+  };
+};
+
 export const clearGroupError = () => {
   return {
     type: types.CLEAR_GROUPS_ERROR

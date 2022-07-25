@@ -30,7 +30,7 @@ import * as actionsGroups from "../actions/actions.groups";
 import { BgError } from "../components/BgError/BgError";
 import View from "./View";
 
-const Authentication = ({ defaultGroup, authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isloginOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
+const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isloginOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogout = !!matchPath({path:"/logout"}, location.pathname);
@@ -66,7 +66,7 @@ const Authentication = ({ defaultGroup, authEndpoint, error, authenticatedMode, 
     if (isLive) {
       navigate(location.pathname.replace("/live/", "/instances/"));
     }
-    setAuthMode(false, defaultGroup);
+    setAuthMode(false);
   };
 
   if (error) {
@@ -92,7 +92,6 @@ const Authentication = ({ defaultGroup, authEndpoint, error, authenticatedMode, 
 
 export default connect(
   state => ({
-    defaultGroup: state.groups.defaultGroup,
     authEndpoint: state.auth.authEndpoint,
     error: state.auth.error,
     authenticatedMode: state.auth.authenticatedMode,
@@ -104,10 +103,9 @@ export default connect(
     isloginOut: state.auth.isloginOut
   }),
   dispatch => ({
-    setAuthMode: (active, defaultGroup) => {
+    setAuthMode: active => {
       if (!active) {
-        dispatch(actionsGroups.setInitialGroup(defaultGroup));
-        dispatch(actionsGroups.setGroup(defaultGroup));
+        dispatch(actionsGroups.resetGroups());
       }
       dispatch(actionsAuth.setAuthMode(active));
     },

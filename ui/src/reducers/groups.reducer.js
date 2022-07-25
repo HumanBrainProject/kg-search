@@ -125,6 +125,7 @@ export function reducer(state = initialState, action = {}) {
     return loadGroupsSuccess(state, action);
   case types.LOAD_GROUPS_FAILURE:
     return loadGroupsFailure(state, action);
+  case types.RESET_GROUPS:
   case types.LOGOUT_SUCCESS:
   case types.SESSION_EXPIRED:
   case types.SESSION_FAILURE:
