@@ -87,10 +87,10 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
 
 
     //Global
-    @FieldInfo(label = "Name", layout = "header", boost = 20)
+    @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
-    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> contributors;
 
     //Overview
@@ -101,16 +101,16 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private List<TargetExternalReference> licenseInfo;
 
-    @FieldInfo(label = "Project", boost = 10, order = 3)
+    @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, useForSuggestion = true, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> custodians;
 
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
     private Value<String> description;
 
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)

@@ -100,7 +100,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         d.setId(datasetVersion.getUUID());
-        d.setFirstRelease(value(datasetVersion.getReleaseDate() != null ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt()));
+        d.setFirstRelease(value(datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt()));
         d.setLastRelease(value(datasetVersion.getLastReleasedAt()));
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);

@@ -60,34 +60,34 @@ public class Contributor implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
-    @FieldInfo(label = "Name", boost = 20)
+    @FieldInfo(label = "Name", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Custodian of datasets", layout = "Custodian of datasets", labelHidden = true)
+    @FieldInfo(label = "Custodian of datasets", layout = "Custodian of datasets", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> custodianOfDataset;
 
-    @FieldInfo(label = "Custodian of models", layout = "Custodian of models", labelHidden = true)
+    @FieldInfo(label = "Custodian of models", layout = "Custodian of models", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> custodianOfModel;
 
-    @FieldInfo(label = "Custodian of software", layout = "Custodian of software", labelHidden = true)
+    @FieldInfo(label = "Custodian of software", layout = "Custodian of software", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> custodianOfSoftware;
 
-    @FieldInfo(label = "Custodian of (meta)data models", layout = "Custodian of (meta)data models", labelHidden = true)
+    @FieldInfo(label = "Custodian of (meta)data models", layout = "Custodian of (meta)data models", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> custodianOfMetaDataModels;
 
-    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Dataset contributions", labelHidden = true)
+    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Dataset contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> datasetContributions;
 
-    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Model contributions", labelHidden = true)
+    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Model contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> modelContributions;
 
-    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Software contributions", labelHidden = true)
+    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Software contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> softwareContributions;
 
-    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "(Meta)Data model contributions", labelHidden = true)
+    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "(Meta)Data model contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> metaDataModelContributions;
 
     @JsonProperty("first_release")
