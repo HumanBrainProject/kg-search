@@ -32,10 +32,3 @@ test("ErrorPanel component renders initially", () => {
 
   expect(component.toJSON()).toMatchSnapshot();
 });
-
-test("ErrorPanel test show false\"", () => {
-  const component = renderer.create(
-    <ErrorPanel show={false} message="some message" retryLabel="retry label" onRetryClick={{}} cancelLabel="cancel label" onCancelClick={{}} onAction={() => {}} />
-  );
-  expect(component.toJSON()).toBe(null);
-});
