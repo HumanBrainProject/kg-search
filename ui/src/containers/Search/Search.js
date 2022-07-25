@@ -25,7 +25,6 @@ import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
-import * as actionsSettings from "../../actions/actions.settings";
 import * as actionsInstances from "../../actions/actions.instances";
 import { withTabKeyNavigation } from "../../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./SearchPanel/SearchPanel";
@@ -37,7 +36,6 @@ import { Footer } from "./Footer/Footer";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { DetailView } from "./Detail/DetailView";
 import {
-  SettingsErrorPanel,
   SearchInstanceErrorPanel,
   SearchErrorPanel
 } from "../Error/ErrorPanel";
@@ -82,7 +80,6 @@ const SearchComponent = ({ show, showKnowledgeSpaceLink, queryString }) => (
         <DetailView />
       </>
     )}
-    <SettingsErrorPanel />
     <SearchErrorPanel />
     <SearchInstanceErrorPanel />
   </div>
@@ -166,10 +163,6 @@ const SearchBase = ({
   totalPages,
   group,
   defaultGroup,
-  settingsIsReady,
-  settingsIsLoading,
-  settingsHasError,
-  loadSettings,
   searchHasError,
   search,
   isUpToDate
@@ -204,46 +197,43 @@ const SearchBase = ({
   }, [isActive]);
 
   useEffect(() => {
-    if (settingsIsReady) {
-      let query = searchToObj();
-      query = getUpdatedQuery(
-        query,
-        "q",
-        queryString !== "",
-        queryString,
-        false
-      );
-      query = getUpdatedQuery(
-        query,
-        "category",
-        !!selectedType,
-        selectedType,
-        false
-      );
-      const list = calculateFacetList(facets);
-      query = list.reduce(
-        (acc, item) =>
-          getUpdatedQuery(acc, item.name, item.checked, item.value, item.many),
-        query
-      );
-      query = getUpdatedQuery(query, "p", page !== 1, page, false);
-      query = getUpdatedQuery(
-        query,
-        "group",
-        group && group !== defaultGroup,
-        group,
-        false
-      );
-      const newLocationSearch = getLocationSearchFromQuery(query);
-      if (newLocationSearch !== location.search) {
-        navigate(`${location.pathname}${newLocationSearch}`, {
-          replace: !window.location.search
-        }); // replace no type at initialisation
-      }
+    let query = searchToObj();
+    query = getUpdatedQuery(
+      query,
+      "q",
+      queryString !== "",
+      queryString,
+      false
+    );
+    query = getUpdatedQuery(
+      query,
+      "category",
+      !!selectedType,
+      selectedType,
+      false
+    );
+    const list = calculateFacetList(facets);
+    query = list.reduce(
+      (acc, item) =>
+        getUpdatedQuery(acc, item.name, item.checked, item.value, item.many),
+      query
+    );
+    query = getUpdatedQuery(query, "p", page !== 1, page, false);
+    query = getUpdatedQuery(
+      query,
+      "group",
+      group && group !== defaultGroup,
+      group,
+      false
+    );
+    const newLocationSearch = getLocationSearchFromQuery(query);
+    if (newLocationSearch !== location.search) {
+      navigate(`${location.pathname}${newLocationSearch}`, {
+        replace: !window.location.search
+      }); // replace no type at initialisation
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    settingsIsReady,
     queryString,
     selectedType,
     page,
@@ -252,20 +242,11 @@ const SearchBase = ({
   ]);
 
   useEffect(() => {
-    if (!settingsIsReady) {
-      if (!settingsIsLoading && !settingsHasError) {
-        loadSettings();
-      }
-    } else if (!isUpToDate) {
+    if (!isUpToDate) {
       search();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    settingsIsReady,
-    settingsIsLoading,
-    settingsHasError,
-    isUpToDate
-  ]);
+  }, [isUpToDate]);
 
   const showKnowledgeSpaceLink =
     (!totalPages || page === totalPages) &&
@@ -273,11 +254,7 @@ const SearchBase = ({
     queryString.length > 0;
   return (
     <SearchComponent
-      show={
-        settingsIsReady &&
-        !settingsHasError &&
-        !searchHasError
-      }
+      show={!searchHasError}
       showKnowledgeSpaceLink={showKnowledgeSpaceLink}
       queryString={queryString}
     />
@@ -293,9 +270,6 @@ export const SearchWithTabKeyNavigation = withTabKeyNavigation(
 const Search = connect(
   state => ({
     isActive: !state.instances.currentInstance && !state.application.info,
-    settingsIsReady: state.settings.isReady,
-    settingsIsLoading: state.settings.isLoading,
-    settingsHasError: !!state.settings.error,
     group: state.groups.group,
     defaultGroup: state.groups.defaultGroup,
     searchHasError: !!state.search.error,
@@ -309,9 +283,6 @@ const Search = connect(
   dispatch => ({
     setInitialSearchParams: params => {
       dispatch(actionsSearch.setInitialSearchParams(params));
-    },
-    loadSettings: () => {
-      dispatch(actionsSettings.loadSettings());
     },
     search: () => {
       dispatch(actionsSearch.search());

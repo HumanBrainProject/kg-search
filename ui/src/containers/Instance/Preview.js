@@ -24,7 +24,6 @@
 import { connect } from "react-redux";
 
 import * as actionsInstances from "../../actions/actions.instances";
-import * as actionsSettings from "../../actions/actions.settings";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
@@ -57,9 +56,6 @@ const Preview = connect(
       path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.error,
-      settingsIsReady: state.settings.isReady,
-      settingsIsLoading: state.settings.isLoading,
-      settingsHasError: !!state.settings.error,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
@@ -73,9 +69,6 @@ const Preview = connect(
     };
   },
   dispatch => ({
-    loadSettings: () => {
-      dispatch(actionsSettings.loadSettings());
-    },
     fetch: (_, id) => {
       dispatch(actionsInstances.loadPreview(id));
     },

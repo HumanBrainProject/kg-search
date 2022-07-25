@@ -29,7 +29,7 @@ import { getTags, getTitle } from "../../helpers/InstanceHelper";
 import { ShareButtons } from "../Share/ShareButtons";
 import { Instance } from "../../components/Instance/Instance";
 import { Tags } from "../../components/Tags/Tags";
-import { SettingsErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
+import { InstanceErrorPanel } from "../Error/ErrorPanel";
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
@@ -75,8 +75,6 @@ const getNavigation = header => {
 
 export const InstanceContainer = ({
   path,
-  settingsIsReady,
-  settingsHasError,
   group,
   instanceHasError,
   currentInstance,
@@ -86,8 +84,6 @@ export const InstanceContainer = ({
   warning,
   fetch,
   defaultGroup,
-  settingsIsLoading,
-  loadSettings,
   instanceIsLoading,
   previousInstance,
   clearAllInstances,
@@ -100,20 +96,16 @@ export const InstanceContainer = ({
   const id = getId(useParams());
 
   useEffect(() => {
-    if (!settingsIsReady) {
-      if (!settingsIsLoading && !settingsHasError) {
-        loadSettings();
-      }
-    } else if (!instanceIsLoading && !instanceHasError) {
-      if (!currentInstance || currentInstance.id !== id || currentInstance.group !== group) {
-        if (currentInstance && currentInstance.group !== group) {
+    if (!instanceIsLoading && !instanceHasError) {
+      if (!currentInstance || currentInstance.id !== id || (currentInstance.group && currentInstance.group !== group)) { // live has not currentInstance.group
+        if (currentInstance?.group !== group) {
           clearAllInstances();
         }
         fetch(group, id);
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settingsIsReady, settingsHasError, group, instanceHasError, id]);
+  }, [id, group, instanceIsLoading, instanceHasError]);
 
   useEffect(() => {
     window.onpopstate = () => {
@@ -165,7 +157,6 @@ export const InstanceContainer = ({
           </div>
         )}
       </div>
-      <SettingsErrorPanel />
       <InstanceErrorPanel />
     </>
   );

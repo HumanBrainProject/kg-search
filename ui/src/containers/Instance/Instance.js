@@ -24,7 +24,6 @@ import { connect } from "react-redux";
 
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
-import * as actionsSettings from "../../actions/actions.settings";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
@@ -52,9 +51,6 @@ const Instance = connect(
       path: path,
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
-      settingsIsReady: state.settings.isReady,
-      settingsIsLoading: state.settings.isLoading,
-      settingsHasError: !!state.settings.error,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
@@ -66,9 +62,6 @@ const Instance = connect(
     };
   },
   dispatch => ({
-    loadSettings: () => {
-      dispatch(actionsSettings.loadSettings());
-    },
     fetch: (group, id) => {
       dispatch(actionsInstances.loadInstance(group, id));
     },

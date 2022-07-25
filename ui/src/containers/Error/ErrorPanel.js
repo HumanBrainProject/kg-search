@@ -27,28 +27,7 @@ import { ErrorPanel as  Component } from "../../components/Error/ErrorPanel";
 import { BgError } from "../../components/BgError/BgError";
 import * as actionsSearch from "../../actions/actions.search";
 import * as actionsInstances from "../../actions/actions.instances";
-import * as actionsSettings from "../../actions/actions.settings";
 import { useNavigate } from "react-router-dom";
-
-const BaseSettingsErrorPanel = ({ error, onRetry }) => {
-  if (!error) {
-    return null;
-  }
-
-  return (
-    <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
-  );
-};
-
-export const SettingsErrorPanel = connect(
-  state => ({
-    error: state.settings.error
-  }),
-  dispatch => ({
-    onRetry:  () => dispatch(actionsSettings.clearSettingsError())
-  })
-)(BaseSettingsErrorPanel);
-
 
 const BaseInstanceErrorPanel = ({ error, onRetry, onCancel, group, defaultGroup }) => {
 

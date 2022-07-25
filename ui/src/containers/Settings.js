@@ -23,30 +23,30 @@
 
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import * as actionsAuth from "../actions/actions.auth";
-import * as actionsGroups from "../actions/actions.groups";
+
+import * as actionsSettings from "../actions/actions.settings";
 
 import { BgError } from "../components/BgError/BgError";
-import Settings from "./Settings";
+import View from "./View";
 
-const Groups = ({ useGroups, error, isLoading, isReady, loadGroups, onCancel, onRetry}) => {
+const Settings = ({ error, isLoading, isReady, loadSettings, onRetry}) => {
 
   useEffect(() => {
-    if (useGroups && !isReady && !error && !isLoading) {
-      loadGroups();
+    if (!isReady && !error && !isLoading) {
+      loadSettings();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady, error, isLoading]);
 
   if (error) {
     return (
-      <BgError message={error} cancelLabel="Back to search" onCancelClick={onCancel} onRetryClick={onRetry} retryVariant="primary" />
+      <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
     );
   }
 
-  if (!useGroups || isReady) {
+  if (isReady) {
     return (
-      <Settings />
+      <View />
     );
   }
 
@@ -55,20 +55,16 @@ const Groups = ({ useGroups, error, isLoading, isReady, loadGroups, onCancel, on
 
 export default connect(
   state => ({
-    useGroups: state.groups.useGroups && state.auth.isAuthenticated,
-    error: state.groups.error,
-    isLoading: state.groups.isLoading,
-    isReady: state.groups.isReady
+    error: state.settings.error,
+    isLoading: state.settings.isLoading,
+    isReady: state.settings.isReady
   }),
   dispatch => ({
-    loadGroups: () => {
-      dispatch(actionsGroups.loadGroups());
-    },
-    onCancel: () => {
-      dispatch(actionsAuth.logout());
+    loadSettings: () => {
+      dispatch(actionsSettings.loadSettings());
     },
     onRetry: () => {
-      dispatch(actionsGroups.clearGroupError());
+      dispatch(actionsSettings.clearSettingsError());
     }
   })
-)(Groups);
+)(Settings);
