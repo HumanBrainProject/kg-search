@@ -91,5 +91,14 @@ body[theme="dark"] .navbar >.nav-item > button.kgs-login {
     .dropdown .kgs-sign__in + .dropdown-menu {
         left:unset;
         right: 0;
+        padding: 0;
+    }
+
+    .dropdown .kgs-sign__in + .dropdown-menu .dropdown-item {
+        padding: 0.25rem 0;
+    }
+
+    .dropdown .kgs-sign__in + .dropdown-menu .dropdown-divider {
+        margin: 0;
     }
 }
