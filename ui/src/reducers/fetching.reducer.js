@@ -82,7 +82,7 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_GROUPS_SUCCESS:
   case types.LOAD_GROUPS_FAILURE:
   case types.CLEAR_GROUPS_ERROR:
-  case types.SET_INITIAL_SEARCH_PARAMS:
+  case types.INITIALIZE_SEARCH:
   case types.SET_INITIAL_GROUP:
   case types.SET_GROUP:
   case types.SET_QUERY_STRING:

@@ -153,7 +153,7 @@ const getUrlParmeters = () => {
 };
 
 const SearchBase = ({
-  setInitialSearchParams,
+  initializeSearch,
   goBackToInstance,
   isActive,
   queryString,
@@ -175,7 +175,7 @@ const SearchBase = ({
     const params = getUrlParmeters();
     const searchParam = { ...params };
     delete searchParam.group;
-    setInitialSearchParams(searchParam);
+    initializeSearch(searchParam);
     window.onpopstate = () => {
       const reg = /^#(.+)$/;
       const [, id] = reg.test(window.location.hash)
@@ -281,8 +281,8 @@ const Search = connect(
     isUpToDate: state.search.isUpToDate
   }),
   dispatch => ({
-    setInitialSearchParams: params => {
-      dispatch(actionsSearch.setInitialSearchParams(params));
+    initializeSearch: params => {
+      dispatch(actionsSearch.initializeSearch(params));
     },
     search: () => {
       dispatch(actionsSearch.search());

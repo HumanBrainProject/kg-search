@@ -79,7 +79,6 @@ const resolvePage = page => {
 const initialState = {
   error: null,
   message: "",
-  initialParams: {},
   types: [],
   page: 1,
   totalPages: 0,
@@ -111,19 +110,9 @@ const setupSearch = (state, action) => {
     return instanceType;
   }):[];
 
-  const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
-  const selectedType = resolveType(state.initialParams["category"], instanceTypes);
-  const page = resolvePage(state.initialParams["p"]);
-  const from = (page -1) * state.hitsPerPage;
-  resolveFacets(selectedType?.facets, state.initialParams);
-
   return {
     ...state,
-    queryString:  queryString,
-    types: instanceTypes,
-    selectedType: selectedType,
-    page: page,
-    from: from
+    types: instanceTypes
   };
 };
 
@@ -137,10 +126,21 @@ const setQueryString = (state, action) => {
   };
 };
 
-const setInitialSearchParams  = (state, action) => {
+const initializeSearch = (state, action) => {
+  const {q, category, p} = (action?.params instanceof Object)?action.params:{};
+
+  const queryString = q?q:"";
+  const selectedType = resolveType(category, state.types);
+  const page = resolvePage(p);
+  const from = (page -1) * state.hitsPerPage;
+  resolveFacets(selectedType?.facets, action.params);
+
   return {
     ...state,
-    initialParams: action.params
+    queryString:  queryString,
+    selectedType: selectedType,
+    page: page,
+    from: from
   };
 };
 
@@ -406,8 +406,8 @@ const abortLoadSearch = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.SET_INITIAL_SEARCH_PARAMS:
-    return setInitialSearchParams(state, action);
+  case types.INITIALIZE_SEARCH:
+    return initializeSearch(state, action);
   case types.LOAD_SETTINGS_SUCCESS:
     return setupSearch(state, action);
   case types.SET_QUERY_STRING:

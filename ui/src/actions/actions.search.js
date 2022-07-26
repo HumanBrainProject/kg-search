@@ -114,9 +114,9 @@ export const setFacetSize = (name, size) => {
   };
 };
 
-export const setInitialSearchParams = params => {
+export const initializeSearch = params => {
   return {
-    type: types.SET_INITIAL_SEARCH_PARAMS,
+    type: types.INITIALIZE_SEARCH,
     params: params
   };
 };
