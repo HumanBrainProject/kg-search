@@ -20,21 +20,22 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../../actions/actions";
-import * as actionsSearch from "../../../actions/actions.search";
-import { help } from "../../../data/help.js";
-import { withFloatingScrollEventsSubscription } from "../../../helpers/withFloatingScrollEventsSubscription";
-import "./SearchPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+
+import * as actions from "../../../actions/actions";
+import * as actionsSearch from "../../../actions/actions.search";
+import { help } from "../../../data/help.js";
+import { withFloatingScrollEventsSubscription } from "../../../helpers/withFloatingScrollEventsSubscription";
 import { searchToObj } from "../../../helpers/BrowserHelpers";
 
-const SeachPanelBaseComponent = ({ queryString, onQueryStringChange, isFloating, onHelp }) => {
+import "./SearchBox.css";
+
+const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, onHelp }) => {
   const textInput = useRef();
   const [value, setValue] = useState(queryString);
 
@@ -114,11 +115,11 @@ const SeachPanelBaseComponent = ({ queryString, onQueryStringChange, isFloating,
 
 };
 
-const SeachPanelComponent = ({ queryString, isFloating, relatedElements, onHelp, onQueryStringChange }) => (
-  <SeachPanelBaseComponent isFloating={isFloating} queryString={queryString} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} />
+const SeachBoxComponent = ({ queryString, isFloating, relatedElements, onHelp, onQueryStringChange }) => (
+  <SeachBoxBaseComponent isFloating={isFloating} queryString={queryString} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} />
 );
 
-const SearchPanelContainer = connect(
+const SearchBoxContainer = connect(
   (state, props) => {
     return {
       isFloating: props.isFloating,
@@ -134,12 +135,14 @@ const SearchPanelContainer = connect(
       dispatch(actionsSearch.setQueryString(value));
     }
   })
-)(SeachPanelComponent);
+)(SeachBoxComponent);
 
-export const SearchPanel = withFloatingScrollEventsSubscription(
+const SearchBox = withFloatingScrollEventsSubscription(
   "top",
   [
     { querySelector: "nav.kgs-navbar" },
     { querySelector: ".kgs-notification" }
   ]
-)(SearchPanelContainer);
+)(SearchBoxContainer);
+
+export default SearchBox;

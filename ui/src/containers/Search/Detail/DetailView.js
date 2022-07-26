@@ -27,6 +27,8 @@ import * as actionsInstances from "../../../actions/actions.instances";
 import { Carousel } from "../../../components/Carousel/Carousel";
 import { ShareButtons } from "../../Share/ShareButtons";
 import { Instance } from "../Instance";
+import InstanceFetching from "../../Instance/InstanceFetching";
+import InstanceError from "./InstanceError";
 import "./DetailView.css";
 
 
@@ -51,12 +53,21 @@ const DetailViewComponent = ({onBack, onClose, clearInstanceCurrentTab, show, da
     navigate(`/${window.location.search}`);
   };
 
-  if (!show || !Array.isArray(data) || !data.length) {
-    return null;
+  if (!show) {
+    return (
+      <>
+        <InstanceFetching />
+        <InstanceError />
+      </>
+    );
   }
 
   return (
-    <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
+    <>
+      <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
+      <InstanceFetching />
+      <InstanceError />
+    </>
   );
 };
 

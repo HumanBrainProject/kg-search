@@ -30,7 +30,7 @@ const converter = new showdown.Converter({extensions: [xssFilter]});
 
 import "./ErrorPanel.css";
 
-export const ErrorPanel = ({ message, cancelLabel="Cancel", onCancelClick, retryLabel="Retry", onRetryClick }) => {
+export const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel="Cancel", retryLabel="Retry" }) => {
   const html = converter.makeHtml(message);
   return (
     <div className="kgs-error-container">
@@ -39,10 +39,10 @@ export const ErrorPanel = ({ message, cancelLabel="Cancel", onCancelClick, retry
         {(typeof onCancelClick === "function" || typeof onRetryClick === "function") && (
           <div className="kgs-error-navigation">
             {typeof onCancelClick === "function" && (
-              <button onClick={onCancelClick}>{cancelLabel}</button>
+              <button className={`${cancelVariant?cancelVariant:""}`} onClick={onCancelClick}>{cancelLabel}</button>
             )}
             {typeof onRetryClick === "function" && (
-              <button onClick={onRetryClick}>{retryLabel}</button>
+              <button className={`${retryVariant?retryVariant:""}`} onClick={onRetryClick}>{retryLabel}</button>
             )}
           </div>
         )}

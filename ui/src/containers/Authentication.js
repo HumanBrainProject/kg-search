@@ -27,10 +27,11 @@ import {useLocation, useNavigate, matchPath} from "react-router-dom";
 import * as actionsAuth from "../actions/actions.auth";
 import * as actionsGroups from "../actions/actions.groups";
 
+import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import { BgError } from "../components/BgError/BgError";
 import Groups from "./Groups";
 
-const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isloginOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
+const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogout = !!matchPath({path:"/logout"}, location.pathname);
@@ -49,14 +50,14 @@ const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, aut
   };
 
   useEffect(() => {
-    if (!error && authenticatedMode && !isLoading && !authenticationInitializing && !isAuthenticating && !isAuthenticated && !isloginOut) {
+    if (!error && authenticatedMode && !isLoading && !authenticationInitializing && !isAuthenticating && !isAuthenticated && !isLogingOut) {
       if (isLogout) {
         navigate("/");
       }
       authenticate();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isloginOut, isLogout]);
+  }, [authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
 
   const loginBack = () => {
     setAuthMode(true);
@@ -81,7 +82,31 @@ const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, aut
     );
   }
 
-  if (!isloginOut && (!authenticatedMode || isAuthenticated)) {
+  if(isLoading) {
+    return (
+      <FetchingPanel message="Retrieving authentication endpoint..." />
+    );
+  }
+
+  if (authenticationInitializing) {
+    return (
+      <FetchingPanel message="Initalizing authentication..." />
+    );
+  }
+
+  if (isAuthenticating) {
+    return (
+      <FetchingPanel message="Authenicating..." />
+    );
+  }
+
+  if (isLogingOut) {
+    return (
+      <FetchingPanel message="Loging out..." />
+    );
+  }
+
+  if (!authenticatedMode || isAuthenticated) {
     return (
       <Groups />
     );
@@ -100,7 +125,7 @@ export default connect(
     authenticationInitializing: state.auth.authenticationInitializing,
     isAuthenticated: state.auth.isAuthenticated,
     isAuthenticating: state.auth.isAuthenticating,
-    isloginOut: state.auth.isloginOut
+    isLogingOut: state.auth.isLogingOut
   }),
   dispatch => ({
     setAuthMode: active => {

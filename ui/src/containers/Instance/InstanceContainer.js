@@ -29,8 +29,9 @@ import { getTags, getTitle } from "../../helpers/InstanceHelper";
 import { ShareButtons } from "../Share/ShareButtons";
 import { Instance } from "../../components/Instance/Instance";
 import { Tags } from "../../components/Tags/Tags";
-import { InstanceErrorPanel } from "../Error/ErrorPanel";
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
+import InstanceFetching from "./InstanceFetching";
+import InstanceError from "./InstanceError";
 
 import "./InstanceContainer.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -157,7 +158,8 @@ export const InstanceContainer = ({
           </div>
         )}
       </div>
-      <InstanceErrorPanel />
+      <InstanceFetching />
+      <InstanceError />
     </>
   );
 };

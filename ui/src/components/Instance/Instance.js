@@ -41,7 +41,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
 
   useEffect(() => {
     const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
-    ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
+    ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
   }, [id, hasNoData, group, defaultGroup, path]);
 
   const onVersionChange = useMemo(() => version => {

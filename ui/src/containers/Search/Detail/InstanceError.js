@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -20,23 +21,32 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import React from "react";
+import { connect } from "react-redux";
 
-import { combineReducers } from "redux";
+import { ErrorPanel } from "../../../components/Error/ErrorPanel";
+import * as actionsInstances from "../../../actions/actions.instances";
 
-import { reducer as application } from "./application.reducer";
-import { reducer as settings } from "./settings.reducer";
-import { reducer as groups } from "./groups.reducer";
-import { reducer as search } from "./search.reducer";
-import { reducer as instances } from "./instances.reducer";
-import { reducer as auth } from "./auth.reducer";
+const BaseInstanceError = ({ error, onCancel }) => {
 
-const createRootReducer = () => combineReducers({
-  application,
-  settings,
-  groups,
-  search,
-  instances,
-  auth
-});
+  if (!error) {
+    return null;
+  }
 
-export default createRootReducer;
+  return (
+    <ErrorPanel message={error} cancelLabel="Ok" onCancelClick={onCancel} cancelVariant="primary" />
+  );
+};
+
+const InstanceError = connect(
+  state => ({
+    error: state.instances.error
+  }),
+  dispatch => ({
+    onCancel: () => {
+      dispatch(actionsInstances.clearInstanceError());
+    }
+  })
+)(BaseInstanceError);
+
+export default InstanceError;

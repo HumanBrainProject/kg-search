@@ -20,22 +20,23 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import React from "react";
-import renderer from "react-test-renderer";
-import FetchingPanel from "./FetchingPanel";
+import { connect } from "react-redux";
+import { FetchingPanel as Component } from "../../components/Fetching/FetchingPanel";
 
-test("FetchingPanel component renders initially", () => {
-  const component = renderer.create(
-    <FetchingPanel show={true} message="some message" />
+const BaseInstanceFetching = ({show}) => {
+  if (!show) {
+    return null;
+  }
+  return (
+    <Component message="Loading instance..." />
   );
+};
 
-  expect(component.toJSON()).toMatchSnapshot();
-});
+const InstanceFetching = connect(
+  state => ({
+    show: state.instances.isLoading
+  })
+)(BaseInstanceFetching);
 
-test("FetchingPanel test show false", () => {
-  const component = renderer.create(
-    <FetchingPanel show={false} message="some message" />
-  );
-  expect(component.toJSON()).toBe(null);
-});
+export default InstanceFetching;

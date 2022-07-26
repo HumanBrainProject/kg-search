@@ -27,22 +27,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 import "./FetchingPanel.css";
 
-export const FetchingPanel = ({show, message}) => {
-  if (!show) {
-    return null;
-  }
-  return (
-    <div className="kgs-fetching-container" >
-      <div className="kgs-fetching-panel">
-        <FontAwesomeIcon icon={faCircleNotch} spin  />
-        <span className="kgs-spinner-label">{message}</span>
-      </div>
+export const FetchingPanel = ({ message }) => (
+  <div className="kgs-fetching-container" >
+    <div className="kgs-fetching-panel">
+      <FontAwesomeIcon icon={faCircleNotch} spin  />
+      <span className="kgs-spinner-label">{message}</span>
     </div>
-  );
-};
+  </div>
+);
 
 FetchingPanel.propTypes = {
-  show: PropTypes.bool,
   message: PropTypes.string
 };
 

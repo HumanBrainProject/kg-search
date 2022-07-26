@@ -20,13 +20,23 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
+import React from "react";
 import { connect } from "react-redux";
-import { FetchingPanel as  Component } from "../../components/Fetching/FetchingPanel";
+import { FetchingPanel as Component } from "../../components/Fetching/FetchingPanel";
 
-export const FetchingPanel = connect(
+const BaseSearchFetching = ({show}) => {
+  if (!show) {
+    return null;
+  }
+  return (
+    <Component message="Performing search request..." />
+  );
+};
+
+const SearchFetching = connect(
   state => ({
-    show: state.fetching.active,
-    message: state.fetching.message
+    show: state.search.isLoading
   })
-)(Component);
+)(BaseSearchFetching);
+
+export default SearchFetching;

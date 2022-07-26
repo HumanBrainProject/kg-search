@@ -33,7 +33,7 @@ import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 
-const SignInComponent = ({ className, Tag, isAuthenticated, isAuthenticating, isloginOut, group, groups, login, logout, onGroupChange }) => {
+const SignInComponent = ({ className, Tag, isAuthenticated, isAuthenticating, isLogingOut, group, groups, login, logout, onGroupChange }) => {
   if(isAuthenticated) {
     return (
       <Tag className={`${className} dropdown`}>
@@ -53,7 +53,7 @@ const SignInComponent = ({ className, Tag, isAuthenticated, isAuthenticating, is
               </button>
             </div>
           ))}
-          {!isloginOut && (
+          {!isLogingOut && (
             <>
               {!!groups.length && (
                 <div className="dropdown-divider"></div>
@@ -83,7 +83,7 @@ export const SignIn = connect(
   (state, props) => ({
     isAuthenticated: state.auth.isAuthenticated,
     isAuthenticating: state.auth.isLoading || state.auth.authenticationInitializing || state.auth.isAuthenticating,
-    isloginOut: state.auth.isloginOut,
+    isLogingOut: state.auth.isLogingOut,
     group: state.groups.group,
     groups: state.groups.groups?state.groups.groups:[],
     className: props.className,

@@ -27,6 +27,7 @@ import { connect } from "react-redux";
 import * as actionsSettings from "../actions/actions.settings";
 
 import { BgError } from "../components/BgError/BgError";
+import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import View from "./View";
 
 const Settings = ({ error, isLoading, isReady, loadSettings, onRetry}) => {
@@ -41,6 +42,12 @@ const Settings = ({ error, isLoading, isReady, loadSettings, onRetry}) => {
   if (error) {
     return (
       <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <FetchingPanel message="Retrieving settings..." />
     );
   }
 

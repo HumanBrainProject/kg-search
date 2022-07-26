@@ -27,6 +27,7 @@ import * as actionsAuth from "../actions/actions.auth";
 import * as actionsGroups from "../actions/actions.groups";
 
 import { BgError } from "../components/BgError/BgError";
+import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import Settings from "./Settings";
 
 const Groups = ({ useGroups, error, isLoading, isReady, loadGroups, onCancel, onRetry}) => {
@@ -41,6 +42,12 @@ const Groups = ({ useGroups, error, isLoading, isReady, loadGroups, onCancel, on
   if (error) {
     return (
       <BgError message={error} cancelLabel="Back to search" onCancelClick={onCancel} onRetryClick={onRetry} retryVariant="primary" />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <FetchingPanel message="Retrieving your profile..." />
     );
   }
 

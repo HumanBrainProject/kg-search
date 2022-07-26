@@ -32,7 +32,6 @@ import * as actionsGroups from "../../actions/actions.groups";
 import { searchToObj, getHashKey } from "../../helpers/BrowserHelpers";
 import { Notification } from "../Notification/Notification";
 import Authentication from "../Authentication";
-import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
@@ -86,7 +85,6 @@ const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, s
       <main>
         <Notification />
         <Authentication />
-        <FetchingPanel />
         <InfoPanel />
       </main>
       <Footer />

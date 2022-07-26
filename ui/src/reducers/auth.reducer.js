@@ -31,7 +31,7 @@ const initialState = {
   authenticationInitializing: false,
   isAuthenticated: false,
   isAuthenticating: false,
-  isloginOut: false
+  isLogingOut: false
 };
 
 const loadAuthEndpointRequest = (state, action) => ({
@@ -71,7 +71,7 @@ const initializeAuthentication = state => ({
   authenticationInitializing: true,
   isAuthenticated: false,
   isAuthenticating: false,
-  isloginOut: false
+  isLogingOut: false
 });
 
 const setAuthReady = state => ({
@@ -106,14 +106,14 @@ const login = state => ({
   authenticatedMode: true,
   isAuthenticated: false,
   isAuthenticating: true,
-  isloginOut: false
+  isLogingOut: false
 });
 
 const logout = state => {
   localStorage.removeItem("group");
   return {
     ...state,
-    isloginOut: true
+    isLogingOut: true
   };
 };
 
@@ -121,7 +121,7 @@ const logoutSuccess = state => ({
   ...state,
   authenticatedMode: false,
   isAuthenticated: false,
-  isloginOut: false
+  isLogingOut: false
 });
 
 const sessionExpired = state => {
@@ -132,7 +132,7 @@ const sessionExpired = state => {
     authenticatedMode: true, // ensure authenticated mode with back navigation
     isAuthenticated: false,
     isAuthenticating: false,
-    isloginOut: false
+    isLogingOut: false
   };
 };
 
@@ -144,7 +144,7 @@ const sessionFailure = (state, action) => {
     authenticatedMode: true, // ensure authenticated mode with back navigation
     isAuthenticated: false,
     isAuthenticating: false,
-    isloginOut: false
+    isLogingOut: false
   };
 };
 

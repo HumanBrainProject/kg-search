@@ -23,8 +23,7 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { clearGroupError } from "./actions.groups";
-import { sessionFailure, logout } from "./actions.auth";
+import { sessionFailure } from "./actions.auth";
 
 export const setInstanceCurrentTab = (instanceId, tabName) => {
   return {
@@ -92,19 +91,10 @@ export const goBackToInstance = id => {
   };
 };
 
-export const goToSearch = (navigate, group, defaultGroup) => {
-  return dispatch => {
-    if (!group) {
-      dispatch(clearGroupError());
-      dispatch(logout());
-    }
-    dispatch(clearInstanceError());
-    dispatch(clearAllInstances());
-    navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
-  };
-};
-
 const handleLoadInstanceResponse = (dispatch, group, data, onSuccessCallback) => {
+  // if (Math.round(Math.random()* 10)%2 === 0) {
+  //   throw new Error("et zut");
+  // }
   dispatch(loadInstanceSuccess(data));
   typeof onSuccessCallback === "function" && onSuccessCallback();
 };

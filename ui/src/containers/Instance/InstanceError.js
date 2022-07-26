@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -20,20 +21,23 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import React from "react";
 import { connect } from "react-redux";
-import { ErrorPanel as  Component } from "../../components/Error/ErrorPanel";
-import { BgError } from "../../components/BgError/BgError";
-import * as actionsSearch from "../../actions/actions.search";
-import * as actionsInstances from "../../actions/actions.instances";
 import { useNavigate } from "react-router-dom";
 
-const BaseInstanceErrorPanel = ({ error, onRetry, onCancel, group, defaultGroup }) => {
+import { BgError } from "../../components/BgError/BgError";
+import * as actionsInstances from "../../actions/actions.instances";
+import * as actionsGroups from "../../actions/actions.groups";
+import * as actionsAuth from "../../actions/actions.auth";
+
+const BaseInstanceError  = ({ error, onRetry, onCancel, group, defaultGroup }) => {
 
   const navigate = useNavigate();
 
-  const handleOnCancelClick = () => onCancel(navigate, group, defaultGroup);
+  const handleOnCancelClick = () => {
+    onCancel(group);
+    navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
+  };
 
   if (!error) {
     return null;
@@ -44,54 +48,25 @@ const BaseInstanceErrorPanel = ({ error, onRetry, onCancel, group, defaultGroup 
   );
 };
 
-export const InstanceErrorPanel = connect(
+const InstanceError = connect(
   state => ({
-    error: state.instances.error,
     group: state.groups.group,
-    defaultGroup: state.groups.defaultGroup
-  }),
-  dispatch => ({
-    onCancel: (navigate, group, defaultGroup) => dispatch(actionsInstances.goToSearch(navigate, group, defaultGroup)),
-    onRetry: () => dispatch(actionsInstances.clearInstanceError())
-  })
-)(BaseInstanceErrorPanel);
-
-
-const BaseSearchInstanceErrorPanel  = ({ error, onRetry }) => {
-  if (!error) {
-    return null;
-  }
-
-  return (
-    <Component message={error} onRetryClick={onRetry} retryLabel="Ok" retryVariant="primary" />
-  );
-};
-
-export const SearchInstanceErrorPanel = connect(
-  state => ({
+    defaultGroup: state.groups.defaultGroup,
     error: state.instances.error
   }),
   dispatch => ({
-    onRetry: () => dispatch(actionsInstances.clearInstanceError())
+    onCancel: (group) => {
+      if (!group) {
+        dispatch(actionsGroups.clearGroupError());
+        dispatch(actionsAuth.logout());
+      }
+      dispatch(actionsInstances.clearInstanceError());
+      dispatch(actionsInstances.clearAllInstances());
+    },
+    onRetry: () => {
+      dispatch(actionsInstances.clearInstanceError());
+    }
   })
-)(BaseSearchInstanceErrorPanel);
+)(BaseInstanceError);
 
-
-const BaseSearchErrorPanel = ({ error, onRetry }) => {
-  if (!error) {
-    return null;
-  }
-
-  return (
-    <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
-  );
-};
-
-export const SearchErrorPanel = connect(
-  state => ({
-    error: state.search.error
-  }),
-  dispatch => ({
-    onRetry: () => dispatch(actionsSearch.search())
-  })
-)(BaseSearchErrorPanel);
+export default InstanceError;
