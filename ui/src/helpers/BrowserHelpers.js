@@ -33,7 +33,8 @@ export const searchToObj = () => {
       return result;
     }
     const [ , key, value] = param.match(regParam);
-    result[key] = value;
+    const fixedOIDCKey = key.replace(/%5B/g, "[").replace(/%5D/g, "]");
+    result[fixedOIDCKey] = value;
     return result;
   }, {});
 };

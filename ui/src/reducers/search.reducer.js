@@ -82,7 +82,7 @@ const initialState = {
   types: [],
   page: 1,
   totalPages: 0,
-  initialRequestDone: false,
+  isInitialized: false,
   isLoading: false,
   queryString: "",
   selectedType: null,
@@ -301,6 +301,7 @@ const setType = (state, action) => {
 const loadSearchRequest = state => {
   return {
     ...state,
+    isInitialized: true,
     isLoading: true,
     error: null,
     message: ""
@@ -341,7 +342,6 @@ const loadSearchResult = (state, action) => {
   return {
     ...state,
     message: "",
-    initialRequestDone: true,
     isLoading: false,
     types: types,
     selectedType: state.selectedType?types.find(t => t.type === state.selectedType?.type):null,

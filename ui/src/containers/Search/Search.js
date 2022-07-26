@@ -156,6 +156,7 @@ const SearchBase = ({
   initializeSearch,
   goBackToInstance,
   isActive,
+  isInitialized,
   queryString,
   selectedType,
   facets,
@@ -229,11 +230,12 @@ const SearchBase = ({
     const newLocationSearch = getLocationSearchFromQuery(query);
     if (newLocationSearch !== location.search) {
       navigate(`${location.pathname}${newLocationSearch}`, {
-        replace: !window.location.search
+        replace: !isInitialized
       }); // replace no type at initialisation
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    isInitialized,
     queryString,
     selectedType,
     page,
@@ -270,6 +272,7 @@ export const SearchWithTabKeyNavigation = withTabKeyNavigation(
 const Search = connect(
   state => ({
     isActive: !state.instances.currentInstance && !state.application.info,
+    isInitialized: state.search.isInitialized,
     group: state.groups.group,
     defaultGroup: state.groups.defaultGroup,
     searchHasError: !!state.search.error,
