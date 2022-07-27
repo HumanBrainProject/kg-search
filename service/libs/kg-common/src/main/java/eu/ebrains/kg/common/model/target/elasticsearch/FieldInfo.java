@@ -60,7 +60,7 @@ public @interface FieldInfo {
     Aggregate aggregate() default Aggregate.UNDEFINED;
     int order() default 0;
     int overviewMaxDisplay() default 0;
-
+    boolean isSingleWord() default false;
 
     public enum Facet{
         UNDEFINED, EXISTS, LIST

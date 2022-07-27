@@ -552,11 +552,13 @@ public class SearchController extends FacetAggregationUtils {
                 });
             }
             Set<String> handledTerms = new HashSet<>();
-            final List<String> unescapedQuery = sanitizedQuery.stream().map(w -> w.replaceAll("\\\\", "")).collect(Collectors.toList());
+            final List<String> unescapedQuery = sanitizedQuery.stream().map(w -> w.replaceAll("\\\\", "").toLowerCase()).collect(Collectors.toList());
             final String unescapedQ = String.join(" ", unescapedQuery);
             suggestionsPerTerm.keySet().forEach(k -> {
                 final Set<Suggestion.Option> options = suggestionsPerTerm.get(k);
                 final List<Suggestion.Option> sortedOptions = options.stream()
+                        .filter(o -> o != null && o.getText() != null)
+                        .peek(o -> o.setText(o.getText().replaceAll("\\W+\\s?$", "")))
                         .filter(o -> !unescapedQuery.contains(o.getText()))
                         .sorted(Comparator.comparing(Suggestion.Option::getText)).collect(Collectors.toList());
                 final List<Suggestion.Option> limitedOptions = sortedOptions.size() > 5 ? sortedOptions.subList(0, 5) : sortedOptions;

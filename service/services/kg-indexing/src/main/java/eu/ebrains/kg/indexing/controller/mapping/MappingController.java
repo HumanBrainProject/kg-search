@@ -24,6 +24,7 @@
 package eu.ebrains.kg.indexing.controller.mapping;
 
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
+import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +40,7 @@ import java.util.*;
 public class MappingController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MetaModelUtils utils;
-    public final static String SEARCH_ANALYZER = "custom_search_analyzer";
+    public final static String TEXT_ANALYZER = "custom_text_analyzer";
     private final static String KEYWORD = "keyword";
     private final static String PROPERTIES = "properties";
 
@@ -93,6 +94,8 @@ public class MappingController {
     private Map<String, Object> handleField(MetaModelUtils.FieldWithGenericTypeInfo field, ElasticSearchInfo parentInfo) {
         try {
             ElasticSearchInfo esInfo = field.getField().getAnnotation(ElasticSearchInfo.class);
+            FieldInfo fieldInfo = field.getField().getAnnotation(FieldInfo.class);
+            boolean isSingleWord = fieldInfo != null && fieldInfo.isSingleWord();
             if(esInfo == null && parentInfo != null) {
                 esInfo = parentInfo;
             }
@@ -113,7 +116,7 @@ public class MappingController {
                     Map<String,  Object> fields = new LinkedHashMap<>();
                     value.put("fields", fields);
                     value.put("type", "text");
-                    value.put("analyzer", SEARCH_ANALYZER);
+                    value.put("analyzer", isSingleWord?KEYWORD:TEXT_ANALYZER);
                     Map<String,  Object> keyword= new LinkedHashMap<>();
                     fields.put(KEYWORD, keyword);
                     keyword.put("type",KEYWORD);
@@ -131,7 +134,7 @@ public class MappingController {
                         if (esInfo != null && esInfo.ignoreAbove() > 0) {
                             keyword.put("ignore_above", esInfo.ignoreAbove());
                         }
-                        fieldDefinition.put("analyzer", SEARCH_ANALYZER);
+                        fieldDefinition.put("analyzer", isSingleWord?KEYWORD:TEXT_ANALYZER);
                     }
                 } else if (topTypeToHandle == Date.class) {
                     fieldDefinition.put("type", "date");

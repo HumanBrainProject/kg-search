@@ -120,7 +120,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<TargetInternalReference> contributors;
 
     //Overview
-    @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
+    @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication", isSingleWord = true)
     private Value<String> doi;
 
     //HDG terms of use are going to be a license too

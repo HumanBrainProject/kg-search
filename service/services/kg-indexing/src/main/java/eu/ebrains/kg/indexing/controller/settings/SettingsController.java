@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static eu.ebrains.kg.indexing.controller.mapping.MappingController.SEARCH_ANALYZER;
+import static eu.ebrains.kg.indexing.controller.mapping.MappingController.TEXT_ANALYZER;
 
 @Component
 public class SettingsController {
@@ -40,14 +40,25 @@ public class SettingsController {
                                 "default", Map.of(
                                         "type", "standard"
                                 ),
-                                SEARCH_ANALYZER, Map.of(
-                                        "tokenizer", "custom_search_tokenizer"
+                                TEXT_ANALYZER, Map.of(
+                                        "tokenizer", "custom_text_tokenizer",
+                                        "filter", List.of("custom_word_delimiter_graph", "flatten_graph", "custom_length", "lowercase", "stop")
                                 )
                         ),
                         "tokenizer", Map.of(
-                                "custom_search_tokenizer", Map.of(
+                                "custom_text_tokenizer", Map.of(
                                         "type", "char_group",
-                                        "tokenize_on_chars", List.of("whitespace", "-", "\n")
+                                        "tokenize_on_chars", List.of("whitespace")
+                                )
+                        ),
+                        "filter", Map.of(
+                                "custom_word_delimiter_graph", Map.of(
+                                        "type", "word_delimiter_graph",
+                                        "preserve_original", true
+                                ),
+                                "custom_length", Map.of(
+                                        "type", "length",
+                                        "min", 2
                                 )
                         )
 
