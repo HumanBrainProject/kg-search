@@ -40,6 +40,7 @@ const DynamicCitation = ({ doi }) => {
 
   useEffect(() => {
     getCitation();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getCitation = async () => {

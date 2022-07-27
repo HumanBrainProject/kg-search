@@ -115,6 +115,7 @@ export const FileFilter = ({ title, show, url, value, onSelect, onSessionFailure
       });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetch, []);
 
   if (!show) {

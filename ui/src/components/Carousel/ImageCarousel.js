@@ -32,6 +32,7 @@ import "./ImageCarousel.css";
 export const ImageCarousel = ({ className, width, images, onClick }) => {
   const labelRef = useRef();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onClickItem = useMemo(() => index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]), [images]);
 
   if (!images || !images.length) {

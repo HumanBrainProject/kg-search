@@ -87,6 +87,7 @@ export const Carousel = ({ className, data, onBack, onClose, itemComponent, navi
       window.addEventListener("keyup", _keyupHandler, false);
       return () => window.removeEventListener("keyup", _keyupHandler);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const items = useMemo(() => Array.from(Array(nbOfItems)).map((_, idx) => ({

@@ -52,6 +52,7 @@ export const ImagePopup = ({ className, src, label, link, onClick }) => {
   const wrapperRef = useRef();
   const closeBtnRef = useRef();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => loadImage(), [src]);
 
   const handleOnClick = e => {
