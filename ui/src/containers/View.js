@@ -24,13 +24,16 @@
 import React, { Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
+
+import { FetchingPanel } from "../components/Fetching/FetchingPanel";
+
 const Search = React.lazy(() => import("./Search/Search"));
 const Instance = React.lazy(() => import("./Instance/Instance"));
 const Preview = React.lazy(() => import("./Instance/Preview"));
 
 const View = () => {
   return (
-    <Suspense>
+    <Suspense fallback={<FetchingPanel message="Loading ressource..." />}>
       <Routes>
         <Route path="/" element={<Search />} />
         <Route path="/instances/:id" element={<Instance />} />
