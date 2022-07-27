@@ -56,6 +56,8 @@ public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
+    private boolean trending = false;
+
     @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 

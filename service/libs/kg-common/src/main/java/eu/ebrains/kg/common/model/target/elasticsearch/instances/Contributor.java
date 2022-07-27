@@ -60,6 +60,8 @@ public class Contributor implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
+    private boolean trending = false;
+
     @FieldInfo(label = "Name", boost = 20, useForSuggestion = true)
     private Value<String> title;
 

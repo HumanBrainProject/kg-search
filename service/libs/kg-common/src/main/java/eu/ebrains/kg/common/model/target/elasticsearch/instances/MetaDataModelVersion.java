@@ -65,7 +65,7 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @ElasticSearchInfo(type = "keyword")
     private List<String> badges;
 
-    private boolean trending;
+    private boolean trending = false;
 
     private int last30DaysViews;
 
