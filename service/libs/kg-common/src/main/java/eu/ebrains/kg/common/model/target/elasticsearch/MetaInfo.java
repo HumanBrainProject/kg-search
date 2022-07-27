@@ -54,5 +54,4 @@ public @interface MetaInfo {
     boolean searchable() default false;
 
     boolean sortByRelevance() default true;
-    boolean badges() default true;
 }

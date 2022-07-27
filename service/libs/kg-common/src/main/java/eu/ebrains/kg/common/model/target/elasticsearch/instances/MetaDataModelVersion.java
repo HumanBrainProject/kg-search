@@ -41,7 +41,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name = "(Meta)Data Model", order = 6, searchable=true)
-public class MetaDataModelVersion implements TargetInstance, VersionedInstance, HasCitation {
+public class MetaDataModelVersion implements TargetInstance, VersionedInstance, HasCitation, HasBadges, HasTrendingInformation{
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -61,6 +61,13 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
+
+    @ElasticSearchInfo(type = "keyword")
+    private List<String> badges;
+
+    private boolean trending;
+
+    private int last30DaysViews;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)

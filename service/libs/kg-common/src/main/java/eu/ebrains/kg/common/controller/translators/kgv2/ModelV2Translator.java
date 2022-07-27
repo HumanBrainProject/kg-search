@@ -33,6 +33,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -71,7 +72,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
         return Collections.singletonList("uniminds/core/modelinstance/v1.0.0");
     }
 
-    public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         ModelVersion m = new ModelVersion();
 
         m.setCategory(new Value<>("Model"));

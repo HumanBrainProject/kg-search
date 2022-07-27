@@ -35,6 +35,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -71,7 +72,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         return Collections.singletonList("https://openminds.ebrains.eu/core/File");
     }
 
-    public File translate(FileV3 file, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public File translate(FileV3 file, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         String fileRepository = file.getFileRepository();
 
         if(StringUtils.isBlank(fileRepository) || StringUtils.isBlank(file.getIri()) || StringUtils.isBlank(file.getName())) {

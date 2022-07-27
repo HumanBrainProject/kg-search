@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
-public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews, HasMetrics {
+public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews, HasBadges, HasTrendingInformation{
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -73,6 +73,14 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
+
+    @ElasticSearchInfo(type = "keyword")
+    private List<String> badges;
+
+    private boolean trending;
+
+    private int last30DaysViews;
+
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
@@ -292,8 +300,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
-
-    private int last30DaysViews;
 
     @Getter
     @Setter

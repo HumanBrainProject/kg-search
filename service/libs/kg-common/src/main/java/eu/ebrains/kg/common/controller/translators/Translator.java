@@ -25,15 +25,15 @@ package eu.ebrains.kg.common.controller.translators;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<Source>> extends TranslatorBase {
 
-    public abstract Target translate(Source source, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException;
+    public abstract Target translate(Source source, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException;
 
     public abstract Class<Source> getSourceType();
 

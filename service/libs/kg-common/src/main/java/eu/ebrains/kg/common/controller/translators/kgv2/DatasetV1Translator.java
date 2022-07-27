@@ -35,6 +35,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -74,7 +75,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
     }
 
 
-    public DatasetVersion translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public DatasetVersion translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
 
         d.setCategory(new Value<>("Dataset"));

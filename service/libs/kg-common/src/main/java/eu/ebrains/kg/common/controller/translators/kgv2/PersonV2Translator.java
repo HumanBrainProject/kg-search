@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, Pers
     }
 
     @Override
-    public Contributor translate(PersonV2 person, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Contributor translate(PersonV2 person, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Contributor c = new Contributor();
 
         c.setCategory(new Value<>("Contributor"));

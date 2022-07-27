@@ -38,7 +38,7 @@ import java.util.List;
 @MetaInfo(name="Software", order=7, searchable=true)
 @Getter
 @Setter
-public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCitation, HasMetrics {
+public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCitation, HasTrendingInformation, HasBadges {
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -57,6 +57,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
+
+    @ElasticSearchInfo(type = "keyword")
+    private List<String> badges;
+
+    private boolean trending;
+
+    private int last30DaysViews;
 
     @FieldInfo(label = "Name", boost = 20, useForSuggestion = true)
     private Value<String> title;
@@ -239,8 +246,6 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     public void setSearchable(boolean searchable) {
         isSearchable = searchable;
     }
-
-    private int last30DaysViews;
 
     @Getter
     @Setter

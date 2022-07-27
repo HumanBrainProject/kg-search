@@ -36,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -194,7 +195,7 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         return collector;
     }
 
-    public ParcellationEntity translate(ParcellationEntityV3 parcellationEntity, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public ParcellationEntity translate(ParcellationEntityV3 parcellationEntity, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         ParcellationEntity pe = new ParcellationEntity();
 
         pe.setCategory(new Value<>("Parcellation Entity Overview"));

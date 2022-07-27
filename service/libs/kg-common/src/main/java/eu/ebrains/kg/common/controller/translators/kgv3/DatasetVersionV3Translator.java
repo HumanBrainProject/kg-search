@@ -37,6 +37,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -93,12 +94,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return repository != null && repository.getIri() != null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
     }
 
-    public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
         logger.debug("Translating {}", datasetVersion.getId());
         d.setCategory(new Value<>("Dataset"));
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
-
+        translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getReleaseDate(), datasetVersion.getLast30DaysViews());
         d.setId(datasetVersion.getUUID());
         d.setFirstRelease(value(datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt()));
         d.setLastRelease(value(datasetVersion.getLastReleasedAt()));
@@ -239,7 +240,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         if (!CollectionUtils.isEmpty(datasetVersion.getRelatedPublications())) {
-            d.setPublications(datasetVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            d.setPublications(datasetVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if (!CollectionUtils.isEmpty(datasetVersion.getKeyword())) {
@@ -470,10 +471,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         if(getConfiguration().isShowHierarchicalSpecimen()) {
             d.setSpecimenBySubject(new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen()));
-        }
-
-        if (datasetVersion.getLast30DaysViews() != null) {
-            d.setLast30DaysViews(datasetVersion.getLast30DaysViews());
         }
 
         return d;

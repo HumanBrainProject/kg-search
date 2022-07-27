@@ -25,6 +25,7 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
@@ -41,7 +42,7 @@ import java.util.List;
 @Getter
 @Setter
 @MetaInfo(name = "Model", order = 5, searchable=true)
-public class ModelVersion implements TargetInstance, VersionedInstance, HasCitation, HasMetrics {
+public class ModelVersion implements TargetInstance, VersionedInstance, HasCitation, HasTrendingInformation, HasBadges{
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -61,6 +62,13 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
+
+    @ElasticSearchInfo(type = "keyword")
+    private List<String> badges;
+
+    private boolean trending;
+
+    private int last30DaysViews;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
@@ -189,7 +197,5 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
 
     @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
     private List<TargetInternalReference> producedDataset;
-
-    private int last30DaysViews;
 
 }

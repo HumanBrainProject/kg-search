@@ -36,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -80,15 +81,15 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         return Collections.singletonList("https://openminds.ebrains.eu/core/SoftwareVersion");
     }
 
-    public SoftwareVersion translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public SoftwareVersion translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         SoftwareVersion s = new SoftwareVersion();
 
         s.setCategory(new Value<>("Software"));
         s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
         SoftwareVersionV3.SoftwareVersions software = softwareVersion.getSoftware();
-
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
+        translatorUtils.defineBadgesAndTrendingState(s, softwareVersion.getReleaseDate(), softwareVersion.getLast30DaysViews());
         s.setFirstRelease(value(softwareVersion.getReleaseDate() != null && softwareVersion.getReleaseDate().before(new Date()) ? softwareVersion.getReleaseDate() : softwareVersion.getFirstReleasedAt()));
         s.setLastRelease(value(softwareVersion.getLastReleasedAt()));
         s.setAllIdentifiers(softwareVersion.getIdentifier());
@@ -178,7 +179,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getPublications())){
-            s.setPublications(softwareVersion.getPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            s.setPublications(softwareVersion.getPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getApplicationCategory())){
@@ -264,10 +265,6 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                 String name = getName(c);
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
             }).collect(Collectors.toList()));
-        }
-
-        if (softwareVersion.getLast30DaysViews() != null) {
-            s.setLast30DaysViews(softwareVersion.getLast30DaysViews());
         }
 
         return s;

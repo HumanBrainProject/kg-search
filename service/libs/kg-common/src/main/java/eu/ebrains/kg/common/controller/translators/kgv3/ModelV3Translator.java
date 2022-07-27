@@ -36,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -73,7 +74,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         return Collections.singletonList("https://openminds.ebrains.eu/core/Model");
     }
 
-    public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Model m = new Model();
 
         m.setCategory(new Value<>("Model Overview"));

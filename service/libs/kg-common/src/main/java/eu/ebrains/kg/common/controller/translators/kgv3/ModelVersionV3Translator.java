@@ -37,9 +37,9 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -78,7 +78,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
     }
 
 
-    public ModelVersion translate(ModelVersionV3 modelVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public ModelVersion translate(ModelVersionV3 modelVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         ModelVersion m = new ModelVersion();
 
         m.setCategory(new Value<>("Model"));
@@ -87,6 +87,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         ModelVersionV3.ModelVersions model = modelVersion.getModel();
         Accessibility accessibility = Accessibility.fromPayload(modelVersion);
         m.setId(IdUtils.getUUID(modelVersion.getId()));
+        translatorUtils.defineBadgesAndTrendingState(m, modelVersion.getReleaseDate(), modelVersion.getLast30DaysViews());
         m.setFirstRelease(value(modelVersion.getReleaseDate() != null && modelVersion.getReleaseDate().before(new Date()) ? modelVersion.getReleaseDate() : modelVersion.getFirstReleasedAt()));
         m.setLastRelease(value(modelVersion.getLastReleasedAt()));
         m.setAllIdentifiers(modelVersion.getIdentifier());
@@ -195,7 +196,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         }
 
         if (!CollectionUtils.isEmpty(modelVersion.getRelatedPublications())) {
-            m.setPublications(modelVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            m.setPublications(modelVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if (!CollectionUtils.isEmpty(modelVersion.getKeyword())) {
@@ -214,10 +215,6 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
                 m.setBrainStructures(brainStructureOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
             }
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
-        }
-
-        if (modelVersion.getLast30DaysViews() != null) {
-            m.setLast30DaysViews(modelVersion.getLast30DaysViews());
         }
         return m;
     }

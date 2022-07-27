@@ -38,6 +38,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -75,7 +76,7 @@ public class ParcellationEntityVersionV3Translator extends TranslatorV3<Parcella
         return Collections.singletonList("https://openminds.ebrains.eu/sands/ParcellationEntityVersion");
     }
 
-    public ParcellationEntityVersion translate(ParcellationEntityVersionV3 parcellationEntityVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public ParcellationEntityVersion translate(ParcellationEntityVersionV3 parcellationEntityVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         ParcellationEntityVersion pev = new ParcellationEntityVersion();
 
         pev.setCategory(new Value<>("Parcellation Entity"));

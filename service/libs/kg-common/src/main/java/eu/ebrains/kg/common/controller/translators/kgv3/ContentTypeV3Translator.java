@@ -29,9 +29,9 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.ContentTypeV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.ContentType;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -70,7 +70,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
     public static class Result extends ResultsOfKGv3<ContentTypeV3> {
     }
 
-    public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
        ContentType c = new ContentType();
 
         c.setCategory(new Value<>("Content Type"));

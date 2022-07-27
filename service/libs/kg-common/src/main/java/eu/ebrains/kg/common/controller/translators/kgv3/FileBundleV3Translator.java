@@ -33,6 +33,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class FileBundleV3Translator extends TranslatorV3<FileBundleV3, FileBundl
         return Collections.singletonList("https://openminds.ebrains.eu/core/FileBundle");
     }
 
-    public FileBundle translate(FileBundleV3 fileBundle, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public FileBundle translate(FileBundleV3 fileBundle, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         FileBundle fb = new FileBundle();
 
         fb.setCategory(new Value<>("File Bundle"));

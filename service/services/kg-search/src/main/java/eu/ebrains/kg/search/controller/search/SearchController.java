@@ -33,17 +33,14 @@ import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasMetrics;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasPreviews;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
-import eu.ebrains.kg.search.controller.metrics.MetricsController;
 import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
 import eu.ebrains.kg.search.utils.*;
@@ -57,8 +54,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -71,7 +66,6 @@ public class SearchController extends FacetAggregationUtils {
     private final ESServiceClient esServiceClient;
     private final UserInfoRoles userInfoRoles;
     private final FacetsController facetsController;
-    private final MetricsController metricsController;
     private final SearchFieldsController searchFieldsController;
     private final MetaModelUtils utils;
 
@@ -84,7 +78,6 @@ public class SearchController extends FacetAggregationUtils {
             UserInfoRoles userInfoRoles,
             FacetsController facetsController,
             SearchFieldsController searchFieldsController,
-            MetricsController metricsController,
             MetaModelUtils utils,
             KGv3 kg
     ) {
@@ -92,7 +85,6 @@ public class SearchController extends FacetAggregationUtils {
         this.userInfoRoles = userInfoRoles;
         this.facetsController = facetsController;
         this.searchFieldsController = searchFieldsController;
-        this.metricsController = metricsController;
         this.utils = utils;
         this.kg = kg;
     }
@@ -210,14 +202,12 @@ public class SearchController extends FacetAggregationUtils {
         if (query != null) {
             payload.put("query", query);
         }
-        boolean includeMetrics = dataStage == DataStage.RELEASED && targetClass != null && HasMetrics.class.isAssignableFrom((Class<?>) targetClass);
-        final Integer trendThreshold = includeMetrics?metricsController.getTrendThreshold((Class<?>) targetClass, type):null;
         String index = ESHelper.getIndexesForSearch(dataStage);
         Result result = esServiceClient.searchDocuments(index, payload);
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        response.put("hits", getHits(result, type, dataStage, metaInfo, trendThreshold));
+        response.put("hits", getHits(result, type, dataStage, metaInfo));
         response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
         response.put("types", getTypesAggregation(result.getAggregations()));
         response.put("suggestions", getSuggestions(sanitizedQuery, dataStage, type));
@@ -230,7 +220,7 @@ public class SearchController extends FacetAggregationUtils {
     }
 
 
-    private List<Map<String, Object>> getHits(Result result, String type, DataStage dataStage, MetaInfo metaInfo, Integer trendThreshold) {
+    private List<Map<String, Object>> getHits(Result result, String type, DataStage dataStage, MetaInfo metaInfo) {
         if (result.getHits() == null || result.getHits().getHits() == null) {
             return Collections.emptyList();
         }
@@ -243,10 +233,7 @@ public class SearchController extends FacetAggregationUtils {
             hit.put("group", getGroup(dataStage));
             hit.put("category", CastingUtils.getStringValueField(source, "category"));
             hit.put("title", CastingUtils.getStringValueField(source, "title"));
-            Map<String, Boolean> badges = getBadges(source, metaInfo, trendThreshold);
-            if (!CollectionUtils.isEmpty(badges)) {
-                hit.put("badges", badges);
-            }
+            hit.put("badges", source.get("badges"));
             if (h.getHighlight() != null) {
                 hit.put("highlight", h.getHighlight());
             }
@@ -254,7 +241,6 @@ public class SearchController extends FacetAggregationUtils {
             if (StringUtils.isNotBlank(previewImage)) {
                 hit.put("previewImage", previewImage);
             }
-
             hit.put("fields", getFields(source, fieldNames));
             return hit;
         }).collect(Collectors.toList());
@@ -273,42 +259,6 @@ public class SearchController extends FacetAggregationUtils {
         return null;
     }
 
-    private Map<String, Boolean> getBadges(Map<String, Object> source, MetaInfo metaInfo, Integer trendThreshold) {
-        if(metaInfo == null || !metaInfo.badges()) {
-            return Collections.emptyMap();
-        }
-        Map<String, Boolean> badges = new HashMap<>();
-
-        String firstRelease = CastingUtils.getStringValueField(source, "first_release");
-        if (isNew(firstRelease)) {
-            badges.put("isNew", true);
-        }
-
-        if (trendThreshold != null && trendThreshold > 0) {
-            int last30DaysViews = CastingUtils.getIntField(source, "last30DaysViews");
-            if (last30DaysViews >= trendThreshold) {
-                badges.put("isTrending", true);
-            }
-        }
-
-        return badges;
-    }
-
-    private boolean isNew(String firstRelease) {
-        if (StringUtils.isBlank(firstRelease)) {
-            return false;
-        }
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(ISODateValue.ISO_DATE_PATTERN);
-            Date firstReleaseDate = sdf.parse(firstRelease);
-            Calendar cal = new GregorianCalendar();
-            cal.add(Calendar.DAY_OF_MONTH, -8);
-            Date daysAgo = cal.getTime();
-            return firstReleaseDate.after(daysAgo);
-        } catch (ParseException e) {
-            return false;
-        }
-    }
 
     public Map<String, Object> getSearchDocument(DataStage dataStage, String id) throws WebClientResponseException {
         String index = ESHelper.getIndexesForDocument(dataStage);
@@ -610,20 +560,9 @@ public class SearchController extends FacetAggregationUtils {
         List<Object> fields = new ArrayList<>();
 
         if (sortByRelevance) {
-
-            Map<String, String> score = new HashMap<>();
-            score.put("order", "desc");
-            Map<String, Object> first = new HashMap<>();
-            first.put("_score", score);
-            fields.add(first);
-
-            Map<String, String> firstRelease = new HashMap<>();
-            firstRelease.put("order", "desc");
-            firstRelease.put("missing", "_last");
-            Map<String, Object> second = new HashMap<>();
-            second.put("first_release.value", firstRelease);
-            fields.add(second);
-
+            fields.add(Map.of("_score", Map.of("order", "desc")));
+            fields.add(Map.of("trending", Map.of("order", "desc", "missing", "_last")));
+            fields.add(Map.of("first_release.value", Map.of("order", "desc", "missing", "_last")));
         } else {
             fields.add(Map.of(
                     "title.value.keyword", Map.of(

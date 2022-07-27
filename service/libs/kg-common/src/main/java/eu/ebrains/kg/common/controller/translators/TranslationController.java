@@ -36,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -60,7 +61,7 @@ public class TranslationController {
         this.configuration = configuration;
     }
 
-    public <Source , Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size) {
+    public <Source , Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
@@ -78,7 +79,7 @@ public class TranslationController {
             instanceResults.setErrors(new ErrorReport());
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                         try {
-                            return translator.translate(s, dataStage, false, doiCitationFormatter);
+                            return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, trendingThreshold));
                         } catch (TranslationException e) {
                             if (instanceResults.getErrors().get(e.getIdentifier()) != null) {
                                 instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
@@ -137,7 +138,7 @@ public class TranslationController {
             return null;
         }
         translator.setConfiguration(configuration);
-        final Target translateResult = translator.translate(source, dataStage, true, doiCitationFormatter);
+        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, null));
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
         }

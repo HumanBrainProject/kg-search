@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -64,7 +65,7 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
         return Collections.singletonList("minds/experiment/subject/v1.0.0");
     }
 
-    public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Subject s = new Subject();
 
         s.setCategory(new Value<>("Subject"));

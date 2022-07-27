@@ -36,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -73,7 +74,7 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
         return Collections.singletonList("https://openminds.ebrains.eu/core/MetaDataModel");
     }
 
-    public MetaDataModel translate(MetaDataModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public MetaDataModel translate(MetaDataModelV3 model, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         MetaDataModel m = new MetaDataModel();
 
         m.setCategory(new Value<>("Meta Data Model Overview"));

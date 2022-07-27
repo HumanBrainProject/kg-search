@@ -29,9 +29,9 @@ import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.ProjectV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -68,7 +68,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         return Collections.singletonList("https://openminds.ebrains.eu/core/Project");
     }
 
-    public Project translate(ProjectV3 project, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Project translate(ProjectV3 project, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Project p = new Project();
 
         p.setCategory(new Value<>("Project"));
@@ -86,7 +86,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         p.setTitle(value(project.getTitle()));
         if(!CollectionUtils.isEmpty(project.getPublications())) {
             p.setPublications(value(project.getPublications().stream()
-                    .map(rp -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, rp.getIdentifier(), rp.resolvedType())).filter(Objects::nonNull).collect(Collectors.toList())));
+                    .map(rp -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), rp.getIdentifier(), rp.resolvedType())).filter(Objects::nonNull).collect(Collectors.toList())));
         }
         return p;
     }

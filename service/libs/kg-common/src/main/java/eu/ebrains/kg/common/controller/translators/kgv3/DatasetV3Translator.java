@@ -32,6 +32,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
         return Collections.singletonList("https://openminds.ebrains.eu/core/Dataset");
     }
 
-    public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         if (!CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
             Dataset d = new Dataset();
 

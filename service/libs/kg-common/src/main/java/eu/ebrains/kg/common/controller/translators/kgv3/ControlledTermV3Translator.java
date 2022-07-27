@@ -32,6 +32,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -135,7 +136,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
         return queryIds;
     }
 
-    public ControlledTerm translate(ControlledTermV3 controlledTerm, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public ControlledTerm translate(ControlledTermV3 controlledTerm, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         ControlledTerm t = new ControlledTerm();
 
         final List<String> type = controlledTerm.getType();

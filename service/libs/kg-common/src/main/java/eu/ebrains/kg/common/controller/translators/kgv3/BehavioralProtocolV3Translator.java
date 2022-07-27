@@ -31,9 +31,9 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.BehavioralProtocol;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +70,7 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
     public static class Result extends ResultsOfKGv3<BehavioralProtocolV3> {
     }
 
-    public BehavioralProtocol translate(BehavioralProtocolV3 behavioralProtocolV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public BehavioralProtocol translate(BehavioralProtocolV3 behavioralProtocolV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
        BehavioralProtocol b = new BehavioralProtocol();
 
         b.setCategory(new Value<>("Behaviour Protocol"));
@@ -83,7 +83,7 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
        b.setTitle(value(behavioralProtocolV3.getName()));
        b.setDescription(value(behavioralProtocolV3.getDescription()));
        if(behavioralProtocolV3.getDescribedInDOI()!=null){
-           b.setDescribedIn(value(Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, behavioralProtocolV3.getDescribedInDOI(), RelatedPublication.PublicationType.DOI)));
+           b.setDescribedIn(value(Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), behavioralProtocolV3.getDescribedInDOI(), RelatedPublication.PublicationType.DOI)));
        }
        else if(behavioralProtocolV3.getDescribedInFile()!=null && behavioralProtocolV3.getDescribedInFile().getName()!=null && behavioralProtocolV3.getDescribedInFile().getIri()!=null){
            b.setDescribedInLink(new TargetExternalReference(behavioralProtocolV3.getDescribedInFile().getIri(), behavioralProtocolV3.getDescribedInFile().getName()));

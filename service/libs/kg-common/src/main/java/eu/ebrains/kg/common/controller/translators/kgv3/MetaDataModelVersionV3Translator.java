@@ -31,15 +31,14 @@ import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.MetadataModelVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.MetaDataModelVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -78,7 +77,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
     }
 
 
-    public MetaDataModelVersion translate(MetadataModelVersionV3 metadataModelVersionV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public MetaDataModelVersion translate(MetadataModelVersionV3 metadataModelVersionV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         MetaDataModelVersion m = new MetaDataModelVersion();
 
         m.setCategory(new Value<>("Meta Data Model"));
@@ -87,6 +86,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         MetadataModelVersionV3.MetaDataModelVersions metaDataModel = metadataModelVersionV3.getMetaDataModel();
         Accessibility accessibility = Accessibility.fromPayload(metadataModelVersionV3);
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
+        translatorUtils.defineBadgesAndTrendingState(m, metadataModelVersionV3.getReleaseDate(), null);//TODO get last 30 days views
         m.setFirstRelease(value(metadataModelVersionV3.getReleaseDate() != null && metadataModelVersionV3.getReleaseDate().before(new Date()) ? metadataModelVersionV3.getReleaseDate() : metadataModelVersionV3.getFirstReleasedAt()));
         m.setLastRelease(value(metadataModelVersionV3.getLastReleasedAt()));
         m.setAllIdentifiers(metadataModelVersionV3.getIdentifier());
@@ -195,7 +195,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         }
 
         if (!CollectionUtils.isEmpty(metadataModelVersionV3.getRelatedPublications())) {
-            m.setPublications(metadataModelVersionV3.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(doiCitationFormatter, p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+            m.setPublications(metadataModelVersionV3.getRelatedPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(metadataModelVersionV3.getSupportChannel())){

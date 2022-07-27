@@ -180,7 +180,7 @@ export const Hit = connect(
       title: getTitle(data?.title, data?.highlight),
       fields: getFields(group, fields, data && data.highlight, mapping),
       previewImage: data?.previewImage,
-      badges: (data?.badges && Object.keys(data.badges).length)?data.badges:null,
+      badges: (data?.badges && data.badges.length)?data.badges:null,
       highlightsField: {
         fields: filterHighlightFields(data?.highlight, ["title.value", "description.value"]),
         mapping: mapping

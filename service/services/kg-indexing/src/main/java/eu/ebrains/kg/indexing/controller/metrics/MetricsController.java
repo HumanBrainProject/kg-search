@@ -21,13 +21,12 @@
  *
  */
 
-package eu.ebrains.kg.search.controller.metrics;
+package eu.ebrains.kg.indexing.controller.metrics;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -50,10 +49,9 @@ public class MetricsController {
         this.esServiceClient = esServiceClient;
     }
 
-    @Cacheable(value = "trendThresholdByType", unless = "#result == null || #type == null ", key = "#type")
-    public Integer getTrendThreshold(Class<?> clazz, String type) { // type is use as key for @Cachable
+    public Integer getTrendThreshold(Class<?> clazz, DataStage stage) { // type is use as key for @Cachable
         try {
-            String index = ESHelper.getSearchableIndex(DataStage.RELEASED, clazz, false);
+            String index = ESHelper.getSearchableIndex(stage, clazz, false);
             Result result = esServiceClient.getMetrics(index, MAX_NUMBER_OF_TRENDING_INSTANCES+1); //We need one instance more to check if it's exactly the limit or less
             if (result == null || result.getHits() == null || CollectionUtils.isEmpty(result.getHits().getHits())) {
                 return null;
@@ -79,9 +77,7 @@ public class MetricsController {
             if(distinctSortedList.size()>1){
                 //We're interested in the second smallest number of the list.
                 final Integer threshold = distinctSortedList.get(1);
-                if(threshold>=MINIMAL_NUMBER_OF_VISITS_TO_BE_REGARDED_TRENDING){
-                    return threshold;
-                }
+                return threshold>=MINIMAL_NUMBER_OF_VISITS_TO_BE_REGARDED_TRENDING ? threshold : MINIMAL_NUMBER_OF_VISITS_TO_BE_REGARDED_TRENDING;
             }
             return null;
         } catch (WebClientResponseException e) {

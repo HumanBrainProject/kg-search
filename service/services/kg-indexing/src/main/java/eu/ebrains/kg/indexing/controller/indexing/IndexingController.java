@@ -41,8 +41,10 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.indexing.controller.mapping.MappingController;
+import eu.ebrains.kg.indexing.controller.metrics.MetricsController;
 import eu.ebrains.kg.indexing.controller.settings.SettingsController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +64,7 @@ public class IndexingController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final MappingController mappingController;
+    private final MetricsController metricsController;
     private final SettingsController settingsController;
     private final ElasticSearchController elasticSearchController;
     private final TranslationController translationController;
@@ -75,8 +78,9 @@ public class IndexingController {
     private final boolean skipKGv2;
 
 
-    public IndexingController(MappingController mappingController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
+    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
         this.mappingController = mappingController;
+        this.metricsController = metricsController;
         this.settingsController = settingsController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
@@ -96,7 +100,7 @@ public class IndexingController {
                         final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, IdUtils.getUUID(id), true);
                         if (source != null) {
                             try {
-                                return translator.translate(source, dataStage, false, doiCitationFormatter);
+                                return translator.translate(source, dataStage, false, new TranslatorUtils(doiCitationFormatter, null));
                             } catch (TranslationException e) {
                                 //We don't take this error any further since only the "old" world is affected.
                                 logger.error(e.getMessage());
@@ -116,7 +120,7 @@ public class IndexingController {
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
         if(translatorModel.getV3translator()!=null) {
-            final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.<String>emptySet(), instance -> {
+            final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.emptySet(), instance -> {
                 if (!skipKGv2 && translatorModel.getMerger() != null) {
                     final Translator<v2Input, Target, ? extends ResultsOfKGv2<v2Input>> v2translator = translatorModel.getV2translator();
                     final List<Target> fromV2 = v2translator != null ? getRelatedInstance(kgV2, v2translator, instance, dataStage) : null;
@@ -203,11 +207,12 @@ public class IndexingController {
 
     private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<?, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
+        final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
         translator.getQueryIds().forEach(queryId -> {
             boolean hasMore = true;
             int from = 0;
             while (hasMore) {
-                TargetInstancesResult<Target> result = translationController.translateToTargetInstances(kg, translator, queryId, dataStage, from, bulkSize);
+                TargetInstancesResult<Target> result = translationController.translateToTargetInstances(kg, translator, queryId, dataStage, from, bulkSize, trendThreshold);
                 if(result.getErrors()!=null){
                     updateResult.errors.putAll(result.getErrors());
                 }
@@ -247,7 +252,6 @@ public class IndexingController {
         });
         return updateResult;
     }
-
 
     public void recreateIdentifiersIndex(DataStage dataStage) {
         Map<String, Object> mapping = mappingController.generateIdentifierMapping();

@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -66,7 +67,7 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
         return Collections.singletonList("minds/core/placomponent/v1.0.0");
     }
 
-    public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Project p = new Project();
 
         p.setCategory(new Value<>("Project"));

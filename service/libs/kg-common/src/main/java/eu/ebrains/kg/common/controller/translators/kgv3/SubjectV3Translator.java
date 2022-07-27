@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +69,7 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
         return Collections.singletonList("https://openminds.ebrains.eu/core/Subject");
     }
 
-    public Subject translate(SubjectV3 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public Subject translate(SubjectV3 subject, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Subject s = new Subject();
 
         s.setCategory(new Value<>("Subject"));

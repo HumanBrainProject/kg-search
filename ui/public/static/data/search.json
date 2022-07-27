@@ -14,9 +14,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Neural Correlates of Multisensory Detection Behavior in Primary and Higher-Order Visual Cortex (v1)",
-      "badges": {
-        "isTrending": true
-      },
+      "badges": ["isTrending"],
       "fields": {
         "keywords": [
           { "value": "behavioral training" },
@@ -61,10 +59,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Fighting the mirror: Brain transcriptome of high and low mirror aggression zebrafish (v1)",
-      "badges": {
-        "isNew": true,
-        "isTrending": true
-      },
+      "badges": ["isNew", "isTrending"],
       "fields": {
         "description": {
           "value": "Zebrafish, like many other animals, are not able to recognize themselves in the mirror and typically respond to their own reflection with aggression. In the current work, we have investigated the genetic basis of mirror aggression by using a classic forward genetics approach - selective breeding for high- and low mirror aggression zebrafish (HAZ and LAZ). For this AB wild-type zebrafish were characterised for their response to the mirror image and both aggressive and non-aggressive fish were inbred over generations. RNAseq analysis revealed that around 500 protein-encoding genes with diverse important biological functions were differentially expressed between the most aggressive HAZ and the least aggressive LAZ, suggesting a strong genetic contribution to this phenotype. DAVID pathway analysis showed that a number of diverse pathways are enriched in HAZ over LAZ including pathways related to immune function, oxidation-reduction processes and cell signalling. In addition, weighted gene co-expression network analysis (WGCNA) identified 12 modules of highly correlated genes that were significantly associated with aggression duration and/or experimental group."
@@ -127,10 +122,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Distribution of muscarinic acetylcholine receptors (type 2) in adult male C57Bl/J6 mice (coronal sections) (v1)",
-      "badges": {
-        "isNew": true,
-        "isTrending": true
-      },
+      "badges": ["isNew", "isTrending"],
       "previewImage": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000007_MuscarinicAcetylcholineReceptor-Mouse_Immunohistochemistry_pub/preview-ext_000007_G06_M2___s202.PNG",
       "fields": {
         "keywords": [
@@ -212,9 +204,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Parcellation-based structural and resting-state functional brain connectomes of a healthy cohort",
-      "badges": {
-        "isNew": true
-      },
+      "badges": [ "isNew" ],
       "fields": {
         "keywords": [
           { "value": "brain parcellation" },
@@ -273,10 +263,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Density measurements of different receptors for Area ifs2 (IFS) [human] (v1)",
-      "badges": {
-        "isNew": true,
-        "isTrending": true
-      },
+      "badges": ["isNew", "isTrending"],
       "fields": {
         "keywords": [{ "value": "brain mapping" }],
         "description": {

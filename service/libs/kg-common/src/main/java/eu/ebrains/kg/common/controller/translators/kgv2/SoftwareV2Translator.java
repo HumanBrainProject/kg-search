@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -66,7 +67,7 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
         return Collections.singletonList("softwarecatalog/software/softwareproject/v1.0.0");
     }
 
-    public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+    public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         SoftwareVersion s = new SoftwareVersion();
 
         s.setCategory(new Value<>("Software"));

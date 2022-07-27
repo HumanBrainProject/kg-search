@@ -36,13 +36,13 @@ const Badge = ({ title, active, className }) => {
 
 
 export const Badges = ({ badges }) => {
-  if (!(badges instanceof Object)) {
+  if (!(badges instanceof Array)) {
     return null;
   }
   return (
     <div className="kgs-badges">
-      <Badge title="New"      className="kgs-badge-new"      active={badges.isNew} />
-      <Badge title="Trending" className="kgs-badge-trending" active={badges.isTrending} />
+      <Badge title="New"      className="kgs-badge-new"      active={badges.includes("isNew")} />
+      <Badge title="Trending" className="kgs-badge-trending" active={badges.includes("isTrending")} />
     </div>
   );
 };
