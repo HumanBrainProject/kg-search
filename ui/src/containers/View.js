@@ -33,7 +33,7 @@ const Preview = React.lazy(() => import("./Instance/Preview"));
 
 const View = () => {
   return (
-    <Suspense fallback={<FetchingPanel message="Loading ressource..." />}>
+    <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
       <Routes>
         <Route path="/" element={<Search />} />
         <Route path="/instances/:id" element={<Instance />} />
