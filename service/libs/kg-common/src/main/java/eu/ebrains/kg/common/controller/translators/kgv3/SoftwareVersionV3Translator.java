@@ -89,8 +89,9 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
         SoftwareVersionV3.SoftwareVersions software = softwareVersion.getSoftware();
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
-        translatorUtils.defineBadgesAndTrendingState(s, softwareVersion.getReleaseDate(), softwareVersion.getLast30DaysViews());
-        s.setFirstRelease(value(softwareVersion.getReleaseDate() != null && softwareVersion.getReleaseDate().before(new Date()) ? softwareVersion.getReleaseDate() : softwareVersion.getFirstReleasedAt()));
+        final Date releaseDate = softwareVersion.getReleaseDate() != null && softwareVersion.getReleaseDate().before(new Date()) ? softwareVersion.getReleaseDate() : softwareVersion.getFirstReleasedAt();
+        translatorUtils.defineBadgesAndTrendingState(s, releaseDate, softwareVersion.getLast30DaysViews());
+        s.setFirstRelease(value(releaseDate));
         s.setLastRelease(value(softwareVersion.getLastReleasedAt()));
         s.setAllIdentifiers(softwareVersion.getIdentifier());
         s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
