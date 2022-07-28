@@ -191,7 +191,7 @@ public class Search {
                                                        Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
         final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
-        if(repositoryUUID == null || (searchAfter != null && searchAfterUUID == null) || size > 10000){
+        if(repositoryUUID == null || (StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || size > 10000){
             return ResponseEntity.badRequest().build();
         }
         if (searchController.canReadLiveFiles(principal, repositoryUUID)) {
@@ -288,7 +288,7 @@ public class Search {
                                                        @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType) {
         final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
         final UUID uuid = MetaModelUtils.castToUUID(id);
-        if ((searchAfter != null && searchAfterUUID == null) || uuid == null || size > 10000) {
+        if ((StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || uuid == null || size > 10000) {
             return ResponseEntity.badRequest().build();
         }
         return searchController.getFilesFromRepo(DataStage.RELEASED, uuid, searchAfterUUID, size, format, groupingType);
@@ -303,7 +303,7 @@ public class Search {
                                                         Principal principal) {
         final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
         final UUID uuid = MetaModelUtils.castToUUID(id);
-        if ((searchAfter != null && searchAfterUUID == null) || uuid == null || size > 10000) {
+        if ((StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || uuid == null || size > 10000) {
             return ResponseEntity.badRequest().build();
         }
         if (searchController.isInInProgressRole(principal)) {
