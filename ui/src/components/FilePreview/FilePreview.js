@@ -28,11 +28,6 @@ const FilePreview = ({ url, title }) => {
 
   const handleOnLoad = () => setLoading(false);
 
-  const style = {
-    width: "100%",
-    visibility: loading?"hidden":"visible"
-  };
-
   return (
     <>
       {loading && (
@@ -41,7 +36,7 @@ const FilePreview = ({ url, title }) => {
           &nbsp;Retrieving {title?title:"file"}...
         </>
       )}
-      <iframe src={url} height="850" style={style} onLoad={handleOnLoad} ></iframe>
+      <iframe src={url} height="850" style={{width: "100%"}} onLoad={handleOnLoad} ></iframe>
     </>
   );
 };
