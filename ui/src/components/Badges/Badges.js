@@ -42,7 +42,7 @@ export const Badges = ({ badges }) => {
   return (
     <div className="kgs-badges">
       <Badge title="New"      className="kgs-badge-new"      active={badges.includes("isNew")} />
-      <Badge title="Trending" className="kgs-badge-trending" active={badges.includes("isTrending")} />
+      <Badge title="Top trending" className="kgs-badge-trending" active={badges.includes("isTrending")} />
     </div>
   );
 };
