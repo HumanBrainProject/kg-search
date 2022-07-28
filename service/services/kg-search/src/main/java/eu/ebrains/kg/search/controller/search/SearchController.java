@@ -561,8 +561,8 @@ public class SearchController extends FacetAggregationUtils {
 
         if (sortByRelevance) {
             fields.add(Map.of("_score", Map.of("order", "desc")));
-            fields.add(Map.of("trending", Map.of("order", "desc", "missing", "_last")));
-            fields.add(Map.of("first_release.value", Map.of("order", "desc", "missing", "_last")));
+            fields.add(Map.of("trending", Map.of("order", "desc", "missing", "_last", "unmapped_type", "boolean")));
+            fields.add(Map.of("first_release.value", Map.of("order", "desc", "missing", "_last", "unmapped_type", "date")));
         } else {
             fields.add(Map.of(
                     "title.value.keyword", Map.of(
