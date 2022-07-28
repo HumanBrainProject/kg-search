@@ -21,10 +21,9 @@
  *
  */
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
-import Tree from "rc-tree";
 import ReactPiwik from "react-piwik";
 
 import LinkedInstance from "../../containers/LinkedInstance";
@@ -32,19 +31,23 @@ import LinkedInstance from "../../containers/LinkedInstance";
 import "./HierarchicalTree.css";
 import "rc-tree/assets/index.css";
 
-const Icon = ({color}) => (
-  <FontAwesomeIcon icon={faCircle} style={{color: color?color:"gray"}} />
+const HierarchicalTreeData = React.lazy(() =>
+  import("./HierarchicalTreeData.js")
+);
+
+const Icon = ({ color }) => (
+  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : "gray" }} />
 );
 
 const Node = ({ node, group }) => {
-
   return (
     <div className="kgs-hierarchical-details">
       <div className="kgs-hierarchical-info">
         {node && (
           <div>
             <div className="kgs-hierarchical-info-title">
-              <Icon color={node.color} />&nbsp;{node.title}
+              <Icon color={node.color} />
+              &nbsp;{node.title}
             </div>
             {node.data && (
               <LinkedInstance
@@ -60,20 +63,16 @@ const Node = ({ node, group }) => {
   );
 };
 
-const Legend = ({legend}) => {
-  if (!(legend instanceof Object)) {
-    return null;
-  }
+const Loading = () => {
   return (
-    <ul className="kgs-hierarchical-legend">
-      {Object.entries(legend).map(([color, label]) => (
-        <li key={label}><Icon color={color} /> {label}</li>
-      ))}
-    </ul>
+    <>
+      <div className="spinner-border spinner-border-sm" role="status"></div>
+      &nbsp;Loading hierarchy...
+    </>
   );
 };
 
-const HierarchicalTree = ({data, group}) => {
+const HierarchicalTree = ({ data, group }) => {
   const [node, setNode] = useState(data);
 
   const onSelect = (_selectedKeys, info) => {
@@ -83,22 +82,17 @@ const HierarchicalTree = ({data, group}) => {
 
   return (
     <div>
-      <i className="kgs-hierarchical-advise">Select the items of the tree to get more details about the individual elements.</i>
+      <i className="kgs-hierarchical-advise">
+        Select the items of the tree to get more details about the individual
+        elements.
+      </i>
       <div className="kgs-hierarchical">
         <div className="kgs-hierarchical-tree">
-          <Tree
-            treeData={[data]}
-            defaultExpandAll={true}
-            defaultSelectedKeys={[data.key]}
-            onSelect={onSelect}
-            icon={Icon}
-          />
-          <Legend legend={data.legend} />
+          <Suspense fallback={<Loading />}>
+            <HierarchicalTreeData data={data} onSelect={onSelect} />
+          </Suspense>
         </div>
-        <Node
-          node={node}
-          group={group}
-        />
+        <Node node={node} group={group} />
       </div>
     </div>
   );
