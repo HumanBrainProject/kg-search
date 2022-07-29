@@ -22,9 +22,11 @@
  */
 
 import React, { Suspense, useState } from "react";
+import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import ReactPiwik from "react-piwik";
+import _ from "lodash-uuid";
 
 import LinkedInstance from "../../containers/LinkedInstance";
 
@@ -72,7 +74,7 @@ const Loading = () => {
   );
 };
 
-const HierarchicalTree = ({ data, group }) => {
+const HierarchicalTreeComponent = ({ data, group, defaultExpandAll, defaultExpandedKeys }) => {
   const [node, setNode] = useState(data);
 
   const onSelect = (_selectedKeys, info) => {
@@ -89,7 +91,7 @@ const HierarchicalTree = ({ data, group }) => {
       <div className="kgs-hierarchical">
         <div className="kgs-hierarchical-tree">
           <Suspense fallback={<Loading />}>
-            <HierarchicalTreeData data={data} onSelect={onSelect} />
+            <HierarchicalTreeData data={data} onSelect={onSelect} defaultExpandAll={defaultExpandAll} defaultExpandedKeys={defaultExpandedKeys} />
           </Suspense>
         </div>
         <Node node={node} group={group} />
@@ -97,5 +99,108 @@ const HierarchicalTree = ({ data, group }) => {
     </div>
   );
 };
+
+const regTitle = /^(.+\s)\d+$/;
+const getTo = (from , to) => {
+  let next = true;
+  let until = 0;
+  for (let i=0; next && i<from.length && i<to.length; i++) {
+    next = from.charAt(i) === to.charAt(i);
+    until = i;
+  }
+  const common = from.slice(0, until);
+  if (regTitle.test(common)) {
+    const [ , start] = common.match(regTitle);
+    return to.slice(start.length);
+  } else {
+    return to.slice(until);
+  }
+};
+
+const chunkSize = 100;
+const chunkThresold = chunkSize * 5;
+const splitChildren = data => {
+  if (!Array.isArray(data.children)) {
+    return {
+      data: data,
+      expandAll: true,
+      expandedKeys: []
+    };
+  }
+  if (data.children.length < chunkThresold) {
+    const { children, expandAll, expandedKeys } = data.children.reduce((acc, c) => {
+      const { data, expandAll, expandedKeys } = splitChildren(c);
+      acc.children.push(data);
+      acc.expandAll = acc.expandAll && expandAll;
+      expandedKeys.forEach(key => acc.expandedKeys.push(key));
+      return acc;
+    }, {children: [], expandAll: false, expandedKeys: []});
+    expandedKeys.push(data.key);
+    return {
+      data: {
+        ...data,
+        children: children
+      },
+      expandAll: expandAll,
+      expandedKeys: expandedKeys
+    };
+  } else {
+    const children = [];
+    const keys = [];
+    const childrenByType = Object.values(data.children.reduce((acc, child) => {
+      if (!acc[child.color]) {
+        acc[child.color] = [];
+      }
+      acc[child.color].push(child);
+      return acc;
+    }, {}));
+    childrenByType.forEach(list => {
+      if (list.length === 1) {
+        const { expandedKeys } = splitChildren(list[0]);
+        expandedKeys.forEach(key => keys.push(key));
+        children.push(list[0]);
+      } else {
+        for (let i = 0; i <  list.length; i += chunkSize) {
+          const chunk =  list.slice(i, i + chunkSize);
+          chunk.forEach(c => {
+            const { expandedKeys } = splitChildren(c);
+            expandedKeys.forEach(key => keys.push(key));
+          });
+          const from = chunk[0].title;
+          const to = getTo(from, chunk[chunk.length-1].title);
+          children.push({
+            key: _.uuid(),
+            title: `from ${from} to ${to}`,
+            color: chunk[0]?.color,
+            children: chunk
+          });
+        }
+      }
+    });
+    if (children.length < chunkSize) {
+      keys.push(data.key);
+    }
+    return {
+      data: {
+        ...data,
+        children: children
+      },
+      expandAll: false,
+      expandedKeys: keys
+    };
+  }
+};
+
+const HierarchicalTree = connect(
+  (state, props) => {
+    const { data, expandAll, expandedKeys } = splitChildren(props.data);
+    return {
+      data: data,
+      group: props.group,
+      defaultExpandAll: expandAll,
+      defaultExpandedKeys: expandAll?undefined:expandedKeys
+    };
+  }
+)(HierarchicalTreeComponent);
 
 export default HierarchicalTree;

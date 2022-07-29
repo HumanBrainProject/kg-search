@@ -48,12 +48,13 @@ const Legend = ({ legend }) => {
   );
 };
 
-const HierarchicalTreeData = ({ data, onSelect }) => {
+const HierarchicalTreeData = ({ data, onSelect, defaultExpandAll, defaultExpandedKeys }) => {
   return (
     <>
       <Tree
         treeData={[data]}
-        defaultExpandAll={true}
+        defaultExpandAll={defaultExpandAll}
+        defaultExpandedKeys={defaultExpandedKeys}
         defaultSelectedKeys={[data.key]}
         onSelect={onSelect}
         icon={Icon}
