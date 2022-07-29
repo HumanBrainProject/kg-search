@@ -91,10 +91,18 @@ export const goBackToInstance = id => {
   };
 };
 
-const handleLoadInstanceResponse = (dispatch, group, data, onSuccessCallback) => {
+const regLegacyInstanceId = /^.+\/(.+)$/;
+const isMatchingLegacyInstanceId = (instanceId) => {
+  return regLegacyInstanceId.test(instanceId);
+};
+
+const handleLoadInstanceResponse = (dispatch, id, data, onSuccessCallback) => {
   // if (Math.round(Math.random()* 10)%2 === 0) {
   //   throw new Error("et zut");
   // }
+  if (isMatchingLegacyInstanceId(id)) {
+    data.id = id;
+  }
   dispatch(loadInstanceSuccess(data));
   typeof onSuccessCallback === "function" && onSuccessCallback();
 };
@@ -137,7 +145,7 @@ export const loadInstance = (group, id, onSuccessCallback) => dispatch => {
   dispatch(loadInstanceRequest());
   API.axios
     .get(API.endpoints.instance(group, id))
-    .then(response => handleLoadInstanceResponse(dispatch, group, response.data, onSuccessCallback))
+    .then(response => handleLoadInstanceResponse(dispatch, id, response.data, onSuccessCallback))
     .catch(e => handleLoadInstanceException(dispatch, group, e));
 };
 
