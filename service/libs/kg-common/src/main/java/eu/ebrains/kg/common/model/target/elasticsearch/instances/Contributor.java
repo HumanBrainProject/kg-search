@@ -92,6 +92,18 @@ public class Contributor implements TargetInstance {
     @FieldInfo(type = FieldInfo.Type.TEXT, layout = "(Meta)Data model contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> metaDataModelContributions;
 
+    @FieldInfo(label = "Datasets citations", layout = "Citations", isCitation=true)
+    private List<Citation> datasetCitations;
+
+    @FieldInfo(label = "Models citations", layout = "Citations", isCitation=true)
+    private List<Citation> modelCitations;
+
+    @FieldInfo(label = "Software citations", layout = "Citations", isCitation=true)
+    private List<Citation> softwareCitations;
+
+    @FieldInfo(label = "(Meta)Data models citations", layout = "Citations", isCitation=true)
+    private List<Citation> metaDataModelCitations;
+
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
@@ -107,6 +119,26 @@ public class Contributor implements TargetInstance {
     @JsonIgnore
     public boolean isSearchableInstance() {
         return true;
+    }
+
+    @Getter
+    @Setter
+    public static class Citation {
+
+        @FieldInfo(label = "Id", ignoreForSearch = true, visible = false, labelHidden = true)
+        private String id;
+
+        @FieldInfo(label = "Type", ignoreForSearch = true, visible = false, labelHidden = true)
+        private String type;
+
+        @FieldInfo(label = "Name", ignoreForSearch = true, visible = false, labelHidden = true)
+        private String title;
+
+        @FieldInfo(label = "Doi", ignoreForSearch = true, visible = false)
+        private String doi;
+
+        @FieldInfo(label = "Citation", ignoreForSearch = true, visible = false)
+        private String citation;
     }
 
 }

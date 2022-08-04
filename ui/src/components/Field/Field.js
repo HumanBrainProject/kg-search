@@ -32,6 +32,7 @@ import HierarchicalTree from "./HierarchicalTree";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 import FilePreview from "../FilePreview/FilePreview";
+import Citations from "./Citation/Citations";
 import MarkDownCitation from "./Citation/MarkDownCitation";
 import DynamicCitation from "./Citation/DynamicCitation";
 import Text from "../Text/Text";
@@ -75,10 +76,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
   if (!mapping || !data) {
     return null;
-  }
-
-  if (Array.isArray(data) && data.length === 1) {
-    data = data[0];
   }
 
   const ListFieldComponent = renderUserInteractions ? ListField : PrintViewListField;
@@ -146,20 +143,30 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
   } else if (mapping.isCitation) { // Citation
 
-    if (name === "customCitation") { // MarkDown Citation
+    if (Array.isArray(data)) {
 
       valueProps = {
-        text: data.value,
+        data: data
       };
-      valueComponent = MarkDownCitation;
+      valueComponent = Citations;
 
-    } else { // Dynamic Citation
+    } else {
 
-      valueProps = {
-        doi: data.value
-      };
-      valueComponent = DynamicCitation;
+      if (name === "customCitation") { // MarkDown Citation
 
+        valueProps = {
+          text: data.value,
+        };
+        valueComponent = MarkDownCitation;
+
+      } else { // Dynamic Citation
+
+        valueProps = {
+          doi: data.value
+        };
+        valueComponent = DynamicCitation;
+
+      }
     }
 
   } else if (mapping.isHierarchical) { // Hierarchical
@@ -221,40 +228,47 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
     };
     valueComponent = TableField;
 
-  } else if (Array.isArray(data)) { // List
+  } else {
 
-    if (mapping.layout === "group") {
-      labelCounter = data.length;
+    if (Array.isArray(data) && data.length === 1) {
+      data = data[0];
     }
 
-    valueProps = {
-      items: data,
-      mapping: mapping,
-      group: group,
-      type: type
-    };
-    valueComponent = ListFieldComponent;
+    if (Array.isArray(data)) { // List
 
-  } else if (mapping.children) { // Object
+      if (mapping.layout === "group") {
+        labelCounter = data.length;
+      }
 
-    valueProps = {
-      items: data,
-      mapping: mapping,
-      group: group,
-      type: type
-    };
-    valueComponent = ObjectFieldComponent;
+      valueProps = {
+        items: data,
+        mapping: mapping,
+        group: group,
+        type: type
+      };
+      valueComponent = ListFieldComponent;
 
-  } else { // Value
+    } else if (mapping.children) { // Object
 
-    valueProps = {
-      data: data,
-      mapping: mapping,
-      group: group,
-      type: type
-    };
-    valueComponent = ValueFieldComponent;
+      valueProps = {
+        items: data,
+        mapping: mapping,
+        group: group,
+        type: type
+      };
+      valueComponent = ObjectFieldComponent;
 
+    } else { // Value
+
+      valueProps = {
+        data: data,
+        mapping: mapping,
+        group: group,
+        type: type
+      };
+      valueComponent = ValueFieldComponent;
+
+    }
   }
 
   return {

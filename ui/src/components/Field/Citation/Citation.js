@@ -29,15 +29,24 @@ import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
 
 import "./Citation.css";
 
-const Citation = ({citation, doi, bibtex}) => {
+const Citation = ({title, citation, doi, bibtex}) => {
+  const html = title?`<h6><strong>${title}</strong></h6>\n${citation}`:citation;
   return (
     <div className="kgs-citation">
       {citation ?
         <pre>
-          <span dangerouslySetInnerHTML={{ __html: citation }} />
-          <CopyToClipboardButton icon={faClipboard} title="Copy citation" confirmationText="Citation copied" content={citation} />
+          <span dangerouslySetInnerHTML={{ __html: html }} />
+          <CopyToClipboardButton icon={faClipboard} title="Copy citation" confirmationText="Citation copied" content={html} />
           {bibtex && <a className="kgs-citation-download" href={bibtex} download={`${doi}.bib`}><FontAwesomeIcon icon={faDownload} /> Download as bibtex</a>}
-        </pre> : <a href={`https://doi.org/${doi}`}>DOI: {doi}</a>}
+        </pre>
+        :
+        <>
+          {title && (
+            <h6><strong>${title}</strong></h6>
+          )}
+          <a href={`https://doi.org/${doi}`}>DOI: {doi}</a>
+        </>
+      }
     </div>
   );
 };

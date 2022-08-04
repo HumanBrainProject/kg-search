@@ -21,15 +21,15 @@
  *
  */
 
- .kgs-citation.kgs-citation-spinner {
-   display: block;
-   padding: 5px 0 10px 0;
+ .kgs-citations {
+  display: inline-block;
+  margin-top: -10px;
 }
 
-.kgs-citation.kgs-citation-spinner > span.spinner-border {
-   margin-right: 5px;
+.kgs-citations.kgs-citations-spinner {
+  margin-top: 0;
 }
 
-.kgs-citation.kgs-citation-error {
-   padding: 5px 0 10px 0;
+.kgs-citations.kgs-citations-spinner > span.spinner-border {
+  margin-right: 5px;
 }

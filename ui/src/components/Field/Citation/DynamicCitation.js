@@ -31,7 +31,7 @@ import Citation from "./Citation";
 
 import "./DynamicCitation.css";
 
-const DynamicCitation = ({ doi }) => {
+const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
 
   const [citation, setCitation] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -46,45 +46,53 @@ const DynamicCitation = ({ doi }) => {
   const getCitation = async () => {
     setIsLoading(true);
     setError(null);
-    const _citationApa = await API.axios.get(API.endpoints.citation(doi, "apa", "text/x-bibliography"));
-    const result = _citationApa?.data;
-    const _citationBibtex = await API.axios.get(API.endpoints.citation(doi, "bibtex", "application/x-bibtex"));
-    const resultBibtex = _citationBibtex?.data;
-    if (result) {
+    const apaCitationResult = await API.axios.get(API.endpoints.citation(doi, "apa", "text/x-bibliography"));
+    const apaCitation = apaCitationResult?.data;
+    const bibtexCitationResult = await API.axios.get(API.endpoints.citation(doi, "bibtex", "application/x-bibtex"));
+    const bibtexCitation = bibtexCitationResult?.data;
+    if (apaCitation) {
       setIsLoading(false);
       setError(null);
-      setCitation(sanitizeHtml(result, {
+      const citation = sanitizeHtml(apaCitation, {
         allowedTags: [],
         allowedAttributes: {},
-      }));
+      });
+      setCitation(citation);
+      typeof onCitationDownloaded === "function" && onCitationDownloaded(doi, citation);
     } else {
       setIsLoading(false);
       setCitation(null);
-      setError(`The citation for doi ${doi} was not found.`);
+      setError(title?`The citation for ${title} was not found.`:`The citation for doi ${doi} was not found.`);
+      typeof onCitationDownloaded === "function" && onCitationDownloaded(doi, null);
     }
-    if (resultBibtex) {
-      const url = window.URL.createObjectURL(
-        new Blob([resultBibtex]),
+    if (bibtexCitation) {
+      const bibtexUrl = window.URL.createObjectURL(
+        new Blob([bibtexCitation]),
       );
-      setBibtex(url);
+      setBibtex(bibtexUrl);
     }
   };
 
   if (error) {
-    return (<div>
-      <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
-      <FontAwesomeIcon icon={faSyncAlt} onClick={getCitation} style={{ cursor: "pointer" }} />
-    </div>);
+    return (
+      <div className="kgs-citation kgs-citation-error">
+        <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
+        <FontAwesomeIcon icon={faSyncAlt} onClick={getCitation} style={{ cursor: "pointer" }} />
+      </div>
+    );
   }
 
   if (isLoading) {
-    return(<div className="kgs-citation-spinner spinner-border spinner-border-sm" role="status">
-      <span className="sr-only">Retrieving citation...</span>
-    </div>);
+    return (
+      <div className="kgs-citation kgs-citation-spinner">
+        <span className="spinner-border spinner-border-sm" role="status"></span>
+        Retrieving citation{title?` for ${title}`:""}...
+      </div>
+    );
   }
 
   return (
-    <Citation citation={citation} bibtex={bibtex} doi={doi} />
+    <Citation title={title} citation={citation} bibtex={bibtex} doi={doi} />
   );
 };
 

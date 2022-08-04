@@ -21,8 +21,12 @@
  *
  */
 .kgs-citation {
-    padding-top: 10px;
+    position: relative;
  }
+
+ .kgs-citation + .kgs-citation {
+  padding-top: 10px;
+}
 
 .kgs-citation a {
    text-decoration: none;
@@ -41,8 +45,8 @@
 
 .kgs-citation .kgs-copy-to-clipboard {
    position: absolute;
-   right: 20px;
-   top: 30px;
+   top: 15px;
+   right: 5px;
  }
  
 .kgs-citation .kgs-copy-to-clipboard .kgs-copy-confirmation{
@@ -57,3 +61,49 @@
    border: 1px solid #ced4da;
    border-radius: 0.25em;
  }
+
+
+.kgs-citation > pre > span h1,
+.kgs-citation > pre > span h2,
+.kgs-citation > pre > span h3 {
+    margin-top: 10px;
+}
+
+.kgs-citation > pre > span blockquote {
+    font-size: unset;
+    border-left-color: var(--color-25);
+    white-space: pre-line;
+}
+
+.kgs-citation > pre > span > p,
+.kgs-citation > pre > span > ul,
+.kgs-citation > pre > span > ol,
+.kgs-citation > pre > span blockquote > p,
+.kgs-citation > pre > span blockquote > ul,
+.kgs-citation > pre > span blockquote > ol {
+    margin: 0;
+}
+
+.kgs-citation > pre > span > p+p,
+.kgs-citation > pre > span > ul+ul,
+.kgs-citation > pre > span > ol+ol,
+.kgs-citation > pre > span > p+ul,
+.kgs-citation > pre > span > p+ol,
+.kgs-citation > pre > span > ul+p,
+.kgs-citation > pre > span > ul+ol,
+.kgs-citation > pre > span > ol+p,
+.kgs-citation > pre > span > ol+ul {
+    margin-top: 1rem;
+}
+
+.kgs-citation > pre > span li+li {
+    margin-top: 0.3rem;
+}
+
+.kgs-citation > pre > span img {
+    max-width: 100%;
+}
+
+.kgs-citation > pre > span code {
+    white-space: break-spaces;
+}

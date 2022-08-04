@@ -23,17 +23,18 @@
 
 package eu.ebrains.kg.common.controller.translators.kgv3;
 
+import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.PersonOrOrganizationV3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ResearchProductVersionReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -138,7 +139,59 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setSoftwareContributions(getReferences(personOrOrganization.getSoftwareContributions()));
         c.setMetaDataModelContributions(getReferences(personOrOrganization.getMetaDataModelContributions()));
 
+        Map<String, Contributor.Citation> datasetCitations = new HashMap<>();
+        personOrOrganization.getCustodianOfDataset().forEach(ref -> addCitation(datasetCitations, ref, "Dataset"));
+        personOrOrganization.getDatasetContributions().forEach(ref -> addCitation(datasetCitations, ref, "Dataset"));
+        if (!CollectionUtils.isEmpty(datasetCitations)) {
+            c.setDatasetCitations(datasetCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
+        }
+
+        Map<String, Contributor.Citation> modelCitations = new HashMap<>();
+        personOrOrganization.getCustodianOfModel().forEach(ref -> addCitation(modelCitations, ref, "Model"));
+        personOrOrganization.getModelContributions().forEach(ref -> addCitation(modelCitations, ref, "Model"));
+        if (!CollectionUtils.isEmpty(modelCitations)) {
+            c.setModelCitations(modelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
+        }
+
+        Map<String, Contributor.Citation> softwareCitations = new HashMap<>();
+        personOrOrganization.getCustodianOfSoftware().forEach(ref -> addCitation(softwareCitations, ref, "Software"));
+        personOrOrganization.getSoftwareContributions().forEach(ref -> addCitation(softwareCitations, ref, "Software"));
+        if (!CollectionUtils.isEmpty(softwareCitations)) {
+            c.setSoftwareCitations(softwareCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
+        }
+
+        Map<String, Contributor.Citation> metaDataModelCitations = new HashMap<>();
+        personOrOrganization.getCustodianOfMetaDataModel().forEach(ref -> addCitation(metaDataModelCitations, ref, "(Meta)Data model"));
+        personOrOrganization.getMetaDataModelContributions().forEach(ref -> addCitation(metaDataModelCitations, ref, "(Meta)Data model"));
+        if (!CollectionUtils.isEmpty(metaDataModelCitations)) {
+            c.setMetaDataModelCitations(metaDataModelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
+        }
+
         return c;
+    }
+
+    private void addCitation(Map<String, Contributor.Citation> citations, ResearchProductVersionReference source, String type) {
+        String doi = source.getDoi();
+        String citation = source.getHowToCite();
+        if (StringUtils.isNotBlank(citation) || StringUtils.isNotBlank(doi)) {
+            TargetInternalReference reference = ref(source);
+            if (reference != null && StringUtils.isNotBlank(reference.getReference()) && StringUtils.isNotBlank(reference.getValue())) {
+                if (!citations.containsKey(reference.getReference())) {
+                    Contributor.Citation target = new Contributor.Citation();
+                    target.setId(reference.getReference());
+                    target.setType(type);
+                    target.setTitle(reference.getValue());
+                    if (StringUtils.isNotBlank(citation)) {
+                        target.setCitation(citation);
+                    }
+                    if (StringUtils.isNotBlank(doi)) {
+                        final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
+                        target.setDoi(doiWithoutPrefix);
+                    }
+                    citations.put(reference.getReference(), target);
+                }
+            }
+        }
     }
 
     private String getTitle(PersonOrOrganizationV3 personOrOrganization) {
@@ -151,7 +204,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         return String.format("%s, %s", personOrOrganization.getFamilyName(), personOrOrganization.getGivenName());
     }
 
-    private List<TargetInternalReference> getReferences(List<ExtendedFullNameRefForResearchProductVersion> references){
+    private List<TargetInternalReference> getReferences(List<ResearchProductVersionReference> references){
         if(references == null){
             return null;
         }
