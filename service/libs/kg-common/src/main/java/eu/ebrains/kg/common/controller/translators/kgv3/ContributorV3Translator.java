@@ -140,34 +140,40 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setMetaDataModelContributions(getReferences(personOrOrganization.getMetaDataModelContributions()));
 
         Map<String, Contributor.Citation> datasetCitations = new HashMap<>();
-        personOrOrganization.getCustodianOfDataset().forEach(ref -> addCitation(datasetCitations, ref, "Dataset"));
-        personOrOrganization.getDatasetContributions().forEach(ref -> addCitation(datasetCitations, ref, "Dataset"));
+        addCitations(datasetCitations, personOrOrganization.getCustodianOfDataset(), "Dataset");
+        addCitations(datasetCitations, personOrOrganization.getDatasetContributions(), "Dataset");
         if (!CollectionUtils.isEmpty(datasetCitations)) {
             c.setDatasetCitations(datasetCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         Map<String, Contributor.Citation> modelCitations = new HashMap<>();
-        personOrOrganization.getCustodianOfModel().forEach(ref -> addCitation(modelCitations, ref, "Model"));
-        personOrOrganization.getModelContributions().forEach(ref -> addCitation(modelCitations, ref, "Model"));
+        addCitations(modelCitations, personOrOrganization.getCustodianOfModel(), "Model");
+        addCitations(modelCitations, personOrOrganization.getModelContributions(), "Model");
         if (!CollectionUtils.isEmpty(modelCitations)) {
             c.setModelCitations(modelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         Map<String, Contributor.Citation> softwareCitations = new HashMap<>();
-        personOrOrganization.getCustodianOfSoftware().forEach(ref -> addCitation(softwareCitations, ref, "Software"));
-        personOrOrganization.getSoftwareContributions().forEach(ref -> addCitation(softwareCitations, ref, "Software"));
+        addCitations(softwareCitations, personOrOrganization.getCustodianOfSoftware(), "Software");
+        addCitations(softwareCitations, personOrOrganization.getSoftwareContributions(), "Software");
         if (!CollectionUtils.isEmpty(softwareCitations)) {
             c.setSoftwareCitations(softwareCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         Map<String, Contributor.Citation> metaDataModelCitations = new HashMap<>();
-        personOrOrganization.getCustodianOfMetaDataModel().forEach(ref -> addCitation(metaDataModelCitations, ref, "(Meta)Data model"));
-        personOrOrganization.getMetaDataModelContributions().forEach(ref -> addCitation(metaDataModelCitations, ref, "(Meta)Data model"));
+        addCitations(metaDataModelCitations, personOrOrganization.getCustodianOfMetaDataModel(), "(Meta)Data model");
+        addCitations(metaDataModelCitations, personOrOrganization.getMetaDataModelContributions(), "(Meta)Data model");
         if (!CollectionUtils.isEmpty(metaDataModelCitations)) {
             c.setMetaDataModelCitations(metaDataModelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         return c;
+    }
+
+    private void addCitations(Map<String, Contributor.Citation> citations, List<ResearchProductVersionReference> references, String title) {
+        if (!CollectionUtils.isEmpty(references)) {
+            references.forEach(ref -> addCitation(citations, ref, title));
+        }
     }
 
     private void addCitation(Map<String, Contributor.Citation> citations, ResearchProductVersionReference source, String type) {
