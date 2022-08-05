@@ -128,9 +128,6 @@ public class Contributor implements TargetInstance {
         @FieldInfo(label = "Id", ignoreForSearch = true, visible = false, labelHidden = true)
         private String id;
 
-        @FieldInfo(label = "Type", ignoreForSearch = true, visible = false, labelHidden = true)
-        private String type;
-
         @FieldInfo(label = "Name", ignoreForSearch = true, visible = false, labelHidden = true)
         private String title;
 

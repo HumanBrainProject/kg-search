@@ -140,29 +140,29 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setMetaDataModelContributions(getReferences(personOrOrganization.getMetaDataModelContributions()));
 
         Map<String, Contributor.Citation> datasetCitations = new HashMap<>();
-        addCitations(datasetCitations, personOrOrganization.getCustodianOfDataset(), "Dataset");
-        addCitations(datasetCitations, personOrOrganization.getDatasetContributions(), "Dataset");
+        addCitations(datasetCitations, personOrOrganization.getCustodianOfDataset());
+        addCitations(datasetCitations, personOrOrganization.getDatasetContributions());
         if (!CollectionUtils.isEmpty(datasetCitations)) {
             c.setDatasetCitations(datasetCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         Map<String, Contributor.Citation> modelCitations = new HashMap<>();
-        addCitations(modelCitations, personOrOrganization.getCustodianOfModel(), "Model");
-        addCitations(modelCitations, personOrOrganization.getModelContributions(), "Model");
+        addCitations(modelCitations, personOrOrganization.getCustodianOfModel());
+        addCitations(modelCitations, personOrOrganization.getModelContributions());
         if (!CollectionUtils.isEmpty(modelCitations)) {
             c.setModelCitations(modelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         Map<String, Contributor.Citation> softwareCitations = new HashMap<>();
-        addCitations(softwareCitations, personOrOrganization.getCustodianOfSoftware(), "Software");
-        addCitations(softwareCitations, personOrOrganization.getSoftwareContributions(), "Software");
+        addCitations(softwareCitations, personOrOrganization.getCustodianOfSoftware());
+        addCitations(softwareCitations, personOrOrganization.getSoftwareContributions());
         if (!CollectionUtils.isEmpty(softwareCitations)) {
             c.setSoftwareCitations(softwareCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
         Map<String, Contributor.Citation> metaDataModelCitations = new HashMap<>();
-        addCitations(metaDataModelCitations, personOrOrganization.getCustodianOfMetaDataModel(), "(Meta)Data model");
-        addCitations(metaDataModelCitations, personOrOrganization.getMetaDataModelContributions(), "(Meta)Data model");
+        addCitations(metaDataModelCitations, personOrOrganization.getCustodianOfMetaDataModel());
+        addCitations(metaDataModelCitations, personOrOrganization.getMetaDataModelContributions());
         if (!CollectionUtils.isEmpty(metaDataModelCitations)) {
             c.setMetaDataModelCitations(metaDataModelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
@@ -170,13 +170,13 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         return c;
     }
 
-    private void addCitations(Map<String, Contributor.Citation> citations, List<ResearchProductVersionReference> references, String title) {
+    private void addCitations(Map<String, Contributor.Citation> citations, List<ResearchProductVersionReference> references) {
         if (!CollectionUtils.isEmpty(references)) {
-            references.forEach(ref -> addCitation(citations, ref, title));
+            references.forEach(ref -> addCitation(citations, ref));
         }
     }
 
-    private void addCitation(Map<String, Contributor.Citation> citations, ResearchProductVersionReference source, String type) {
+    private void addCitation(Map<String, Contributor.Citation> citations, ResearchProductVersionReference source) {
         String doi = source.getDoi();
         String citation = source.getHowToCite();
         if (StringUtils.isNotBlank(citation) || StringUtils.isNotBlank(doi)) {
@@ -185,7 +185,6 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
                 if (!citations.containsKey(reference.getReference())) {
                     Contributor.Citation target = new Contributor.Citation();
                     target.setId(reference.getReference());
-                    target.setType(type);
                     target.setTitle(reference.getValue());
                     if (StringUtils.isNotBlank(citation)) {
                         target.setCitation(citation);

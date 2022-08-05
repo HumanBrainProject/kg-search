@@ -21,23 +21,29 @@
  *
  */
 
- .kgs-citations {
-  display: inline;
-}
+import React from "react";
+import DynamicCitation from "./DynamicCitation";
+import Citation from "./Citation";
 
- .kgs-citations .kgs-citations-header {
-  display: inline-block;
-  margin-top: -10px;
-}
+const CitationComponent = ({ item, onCitationDownloaded }) => {
 
-.kgs-citations .kgs-citations-spinner {
-  display: inline-block;
-}
+  if (item.isDynamic) {
+    return (
+      <DynamicCitation title={item.title} doi={item.doi} onCitationDownloaded={onCitationDownloaded} />
+    );
+  }
 
-.kgs-citations .kgs-citations-spinner > span.spinner-border {
-  margin-right: 5px;
-}
+  return (
+    <Citation title={item.title} citation={item.citation} />
+  );
+};
 
-.kgs-citations .kgs-citations-body {
-  margin-top: 5px;
-}
+const CitationsList = ({ citations, onCitationDownloaded }) => (
+  <>
+    {citations.map(item => (
+      <CitationComponent key={item.key} item={item} onCitationDownloaded={onCitationDownloaded} />
+    ))}
+  </>
+);
+
+export default CitationsList;

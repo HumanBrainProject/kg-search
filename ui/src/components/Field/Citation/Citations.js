@@ -21,44 +21,26 @@
  *
  */
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
-import DynamicCitation from "./DynamicCitation";
-import Citation from "./Citation";
 import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
+
+const CitationsList = React.lazy(() => import("./CitationsList"));
 
 import "./Citations.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-const getTitle = (type, title) => {
-  if (!title) {
-    return null;
-  }
-  if (!type) {
-    return title;
-  }
-  return `${type} ${title}`;
-};
-
-const CitationComponent = ({ item, onCitationDownloaded }) => {
-
-  const title = getTitle(item.type, item.title);
-
-  if (item.isDynamic) {
-    return (
-      <DynamicCitation title={title} doi={item.doi} onCitationDownloaded={onCitationDownloaded} />
-    );
-  }
-
-  return (
-    <Citation title={title} citation={item.citation} />
-  );
-};
+const Loading = () => (
+  <>
+    <div className="spinner-border spinner-border-sm" role="status"></div>
+    &nbsp;Loading...
+  </>
+);
 
 const Citations = ({ data }) => {
 
@@ -105,30 +87,31 @@ const Citations = ({ data }) => {
   const errors = list.filter(item => item.error).length;
   const number = allCitations.length;
   const total = list.length;
-  const text = allCitations.map(item => {
-    const title = getTitle(item.type, item.title);
-    return title?`<h6><strong>${title}</strong></h6>\n${item.citation}`:item.citation;
-  }).join("\n\n");
+  const text = allCitations.map(item => item.title?`<h6><strong>${item.title}</strong></h6>\n${item.citation}`:item.citation).join("\n\n");
 
   return (
-    <>
-      {(number + errors) === total?
-        <div className="kgs-citations">
-          {number !== total && (
-            <span style={{ color: "var(--code-color)" }} title={`Only ${number} out of ${total} citations available)`}><FontAwesomeIcon icon={faExclamationTriangle} /></span>
-          )}
-          <CopyToClipboardButton icon={faClipboard} title={(number === total)?"Copy all citations":`Copy available citations (${number} out of ${total} )`} confirmationText="Citations copied" content={text} />
-        </div>
-        :
-        <div className="kgs-citations kgs-citations-spinner">
-          <span className="spinner-border spinner-border-sm" role="status"></span>
-          Retrieving citations ({number + errors}/{total})...
-        </div>
-      }
-      {Object.values(citations).map(item => (
-        <CitationComponent key={item.key} item={item} onCitationDownloaded={handleOnCitationDownloaded} />
-      ))}
-    </>
+    <div className="kgs-citations">
+      <div className="kgs-citations-header">
+        {(number + errors) === total?
+          <>
+            {number !== total && (
+              <span style={{ color: "var(--code-color)" }} title={`Only ${number} out of ${total} citations available)`}><FontAwesomeIcon icon={faExclamationTriangle} /></span>
+            )}
+            <CopyToClipboardButton icon={faClipboard} title={(number === total)?"Copy all citations":`Copy available citations (${number} out of ${total} )`} confirmationText="Citations copied" content={text} />
+          </>
+          :
+          <div className="kgs-citations-spinner">
+            <span className="spinner-border spinner-border-sm" role="status"></span>
+            Retrieving citations ({number + errors}/{total})...
+          </div>
+        }
+      </div>
+      <div className="kgs-citations-body">
+        <Suspense fallback={<Loading />}>
+          <CitationsList citations={Object.values(citations)} onCitationDownloaded={handleOnCitationDownloaded} />
+        </Suspense>
+      </div>
+    </div>
   );
 };
 

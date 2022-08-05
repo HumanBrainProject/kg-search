@@ -45,8 +45,8 @@
 
 .kgs-citation .kgs-copy-to-clipboard {
    position: absolute;
-   top: 15px;
-   right: 5px;
+   top: 5px;
+   right: 0;
  }
  
 .kgs-citation .kgs-copy-to-clipboard .kgs-copy-confirmation{
