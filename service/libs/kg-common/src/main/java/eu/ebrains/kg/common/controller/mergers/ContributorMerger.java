@@ -30,7 +30,7 @@ public class ContributorMerger extends Merger<Contributor> {
                 parent.setDatasetContributions(new ArrayList<>());
             }
             final Set<String> parentContributions = parent.getDatasetContributions().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
-            final Set<String> parentContributionsWithOld = Stream.concat(parentContributions.stream(), parentContributions.stream().map(p -> String.format("Person/%s", p))).collect(Collectors.toSet());
+            final Set<String> parentContributionsWithOld = Stream.concat(parentContributions.stream(), parentContributions.stream().map(p -> String.format("Dataset/%s", p))).collect(Collectors.toSet());
             parent.getDatasetContributions().addAll(child.getDatasetContributions().stream().filter(d -> parentContributionsWithOld.contains(d.getReference())).collect(Collectors.toList()));
             sortByValue(parent.getDatasetContributions());
         }
@@ -39,7 +39,7 @@ public class ContributorMerger extends Merger<Contributor> {
                 parent.setCustodianOfDataset(new ArrayList<>());
             }
             final Set<String> parentCustodians = parent.getCustodianOfDataset().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
-            final Set<String> parentCustodiansWithOld = Stream.concat(parentCustodians.stream(), parentCustodians.stream().map(p -> String.format("Person/%s", p))).collect(Collectors.toSet());
+            final Set<String> parentCustodiansWithOld = Stream.concat(parentCustodians.stream(), parentCustodians.stream().map(p -> String.format("Dataset/%s", p))).collect(Collectors.toSet());
             parent.getCustodianOfDataset().addAll(child.getCustodianOfDataset().stream().filter(d -> !parentCustodiansWithOld.contains(d.getReference())).collect(Collectors.toList()));
             sortByValue(parent.getCustodianOfDataset());
         }
@@ -48,7 +48,7 @@ public class ContributorMerger extends Merger<Contributor> {
                 parent.setCustodianOfModel(new ArrayList<>());
             }
             final Set<String> parentCustodians = parent.getCustodianOfModel().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
-            final Set<String> parentCustodiansWithOld = Stream.concat(parentCustodians.stream(), parentCustodians.stream().map(p -> String.format("Person/%s", p))).collect(Collectors.toSet());
+            final Set<String> parentCustodiansWithOld = Stream.concat(parentCustodians.stream(), parentCustodians.stream().map(p -> String.format("Model/%s", p))).collect(Collectors.toSet());
             parent.getCustodianOfModel().addAll(child.getCustodianOfModel().stream().filter(d -> !parentCustodiansWithOld.contains(d.getReference())).collect(Collectors.toList()));
             sortByValue(parent.getCustodianOfModel());
         }
@@ -57,7 +57,7 @@ public class ContributorMerger extends Merger<Contributor> {
                 parent.setModelContributions(new ArrayList<>());
             }
             final Set<String> parentContributions = parent.getModelContributions().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
-            final Set<String> parentContributionsWithOld = Stream.concat(parentContributions.stream(), parentContributions.stream().map(p -> String.format("Person/%s", p))).collect(Collectors.toSet());
+            final Set<String> parentContributionsWithOld = Stream.concat(parentContributions.stream(), parentContributions.stream().map(p -> String.format("Model/%s", p))).collect(Collectors.toSet());
             parent.getModelContributions().addAll(child.getModelContributions().stream().filter(d -> !parentContributionsWithOld.contains(d.getReference())).collect(Collectors.toList()));
             sortByValue(parent.getModelContributions());
         }
