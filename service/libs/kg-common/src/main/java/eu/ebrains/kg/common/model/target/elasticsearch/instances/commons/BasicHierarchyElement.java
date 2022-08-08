@@ -9,16 +9,16 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class BasicHierarchyElement {
+public class BasicHierarchyElement<T> {
 
     private String key;
     private String parentRelationType;
     private String title;
     private String color;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Object data;
+    private T data;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> legend;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<? extends BasicHierarchyElement> children;
+    private List<? extends BasicHierarchyElement<Object>> children;
 }

@@ -186,7 +186,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Study targets", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> studyTargets;
 
-    @FieldInfo(label = "Anat. location of tissue samples", layout = "summary", hint = "Please see the section \"Tissue samples\" for distribution of the anatomical locations", useForSuggestion = true)
+    @FieldInfo(label = "Anat. location of tissue samples", layout = "summary", hint = "Please see the section \"Specimen\" for distribution of the anatomical locations", useForSuggestion = true)
     private List<TargetInternalReference> anatomicalLocationOfTissueSamples;
 
     @FieldInfo(label = "Behavioral protocols", layout = "summary", useForSuggestion = true)
@@ -286,17 +286,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private BasicHierarchyElement specimenBySubject;
 
     /**
-     * @deprecated  use subjects for openMINDS instead
+     * @deprecated  use specimen for openMINDS instead
      */
     @Deprecated(forRemoval = true)
     @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
     private List<Children<OldSubject>> subjectGroupOrSingleSubjectOld;
-
-    @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
-    private List<Children<SubjectGroupOrSingleSubject>> subjectGroupOrSingleSubject;
-
-    @FieldInfo(layout = "Tissue samples", isTable = true)
-    private List<Children<TissueSampleOrTissueSampleCollection>> tissueSamples;
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
@@ -337,162 +331,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         private List<TargetInternalReference> samples;
 
     }
-
-    @Getter
-    @Setter
-    public static class TissueSampleOrTissueSampleCollection extends AbstractTissueSampleOrTissueSampleCollection<SingleTissueSample>{    }
-
-
-    @Getter
-    @Setter
-    public abstract static class AbstractTissueSampleOrTissueSampleCollection<C> {
-        private List<C> children;
-        private boolean collapsible;
-        private boolean subset;
-
-
-        @FieldInfo
-        private TargetInternalReference label;
-
-        @FieldInfo(label = "# of samples")
-        private Value<String> numberOfSamples;
-
-        @FieldInfo(label = "Type")
-        private TargetInternalReference tsType;
-
-        @FieldInfo(label = "Species", separator = ", ")
-        private List<TargetInternalReference> species;
-
-        @FieldInfo(label = "Sex", separator = ", ")
-        private List<TargetInternalReference> sex;
-
-        @FieldInfo(label = "Origin")
-        private List<TargetInternalReference> origin;
-
-        @FieldInfo(label = "Laterality")
-        private List<TargetInternalReference> laterality;
-
-        @FieldInfo(label = "Anatomical location")
-        private List<TargetInternalReference> anatomicalLocation;
-
-        @FieldInfo(label = "Strain")
-        private List<TargetInternalReference> strain;
-
-        @FieldInfo(label = "Genetic strain type")
-        private List<TargetInternalReference> geneticStrainType;
-
-        @FieldInfo(label = "Age")
-        private List<Value<String>> age;
-
-        @FieldInfo(label = "Age category")
-        private List<List<TargetInternalReference>> ageCategory;
-
-        @FieldInfo(label = "Pathology")
-        private List<List<TargetInternalReference>> pathology;
-
-        @FieldInfo(label = "Weight")
-        private List<Value<String>> weight;
-
-
-    }
-
-    @Getter
-    @Setter
-    public static class SingleTissueSample extends AbstractTissueSampleOrTissueSampleCollection<TissueSampleState>{}
-
-    @Getter
-    @Setter
-    public static class TissueSampleState {
-        @FieldInfo
-        private Value<String> label;
-
-        @FieldInfo(label = "Age")
-        private Value<String> age;
-
-        @FieldInfo(label = "Age category")
-        private List<TargetInternalReference> ageCategory;
-
-        @FieldInfo(label = "Pathology")
-        private List<TargetInternalReference> pathology;
-
-        @FieldInfo(label = "Weight")
-        private Value<String> weight;
-
-    }
-
-    @Getter
-    @Setter
-    public static class SubjectGroupOrSingleSubject extends AbstractSubject<SingleSubject> {}
-
-    @Getter
-    @Setter
-    public static class SingleSubject extends AbstractSubject<SubjectState>{}
-
-    @Getter
-    @Setter
-    public abstract static class AbstractSubject<C> {
-        private List<C> children;
-        private boolean collapsible;
-
-        @FieldInfo
-        private TargetInternalReference label;
-
-        @FieldInfo(label = "# of subjects")
-        private Value<String> numberOfSubjects;
-
-        @FieldInfo(label = "Species", separator = ", ")
-        private List<TargetInternalReference> species;
-
-        @FieldInfo(label = "Sex", separator = ", ")
-        private List<TargetInternalReference> sex;
-
-        @FieldInfo(label = "Strain")
-        private List<TargetInternalReference> strain;
-
-        @FieldInfo(label = "Genetic strain type")
-        private List<TargetInternalReference> geneticStrainType;
-
-        @FieldInfo(label = "Age")
-        private List<Value<String>> age;
-
-        @FieldInfo(label = "Age category")
-        private List<List<TargetInternalReference>> ageCategory;
-
-        @FieldInfo(label = "Attributes", separator = ", ")
-        private List<Value<String>> attributes;
-
-        @FieldInfo(label = "Weight")
-        private List<Value<String>> weight;
-
-        @FieldInfo(label = "Additional remarks", separator = ", ")
-        private List<Value<String>> additionalRemarks;
-
-    }
-
-
-    @Getter
-    @Setter
-    public static class SubjectState{
-
-        @FieldInfo
-        private Value<String> label;
-
-        @FieldInfo(label = "Age")
-        private Value<String> age;
-
-        @FieldInfo(label = "Age category")
-        private List<TargetInternalReference> ageCategory;
-
-        @FieldInfo(label = "Attributes", separator = ", ")
-        private List<Value<String>> attributes;
-
-        @FieldInfo(label = "Weight")
-        private Value<String> weight;
-
-        @FieldInfo(label = "Additional remarks", separator = ", ")
-        private Value<String> additionalRemarks;
-    }
-
 
     @Getter
     @Setter
@@ -812,6 +650,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @JsonIgnore
         private transient Set<String> subjectGroupIds = new HashSet<>();
 
+        @JsonIgnore
+        private transient Set<TargetInternalReference> anatomicalLocationsOfTissueSamples = new HashSet<>();
+
         @FieldInfo(label = "Subjects")
         private Value<String> numberOfSubjects;
 
@@ -870,8 +711,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         private List<TargetInternalReference> flush(String key){
             final Map<TargetInternalReference, Map<String, Set<String>>> map = collector.computeIfAbsent(key, k -> Collections.emptyMap());
             Stream<TargetInternalReference> stream = map.keySet().stream();
-            // Disabling the code for now -> we want to clarify first, how we can properly calculate the summary and how to display it accordingly.
-
             if(!map.isEmpty()){
                 stream = stream.map(k -> {
                     final Map<String, Set<String>> count = map.get(k);

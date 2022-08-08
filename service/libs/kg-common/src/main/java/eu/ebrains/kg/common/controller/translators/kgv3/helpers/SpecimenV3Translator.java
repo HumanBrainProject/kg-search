@@ -1,11 +1,13 @@
 package eu.ebrains.kg.common.controller.translators.kgv3.helpers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.ebrains.kg.common.controller.translators.TranslatorBase;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -65,11 +67,11 @@ public class SpecimenV3Translator extends TranslatorBase {
      */
 
 
-    public BasicHierarchyElement translateToHierarchy(List<DatasetVersionV3.StudiedSpecimen> studiedSpecimen) {
+    public BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> translateToHierarchy(List<DatasetVersionV3.StudiedSpecimen> studiedSpecimen) {
         if(CollectionUtils.isEmpty(studiedSpecimen)){
             return null;
         }
-        BasicHierarchyElement e = new BasicHierarchyElement();
+        BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> e = new BasicHierarchyElement<>();
         e.setKey("root");
         e.setTitle("Specimen");
         e.setColor("#e3dcdc");
@@ -135,19 +137,21 @@ public class SpecimenV3Translator extends TranslatorBase {
         private final Map<String, List<DatasetVersionV3.StudiedSpecimen>> partOfRelations;
         private final DatasetVersion.DSVSpecimenOverview overviewAggregator = new DatasetVersion.DSVSpecimenOverview();
 
+        private final List<TargetInternalReference> anatomicalLocationsOfTissueSamples = new ArrayList<>();
+
         public GlobalTranslationContext(Map<String, List<DatasetVersionV3.StudiedState>> descendentStatesMap, Map<String, List<DatasetVersionV3.StudiedSpecimen>> partOfRelations) {
             this.descendentStatesMap = descendentStatesMap;
             this.partOfRelations = partOfRelations;
         }
     }
 
-    private BasicHierarchyElement translateToBasicHierarchyElement(DatasetVersionV3.StudiedState studiedState, GlobalTranslationContext context, boolean attachRootElementAsChild, int order, String parentRelationType){
+    private BasicHierarchyElement<Object> translateToBasicHierarchyElement(DatasetVersionV3.StudiedState studiedState, GlobalTranslationContext context, boolean attachRootElementAsChild, int order, String parentRelationType){
         final String uuid = IdUtils.getUUID(studiedState.getId());
         if(context.handledInstances.contains(uuid)){
             logger.error("Circular reference detected - breaking at instance {}", uuid);
             return null;
         }
-        BasicHierarchyElement elState = new BasicHierarchyElement();
+        BasicHierarchyElement<Object> elState = new BasicHierarchyElement<>();
         elState.setKey(UUID.randomUUID().toString());
         context.handledInstances.push(uuid);
         elState.setParentRelationType(parentRelationType);
@@ -165,7 +169,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             elState.setTitle(label);
             elState.setData(translator.translateState(studiedState, label));
             final List<DatasetVersionV3.StudiedState> descendentStates = context.descendentStatesMap.get(studiedState.getId());
-            List<BasicHierarchyElement> children = new ArrayList<>();
+            List<BasicHierarchyElement<Object>> children = new ArrayList<>();
             if(!CollectionUtils.isEmpty(descendentStates)){
                 //There are descendent states. For those which are completely connected to the current state, we can visualize them more naturally by attaching the specimen directly to the state (since it's true that the whole specimen is descendent from this state).
                 final List<DatasetVersionV3.StudiedSpecimen> fullyEnclosedDescendentSpecimen = descendentStates.stream().map(DatasetVersionV3.StudiedState::getParent).distinct().filter(d -> new HashSet<>(descendentStates).containsAll(d.getStudiedState())).collect(Collectors.toList());
@@ -178,7 +182,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             }
 
             if (attachRootElementAsChild && studiedState.getParent() != null) {
-                final BasicHierarchyElement parent = translateToBasicHierarchyElement(studiedState.getParent(), context, true, PART_OF);
+                final BasicHierarchyElement<Object> parent = translateToBasicHierarchyElement(studiedState.getParent(), context, true, PART_OF);
                     if(parent!=null){
                         if (canMergeHierarchyElements(studiedState.getParent())) {
                             elState = mergeBasicHierarchyElements(parent, elState, children);
@@ -201,8 +205,8 @@ public class SpecimenV3Translator extends TranslatorBase {
         return specimen.getStudiedState().size() == 1;
     }
 
-    private BasicHierarchyElement mergeBasicHierarchyElements(BasicHierarchyElement parent, BasicHierarchyElement child, List<BasicHierarchyElement> children){
-        BasicHierarchyElement el = new BasicHierarchyElement();
+    private BasicHierarchyElement<Object> mergeBasicHierarchyElements(BasicHierarchyElement<Object> parent, BasicHierarchyElement<Object> child, List<BasicHierarchyElement<Object>> children){
+        BasicHierarchyElement<Object> el = new BasicHierarchyElement<>();
         el.setKey(parent.getKey());
         //If we can merge an element, it means that there is only a single state and we therefore don't need a "state label" to distinguish. We therefore can just use the parent label.
         el.setTitle(parent.getTitle());
@@ -240,7 +244,7 @@ public class SpecimenV3Translator extends TranslatorBase {
 
         public abstract void aggregateOverview(T source, DatasetVersion.DSVSpecimenOverview overviewAggregator);
 
-        public void flush(T data, BasicHierarchyElement element){}
+        public void flush(T data, BasicHierarchyElement<?> element){}
 
         public boolean matches(DatasetVersionV3.StudiedSpecimen specimen){
             return specimen.getType().contains(specimenType);
@@ -373,7 +377,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
 
         @Override
-        public void flush(DatasetVersion.DSVSubjectGroup data, BasicHierarchyElement element) {
+        public void flush(DatasetVersion.DSVSubjectGroup data, BasicHierarchyElement<?> element) {
             if(!CollectionUtils.isEmpty(element.getChildren()) && data.getNumberOfSubjects()!=null){
                 final long count = element.getChildren().stream().filter(c -> c.getParentRelationType()!=null && c.getParentRelationType().equals(PART_OF)).count();
                 final String quantity = data.getNumberOfSubjects().getValue();
@@ -470,6 +474,9 @@ public class SpecimenV3Translator extends TranslatorBase {
             overviewAggregator.collectSpecies(source.getId(), source.getSpecies(), this.prefix);
             overviewAggregator.collectGeneticStrainTypes(source.getId(), source.getGeneticStrainType(), this.prefix);
             overviewAggregator.collectPathology(source.getId(), source.getPathology(), this.prefix);
+            if(source.getAnatomicalLocation()!=null) {
+                overviewAggregator.getAnatomicalLocationsOfTissueSamples().addAll(source.getAnatomicalLocation());
+            }
         }
 
         @Override
@@ -504,7 +511,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
 
         @Override
-        public void flush(DatasetVersion.DSVTissueSampleCollection data, BasicHierarchyElement element) {
+        public void flush(DatasetVersion.DSVTissueSampleCollection data, BasicHierarchyElement<?> element) {
             if(!CollectionUtils.isEmpty(element.getChildren()) && data.getTissueSamples()!=null){
                 final long count = element.getChildren().stream().filter(c -> c.getParentRelationType()!=null && c.getParentRelationType().equals(PART_OF)).count();
                 final String quantity = data.getTissueSamples().getValue();
@@ -522,6 +529,9 @@ public class SpecimenV3Translator extends TranslatorBase {
             overviewAggregator.collectSpecies(source.getId(), source.getSpecies(), this.prefix);
             overviewAggregator.collectGeneticStrainTypes(source.getId(), source.getGeneticStrainType(), this.prefix);
             overviewAggregator.collectPathology(source.getId(), source.getPathology(), this.prefix);
+            if(source.getAnatomicalLocation()!=null) {
+                overviewAggregator.getAnatomicalLocationsOfTissueSamples().addAll(source.getAnatomicalLocation());
+            }
         }
 
         @Override
@@ -560,22 +570,22 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private final static List<SpecimenTranslator<?>> TRANSLATORS = Arrays.asList(new SubjectTranslator(), new SubjectGroupTranslator(), new TissueSampleTranslator(), new TissueSampleCollectionTranslator());
 
-    private SpecimenTranslator getTranslator(DatasetVersionV3.StudiedSpecimen specimen){
-        return TRANSLATORS.stream().filter(t -> t.matches(specimen)).findFirst().orElse(null);
+    private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedSpecimen specimen){
+        return (SpecimenTranslator<T>) TRANSLATORS.stream().filter(t -> t.matches(specimen)).findFirst().orElse(null);
     }
 
-    private SpecimenTranslator getTranslator(DatasetVersionV3.StudiedState state){
-        return  TRANSLATORS.stream().filter(t -> t.matches(state)).findFirst().orElse(null);
+    private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedState state){
+        return  (SpecimenTranslator<T>) TRANSLATORS.stream().filter(t -> t.matches(state)).findFirst().orElse(null);
     }
 
-    private <T> BasicHierarchyElement translateToBasicHierarchyElement(DatasetVersionV3.StudiedSpecimen studiedSpecimen, GlobalTranslationContext context, boolean attachRootElementAsChild, String parentRelationType){
+    private <T> BasicHierarchyElement<Object> translateToBasicHierarchyElement(DatasetVersionV3.StudiedSpecimen studiedSpecimen, GlobalTranslationContext context, boolean attachRootElementAsChild, String parentRelationType){
         final String uuid = IdUtils.getUUID(studiedSpecimen.getId());
         if(context.handledInstances.contains(uuid)){
             logger.error("Circular reference detected - breaking at instance {}", uuid);
             return null;
         }
         context.handledInstances.push(uuid);
-        BasicHierarchyElement el = new BasicHierarchyElement();
+        BasicHierarchyElement<Object> el = new BasicHierarchyElement<>();
         logger.debug("translating {}", studiedSpecimen.getId());
         el.setKey(UUID.randomUUID().toString());
         el.setParentRelationType(parentRelationType);
@@ -587,7 +597,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             data = specimenTranslator.translateSpecimen(studiedSpecimen);
             specimenTranslator.aggregateOverview(data, context.overviewAggregator);
         }
-        List<BasicHierarchyElement> children = new ArrayList<>();
+        List<BasicHierarchyElement<Object>> children = new ArrayList<>();
         final List<DatasetVersionV3.StudiedSpecimen> partOfRelation = context.partOfRelations.get(studiedSpecimen.getId());
         if(!CollectionUtils.isEmpty(partOfRelation)){
             children.addAll(partOfRelation.stream().map(p -> translateToBasicHierarchyElement(p, context, false, PART_OF)).filter(Objects::nonNull).collect(Collectors.toList()));
@@ -595,7 +605,7 @@ public class SpecimenV3Translator extends TranslatorBase {
 
         if(!attachRootElementAsChild){
             if(canMergeHierarchyElements(studiedSpecimen)){
-                final BasicHierarchyElement singleState = translateToBasicHierarchyElement(studiedSpecimen.getStudiedState().get(0), context, false, 0, DESCENDENT_FROM);
+                final BasicHierarchyElement<Object> singleState = translateToBasicHierarchyElement(studiedSpecimen.getStudiedState().get(0), context, false, 0, DESCENDENT_FROM);
                 if(singleState!=null){
                     el = mergeBasicHierarchyElements(el, singleState, children);
                 }
@@ -641,7 +651,7 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     }
 
-    private Map<String, String> collectLegend(BasicHierarchyElement el, Map<String, String> collector){
+    private Map<String, String> collectLegend(BasicHierarchyElement<?> el, Map<String, String> collector){
         final String color = el.getColor();
         if(color!=null) {
             final String labelForColor = findLabelForColor(color);

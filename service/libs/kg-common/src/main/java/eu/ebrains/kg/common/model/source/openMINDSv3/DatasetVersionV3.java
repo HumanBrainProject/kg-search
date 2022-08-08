@@ -61,8 +61,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<PersonOrOrganizationRef> author;
     private List<FullNameRef> projects;
     private List<PersonOrOrganizationRef> custodians;
-    private List<SubjectOrSubjectGroup> subjects;
-    private List<TissueSampleOrTissueSampleCollection> tissueSampleOrCollection;
     private DatasetVersions dataset;
     private String fullDocumentationUrl;
     private String fullDocumentationDOI;

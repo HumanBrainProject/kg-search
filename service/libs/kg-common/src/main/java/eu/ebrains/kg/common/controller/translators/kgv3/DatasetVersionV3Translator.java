@@ -160,10 +160,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (!CollectionUtils.isEmpty(techniquesForFilter)) {
                 d.setMethodsForFilter(value(techniquesForFilter));
             }
-
         }
-
-
         d.setAllIdentifiers(datasetVersion.getIdentifier());
         d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = dataset == null ? null : dataset.getVersions();
@@ -248,78 +245,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             Collections.sort(datasetVersion.getKeyword());
             d.setKeywords(value(datasetVersion.getKeyword()));
         }
-        if (!CollectionUtils.isEmpty(datasetVersion.getSubjects()) && !getConfiguration().isShowHierarchicalSpecimen()) {
-            final Set<String> groupedSubjects = datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getChildren).filter(children -> !CollectionUtils.isEmpty(children)).flatMap(Collection::stream).map(DatasetVersionV3.SubjectOrSubjectGroup::getId).collect(Collectors.toSet());
-            final List<DatasetVersion.SubjectGroupOrSingleSubject> subjects = datasetVersion.getSubjects().stream()
-                    //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
-                    .filter(s -> !groupedSubjects.contains(s.getId()))
-                    .map(s ->
-                            {
-                                //Some subject groups contain individual subject information. Let's populate the values before we start to translate
-                                s.calculateSubjectGroupInformationFromChildren();
-                                DatasetVersion.SubjectGroupOrSingleSubject subj = new DatasetVersion.SubjectGroupOrSingleSubject();
-                                fillIndividualSubjectInformation(subj, s, null);
-                                if (!CollectionUtils.isEmpty(s.getChildren())) {
-                                    //This is a subject group with individual information.
-                                    subj.setCollapsible(true);
-                                    subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child, subj)).sorted(Comparator.comparing(DatasetVersion.SingleSubject::getLabel)).collect(Collectors.toList()));
-                                }
-                                subj.setNumberOfSubjects(value(s.getQuantity() != null ? String.valueOf(s.getQuantity()) : null));
-                                return subj;
-                            }
-                    ).sorted(Comparator.comparing(DatasetVersion.SubjectGroupOrSingleSubject::getLabel)).collect(Collectors.toList());
-            if (!subjects.isEmpty()) {
-                d.setSubjectGroupOrSingleSubject(children(subjects));
-            }
-        }
-
-        if (!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection()) && !getConfiguration().isShowHierarchicalSpecimen()) {
-
-            final Map<String, String> sampleToGroup = new HashMap<>();
-            datasetVersion.getTissueSampleOrCollection().forEach(s -> {
-                if (!s.getChildren().isEmpty()) {
-                    s.getChildren().forEach(c -> {
-                        sampleToGroup.put(c.getId(), s.getId());
-                    });
-                }
-            });
-
-            final Map<String, Set<String>> groupToFilteredSamples = new HashMap<>();
-            datasetVersion.getTissueSampleOrCollection().forEach(s -> {
-                if (sampleToGroup.containsKey(s.getId())) {
-                    String groupId = sampleToGroup.get(s.getId());
-                    if (!groupToFilteredSamples.containsKey(groupId)) {
-                        groupToFilteredSamples.put(groupId, new HashSet<>());
-                    }
-                    groupToFilteredSamples.get(groupId).add(s.getId());
-                }
-            });
-
-            final List<DatasetVersion.TissueSampleOrTissueSampleCollection> tissueSamples = datasetVersion.getTissueSampleOrCollection().stream()
-                    //We don't want individual tissue samples to appear on the root hierarchy level if they also have a representation inside the groups...
-                    .filter(s -> !sampleToGroup.containsKey(s.getId()))
-                    .map(s ->
-                            {
-                                DatasetVersion.TissueSampleOrTissueSampleCollection tissueSample = new DatasetVersion.TissueSampleOrTissueSampleCollection();
-                                fillIndividualTissueSampleInformation(tissueSample, s, null);
-                                if (!CollectionUtils.isEmpty(s.getChildren())) {
-                                    //This is a tissue sample group with individual information.
-                                    tissueSample.setCollapsible(true);
-                                    boolean isFiltered = groupToFilteredSamples.containsKey(s.getId());
-                                    if (isFiltered) {
-                                        tissueSample.setSubset(true);
-                                    }
-                                    Set<String> filteredSampleIds = groupToFilteredSamples.get(s.getId());
-                                    tissueSample.setChildren((s.getChildren().stream().filter(c -> !isFiltered || filteredSampleIds.contains(c.getId()))).map(child -> fillIndividualTissueSampleInformation(new DatasetVersion.SingleTissueSample(), child, tissueSample)).sorted(Comparator.comparing(DatasetVersion.SingleTissueSample::getLabel)).collect(Collectors.toList()));
-                                }
-                                tissueSample.setNumberOfSamples(value(s.getQuantity() != null ? String.valueOf(s.getQuantity()) : null));
-                                return tissueSample;
-                            }
-                    ).sorted(Comparator.comparing(DatasetVersion.TissueSampleOrTissueSampleCollection::getLabel)).collect(Collectors.toList());
-            if (!tissueSamples.isEmpty()) {
-                d.setTissueSamples(children(tissueSamples));
-            }
-        }
 
         if (datasetVersion.getEthicsAssessment() != null) {
             String ethicsAssessment = null;
@@ -338,17 +263,17 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!dataDescriptors.isEmpty()) {
             TargetExternalReference reference;
             if (dataDescriptors.size() > 1) {
-                logger.error(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
+                logger.warn(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
                 reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
             } else {
                 if (datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())) {
-                    logger.error(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. Falling back to the full documentation file!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), datasetVersion.getUUID());
+                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. Falling back to the full documentation file!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), datasetVersion.getUUID());
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName());
                 } else if (datasetVersion.getFullDocumentationDOI() != null) {
-                    logger.error(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. Falling back to the full documentation DOI!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), datasetVersion.getUUID());
+                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. Falling back to the full documentation DOI!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), datasetVersion.getUUID());
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI());
                 } else if (datasetVersion.getFullDocumentationUrl() != null) {
-                    logger.error(String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), datasetVersion.getUUID());
+                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), datasetVersion.getUUID());
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl());
                 } else {
                     reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
@@ -439,18 +364,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))) {
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
-
-        final List<TargetInternalReference> collectedAnatomicalLocations = d.getTissueSamples() == null ? Collections.emptyList() : d.getTissueSamples().stream().filter(Objects::nonNull).map(Children::getChildren).filter(Objects::nonNull).map(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(collectedAnatomicalLocations)) {
-            d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
-        }
-
         d.setContentTypes(value(datasetVersion.getContentTypes()));
-
-        final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject() != null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
-        final List<TargetInternalReference> speciesFromTS = d.getTissueSamples() != null ? d.getTissueSamples().stream().filter(ts -> ts.getChildren() != null).map(ts -> ts.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
-        List<TargetInternalReference> species = Stream.concat(speciesFromSG.stream(), speciesFromTS.stream()).distinct().collect(Collectors.toList());
-        d.setSpeciesFilter(value(species.stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).collect(Collectors.toList())));
 
         if (StringUtils.isNotBlank(datasetVersion.getHomepage())) {
             d.setHomepage(new TargetExternalReference(datasetVersion.getHomepage(), datasetVersion.getHomepage()));
@@ -470,15 +384,19 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-        if(getConfiguration().isShowHierarchicalSpecimen()) {
-            d.setSpecimenBySubject(new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen()));
+        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen());
+        if(specimenBySubject!=null) {
+            if(specimenBySubject.getData().getSpecies()!=null) {
+                d.setSpeciesFilter(specimenBySubject.getData().getSpecies().stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).distinct().map(Value::new).collect(Collectors.toList()));
+            }
+            final Set<TargetInternalReference> anatomicalLocationsOfTissueSamples = specimenBySubject.getData().getAnatomicalLocationsOfTissueSamples();
+            if (!CollectionUtils.isEmpty(anatomicalLocationsOfTissueSamples)) {
+                d.setAnatomicalLocationOfTissueSamples(anatomicalLocationsOfTissueSamples.stream().sorted().collect(Collectors.toList()));
+            }
+            d.setSpecimenBySubject(specimenBySubject);
         }
-
         return d;
     }
-
-
-
 
     private String stripFileExtension(File file) {
         return stripFileExtension(file.getIri());
@@ -488,174 +406,5 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
-    private static <U, T> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent) {
-        if (child == null || parent == null) {
-            return false;
-        }
-        final U childValue = f.apply(child);
-        U parentValue = f.apply(parent);
-        if (!(childValue instanceof List) && parentValue instanceof List && ((List<?>) parentValue).size() == 1) {
-            parentValue = (U) ((List<?>) parentValue).get(0);
-        }
-        return (childValue == null && parentValue == null) || (childValue != null && childValue.equals(parentValue));
-    }
 
-    @SuppressWarnings("java:S3740") // we keep the generics intentionally
-    private <T extends DatasetVersion.AbstractTissueSampleOrTissueSampleCollection> T fillIndividualTissueSampleInformation(T tissueSample, DatasetVersionV3.TissueSampleOrTissueSampleCollection t, DatasetVersion.AbstractTissueSampleOrTissueSampleCollection parent) {
-        String type = "Tissue sample";
-        if (t.getTissueSampleType() != null && t.getTissueSampleType().contains(Constants.OPENMINDS_ROOT + "core/TissueSampleCollection")) {
-            type = "Tissue sample collection";
-        }
-        tissueSample.setLabel(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier() != null ? String.format("%s %s", type, t.getInternalIdentifier()) : type));
-        tissueSample.setSex(ref(t.getBiologicalSex()));
-        tissueSample.setTsType(ref(t.getTsType()));
-        List<FullNameRef> species = t.getSpecies();
-        if (CollectionUtils.isEmpty(species)) {
-            species = t.getStrain().stream().map(DatasetVersionV3.Strain::getSpecies).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-        }
-        tissueSample.setSpecies(ref(species));
-        tissueSample.setStrain(ref(t.getStrain()));
-        if (t.getStrain() != null) {
-            tissueSample.setGeneticStrainType(ref(t.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
-        }
-        tissueSample.setOrigin(ref(t.getOrigin()));
-        tissueSample.setLaterality(ref(t.getLaterality()));
-        if (!CollectionUtils.isEmpty(t.getAnatomicalLocation())) {
-            tissueSample.setAnatomicalLocation(t.getAnatomicalLocation().stream().filter(Objects::nonNull).map(this::refAnatomical).filter(Objects::nonNull).collect(Collectors.toList()));
-        }
-        if (!CollectionUtils.isEmpty(t.getStates())) {
-            if (t.getStates().size() > 1) {
-                //If we have more than one state, we're going to expand them.
-                tissueSample.setChildren(t.getStates().stream().map(state -> fillTissueSampleStateInformation(t.getInternalIdentifier() != null ? t.getInternalIdentifier() : null, state)).collect(Collectors.toList()));
-            } else {
-                final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = t.getStates().get(0);
-                if (onlyState.getAge() != null) {
-                    final Value<String> age = value(onlyState.getAge().displayString());
-                    tissueSample.setAge(age == null ? null : Collections.singletonList(age));
-                }
-                final List<TargetInternalReference> ageCategories = ref(onlyState.getAgeCategory());
-                tissueSample.setAgeCategory(CollectionUtils.isEmpty(ageCategories) ? null : Collections.singletonList(ageCategories));
-                if (onlyState.getWeight() != null) {
-                    final Value<String> weight = value(onlyState.getWeight().displayString());
-                    tissueSample.setWeight(weight == null ? null : Collections.singletonList(weight));
-                }
-                final List<TargetInternalReference> ref = ref(onlyState.getPathology());
-                tissueSample.setPathology(CollectionUtils.isEmpty(ref) ? null : Collections.singletonList(ref));
-            }
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getTsType, tissueSample, parent)) {
-            tissueSample.setTsType(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getGeneticStrainType, tissueSample, parent)) {
-            tissueSample.setGeneticStrainType(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getSex, tissueSample, parent)) {
-            tissueSample.setSex(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getSpecies, tissueSample, parent)) {
-            tissueSample.setSpecies(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getStrain, tissueSample, parent)) {
-            tissueSample.setStrain(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getOrigin, tissueSample, parent)) {
-            tissueSample.setOrigin(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getLaterality, tissueSample, parent)) {
-            tissueSample.setLaterality(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation, tissueSample, parent)) {
-            tissueSample.setAnatomicalLocation(null);
-        }
-        return tissueSample;
-    }
-
-    @SuppressWarnings("java:S3740") // we keep the generics intentionally
-    private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
-        String type = "Subject";
-        if (s.getSubjectType() != null && s.getSubjectType().contains(Constants.OPENMINDS_ROOT + "core/SubjectGroup")) {
-            type = "Subject group";
-        }
-        subj.setLabel(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier() != null ? String.format("%s %s", type, s.getInternalIdentifier()) : type));
-        List<FullNameRef> species = s.getSpecies();
-        if (CollectionUtils.isEmpty(species)) {
-            species = s.getStrain().stream().map(DatasetVersionV3.Strain::getSpecies).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-        }
-        subj.setSpecies(ref(species));
-        subj.setStrain(ref(s.getStrain()));
-        if (s.getStrain() != null) {
-            subj.setGeneticStrainType(ref(s.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
-        }
-        subj.setSex(ref(s.getBiologicalSex()));
-        if (!CollectionUtils.isEmpty(s.getStates())) {
-            if (s.getStates().size() > 1) {
-                //If we have more than one state, we're going to expand them.
-                subj.setChildren(s.getStates().stream().map(state -> fillSubjectStateInformation(s.getInternalIdentifier() != null ? s.getInternalIdentifier() : null, state)).collect(Collectors.toList()));
-            } else {
-                final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = s.getStates().get(0);
-                if (onlyState.getAge() != null) {
-                    subj.setAge(Collections.singletonList(value(onlyState.getAge().displayString())));
-                }
-                subj.setAgeCategory(Collections.singletonList(ref(onlyState.getAgeCategory())));
-                if (onlyState.getWeight() != null) {
-                    subj.setWeight(Collections.singletonList(value(onlyState.getWeight().displayString())));
-                }
-            }
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getSpecies, subj, parent)) {
-            subj.setSpecies(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getStrain, subj, parent)) {
-            subj.setStrain(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getSex, subj, parent)) {
-            subj.setSex(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getAge, subj, parent)) {
-            subj.setAge(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getAttributes, subj, parent)) {
-            subj.setAttributes(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getAgeCategory, subj, parent)) {
-            subj.setAgeCategory(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getGeneticStrainType, subj, parent)) {
-            subj.setGeneticStrainType(null);
-        }
-        if (sameAsParent(DatasetVersion.AbstractSubject::getWeight, subj, parent)) {
-            subj.setWeight(null);
-        }
-
-        return subj;
-    }
-
-    private DatasetVersion.TissueSampleState fillTissueSampleStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state) {
-        DatasetVersion.TissueSampleState result = new DatasetVersion.TissueSampleState();
-        result.setLabel(subjectName != null ? value(String.format("Tissue sample state of %s", subjectName)) : value("Tissue sample state"));
-        if (state.getAge() != null) {
-            result.setAge(value(state.getAge().displayString()));
-        }
-        result.setAgeCategory(ref(state.getAgeCategory()));
-        if (state.getWeight() != null) {
-            result.setWeight(value(state.getWeight().displayString()));
-        }
-        result.setPathology(ref(state.getPathology()));
-        return result;
-    }
-
-    private DatasetVersion.SubjectState fillSubjectStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state) {
-        DatasetVersion.SubjectState result = new DatasetVersion.SubjectState();
-        result.setLabel(subjectName != null ? value(String.format("Subject state of %s", subjectName)) : value("Subject state"));
-        if (state.getAge() != null) {
-            result.setAge(value(state.getAge().displayString()));
-        }
-        result.setAdditionalRemarks(value(state.getAdditionalRemarks()));
-        result.setAttributes(value(state.getAttribute()));
-        result.setAgeCategory(ref(state.getAgeCategory()));
-        if (state.getWeight() != null) {
-            result.setWeight(value(state.getWeight().displayString()));
-        }
-        return result;
-    }
 }
