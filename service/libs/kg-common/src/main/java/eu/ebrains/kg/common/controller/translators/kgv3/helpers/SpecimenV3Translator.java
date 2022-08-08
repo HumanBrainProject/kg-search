@@ -126,7 +126,7 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private static String getFullStateLabel(SpecimenTranslator translator, String label, DatasetVersionV3.StudiedState state){
         final String parentLabel = translator.calculateLabel(state.getParent());
-        return String.format("State %s of %s", label, StringUtils.uncapitalize(StringUtils.defaultString(state.getParent().getInternalIdentifier(), parentLabel)));
+        return String.format("State %s of %s", label, StringUtils.uncapitalize(StringUtils.defaultString(StringUtils.trimToNull(state.getParent().getInternalIdentifier()), parentLabel)));
     }
 
 
@@ -255,7 +255,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
 
         public String calculateLabel(DatasetVersionV3.StudiedSpecimen specimen){
-            return String.format("%s%s", prefix!=null ? String.format("%s ", prefix) : "", StringUtils.defaultString(specimen.getInternalIdentifier(), specimen.getLookupLabel()));
+            return String.format("%s%s", prefix!=null ? String.format("%s ", prefix) : "", StringUtils.defaultString(StringUtils.trimToNull(specimen.getInternalIdentifier()), specimen.getLookupLabel()));
         }
     }
 
@@ -373,6 +373,8 @@ public class SpecimenV3Translator extends TranslatorBase {
             final DatasetVersion.DSVSubjectGroupState subGrp = new DatasetVersion.DSVSubjectGroupState();
             subGrp.setTitle(value(state.getParent().getInternalIdentifier()));
             subGrp.setServiceLinks(translateServiceLinks(state.getServiceLinks(), subGrp.getServiceLinks()));
+            fillSubjectGroupInformation(subGrp, state.getParent());
+            fillSubjectGroupStateInformation(subGrp, state);
             return subGrp;
         }
 
