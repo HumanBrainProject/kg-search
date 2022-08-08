@@ -223,10 +223,15 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
             return null;
         }
         final List<TargetInternalReference> result = references.stream().map(r -> {
-            //Add all children elements if it has a research product version
+            //Add all children elements if it has a research product version - but only if the underlying research product version doesn't provide its own contributor list...
             List<TargetInternalReference> refs;
             if(!CollectionUtils.isEmpty(r.getResearchProductVersions())) {
-                refs = refVersion(r.getResearchProductVersions(), true);
+                final List<FullNameRefForResearchProductVersion> rpvsWithInheritedContributorList = r.getResearchProductVersions().stream().filter(rpv -> CollectionUtils.isEmpty(rpv.getContributors())).collect(Collectors.toList());
+                refs = refVersion(rpvsWithInheritedContributorList, true);
+                if(r.getResearchProductVersions().size()>1 && CollectionUtils.isEmpty(rpvsWithInheritedContributorList)){
+                    //The contributor is only contributor of the conceptual structure -> we therefore provide a reference to the general one
+                    refs = Collections.singletonList(ref(r));
+                }
             }
             else{
                 refs = Collections.singletonList(ref(r));
