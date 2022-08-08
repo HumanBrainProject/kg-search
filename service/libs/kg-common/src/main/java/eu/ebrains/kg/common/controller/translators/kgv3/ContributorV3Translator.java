@@ -27,7 +27,8 @@ import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.PersonOrOrganizationV3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ResearchProductVersionReference;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
@@ -170,13 +171,21 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         return c;
     }
 
-    private void addCitations(Map<String, Contributor.Citation> citations, List<ResearchProductVersionReference> references) {
+    private void addCitations(Map<String, Contributor.Citation> citations, List<ExtendedFullNameRefForResearchProductVersion> references) {
         if (!CollectionUtils.isEmpty(references)) {
-            references.forEach(ref -> addCitation(citations, ref));
+            references.forEach(ref -> {
+                if(CollectionUtils.isEmpty(ref.getResearchProductVersions()) || ref.getResearchProductVersions().size()>1) {
+                    addCitation(citations, ref);
+                }
+                //If the reference has research product versions (meaning it's a conceptual structure), we add a citation for all of those sub elements which do not have individual contributors set (since they are supposed to fall back on the conceptional contributors list)
+                if(!CollectionUtils.isEmpty(ref.getResearchProductVersions())){
+                    ref.getResearchProductVersions().stream().filter(r -> CollectionUtils.isEmpty(r.getContributors())).forEach(r -> addCitation(citations, r));
+                }
+            });
         }
     }
 
-    private void addCitation(Map<String, Contributor.Citation> citations, ResearchProductVersionReference source) {
+    private void addCitation(Map<String, Contributor.Citation> citations, FullNameRefForResearchProductVersion source) {
         String doi = source.getDoi();
         String citation = source.getHowToCite();
         if (StringUtils.isNotBlank(citation) || StringUtils.isNotBlank(doi)) {
@@ -209,7 +218,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         return String.format("%s, %s", personOrOrganization.getFamilyName(), personOrOrganization.getGivenName());
     }
 
-    private List<TargetInternalReference> getReferences(List<ResearchProductVersionReference> references){
+    private List<TargetInternalReference> getReferences(List<ExtendedFullNameRefForResearchProductVersion> references){
         if(references == null){
             return null;
         }

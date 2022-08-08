@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ResearchProductVersionReference;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,12 +41,12 @@ public class PersonOrOrganizationV3 extends SourceInstanceV3 {
     private String givenName;
 
     //Common
-    private List<ResearchProductVersionReference> custodianOfModel;
-    private List<ResearchProductVersionReference> custodianOfMetaDataModel;
-    private List<ResearchProductVersionReference> custodianOfDataset;
-    private List<ResearchProductVersionReference> custodianOfSoftware;
-    private List<ResearchProductVersionReference> modelContributions;
-    private List<ResearchProductVersionReference> metaDataModelContributions;
-    private List<ResearchProductVersionReference> datasetContributions;
-    private List<ResearchProductVersionReference> softwareContributions;
+    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfModel;
+    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfMetaDataModel;
+    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfDataset;
+    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfSoftware;
+    private List<ExtendedFullNameRefForResearchProductVersion> modelContributions;
+    private List<ExtendedFullNameRefForResearchProductVersion> metaDataModelContributions;
+    private List<ExtendedFullNameRefForResearchProductVersion> datasetContributions;
+    private List<ExtendedFullNameRefForResearchProductVersion> softwareContributions;
 }

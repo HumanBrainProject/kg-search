@@ -27,10 +27,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class FullNameRefForResearchProductVersion extends FullNameRef {
     private String versionIdentifier;
     private String fallbackName;
+    private List<String> contributors;
+    private String doi;
+    private String howToCite;
 }
