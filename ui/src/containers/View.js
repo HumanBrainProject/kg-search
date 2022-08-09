@@ -21,8 +21,11 @@
  *
  */
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
+import ReactPiwik from "react-piwik";
+import * as Sentry from "@sentry/browser";
 
 
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
@@ -31,7 +34,24 @@ const Search = React.lazy(() => import("./Search/Search"));
 const Instance = React.lazy(() => import("./Instance/Instance"));
 const Preview = React.lazy(() => import("./Instance/Preview"));
 
-const View = () => {
+const ViewComponent = ({matomo, sentry}) => {
+
+  useEffect(() => {
+    new ReactPiwik({ //NOSONAR
+      url: (matomo?.url)?matomo.url:process.env.REACT_APP_MATOMO_URL,
+      siteId: (matomo?.siteId)?matomo.siteId:process.env.REACT_APP_MATOMO_SITE_ID,
+      trackErrors: true
+    });
+
+    Sentry.init({
+      dsn: (sentry?.url)?sentry.url:process.env.REACT_APP_SENTRY_URL,
+      environment: window.location.host
+    });
+
+    ReactPiwik.push(["trackPageView"]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
       <Routes>
@@ -46,4 +66,9 @@ const View = () => {
   );
 };
 
-export default View;
+export default connect(
+  state => ({
+    matomo: state.settings.matomo,
+    sentry: state.settings.sentry
+  })
+)(ViewComponent);
