@@ -77,12 +77,14 @@ public class Search {
         this.doiCitationFormatter = doiCitationFormatter;
     }
 
-    @GetMapping("/auth/endpoint")
-    public Map<String, String> getAuthEndpoint() {
-        Map<String, String> result = new HashMap<>();
+    @GetMapping("/auth/settings")
+    public Map<String, String> getAuthSettings(@Value("${keycloak.realm}") String keycloakRealm , @Value("${keycloak.resource}") String keycloakClientId) {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
-        result.put("authEndpoint", authEndpoint);
-        return result;
+        return Map.of(
+                "realm", keycloakRealm,
+                "url",  authEndpoint,
+                "clientId", keycloakClientId
+        );
     }
 
     @GetMapping("/citation")

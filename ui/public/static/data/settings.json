@@ -1279,6 +1279,5 @@
         "describedInLink": { "label": "Described in" }
       }
     }
-  },
-  "authEndpoint": "https://iam-dev.ebrains.eu/auth"
+  }
 }

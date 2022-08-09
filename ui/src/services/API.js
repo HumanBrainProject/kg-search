@@ -24,7 +24,7 @@
 import axios from "axios";
 
 const endpoints = {
-  "authEndpoint": () => "/api/auth/endpoint",
+  "authSettings": () => "/api/auth/settings",
   //"settings": () => "/static/data/settings.json",
   "settings": () => "/api/settings",
   "groups": () => "/api/groups",

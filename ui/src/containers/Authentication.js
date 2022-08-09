@@ -31,43 +31,45 @@ import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import { BgError } from "../components/BgError/BgError";
 import Groups from "./Groups";
 
-const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthenticationAndLogin, loadAuthEndpoint, setAuthMode }) => {
+const Authentication = ({ settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, setLoginRequired }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogout = !!matchPath({path:"/logout"}, location.pathname);
   const isLive = !!matchPath({path:"/live/*"}, location.pathname);
 
   const authenticate = () => {
-    if (authEndpoint) {
+    if (settings) {
       if (authenticationInitialized) {
         login();
       } else {
-        setUpAuthenticationAndLogin(authEndpoint);
+        setUpAuthentication(settings, loginRequired);
       }
     } else {
-      loadAuthEndpoint();
+      loadAuthSettings();
     }
   };
 
   useEffect(() => {
-    if (!error && authenticatedMode && !isLoading && !authenticationInitializing && !isAuthenticating && !isAuthenticated && !isLogingOut) {
-      if (isLogout) {
+    if (!error && !isLoading && !authenticationInitializing && !isAuthenticating && !isAuthenticated && !isLogingOut) {
+      if (isLogout && loginRequired) {
         navigate("/");
       }
-      authenticate();
+      if ((!isLogout && !authenticationInitialized) || loginRequired) {
+        authenticate(loginRequired);
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authEndpoint, error, authenticatedMode, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
+  }, [settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
 
   const loginBack = () => {
-    setAuthMode(true);
+    setLoginRequired(true);
   };
 
   const cancelLogin = () => {
     if (isLive) {
       navigate(location.pathname.replace("/live/", "/instances/"));
     }
-    setAuthMode(false);
+    setLoginRequired(false);
   };
 
   if (error) {
@@ -84,7 +86,7 @@ const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, aut
 
   if(isLoading) {
     return (
-      <FetchingPanel message="Retrieving authentication endpoint..." />
+      <FetchingPanel message="Retrieving authentication settings..." />
     );
   }
 
@@ -106,7 +108,7 @@ const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, aut
     );
   }
 
-  if (!authenticatedMode || isAuthenticated) {
+  if (isAuthenticated || (!loginRequired && authenticationInitialized)) {
     return (
       <Groups />
     );
@@ -117,9 +119,9 @@ const Authentication = ({ authEndpoint, error, authenticatedMode, isLoading, aut
 
 export default connect(
   state => ({
-    authEndpoint: state.auth.authEndpoint,
+    settings: state.auth.settings,
     error: state.auth.error,
-    authenticatedMode: state.auth.authenticatedMode,
+    loginRequired: state.auth.loginRequired,
     isLoading: state.auth.isLoading,
     authenticationInitialized: state.auth.authenticationInitialized,
     authenticationInitializing: state.auth.authenticationInitializing,
@@ -128,20 +130,20 @@ export default connect(
     isLogingOut: state.auth.isLogingOut
   }),
   dispatch => ({
-    setAuthMode: active => {
-      if (!active) {
+    setLoginRequired: required => {
+      if (!required) {
         dispatch(actionsGroups.resetGroups());
       }
-      dispatch(actionsAuth.setAuthMode(active));
+      dispatch(actionsAuth.setLoginRequired(required));
     },
     login: () => {
-      dispatch(actionsAuth.login);
+      dispatch(actionsAuth.login());
     },
-    setUpAuthenticationAndLogin: authEndpoint => {
-      dispatch(actionsAuth.setUpAuthenticationAndLogin(authEndpoint));
+    setUpAuthentication: (settings, loginRequired) => {
+      dispatch(actionsAuth.setUpAuthentication(settings, loginRequired));
     },
-    loadAuthEndpoint: () => {
-      dispatch(actionsAuth.loadAuthEndpoint());
+    loadAuthSettings: () => {
+      dispatch(actionsAuth.loadAuthSettings());
     }
   })
 )(Authentication);

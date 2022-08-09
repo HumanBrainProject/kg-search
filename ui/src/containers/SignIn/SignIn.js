@@ -94,7 +94,7 @@ export const SignIn = connect(
       dispatch(actionsAuth.logout());
     },
     login: () => {
-      dispatch(actionsAuth.setAuthMode(true));
+      dispatch(actionsAuth.setLoginRequired(true));
     },
     onGroupChange: value => {
       dispatch(actionsGroups.setGroup(value));

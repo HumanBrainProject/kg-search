@@ -39,7 +39,7 @@ import Theme from "../Theme/Theme";
 
 import "./App.css";
 
-const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, setApplicationReady }) => {
+const App = ({ isApplicationReady, setInitialGroup, setLoginRequired, setUseGroups, setApplicationReady }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, s
       if (useGroups) {
         setUseGroups();
       }
-      setAuthMode();
+      setLoginRequired();
       setApplicationReady();
     } else {
       setApplicationReady();
@@ -103,8 +103,8 @@ export default connect(
     setUseGroups: () => {
       dispatch(actionsGroups.setUseGroups());
     },
-    setAuthMode: () => {
-      dispatch(actionsAuth.setAuthMode());
+    setLoginRequired: () => {
+      dispatch(actionsAuth.setLoginRequired());
     },
     setApplicationReady: () => {
       dispatch(actions.setApplicationReady());
