@@ -20,15 +20,18 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as actionsInstances from "../../../actions/actions.instances";
-import { Carousel } from "../../../components/Carousel/Carousel";
 import { ShareButtons } from "../../Share/ShareButtons";
 import { Instance } from "../Instance";
 import InstanceFetching from "../../Instance/InstanceFetching";
 import InstanceError from "./InstanceError";
+import { FetchingPanel } from "../../../components/Fetching/FetchingPanel";
+
+const Carousel = React.lazy(() => import("../../../components/Carousel/Carousel"));
+
 import "./DetailView.css";
 
 
@@ -64,7 +67,9 @@ const DetailViewComponent = ({onBack, onClose, clearInstanceCurrentTab, show, da
 
   return (
     <>
-      <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
+      <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
+        <Carousel className="kgs-detailView" data={data} itemComponent={Instance} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
+      </Suspense>
       <InstanceFetching />
       <InstanceError />
     </>

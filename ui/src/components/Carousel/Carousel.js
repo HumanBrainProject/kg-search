@@ -73,7 +73,7 @@ const CarouselItem = ({ item, showPrevious, onClose, onBack, itemComponent, navi
 
 const nbOfItems = 5;
 
-export const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationComponent }) => {
+const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationComponent }) => {
   const wrapperRef = useRef();
 
   useEffect(() => {
