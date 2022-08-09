@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
 import * as actionsAuth from "../actions/actions.auth";
@@ -29,7 +29,8 @@ import * as actionsGroups from "../actions/actions.groups";
 
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import { BgError } from "../components/BgError/BgError";
-import Groups from "./Groups";
+
+const Groups = React.lazy(() => import("./Groups"));
 
 const Authentication = ({ settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, setLoginRequired }) => {
   const navigate = useNavigate();
@@ -110,7 +111,9 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
 
   if (isAuthenticated || (!loginRequired && authenticationInitialized)) {
     return (
-      <Groups />
+      <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
+        <Groups />
+      </Suspense>
     );
   }
 
