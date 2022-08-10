@@ -23,7 +23,7 @@
 
 import { connect } from "react-redux";
 
-import * as actionsInstances from "../../actions/actions.instances";
+import { loadInstance } from "../../actions/actions.instances";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
@@ -40,7 +40,7 @@ export const Instance = connect(
   }),
   dispatch => ({
     fetch: (group, id, navigate) => {
-      dispatch(actionsInstances.loadInstance(group, id, () => {
+      dispatch(loadInstance(group, id, () => {
         navigate(`/${window.location.search}#${id}`);
       }));
     }

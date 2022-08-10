@@ -23,7 +23,7 @@
 
 import { connect } from "react-redux";
 
-import * as actionsInstances from "../../actions/actions.instances";
+import { goBackToInstance as actionGoBackToInstance, loadPreview, clearAllInstances as actionClearAllInstances } from "../../actions/actions.instances";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
@@ -70,13 +70,13 @@ const Preview = connect(
   },
   dispatch => ({
     fetch: (_, id) => {
-      dispatch(actionsInstances.loadPreview(id));
+      dispatch(loadPreview(id));
     },
     clearAllInstances: () => {
-      dispatch(actionsInstances.clearAllInstances());
+      dispatch(actionClearAllInstances());
     },
     goBackToInstance: id => {
-      dispatch(actionsInstances.goBackToInstance(id));
+      dispatch(actionGoBackToInstance(id));
     }
   })
 )(InstanceContainer);

@@ -25,9 +25,9 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import * as actions from "../../actions/actions";
-import * as actionsAuth from "../../actions/actions.auth";
-import * as actionsGroups from "../../actions/actions.groups";
+import { setApplicationReady as actionSetApplicationReady } from "../../actions/actions";
+import { setLoginRequired as actionSetLoginRequired } from "../../actions/actions.auth";
+import { setUseGroups as actionSetUseGroups, setInitialGroup as actionSetInitialGroup } from "../../actions/actions.groups";
 
 import { searchToObj, getHashKey } from "../../helpers/BrowserHelpers";
 import { Notification } from "../Notification/Notification";
@@ -39,7 +39,7 @@ import Theme from "../Theme/Theme";
 
 import "./App.css";
 
-const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, setApplicationReady }) => {
+const App = ({ isApplicationReady, setInitialGroup, setLoginRequired, setUseGroups, setApplicationReady }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const App = ({ isApplicationReady, setInitialGroup, setAuthMode, setUseGroups, s
       if (useGroups) {
         setUseGroups();
       }
-      setAuthMode();
+      setLoginRequired();
       setApplicationReady();
     } else {
       setApplicationReady();
@@ -98,16 +98,16 @@ export default connect(
   }),
   dispatch => ({
     setInitialGroup: group => {
-      dispatch(actionsGroups.setInitialGroup(group));
+      dispatch(actionSetInitialGroup(group));
     },
     setUseGroups: () => {
-      dispatch(actionsGroups.setUseGroups());
+      dispatch(actionSetUseGroups());
     },
-    setAuthMode: () => {
-      dispatch(actionsAuth.setAuthMode());
+    setLoginRequired: () => {
+      dispatch(actionSetLoginRequired());
     },
     setApplicationReady: () => {
-      dispatch(actions.setApplicationReady());
+      dispatch(actionSetApplicationReady());
     }
   })
 )(App);

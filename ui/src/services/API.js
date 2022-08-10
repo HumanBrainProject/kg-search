@@ -22,9 +22,11 @@
  */
 
 import axios from "axios";
+import ReactPiwik from "react-piwik";
+import * as Sentry from "@sentry/browser";
 
 const endpoints = {
-  "authEndpoint": () => "/api/auth/endpoint",
+  "authSettings": () => "/api/auth/settings",
   //"settings": () => "/static/data/settings.json",
   "settings": () => "/api/settings",
   "groups": () => "/api/groups",
@@ -59,6 +61,50 @@ class API {
 
   setKeycloak(keycloak) {
     this._keycloak = keycloak;
+  }
+
+  setSentry(commit, sentry) {
+    if (commit && sentry) {
+      Sentry.init({
+        ...sentry,
+        release: commit,
+        environment: window.location.host
+      });
+    }
+  }
+
+  setMatomo(settings) {
+    if (settings?.url && settings?.siteId) {
+      this._matomo = new ReactPiwik({
+        url: settings.url,
+        siteId:settings.siteId,
+        trackErrors: true
+      });
+    }
+  }
+
+  trackCustomUrl(url) {
+    if (this._matomo && url) {
+      ReactPiwik.push(["setCustomUrl", url]);
+    }
+  }
+
+  trackPageView() {
+    if (this._matomo) {
+      ReactPiwik.push(["trackPageView"]);
+    }
+  }
+
+  trackEvent(category, name, value) {
+    if (this._matomo) {
+      ReactPiwik.push(["trackEvent", category, name, value]);
+    }
+  }
+
+  trackLink(category, name) {
+    if (this._matomo) {
+      ReactPiwik.push(["trackLink", category, name]);
+    }
   }
 
   login() {

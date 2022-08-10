@@ -21,7 +21,7 @@
  *
  */
 
-import * as actionsSearch from "../actions/actions.search";
+import { loadSearchResult } from "../actions/actions.search";
 import { reducer as searchReducer} from "./search.reducer";
 describe("search reducer", () => {
   describe("unknown action", () => {
@@ -39,7 +39,7 @@ describe("search reducer", () => {
       const results = {
         hits: hits
       };
-      const action = actionsSearch.loadSearchResult(results);
+      const action = loadSearchResult(results);
       const newState = searchReducer(state, action);
       expect(newState.hits).toBe(hits);
     });

@@ -23,10 +23,10 @@
 import * as types from "../actions/actions.types";
 
 const initialState = {
-  authEndpoint: null,
+  settings: null,
   isLoading: false,
   error: null,
-  authenticatedMode: false,
+  loginRequired: false,
   authenticationInitialized: false,
   authenticationInitializing: false,
   isAuthenticated: false,
@@ -34,13 +34,12 @@ const initialState = {
   isLogingOut: false
 };
 
-const loadAuthEndpointRequest = (state, action) => ({
+const loadAuthSettingsRequest = state => ({
   ...state,
-  isLoading: true,
-  authEndpoint: action.authEndpoint
+  isLoading: true
 });
 
-const loadAuthEndpointFailure = (state, action) => ({
+const loadAuthSettingsFailure = (state, action) => ({
   ...state,
   isLoading: false,
   error: action.error
@@ -51,23 +50,22 @@ const clearAuthError = state => ({
   error: null
 });
 
-const setAuthEndpoint = (state, action) => ({
+const setAuthSettings = (state, action) => ({
   ...state,
   isLoading: false,
-  authEndpoint: action.authEndpoint
+  settings: action.settings
 });
 
-const setAuthMode = (state, action) => ({
+const setLoginRequired = (state, action) => ({
   ...state,
   error: null,
-  authenticatedMode: action.active
+  loginRequired: action.required
 });
 
 const initializeAuthentication = state => ({
   ...state,
   error: null,
   authenticationInitialized: false,
-  authenticatedMode: true,
   authenticationInitializing: true,
   isAuthenticated: false,
   isAuthenticating: false,
@@ -103,7 +101,7 @@ const loginSuccess = state => ({
 const login = state => ({
   ...state,
   error: false,
-  authenticatedMode: true,
+  loginRequired: true,
   isAuthenticated: false,
   isAuthenticating: true,
   isLogingOut: false
@@ -113,13 +111,14 @@ const logout = state => {
   localStorage.removeItem("group");
   return {
     ...state,
+    loginRequired: false,
     isLogingOut: true
   };
 };
 
 const logoutSuccess = state => ({
   ...state,
-  authenticatedMode: false,
+  loginRequired: false,
   isAuthenticated: false,
   isLogingOut: false
 });
@@ -129,7 +128,7 @@ const sessionExpired = state => {
   return {
     ...state,
     error: "The session has expired",
-    authenticatedMode: true, // ensure authenticated mode with back navigation
+    loginRequired: true, // ensure authenticated mode with back navigation
     isAuthenticated: false,
     isAuthenticating: false,
     isLogingOut: false
@@ -141,7 +140,7 @@ const sessionFailure = (state, action) => {
   return {
     ...state,
     error: action.error,
-    authenticatedMode: true, // ensure authenticated mode with back navigation
+    loginRequired: true, // ensure authenticated mode with back navigation
     isAuthenticated: false,
     isAuthenticating: false,
     isLogingOut: false
@@ -151,16 +150,16 @@ const sessionFailure = (state, action) => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_AUTH_ENDPOINT_REQUEST:
-    return loadAuthEndpointRequest(state, action);
-  case types.LOAD_AUTH_ENDPOINT_FAILURE:
-    return loadAuthEndpointFailure(state, action);
-  case types.CLEAR_AUTH_ENDPOINT_ERROR:
+  case types.LOAD_AUTH_SETTINGS_REQUEST:
+    return loadAuthSettingsRequest(state);
+  case types.LOAD_AUTH_SETTINGS_FAILURE:
+    return loadAuthSettingsFailure(state, action);
+  case types.CLEAR_AUTH_SETTINGS_ERROR:
     return clearAuthError(state, action);
-  case types.SET_AUTH_ENDPOINT:
-    return setAuthEndpoint(state, action);
+  case types.SET_AUTH_SETTINGS:
+    return setAuthSettings(state, action);
   case types.AUTH_MODE:
-    return setAuthMode(state, action);
+    return setLoginRequired(state, action);
   case types.AUTH_INITIALIZE:
     return initializeAuthentication(state, action);
   case types.SET_AUTH_READY:

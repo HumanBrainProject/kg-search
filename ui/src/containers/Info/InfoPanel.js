@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
+import { setInfo } from "../../actions/actions";
 import { InfoPanel as  Component } from "../../components/InfoPanel/InfoPanel";
 
 export const InfoPanel = connect(
@@ -31,7 +31,7 @@ export const InfoPanel = connect(
   }),
   dispatch => ({
     onClose: () => {
-      dispatch(actions.setInfo());
+      dispatch(setInfo());
     }
   })
 )(Component);

@@ -23,17 +23,17 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 
-export const setAuthEndpoint = authEndpoint => {
+export const setAuthSettings = settings => {
   return {
-    type: types.SET_AUTH_ENDPOINT,
-    authEndpoint: authEndpoint
+    type: types.SET_AUTH_SETTINGS,
+    settings: settings
   };
 };
 
-export const setAuthMode = (active=true) => {
+export const setLoginRequired = (required=true) => {
   return {
     type: types.AUTH_MODE,
-    active: active
+    required: required
   };
 };
 
@@ -117,13 +117,12 @@ export const logout = () => {
   };
 };
 
-const initializeKeycloakAndLogin = (endpoint, dispatch) => {
-  const keycloak = window.Keycloak({
-    "realm": "hbp",
-    "url":  endpoint,
-    "clientId": "kg"
-  });
+const initializeKeycloak = (settings, loginRequired, dispatch) => {
+  const keycloak = window.Keycloak(settings);
   API.setKeycloak(keycloak);
+  keycloak.onReady = () => { // authenticated => {
+    dispatch(setAuthReady());
+  };
   keycloak.onAuthSuccess = () => {
     dispatch(loginSuccess());
   };
@@ -138,23 +137,22 @@ const initializeKeycloakAndLogin = (endpoint, dispatch) => {
         dispatch(sessionExpired());
       });
   };
-  keycloak.init({ onLoad: "login-required", pkceMethod: "S256" });
-  dispatch(setAuthReady());
+  keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" });
 };
 
 //authenticate = (group=null)
-export const setUpAuthenticationAndLogin = endpoint => {
+export const setUpAuthentication = (settings, loginRequired) => {
   return async dispatch => {
-    if(endpoint) {
+    if(settings && settings.url) {
       dispatch(authInialize());
       try {
         const keycloakScript = document.createElement("script");
-        keycloakScript.src = endpoint + "/js/keycloak.js";
+        keycloakScript.src = settings.url + "/js/keycloak.js";
         keycloakScript.async = true;
 
         document.head.appendChild(keycloakScript);
         keycloakScript.onload = () => {
-          initializeKeycloakAndLogin(endpoint, dispatch);
+          initializeKeycloak(settings, loginRequired, dispatch);
         };
         keycloakScript.onerror = () => {
           document.head.removeChild(keycloakScript);
@@ -171,36 +169,36 @@ export const setUpAuthenticationAndLogin = endpoint => {
     }
   };
 };
-export const loadAuthEndpointRequest = () => {
+export const loadAuthSettingsRequest = () => {
   return {
-    type: types.LOAD_AUTH_ENDPOINT_REQUEST
+    type: types.LOAD_AUTH_SETTINGS_REQUEST
   };
 };
 
-export const loadAuthEndpointFailure = error => {
+export const loadAuthSettingsFailure = error => {
   return {
-    type: types.LOAD_AUTH_ENDPOINT_FAILURE,
+    type: types.LOAD_AUTH_SETTINGS_FAILURE,
     error: error
   };
 };
 
-export const clearAuthEndpointError = () => {
+export const clearAuthSettingsError = () => {
   return {
-    type: types.CLEAR_AUTH_ENDPOINT_ERROR
+    type: types.CLEAR_AUTH_SETTINGS_ERROR
   };
 };
 
-export const loadAuthEndpoint = () => {
+export const loadAuthSettings = () => {
   return dispatch => {
-    dispatch(loadAuthEndpointRequest());
+    dispatch(loadAuthSettingsRequest());
     API.axios
-      .get(API.endpoints.authEndpoint())
+      .get(API.endpoints.authSettings())
       .then(({ data }) => {
-        data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
+        dispatch(setAuthSettings(data));
       })
       .catch(e => {
         const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
-        dispatch(loadAuthEndpointFailure(error));
+        dispatch(loadAuthSettingsFailure(error));
       });
   };
 };

@@ -22,8 +22,8 @@
  */
 import { connect } from "react-redux";
 
-import * as actionsGroups from "../../actions/actions.groups";
-import * as actionsInstances from "../../actions/actions.instances";
+import { setGroup } from "../../actions/actions.groups";
+import { loadInstance, clearAllInstances as actionClearAllInstances, goBackToInstance as actionGoBackToInstance } from "../../actions/actions.instances";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
@@ -63,16 +63,17 @@ const Instance = connect(
   },
   dispatch => ({
     fetch: (group, id) => {
-      dispatch(actionsInstances.loadInstance(group, id));
+      dispatch(loadInstance(group, id));
     },
     clearAllInstances: () => {
-      dispatch(actionsInstances.clearAllInstances());
+      dispatch(actionClearAllInstances());
     },
     goBackToInstance: (group, id) => {
-      dispatch(actionsGroups.setGroup(group));
-      dispatch(actionsInstances.goBackToInstance(id));
+      dispatch(setGroup(group));
+      dispatch(actionGoBackToInstance(id));
     }
   })
 )(InstanceContainer);
 
 export default Instance;
+

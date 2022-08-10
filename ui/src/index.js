@@ -30,22 +30,7 @@ import "normalize.css/normalize.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./index.css";
-import ReactPiwik from "react-piwik";
-import * as Sentry from "@sentry/browser";
 import { BrowserRouter } from "react-router-dom";
-
-new ReactPiwik({ //NOSONAR
-  url: process.env.REACT_APP_MATOMO_URL,
-  siteId: process.env.REACT_APP_MATOMO_SITE_ID,
-  trackErrors: true
-});
-
-Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_URL,
-  environment: window.location.host
-});
-
-ReactPiwik.push(["trackPageView"]);
 
 const container = document.getElementById("root");
 const root = createRoot(container);

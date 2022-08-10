@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import * as actionsInstances from "../../actions/actions.instances";
+import { loadInstance } from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
 import Count from "./Count";
 
@@ -75,7 +75,7 @@ export const InstanceLink = connect(
   },
   dispatch => ({
     onClick: (id, group, navigate) => {
-      dispatch(actionsInstances.loadInstance(group, id, () => {
+      dispatch(loadInstance(group, id, () => {
         navigate(`/${window.location.search}#${id}`);
       }));
     }

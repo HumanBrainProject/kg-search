@@ -23,8 +23,8 @@
 
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import * as actionsAuth from "../actions/actions.auth";
-import * as actionsGroups from "../actions/actions.groups";
+import { logout } from "../actions/actions.auth";
+import { loadGroups as actionLoadGroups, clearGroupError } from "../actions/actions.groups";
 
 import { BgError } from "../components/BgError/BgError";
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
@@ -69,13 +69,13 @@ export default connect(
   }),
   dispatch => ({
     loadGroups: () => {
-      dispatch(actionsGroups.loadGroups());
+      dispatch(actionLoadGroups());
     },
     onCancel: () => {
-      dispatch(actionsAuth.logout());
+      dispatch(logout());
     },
     onRetry: () => {
-      dispatch(actionsGroups.clearGroupError());
+      dispatch(clearGroupError());
     }
   })
 )(Groups);

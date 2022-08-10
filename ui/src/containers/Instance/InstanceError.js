@@ -26,9 +26,9 @@ import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { BgError } from "../../components/BgError/BgError";
-import * as actionsInstances from "../../actions/actions.instances";
-import * as actionsGroups from "../../actions/actions.groups";
-import * as actionsAuth from "../../actions/actions.auth";
+import { clearInstanceError, clearAllInstances } from "../../actions/actions.instances";
+import { clearGroupError } from "../../actions/actions.groups";
+import { logout } from "../../actions/actions.auth";
 
 const BaseInstanceError  = ({ error, onRetry, onCancel, group, defaultGroup }) => {
 
@@ -57,14 +57,14 @@ const InstanceError = connect(
   dispatch => ({
     onCancel: (group) => {
       if (!group) {
-        dispatch(actionsGroups.clearGroupError());
-        dispatch(actionsAuth.logout());
+        dispatch(clearGroupError());
+        dispatch(logout());
       }
-      dispatch(actionsInstances.clearInstanceError());
-      dispatch(actionsInstances.clearAllInstances());
+      dispatch(clearInstanceError());
+      dispatch(clearAllInstances());
     },
     onRetry: () => {
-      dispatch(actionsInstances.clearInstanceError());
+      dispatch(clearInstanceError());
     }
   })
 )(BaseInstanceError);

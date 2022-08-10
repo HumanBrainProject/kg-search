@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { windowWidth } from "../../../helpers/BrowserHelpers";
-import * as actionsSearch from "../../../actions/actions.search";
+import { setPage } from "../../../actions/actions.search";
 import "./Pagination.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
@@ -43,8 +43,9 @@ class PageLinkButton extends React.PureComponent {
     const previous = name === "previous";
     const next = name === "next";
     const ellipsis = name === "ellipsis";
+    const ariaLabel = previous?"previous":(next?"next":title);
     return (
-      <button className={`kgs-page-link ${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly}>
+      <button className={`kgs-page-link ${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly} title={ariaLabel}>
         {previous && <FontAwesomeIcon icon={faChevronLeft} className="is-previous" />}
         {!previous && !next && title}
         {next && <FontAwesomeIcon icon={faChevronRight} className="is-next" />}
@@ -204,7 +205,7 @@ export const Pagination = connect(
   }),
   dispatch => ({
     onClick: value => {
-      dispatch(actionsSearch.setPage(value));
+      dispatch(setPage(value));
       window.scrollTo(0, 0); // Scroll page to top after paginating
     }
   })

@@ -21,7 +21,7 @@
  *
  */
 
-import * as actions from "../actions/actions.instances";
+import { loadInstanceRequest, loadInstanceSuccess, setPreviousInstance, clearAllInstances} from "../actions/instances";
 import { reducer as instancesReducer} from "./instances.reducer";
 describe("instances reducer", () => {
   describe("unknown action", () => {
@@ -35,7 +35,7 @@ describe("instances reducer", () => {
   describe("load instance request", () => {
     it("should set loading reference", () => {
       const state = {isLoading: false, currentInstance: {id: 567}, previousInstances:[{id: 234}, {id: 345}, {id: 456}]};
-      const action = actions.loadInstanceRequest();
+      const action = loadInstanceRequest();
       const newState = instancesReducer(state, action);
       expect(newState.isLoading).toBe(true);
     });
@@ -43,19 +43,19 @@ describe("instances reducer", () => {
   describe("load instance success", () => {
     it("should set current instance", () => {
       const state = undefined;
-      const action = actions.loadInstanceSuccess({id: 123});
+      const action = loadInstanceSuccess({id: 123});
       const newState = instancesReducer(state, action);
       expect(newState.currentInstance).toMatchObject({id: 123});
     });
     it("should increase previous instances array length", () => {
       const state = {currentInstance: {id: 567}, previousInstances:[{id: 234}, {id: 345}, {id: 456}]};
-      const action = actions.loadInstanceSuccess({id: 123});
+      const action = loadInstanceSuccess({id: 123});
       const newState = instancesReducer(state, action);
       expect(newState.previousInstances.length).toBe(4);
     });
     it("should put previous instance into previous instances array", () => {
       const state = {currentInstance: {id: 567}, previousInstances:[{id: 234}, {id: 345}, {id: 456}]};
-      const action = actions.loadInstanceSuccess({id: 123});
+      const action = loadInstanceSuccess({id: 123});
       const newState = instancesReducer(state, action);
       expect(newState.previousInstances[3]).toMatchObject({id: 567});
     });
@@ -63,13 +63,13 @@ describe("instances reducer", () => {
   describe("set previous instance", () => {
     it("should set last item of previous instances array as current instance", () => {
       const state = {currentInstance: {id: 567}, previousInstances:[{id: 234}, {id: 345}, {id: 456}]};
-      const action = actions.setPreviousInstance();
+      const action = setPreviousInstance();
       const newState = instancesReducer(state, action);
       expect(newState.currentInstance).toMatchObject({id: 456});
     });
     it("should set current instance as null when previous instances array is empty", () => {
       const state = {currentInstance: {id: 567}, previousInstances:[]};
-      const action = actions.setPreviousInstance();
+      const action = setPreviousInstance();
       const newState = instancesReducer(state, action);
       expect(newState.currentInstance).toBe(null);
     });
@@ -77,13 +77,13 @@ describe("instances reducer", () => {
   describe("clear all instances", () => {
     it("should set current instance to null", () => {
       const state = {currentInstance: {id: 567}, previousInstances:[{id: 234}, {id: 345}, {id: 456}]};
-      const action = actions.clearAllInstances();
+      const action = clearAllInstances();
       const newState = instancesReducer(state, action);
       expect(newState.currentInstance).toBe(null);
     });
     it("should set previous instances array empty", () => {
       const state = {currentInstance: {id: 567}, previousInstances:[]};
-      const action = actions.clearAllInstances();
+      const action = clearAllInstances();
       const newState = instancesReducer(state, action);
       expect(newState.previousInstances.length).toBe(0);
     });

@@ -24,26 +24,23 @@
 import React, { Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
-
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 
 const Search = React.lazy(() => import("./Search/Search"));
 const Instance = React.lazy(() => import("./Instance/Instance"));
 const Preview = React.lazy(() => import("./Instance/Preview"));
 
-const View = () => {
-  return (
-    <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-      <Routes>
-        <Route path="/" element={<Search />} />
-        <Route path="/instances/:id" element={<Instance />} />
-        <Route path="/instances/:type/:id" element={<Instance />} />
-        <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-        <Route path="/live/:id" element={<Preview />} />
-        <Route path="*" element={<Navigate to="/" replace={true} />} />
-      </Routes>
-    </Suspense>
-  );
-};
+const View = () => (
+  <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
+    <Routes>
+      <Route path="/" element={<Search />} />
+      <Route path="/instances/:id" element={<Instance />} />
+      <Route path="/instances/:type/:id" element={<Instance />} />
+      <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
+      <Route path="/live/:id" element={<Preview />} />
+      <Route path="*" element={<Navigate to="/" replace={true} />} />
+    </Routes>
+  </Suspense>
+);
 
 export default View;
