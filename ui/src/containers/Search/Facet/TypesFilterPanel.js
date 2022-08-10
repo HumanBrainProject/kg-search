@@ -24,7 +24,7 @@
 import React, { useMemo } from "react";
 import { connect } from "react-redux";
 
-import * as actionsSearch from "../../../actions/actions.search";
+import { setType } from "../../../actions/actions.search";
 import "./TypesFilterPanel.css";
 
 const TypeFilterBase = ({ type: { label, count, active }, onClick }) => (
@@ -68,7 +68,7 @@ export const TypesFilterPanel = connect(
   }),
   dispatch => ({
     onClick: value => {
-      dispatch(actionsSearch.setType(value));
+      dispatch(setType(value));
     }
   })
 )(TypesFilterPanelBase);

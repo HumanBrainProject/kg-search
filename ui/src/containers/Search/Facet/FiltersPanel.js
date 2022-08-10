@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import * as actionsSearch from "../../../actions/actions.search";
+import { setFacet, setFacetSize, resetFacets } from "../../../actions/actions.search";
 import { Facet } from "./Facet";
 
 import "./FiltersPanel.css";
@@ -93,13 +93,13 @@ export const FiltersPanel = connect(
   },
   dispatch => ({
     onChange: (name, active, keyword) => {
-      dispatch(actionsSearch.setFacet(name, active, keyword));
+      dispatch(setFacet(name, active, keyword));
     },
     onViewChange: (name, size) => {
-      dispatch(actionsSearch.setFacetSize(name, size));
+      dispatch(setFacetSize(name, size));
     },
     onReset: () => {
-      dispatch(actionsSearch.resetFacets());
+      dispatch(resetFacets());
     }
   })
 )(FiltersPanelBase);

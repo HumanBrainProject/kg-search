@@ -23,15 +23,17 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import * as actionsAuth from "../../actions/actions.auth";
-import * as actionsGroups from "../../actions/actions.groups";
-import * as actionsSearch from "../../actions/actions.search";
-import * as actionsInstances from "../../actions/actions.instances";
-import "./SignIn.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
+
+import { logout as actionLogout, setLoginRequired } from "../../actions/actions.auth";
+import { setGroup } from "../../actions/actions.groups";
+import { setPage } from "../../actions/actions.search";
+import { clearAllInstances } from "../../actions/actions.instances";
+
+import "./SignIn.css";
 
 const SignInComponent = ({ className, Tag, isAuthenticated, isAuthenticating, isLogingOut, group, groups, login, logout, onGroupChange }) => {
   if(isAuthenticated) {
@@ -91,17 +93,15 @@ export const SignIn = connect(
   }),
   dispatch => ({
     logout: () => {
-      dispatch(actionsAuth.logout());
+      dispatch(actionLogout());
     },
     login: () => {
-      dispatch(actionsAuth.setLoginRequired(true));
+      dispatch(setLoginRequired(true));
     },
     onGroupChange: value => {
-      dispatch(actionsGroups.setGroup(value));
-      dispatch(actionsInstances.clearAllInstances());
-      dispatch(actionsSearch.setPage(1));
+      dispatch(setGroup(value));
+      dispatch(clearAllInstances());
+      dispatch(setPage(1));
     }
   })
 )(SignInComponent);
-
-

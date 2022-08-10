@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { ErrorPanel } from "../../../components/Error/ErrorPanel";
-import * as actionsInstances from "../../../actions/actions.instances";
+import { clearInstanceError } from "../../../actions/actions.instances";
 
 const BaseInstanceError = ({ error, onCancel }) => {
 
@@ -44,7 +44,7 @@ const InstanceError = connect(
   }),
   dispatch => ({
     onCancel: () => {
-      dispatch(actionsInstances.clearInstanceError());
+      dispatch(clearInstanceError());
     }
   })
 )(BaseInstanceError);

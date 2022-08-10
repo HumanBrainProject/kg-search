@@ -22,7 +22,8 @@
  */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
+
+import { showImage } from "../../actions/actions";
 import { ImagePopup as Component } from "../../components/ImagePopup/ImagePopup";
 
 export const ImagePopup = connect(
@@ -36,7 +37,7 @@ export const ImagePopup = connect(
   },
   dispatch => ({
     onClick: () => {
-      dispatch(actions.showImage(null, null));
+      dispatch(showImage(null, null));
     }
   })
 )(Component);

@@ -24,8 +24,8 @@
 import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
-import * as actionsAuth from "../actions/actions.auth";
-import * as actionsGroups from "../actions/actions.groups";
+import { setLoginRequired as actionSetLoginRequired, login as actionLogin, setUpAuthentication as actionSetUpAuthentication, loadAuthSettings as actionLoadAuthSettings } from "../actions/actions.auth";
+import { resetGroups } from "../actions/actions.groups";
 
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import { BgError } from "../components/BgError/BgError";
@@ -135,18 +135,18 @@ export default connect(
   dispatch => ({
     setLoginRequired: required => {
       if (!required) {
-        dispatch(actionsGroups.resetGroups());
+        dispatch(resetGroups());
       }
-      dispatch(actionsAuth.setLoginRequired(required));
+      dispatch(actionSetLoginRequired(required));
     },
     login: () => {
-      dispatch(actionsAuth.login());
+      dispatch(actionLogin());
     },
     setUpAuthentication: (settings, loginRequired) => {
-      dispatch(actionsAuth.setUpAuthentication(settings, loginRequired));
+      dispatch(actionSetUpAuthentication(settings, loginRequired));
     },
     loadAuthSettings: () => {
-      dispatch(actionsAuth.loadAuthSettings());
+      dispatch(actionLoadAuthSettings());
     }
   })
 )(Authentication);

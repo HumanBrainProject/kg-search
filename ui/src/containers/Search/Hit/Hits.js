@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 
 import API from "../../../services/API";
-import * as actionsInstances from "../../../actions/actions.instances";
+import { loadInstance } from "../../../actions/actions.instances";
 
 import { Hit } from "./Hit";
 
@@ -83,7 +83,7 @@ export const Hits = connect(
         API.trackEvent("Card", "Open in new tab", relativeUrl);
         window.open(relativeUrl, "_blank");
       } else {
-        dispatch(actionsInstances.loadInstance(group, data.id, () => {
+        dispatch(loadInstance(group, data.id, () => {
           navigate(`/${window.location.search}#${data.id}`);
         }));
       }

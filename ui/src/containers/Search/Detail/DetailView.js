@@ -23,7 +23,7 @@
 import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import * as actionsInstances from "../../../actions/actions.instances";
+import { setPreviousInstance, clearInstanceCurrentTab, clearAllInstances, clearInstanceCurrentTab as actionClearInstanceCurrentTab } from "../../../actions/actions.instances";
 import { ShareButtons } from "../../Share/ShareButtons";
 import { Instance } from "../Instance";
 import InstanceFetching from "../../Instance/InstanceFetching";
@@ -88,14 +88,14 @@ export const DetailView = connect(
   },
   dispatch => ({
     onBack: () => {
-      dispatch(actionsInstances.setPreviousInstance());
+      dispatch(setPreviousInstance());
     },
     onClose: () => {
-      dispatch(actionsInstances.clearInstanceCurrentTab());
-      dispatch(actionsInstances.clearAllInstances());
+      dispatch(clearInstanceCurrentTab());
+      dispatch(clearAllInstances());
     },
     clearInstanceCurrentTab: () => {
-      dispatch(actionsInstances.clearInstanceCurrentTab());
+      dispatch(actionClearInstanceCurrentTab());
     }
   })
 )(DetailViewComponent);

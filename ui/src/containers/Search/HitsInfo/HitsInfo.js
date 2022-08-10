@@ -26,7 +26,7 @@ import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import API from "../../../services/API";
-import * as actionsSearch from "../../../actions/actions.search";
+import { setQueryString as actionSetQueryString } from "../../../actions/actions.search";
 
 import "./HitsInfo.css";
 
@@ -117,7 +117,7 @@ export const HitsInfo = connect(
         to = location.search + location.search.endsWith("?")?"q=":"&q=" + encodeURIComponent(value);
       }
       navigate(to);
-      dispatch(actionsSearch.setQueryString(value));
+      dispatch(actionSetQueryString(value));
     }
   })
 )(HitsInfoBase);

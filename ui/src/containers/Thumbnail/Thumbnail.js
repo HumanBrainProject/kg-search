@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
+import { showImage } from "../../actions/actions";
 import { Thumbnail as Component} from "../../components/Thumbnail/Thumbnail";
 
 export const Thumbnail = connect(
@@ -34,7 +34,7 @@ export const Thumbnail = connect(
   (dispatch, props) => ({
     onClick: (props.showPreview && typeof props.previewUrl === "string")?
       () => {
-        dispatch(actions.showImage(props.previewUrl, props.alt));
+        dispatch(showImage(props.previewUrl, props.alt));
       }
       :null
   })

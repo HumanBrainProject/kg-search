@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
+import { agreeTermsShortNotice } from "../../actions/actions";
 import { Notice } from "../../components/Notice/Notice";
 import { termsShortNotice, termsShortNoticeUpdate } from "../../data/termsShortNotice";
 
@@ -34,7 +34,7 @@ export const TermsShortNotice = connect(
   }),
   dispatch => ({
     onAgree: () => {
-      dispatch(actions.agreeTermsShortNotice());
+      dispatch(agreeTermsShortNotice());
     }
   })
 )(Notice);

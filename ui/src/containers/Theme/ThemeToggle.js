@@ -27,7 +27,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faMoon} from "@fortawesome/free-solid-svg-icons/faMoon";
 import {faSun} from "@fortawesome/free-solid-svg-icons/faSun";
 
-import * as actions from "../../actions/actions";
+import { setTheme as actionSetTheme } from "../../actions/actions";
 
 import "./ThemeToggle.css";
 
@@ -58,7 +58,7 @@ export default connect(
   }),
   dispatch => ({
     setTheme: theme => {
-      dispatch(actions.setTheme(theme));
+      dispatch(actionSetTheme(theme));
     }
   })
 )(ThemeToggle);

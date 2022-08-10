@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
+import { showImage } from "../../actions/actions";
 import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
 
 export const ImagePreviews = connect(
@@ -45,7 +45,7 @@ export const ImagePreviews = connect(
   },
   dispatch => ({
     onClick: image => {
-      dispatch(actions.showImage(image.target, image.label, image.link));
+      dispatch(showImage(image.target, image.label, image.link));
     }
   })
 )(ImageCarousel);

@@ -24,7 +24,7 @@ import { connect } from "react-redux";
 
 import API from "../../services/API";
 import { Tabs as Component } from "../../components/Tabs/Tabs";
-import * as actionsInstances from "../../actions/actions.instances";
+import { setInstanceCurrentTab } from "../../actions/actions.instances";
 
 export const Tabs = connect(
   (state, props) => {
@@ -45,7 +45,7 @@ export const Tabs = connect(
   },
   (dispatch, props) => ({
     selectTab: tab =>  {
-      dispatch(actionsInstances.setInstanceCurrentTab(props.instanceId, tab.name));
+      dispatch(setInstanceCurrentTab(props.instanceId, tab.name));
       API.trackEvent("Tab", `${tab.name} clicked`, props.instanceId);
     }
   })

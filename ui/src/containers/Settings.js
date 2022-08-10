@@ -24,7 +24,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
-import * as actionsSettings from "../actions/actions.settings";
+import { loadSettings as actionLoadSettings, clearSettingsError } from "../actions/actions.settings";
 
 import { BgError } from "../components/BgError/BgError";
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
@@ -68,10 +68,10 @@ export default connect(
   }),
   dispatch => ({
     loadSettings: () => {
-      dispatch(actionsSettings.loadSettings());
+      dispatch(actionLoadSettings());
     },
     onRetry: () => {
-      dispatch(actionsSettings.clearSettingsError());
+      dispatch(clearSettingsError());
     }
   })
 )(Settings);

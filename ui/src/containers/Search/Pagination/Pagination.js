@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { windowWidth } from "../../../helpers/BrowserHelpers";
-import * as actionsSearch from "../../../actions/actions.search";
+import { setPage } from "../../../actions/actions.search";
 import "./Pagination.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
@@ -204,7 +204,7 @@ export const Pagination = connect(
   }),
   dispatch => ({
     onClick: value => {
-      dispatch(actionsSearch.setPage(value));
+      dispatch(setPage(value));
       window.scrollTo(0, 0); // Scroll page to top after paginating
     }
   })

@@ -24,8 +24,8 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import * as actionsSearch from "../../actions/actions.search";
-import * as actionsInstances from "../../actions/actions.instances";
+import { search as actionSearch, initializeSearch as actionInitializeSearch } from "../../actions/actions.search";
+import { goBackToInstance as actionGoBackToInstance } from "../../actions/actions.instances";
 import { withTabKeyNavigation } from "../../helpers/withTabKeyNavigation";
 import SearchBox from "./SearchBox/SearchBox";
 import { TypesFilterPanel } from "./Facet/TypesFilterPanel";
@@ -306,13 +306,13 @@ const Search = connect(
   }),
   dispatch => ({
     initializeSearch: params => {
-      dispatch(actionsSearch.initializeSearch(params));
+      dispatch(actionInitializeSearch(params));
     },
     search: () => {
-      dispatch(actionsSearch.search());
+      dispatch(actionSearch());
     },
     goBackToInstance: id => {
-      dispatch(actionsInstances.goBackToInstance(id));
+      dispatch(actionGoBackToInstance(id));
     }
   })
 )(SearchWithTabKeyNavigation);
