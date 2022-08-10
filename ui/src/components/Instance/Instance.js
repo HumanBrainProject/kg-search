@@ -22,11 +22,11 @@
  */
 
 import React, { useEffect, useMemo } from "react";
-import ReactPiwik from "react-piwik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import { useNavigate } from "react-router-dom";
 
+import API from "../../services/API";
 import { BgError } from "../BgError/BgError";
 import { Header } from "./Header/Header";
 import { Tabs } from "../../containers/Instance/Tabs";
@@ -41,7 +41,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
 
   useEffect(() => {
     const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
-    ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
+    API.trackEvent("Card", "Opened", relativeUrl);
   }, [id, hasNoData, group, defaultGroup, path]);
 
   const onVersionChange = useMemo(() => version => {

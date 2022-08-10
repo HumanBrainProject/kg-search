@@ -24,8 +24,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import ReactPiwik from "react-piwik";
 
+import API from "../../../services/API";
 import * as actionsSearch from "../../../actions/actions.search";
 
 import "./HitsInfo.css";
@@ -108,7 +108,7 @@ export const HitsInfo = connect(
   },
   dispatch => ({
     setQueryString: (value, location, navigate) => {
-      ReactPiwik.push(["trackEvent", "Search", "Refine search using suggestion", value]);
+      API.trackEvent("Search", "Refine search using suggestion", value);
       let to = "/";
       const find = location.search.split("&").find(p => p.match(/\??q=.*/));
       if (find) {

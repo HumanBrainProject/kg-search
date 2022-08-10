@@ -21,8 +21,8 @@
  *
  */
 import { connect } from "react-redux";
-import ReactPiwik from "react-piwik";
 
+import API from "../../services/API";
 import { Tabs as Component } from "../../components/Tabs/Tabs";
 import * as actionsInstances from "../../actions/actions.instances";
 
@@ -46,7 +46,7 @@ export const Tabs = connect(
   (dispatch, props) => ({
     selectTab: tab =>  {
       dispatch(actionsInstances.setInstanceCurrentTab(props.instanceId, tab.name));
-      ReactPiwik.push(["trackEvent", "Tab", `${tab.name} clicked`, props.instanceId]);
+      API.trackEvent("Tab", `${tab.name} clicked`, props.instanceId);
     }
   })
 )(Component);

@@ -25,7 +25,7 @@ import React, { Suspense, useState } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
-import ReactPiwik from "react-piwik";
+import API from "../../services/API";
 import _ from "lodash-uuid";
 
 import LinkedInstance from "../../containers/LinkedInstance";
@@ -78,7 +78,7 @@ const HierarchicalTreeComponent = ({ data, group, defaultExpandAll, defaultExpan
   const [node, setNode] = useState(data);
 
   const onSelect = (_selectedKeys, info) => {
-    ReactPiwik.push(["trackEvent", "Specimen", "Clicked", info.node.title]);
+    API.trackEvent("Specimen", "Clicked", info.node.title);
     setNode(info.node);
   };
 

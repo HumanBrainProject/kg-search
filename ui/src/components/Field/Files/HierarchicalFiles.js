@@ -26,24 +26,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faFolder } from "@fortawesome/free-solid-svg-icons/faFolder";
+import { debounce } from "lodash";
+import Tree from "rc-tree";
 
+import API from "../../../services/API";
 import Download from "./Download";
 import LinkedInstance from "../../../containers/LinkedInstance";
 import AsyncLinkedInstance from "../../../containers/AsyncLinkedInstance";
+import { getTreeByFolder } from "./FileTreeByFolderHelper";
+import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper";
+import * as filters from "./helpers";
 
 import "./HierarchicalFiles.css";
 import "rc-tree/assets/index.css";
-
-import { getTreeByFolder } from "./FileTreeByFolderHelper";
-import {
-  getTreeByGroupingType,
-  JSONPath
-} from "./FileTreeByGroupingTypeHelper";
-import * as filters from "./helpers";
-import { debounce } from "lodash";
-
-import Tree from "rc-tree";
-import ReactPiwik from "react-piwik";
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {
@@ -187,7 +182,7 @@ class HierarchicalFiles extends React.Component {
   }, 500);
 
   onSelect = (_selectedKeys, info) => {
-    ReactPiwik.push(["trackEvent", "Files", "Clicked", info.node.title]);
+    API.trackEvent("Files", "Clicked", info.node.title);
     this.setState({ node: info.node });
   };
 

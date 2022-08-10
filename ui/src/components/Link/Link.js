@@ -22,8 +22,8 @@
  */
 
 import React from "react";
-import ReactPiwik from "react-piwik";
 
+import API from "../../services/API";
 import Count from "../Field/Count";
 
 import "./Link.css";
@@ -42,9 +42,9 @@ export const Link = ({ url, label, isAFileLink, isExternalLink, icon, count }) =
 
   const handleClick = () => {
     if (isAFileLink) {
-      ReactPiwik.push(["trackLink", url, "download"]);
+      API.trackLink(url, "download");
     } else if (isExternalLink) {
-      ReactPiwik.push(["trackLink", url, "link"]);
+      API.trackLink(url, "link");
     }
   };
 

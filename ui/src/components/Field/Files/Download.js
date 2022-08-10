@@ -22,10 +22,10 @@
  */
 
 import React, { useState } from "react";
-import ReactPiwik from "react-piwik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 
+import API from "../../../services/API";
 import { InfoPanel } from "../../InfoPanel/InfoPanel";
 
 import { termsOfUse } from "../../../data/termsOfUse.js";
@@ -37,7 +37,7 @@ const Download = ({name, type, url}) => {
 
   const trackDownload = e => {
     e.stopPropagation();
-    ReactPiwik.push(["trackLink", url, "download"]);
+    API.trackLink(url, "download");
   };
 
   const openTermsOfUse = e => {

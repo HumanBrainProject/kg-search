@@ -21,12 +21,8 @@
  *
  */
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { connect } from "react-redux";
-import ReactPiwik from "react-piwik";
-import * as Sentry from "@sentry/browser";
-
 
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 
@@ -34,50 +30,17 @@ const Search = React.lazy(() => import("./Search/Search"));
 const Instance = React.lazy(() => import("./Instance/Instance"));
 const Preview = React.lazy(() => import("./Instance/Preview"));
 
-const ViewComponent = ({commit, matomo, sentry}) => {
+const View = () => (
+  <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
+    <Routes>
+      <Route path="/" element={<Search />} />
+      <Route path="/instances/:id" element={<Instance />} />
+      <Route path="/instances/:type/:id" element={<Instance />} />
+      <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
+      <Route path="/live/:id" element={<Preview />} />
+      <Route path="*" element={<Navigate to="/" replace={true} />} />
+    </Routes>
+  </Suspense>
+);
 
-  useEffect(() => {
-
-    if (commit) {
-
-      if (sentry) {
-        Sentry.init({
-          ...sentry,
-          release: commit,
-          environment: window.location.host
-        });
-      }
-
-      if (matomo) {
-        new ReactPiwik({ //NOSONAR
-          ...matomo,
-          trackErrors: true
-        });
-
-        ReactPiwik.push(["trackPageView"]);
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-      <Routes>
-        <Route path="/" element={<Search />} />
-        <Route path="/instances/:id" element={<Instance />} />
-        <Route path="/instances/:type/:id" element={<Instance />} />
-        <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-        <Route path="/live/:id" element={<Preview />} />
-        <Route path="*" element={<Navigate to="/" replace={true} />} />
-      </Routes>
-    </Suspense>
-  );
-};
-
-export default connect(
-  state => ({
-    commit: state.settings.commit,
-    matomo: state.settings.matomo,
-    sentry: state.settings.sentry
-  })
-)(ViewComponent);
+export default View;

@@ -23,7 +23,6 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import ReactPiwik from "react-piwik";
 import { sessionFailure } from "./actions.auth";
 
 import { getAggregation } from "../helpers/Facets";
@@ -127,8 +126,8 @@ export const search = () => {
     const { queryString, selectedType, from, hitsPerPage } = state.search;
     const payload = getAggregation(selectedType?.facets);
     dispatch(loadSearchRequest());
-    ReactPiwik.push(["setCustomUrl", window.location.href]);
-    ReactPiwik.push(["trackPageView"]);
+    API.trackCustomUrl(window.location.href);
+    API.trackPageView();
     API.axios
       .post(API.endpoints.search(state.groups.group, queryString, selectedType?.type, from, hitsPerPage), payload)
       //.get(API.endpoints.search(state.groups.group, queryString, selectedType?.type, from, hitsPerPage), payload)

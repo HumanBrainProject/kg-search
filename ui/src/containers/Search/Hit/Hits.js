@@ -24,8 +24,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import ReactPiwik from "react-piwik";
 
+import API from "../../../services/API";
 import * as actionsInstances from "../../../actions/actions.instances";
 
 import { Hit } from "./Hit";
@@ -80,7 +80,7 @@ export const Hits = connect(
     onClick: (data, target, group, defaultGroup, navigate) => {
       if (target === "_blank") {
         const relativeUrl = `/instances/${data.id}${(group != defaultGroup)?("?group=" + group):""}`;
-        ReactPiwik.push(["trackEvent", "Card", "Open in new tab", relativeUrl]);
+        API.trackEvent("Card", "Open in new tab", relativeUrl);
         window.open(relativeUrl, "_blank");
       } else {
         dispatch(actionsInstances.loadInstance(group, data.id, () => {
