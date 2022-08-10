@@ -21,7 +21,7 @@
  *
  */
 
-import { loadSettingsSuccess, loadSettingsFailure } from "../actions/settings";
+import { loadSettingsSuccess, loadSettingsFailure } from "../actions/actions.settings";
 import { reducer as settingsReducer} from "./settings.reducer";
 describe("settings reducer", () => {
   describe("unknown action", () => {

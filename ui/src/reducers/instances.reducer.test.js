@@ -21,7 +21,7 @@
  *
  */
 
-import { loadInstanceRequest, loadInstanceSuccess, setPreviousInstance, clearAllInstances} from "../actions/instances";
+import { loadInstanceRequest, loadInstanceSuccess, setPreviousInstance, clearAllInstances} from "../actions/actions.instances";
 import { reducer as instancesReducer} from "./instances.reducer";
 describe("instances reducer", () => {
   describe("unknown action", () => {
