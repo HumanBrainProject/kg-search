@@ -56,7 +56,7 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
         navigate("/");
       }
       if ((!isLogout && !authenticationInitialized) || loginRequired) {
-        authenticate(loginRequired);
+        authenticate();
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
