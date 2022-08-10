@@ -37,18 +37,22 @@ const Preview = React.lazy(() => import("./Instance/Preview"));
 const ViewComponent = ({matomo, sentry}) => {
 
   useEffect(() => {
-    new ReactPiwik({ //NOSONAR
-      url: (matomo?.url)?matomo.url:process.env.REACT_APP_MATOMO_URL,
-      siteId: (matomo?.siteId)?matomo.siteId:process.env.REACT_APP_MATOMO_SITE_ID,
-      trackErrors: true
-    });
 
-    Sentry.init({
-      dsn: (sentry?.url)?sentry.url:process.env.REACT_APP_SENTRY_URL,
-      environment: window.location.host
-    });
+    if (sentry) {
+      Sentry.init({
+        ...sentry,
+        environment: window.location.host
+      });
+    }
 
-    ReactPiwik.push(["trackPageView"]);
+    if (matomo) {
+      new ReactPiwik({ //NOSONAR
+        ...matomo,
+        trackErrors: true
+      });
+
+      ReactPiwik.push(["trackPageView"]);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
