@@ -47,7 +47,7 @@ const Settings = ({ error, isLoading, isReady, loadSettings, onRetry}) => {
 
   if (isLoading) {
     return (
-      <FetchingPanel message="Retrieving settings..." />
+      <FetchingPanel message="Retrieving application settings..." />
     );
   }
 

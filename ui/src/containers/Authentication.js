@@ -87,13 +87,13 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
 
   if(isLoading) {
     return (
-      <FetchingPanel message="Retrieving authentication settings..." />
+      <FetchingPanel message={loginRequired?"Retrieving authentication settings...":"Retrieving application configuration..."} />
     );
   }
 
   if (authenticationInitializing) {
     return (
-      <FetchingPanel message="Initalizing authentication..." />
+      <FetchingPanel message={loginRequired?"Initalizing authentication...":"Initalizing application..."} />
     );
   }
 
