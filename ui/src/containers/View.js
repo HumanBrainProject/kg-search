@@ -34,24 +34,28 @@ const Search = React.lazy(() => import("./Search/Search"));
 const Instance = React.lazy(() => import("./Instance/Instance"));
 const Preview = React.lazy(() => import("./Instance/Preview"));
 
-const ViewComponent = ({matomo, sentry}) => {
+const ViewComponent = ({commit, matomo, sentry}) => {
 
   useEffect(() => {
 
-    if (sentry) {
-      Sentry.init({
-        ...sentry,
-        environment: window.location.host
-      });
-    }
+    if (commit) {
 
-    if (matomo) {
-      new ReactPiwik({ //NOSONAR
-        ...matomo,
-        trackErrors: true
-      });
+      if (sentry) {
+        Sentry.init({
+          ...sentry,
+          release: commit,
+          environment: window.location.host
+        });
+      }
 
-      ReactPiwik.push(["trackPageView"]);
+      if (matomo) {
+        new ReactPiwik({ //NOSONAR
+          ...matomo,
+          trackErrors: true
+        });
+
+        ReactPiwik.push(["trackPageView"]);
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -72,6 +76,7 @@ const ViewComponent = ({matomo, sentry}) => {
 
 export default connect(
   state => ({
+    commit: state.settings.commit,
     matomo: state.settings.matomo,
     sentry: state.settings.sentry
   })
