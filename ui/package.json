@@ -48,10 +48,8 @@
     "showdown-xss-filter": "^0.2.0"
   },
   "scripts": {
-    "start": "env-cmd -f .env.development react-scripts start",
-    "build": "env-cmd -f .env.production react-scripts build",
-    "build:int": "env-cmd -f .env.integration react-scripts build",
-    "build:dev": "env-cmd -f .env.development react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "testCI": "CI=true react-scripts test --env=jsdom --coverage --testResultsProcessor=jest-sonar-reporter",
     "lint": "eslint src/",
