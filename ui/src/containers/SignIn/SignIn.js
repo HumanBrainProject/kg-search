@@ -35,7 +35,10 @@ import { clearAllInstances } from "../../actions/actions.instances";
 
 import "./SignIn.css";
 
-const SignInComponent = ({ className, Tag, isAuthenticated, isAuthenticating, isLogingOut, group, groups, login, logout, onGroupChange }) => {
+const SignInComponent = ({ className, Tag, isUnavailble, isAuthenticated, isAuthenticating, isLogingOut, group, groups, login, logout, onGroupChange }) => {
+  if (isUnavailble) {
+    return null;
+  }
   if(isAuthenticated) {
     return (
       <Tag className={`${className} dropdown`}>
@@ -83,6 +86,7 @@ const SignInComponent = ({ className, Tag, isAuthenticated, isAuthenticating, is
 
 export const SignIn = connect(
   (state, props) => ({
+    isUnavailble: state.auth.isUnavailble,
     isAuthenticated: state.auth.isAuthenticated,
     isAuthenticating: state.auth.isLoading || state.auth.authenticationInitializing || state.auth.isAuthenticating,
     isLogingOut: state.auth.isLogingOut,

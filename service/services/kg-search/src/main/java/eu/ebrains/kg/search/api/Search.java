@@ -75,13 +75,16 @@ public class Search {
     }
 
     @GetMapping("/auth/settings")
-    public Map<String, String> getAuthSettings(@Value("${keycloak.realm}") String keycloakRealm , @Value("${keycloak.resource}") String keycloakClientId) {
+    public ResponseEntity getAuthSettings(@Value("${keycloak.realm}") String keycloakRealm , @Value("${keycloak.resource}") String keycloakClientId) {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
-        return Map.of(
-                "realm", keycloakRealm,
-                "url",  authEndpoint,
-                "clientId", keycloakClientId
-        );
+        if (StringUtils.isNotBlank(authEndpoint)) {
+            return ResponseEntity.ok(Map.of(
+                    "realm", keycloakRealm,
+                    "url", authEndpoint,
+                    "clientId", keycloakClientId
+            ));
+        }
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
     }
 
     @GetMapping("/citation")

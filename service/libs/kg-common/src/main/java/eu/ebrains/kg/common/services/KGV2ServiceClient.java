@@ -25,7 +25,6 @@ package eu.ebrains.kg.common.services;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.DatabaseScope;
-import eu.ebrains.kg.common.services.KGServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

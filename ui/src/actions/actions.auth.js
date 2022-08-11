@@ -30,6 +30,12 @@ export const setAuthSettings = settings => {
   };
 };
 
+export const setAuthUnavailable = () => {
+  return {
+    type: types.SET_AUTH_UNAVAILABLE
+  };
+};
+
 export const setLoginRequired = (required=true) => {
   return {
     type: types.AUTH_MODE,
@@ -207,7 +213,7 @@ export const clearAuthSettingsError = () => {
   };
 };
 
-export const loadAuthSettings = () => {
+export const loadAuthSettings = loginRequired => {
   return dispatch => {
     dispatch(loadAuthSettingsRequest());
     API.axios
@@ -216,8 +222,12 @@ export const loadAuthSettings = () => {
         dispatch(setAuthSettings(data));
       })
       .catch(e => {
-        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
-        dispatch(loadAuthSettingsFailure(error));
+        if (e.response && e.response.status === 503 && !loginRequired) {
+          dispatch(setAuthUnavailable());
+        } else {
+          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          dispatch(loadAuthSettingsFailure(error));
+        }
       });
   };
 };

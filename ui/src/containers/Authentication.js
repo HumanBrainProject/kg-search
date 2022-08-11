@@ -33,7 +33,7 @@ import { BgError } from "../components/BgError/BgError";
 
 const Groups = React.lazy(() => import("./Groups"));
 
-const Authentication = ({ settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, setLoginRequired, clearError }) => {
+const Authentication = ({ isUnavailble, settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, setLoginRequired, clearError }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogout = !!matchPath({path:"/logout"}, location.pathname);
@@ -47,7 +47,7 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
         setUpAuthentication(settings, loginRequired);
       }
     } else {
-      loadAuthSettings();
+      loadAuthSettings(loginRequired);
     }
   };
 
@@ -56,7 +56,7 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
       if (isLogout && loginRequired) {
         navigate("/");
       }
-      if ((!isLogout && !authenticationInitialized) || loginRequired) {
+      if (!isUnavailble && ((!isLogout && !authenticationInitialized) || loginRequired)) {
         authenticate();
       }
     }
@@ -121,7 +121,7 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
     );
   }
 
-  if (isAuthenticated || (!loginRequired && authenticationInitialized)) {
+  if (isUnavailble || isAuthenticated || (!loginRequired && authenticationInitialized)) {
     return (
       <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
         <Groups />
@@ -134,6 +134,7 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
 
 export default connect(
   state => ({
+    isUnavailble: state.auth.isUnavailble,
     settings: state.auth.settings,
     error: state.auth.error,
     loginRequired: state.auth.loginRequired,
@@ -160,8 +161,8 @@ export default connect(
     setUpAuthentication: (settings, loginRequired) => {
       dispatch(actionSetUpAuthentication(settings, loginRequired));
     },
-    loadAuthSettings: () => {
-      dispatch(actionLoadAuthSettings());
+    loadAuthSettings: loginRequired => {
+      dispatch(actionLoadAuthSettings(loginRequired));
     }
   })
 )(Authentication);

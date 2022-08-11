@@ -23,6 +23,7 @@
 import * as types from "../actions/actions.types";
 
 const initialState = {
+  isUnavailble: false,
   settings: null,
   isLoading: false,
   error: null,
@@ -54,6 +55,12 @@ const setAuthSettings = (state, action) => ({
   ...state,
   isLoading: false,
   settings: action.settings
+});
+
+const setAuthUnavailable = state => ({
+  ...state,
+  isUnavailble: true,
+  isLoading: false
 });
 
 const setLoginRequired = (state, action) => ({
@@ -155,19 +162,21 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_AUTH_SETTINGS_FAILURE:
     return loadAuthSettingsFailure(state, action);
   case types.CLEAR_AUTH_SETTINGS_ERROR:
-    return clearAuthError(state, action);
+    return clearAuthError(state);
   case types.SET_AUTH_SETTINGS:
     return setAuthSettings(state, action);
+  case types.SET_AUTH_UNAVAILABLE:
+    return setAuthUnavailable(state);
   case types.AUTH_MODE:
     return setLoginRequired(state, action);
   case types.AUTH_INITIALIZE:
-    return initializeAuthentication(state, action);
+    return initializeAuthentication(state);
   case types.SET_AUTH_READY:
-    return setAuthReady(state, action);
+    return setAuthReady(state);
   case types.AUTH_INIALIZATION_FAILURE:
     return authInializationFailure(state, action);
   case types.LOGIN:
-    return login(state, action);
+    return login(state);
   case types.AUTH_FAILURE:
     return authFailure(state, action);
   case types.LOGIN_SUCCESS:
@@ -177,7 +186,7 @@ export function reducer(state = initialState, action = {}) {
   case types.LOGOUT_SUCCESS:
     return logoutSuccess(state);
   case types.SESSION_EXPIRED:
-    return sessionExpired(state, action);
+    return sessionExpired(state);
   case types.SESSION_FAILURE:
     return sessionFailure(state, action);
   default:
