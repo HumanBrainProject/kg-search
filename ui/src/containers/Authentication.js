@@ -24,19 +24,17 @@
 import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
-import { setLoginRequired as actionSetLoginRequired, login as actionLogin, setUpAuthentication as actionSetUpAuthentication, loadAuthSettings as actionLoadAuthSettings } from "../actions/actions.auth";
-import { resetGroups } from "../actions/actions.groups";
+import { login as actionLogin, setUpAuthentication as actionSetUpAuthentication, loadAuthSettings as actionLoadAuthSettings, clearAuthSettingsError } from "../actions/actions.auth";
 
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 import { BgError } from "../components/BgError/BgError";
 
 const Groups = React.lazy(() => import("./Groups"));
 
-const Authentication = ({ settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, setLoginRequired }) => {
+const Authentication = ({ settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, clearError }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogout = !!matchPath({path:"/logout"}, location.pathname);
-  const isLive = !!matchPath({path:"/live/*"}, location.pathname);
 
   const authenticate = () => {
     if (settings) {
@@ -62,26 +60,19 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
 
-  const loginBack = () => {
-    setLoginRequired(true);
-  };
-
-  const cancelLogin = () => {
-    if (isLive) {
-      navigate(location.pathname.replace("/live/", "/instances/"));
-    }
-    setLoginRequired(false);
+  const handleRetry = () => {
+    clearError();
   };
 
   if (error) {
     return (
-      <BgError message={error} onCancelClick={cancelLogin} cancelLabel="Cancel authentication"  onRetryClick={loginBack} retryLabel="Login" retryVariant="primary" />
+      <BgError message={error} onRetryClick={handleRetry} retryLabel="Retry" retryVariant="primary" />
     );
   }
 
   if (isLogout) {
     return (
-      <BgError message="You have been successfully logged out" onRetryClick={loginBack} retryLabel="Login" retryVariant="primary" />
+      <BgError message="You have been successfully logged out" onRetryClick={handleRetry} retryLabel="Login" retryVariant="primary" />
     );
   }
 
@@ -133,11 +124,8 @@ export default connect(
     isLogingOut: state.auth.isLogingOut
   }),
   dispatch => ({
-    setLoginRequired: required => {
-      if (!required) {
-        dispatch(resetGroups());
-      }
-      dispatch(actionSetLoginRequired(required));
+    clearError: () => {
+      dispatch(clearAuthSettingsError());
     },
     login: () => {
       dispatch(actionLogin());
