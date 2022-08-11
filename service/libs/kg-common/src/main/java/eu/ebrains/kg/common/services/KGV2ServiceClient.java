@@ -25,8 +25,6 @@ package eu.ebrains.kg.common.services;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.DatabaseScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,11 +36,9 @@ import java.util.Map;
 
 @Component
 public class KGV2ServiceClient extends KGServiceClient {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String kgQueryEndpoint;
     private final String kgCoreEndpoint;
-
-
+    
     public KGV2ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
         super(serviceAccountWebClient, userWebClient);
         this.kgQueryEndpoint = kgQueryEndpoint;
@@ -64,7 +60,6 @@ public class KGV2ServiceClient extends KGServiceClient {
             Map data = (Map) result.get("data");
             return data.get("endpoint").toString();
         } catch (Exception e) {
-            logger.info(e.getMessage());
             return null;
         }
     }
