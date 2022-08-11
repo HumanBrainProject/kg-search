@@ -74,6 +74,10 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
     clearError();
   };
 
+  const loginBack = () => {
+    setLoginRequired(true);
+  };
+
   if (error) {
 
     if (loginRequired) {
@@ -89,7 +93,7 @@ const Authentication = ({ settings, error, loginRequired, isLoading, authenticat
 
   if (isLogout) {
     return (
-      <BgError message="You have been successfully logged out" onRetryClick={handleRetry} retryLabel="Login" retryVariant="primary" />
+      <BgError message="You have been successfully logged out" onRetryClick={loginBack} retryLabel="Login" retryVariant="primary" />
     );
   }
 
