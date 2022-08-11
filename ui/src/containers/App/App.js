@@ -51,7 +51,7 @@ const App = ({ isApplicationReady, setInitialGroup, setLoginRequired, setUseGrou
     const hasAuthSession = !!getHashKey("session_state");
 
     // search with instance + refresh
-    const instance = !hasAuthSession && location.pathname === "/" && location.hash.substr(1);
+    const instance = !hasAuthSession && location.pathname === "/" && !location.hash.startsWith("#error") && location.hash.substr(1);
     if (instance) {
       const url = `/instances/${instance}${hasGroup?("?group=" + group):""}`;
       navigate(url, {replace: true});
