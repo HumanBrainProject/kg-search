@@ -118,26 +118,42 @@ export const logout = () => {
 };
 
 const initializeKeycloak = (settings, loginRequired, dispatch) => {
-  const keycloak = window.Keycloak(settings);
-  API.setKeycloak(keycloak);
-  keycloak.onReady = () => { // authenticated => {
-    dispatch(setAuthReady());
-  };
-  keycloak.onAuthSuccess = () => {
-    dispatch(loginSuccess());
-  };
-  keycloak.onAuthError = error => {
-    const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
-    dispatch(authFailure(message));
-  };
-  keycloak.onTokenExpired = () => {
-    keycloak
-      .updateToken(30)
-      .catch(() => {
-        dispatch(sessionExpired());
-      });
-  };
-  keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" });
+  try {
+    const keycloak = window.Keycloak(settings);
+    API.setKeycloak(keycloak);
+    keycloak.onReady = () => { // authenticated => {
+      dispatch(setAuthReady());
+    };
+    keycloak.onAuthSuccess = () => {
+      dispatch(loginSuccess());
+    };
+    keycloak.onAuthError = error => {
+      const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
+      dispatch(authFailure(message));
+    };
+    keycloak.onTokenExpired = () => {
+      keycloak
+        .updateToken(30)
+        .catch(() => {
+          dispatch(sessionExpired());
+        });
+    };
+    keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" }).catch(() => {
+      if (loginRequired) {
+        const message = "Failed to initialize authentication";
+        dispatch(authInializationFailure(message));
+      } else {
+        dispatch(setAuthReady());
+      }
+    });
+  } catch (e) {
+    if (loginRequired) {
+      const message = `Failed to load service endpoints configuration (${e && e.message?e.message:e})`;
+      dispatch(authInializationFailure(message));
+    } else {
+      dispatch(setAuthReady());
+    }
+  }
 };
 
 //authenticate = (group=null)
@@ -145,27 +161,30 @@ export const setUpAuthentication = (settings, loginRequired) => {
   return async dispatch => {
     if(settings && settings.url) {
       dispatch(authInialize());
-      try {
-        const keycloakScript = document.createElement("script");
-        keycloakScript.src = settings.url + "/js/keycloak.js";
-        keycloakScript.async = true;
+      const keycloakScript = document.createElement("script");
+      keycloakScript.src = settings.url + "/js/keycloak.js";
+      keycloakScript.async = true;
 
-        document.head.appendChild(keycloakScript);
-        keycloakScript.onload = () => {
-          initializeKeycloak(settings, loginRequired, dispatch);
-        };
-        keycloakScript.onerror = () => {
-          document.head.removeChild(keycloakScript);
+      document.head.appendChild(keycloakScript);
+      keycloakScript.onload = () => {
+        initializeKeycloak(settings, loginRequired, dispatch);
+      };
+      keycloakScript.onerror = () => {
+        document.head.removeChild(keycloakScript);
+        if (loginRequired) {
           const message = `Failed to load resource! (${keycloakScript.src})`;
           dispatch(authInializationFailure(message));
-        };
-      } catch (e) {
-        const message = `Failed to load service endpoints configuration (${e && e.message?e.message:e})`;
-        dispatch(authInializationFailure(message));
-      }
+        } else {
+          dispatch(setAuthReady());
+        }
+      };
     } else {
-      const message = "service endpoints configuration is not correctly set";
-      dispatch(authInializationFailure(message));
+      if (loginRequired) {
+        const message = "service endpoints configuration is not correctly set";
+        dispatch(authInializationFailure(message));
+      } else {
+        dispatch(setAuthReady());
+      }
     }
   };
 };
