@@ -75,7 +75,10 @@ public class Search {
     }
 
     @GetMapping("/auth/settings")
-    public ResponseEntity getAuthSettings(@Value("${keycloak.realm}") String keycloakRealm , @Value("${keycloak.resource}") String keycloakClientId) {
+    public ResponseEntity getAuthSettings(
+            @Value("${keycloak.realm}") String keycloakRealm,
+            @Value("${keycloak.resource}") String keycloakClientId
+    ) {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         if (StringUtils.isNotBlank(authEndpoint)) {
             return ResponseEntity.ok(Map.of(
@@ -110,18 +113,29 @@ public class Search {
 //    }
 
     @GetMapping("/settings")
-    public Map<String, Object> getSettings(@Value("${eu.ebrains.kg.commit}") String commit, @Value("${sentry.dsn.ui}") String sentryDsnUi, @Value("${matomo.url}") String matomoUrl, @Value("${matomo.siteId}") String matomoSiteId) {
+    public Map<String, Object> getSettings(
+            @Value("${eu.ebrains.kg.commit}") String commit,
+            @Value("${sentry.dsn.ui}") String sentryDsnUi,
+            @Value("${sentry.environment}") String sentryEnvironment,
+            @Value("${matomo.url}") String matomoUrl,
+            @Value("${matomo.siteId}") String matomoSiteId
+    ) {
         Map<String, Object> result = new HashMap<>();
         result.put("types", definitionController.generateTypes());
         result.put("typeMappings", definitionController.generateTypeMappings());
         if(StringUtils.isNotBlank(commit) && !commit.equals("\"\"")){
             result.put("commit", commit);
+
+            // Only provide sentry when commit is available, ie on deployed env
+            if (StringUtils.isNotBlank(sentryDsnUi)) {
+                result.put("sentry", Map.of(
+                        "dsn", sentryDsnUi,
+                        "release", commit,
+                        "environment", sentryEnvironment
+                ));
+            }
         }
-        if (StringUtils.isNotBlank(sentryDsnUi)) {
-            result.put("sentry", Map.of(
-                    "dsn", sentryDsnUi
-            ));
-        }
+
         if (StringUtils.isNotBlank(matomoUrl) && StringUtils.isNotBlank(matomoSiteId)) {
             result.put("matomo", Map.of(
                     "url", matomoUrl,

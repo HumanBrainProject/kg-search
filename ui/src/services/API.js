@@ -63,13 +63,9 @@ class API {
     this._keycloak = keycloak;
   }
 
-  setSentry(commit, sentry) {
-    if (commit && sentry) {
-      Sentry.init({
-        ...sentry,
-        release: commit,
-        environment: window.location.host
-      });
+  setSentry(sentry) {
+    if (sentry) {
+      Sentry.init(sentry);
     }
   }
 

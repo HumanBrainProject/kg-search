@@ -65,7 +65,7 @@ export const loadSettings = () => {
       .get(API.endpoints.settings())
       .then(({ data }) => {
         API.setMatomo(data.matomo);
-        API.setSentry(data.commit, data.sentry);
+        API.setSentry(data.sentry);
         data.commit && dispatch(setCommit(data.commit));
         dispatch(loadSettingsSuccess(data?.types, data?.typeMappings));
       })
