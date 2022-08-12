@@ -124,42 +124,33 @@ export const logout = () => {
 };
 
 const initializeKeycloak = (settings, loginRequired, dispatch) => {
-  try {
-    const keycloak = window.Keycloak(settings);
-    API.setKeycloak(keycloak);
-    keycloak.onReady = () => { // authenticated => {
-      dispatch(setAuthReady());
-    };
-    keycloak.onAuthSuccess = () => {
-      dispatch(loginSuccess());
-    };
-    keycloak.onAuthError = error => {
-      const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
-      dispatch(authFailure(message));
-    };
-    keycloak.onTokenExpired = () => {
-      keycloak
-        .updateToken(30)
-        .catch(() => {
-          dispatch(sessionExpired());
-        });
-    };
-    keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" }).catch(() => {
-      if (loginRequired) {
-        const message = "Failed to initialize authentication";
-        dispatch(authInializationFailure(message));
-      } else {
-        dispatch(setAuthReady());
-      }
-    });
-  } catch (e) {
+  const keycloak = window.Keycloak(settings);
+  API.setKeycloak(keycloak);
+  keycloak.onReady = () => { // authenticated => {
+    dispatch(setAuthReady());
+  };
+  keycloak.onAuthSuccess = () => {
+    dispatch(loginSuccess());
+  };
+  keycloak.onAuthError = error => {
+    const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
+    dispatch(authFailure(message));
+  };
+  keycloak.onTokenExpired = () => {
+    keycloak
+      .updateToken(30)
+      .catch(() => {
+        dispatch(sessionExpired());
+      });
+  };
+  keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" }).catch(() => {
     if (loginRequired) {
-      const message = `Failed to load service endpoints configuration (${e && e.message?e.message:e})`;
+      const message = "Failed to initialize authentication";
       dispatch(authInializationFailure(message));
     } else {
       dispatch(setAuthReady());
     }
-  }
+  });
 };
 
 //authenticate = (group=null)
