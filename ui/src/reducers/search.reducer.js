@@ -436,7 +436,7 @@ export function reducer(state = initialState, action = {}) {
     return logout(state);
   case types.SESSION_EXPIRED:
   case types.SESSION_FAILURE:
-    return abortLoadSearch(state, action);
+    return abortLoadSearch(state);
   default:
     return state;
   }

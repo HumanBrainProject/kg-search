@@ -215,7 +215,7 @@ export function reducer(state = initialState, action = {}) {
     return setInstanceCurrentTab(state, action);
   case types.SESSION_EXPIRED:
   case types.SESSION_FAILURE:
-    return abortLoadInstance(state, action);
+    return abortLoadInstance(state);
   default:
     return state;
   }
