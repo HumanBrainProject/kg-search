@@ -331,10 +331,15 @@ public class ESServiceClient {
         boolean continueSearch = true;
         while (continueSearch) {
             Result documents = getPaginatedDocuments(index, searchAfter);
-            List<Document> hits = documents.getHits().getHits();
-            result.addAll(hits);
-            searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
-            continueSearch = searchAfter != null;
+            if (documents.getHits() != null) {
+                List<Document> hits = documents.getHits().getHits();
+                result.addAll(hits);
+                searchAfter = hits.size() < ES_QUERY_SIZE ? null : hits.get(hits.size() - 1).getId();
+                continueSearch = searchAfter != null;
+            } else {
+                searchAfter = null;
+                continueSearch = false;
+            }
         }
         return result;
     }
@@ -345,10 +350,15 @@ public class ESServiceClient {
         boolean continueSearch = true;
         while (continueSearch) {
             Result documents = getPaginatedDocumentIds(index, searchAfter, type);
-            List<Document> hits = documents.getHits().getHits();
-            hits.forEach(hit -> result.add(hit.getId()));
-            searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
-            continueSearch = searchAfter != null;
+            if (documents.getHits() != null) {
+                List<Document> hits = documents.getHits().getHits();
+                hits.forEach(hit -> result.add(hit.getId()));
+                searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
+                continueSearch = searchAfter != null;
+            } else {
+                searchAfter = null;
+                continueSearch = false;
+            }
         }
         return result;
     }
