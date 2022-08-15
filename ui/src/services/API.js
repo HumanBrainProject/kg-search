@@ -81,9 +81,21 @@ class API {
     }
   }
 
-  showReportDialog(report) {
+  showReportDialog(customSettings) {
     if (this._is_sentry_initilized) {
-      SentryShowReportDialog(report);
+      const defaultSettings = {
+        title: "An unexpected error has occured.",
+        subtitle2: "We recommend you to save all your changes and reload the application in your browser. The KG team has been notified. If you'd like to help, tell us what happened below.",
+        labelEmail: "Email",
+        labelName: "Name",
+        labelComments: "Please fill in a description of your error use case"
+      };
+      const settings = {
+        ...defaultSettings,
+        ...customSettings
+      };
+      SentryCaptureException(new Error(settings.title)); //We generate a custom error as report dialog is only linked to an error.
+      SentryShowReportDialog(settings);
     }
   }
 
