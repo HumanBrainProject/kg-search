@@ -22,6 +22,7 @@
  */
 
 import { reducer as applicationReducer} from "./application.reducer";
+import { loadSettingsFailure } from "../actions/actions.application";
 describe("application reducer", () => {
   describe("unknown action", () => {
     it("should return same state", () => {
@@ -29,6 +30,14 @@ describe("application reducer", () => {
       const action = {type: "ABCDEFGH"};
       const newState = applicationReducer(state, action);
       expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
+    });
+  });
+  describe("load settings failure", () => {
+    it("should set ready to false", () => {
+      const state = {error: null};
+      const action = loadSettingsFailure("error");
+      const newState = applicationReducer(state, action);
+      expect(newState.error).toBe("error");
     });
   });
 });

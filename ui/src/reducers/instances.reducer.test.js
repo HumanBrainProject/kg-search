@@ -21,9 +21,18 @@
  *
  */
 
-import { loadInstanceRequest, loadInstanceSuccess, setPreviousInstance, clearAllInstances} from "../actions/actions.instances";
+import { setTypeMappings, loadInstanceRequest, loadInstanceSuccess, setPreviousInstance, clearAllInstances} from "../actions/actions.instances";
 import { reducer as instancesReducer} from "./instances.reducer";
 describe("instances reducer", () => {
+  describe("load settings success", () => {
+    it("should set type mappings", () => {
+      const state = undefined;
+      const typeMappings = {a: 1, b: 2, c: 4};
+      const action = setTypeMappings(typeMappings);
+      const newState = instancesReducer(state, action);
+      expect(newState.typeMappings).toBe(typeMappings);
+    });
+  });
   describe("unknown action", () => {
     it("should return same state", () => {
       const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
