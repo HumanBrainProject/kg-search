@@ -31,14 +31,14 @@ import { BgError } from "../components/BgError/BgError";
 
 const Authentication = React.lazy(() => import("./Authentication"));
 
-const Settings = ({ error, isLoading, hasSettings, sentrySettings, matomoSettings, loadSettings, clearError }) => {
+const Settings = ({ error, isLoading, hasSettings, loadSettings, clearError }) => {
 
   useEffect(() => {
     if (!error && !isLoading && !hasSettings) {
       loadSettings();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, isLoading, hasSettings, sentrySettings, matomoSettings]);
+  }, [error, isLoading, hasSettings]);
 
   const handleRetry = () => {
     clearError();

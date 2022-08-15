@@ -23,7 +23,7 @@
 
 import axios from "axios";
 import ReactPiwik from "react-piwik";
-import * as Sentry from "@sentry/browser";
+import { init as SentryInit, captureException as SentryCaptureException, showReportDialog as SentryShowReportDialog } from "@sentry/browser";
 
 const endpoints = {
   //"settings": () => "/static/data/settings.json",
@@ -38,7 +38,10 @@ const endpoints = {
 };
 
 class API {
+
   constructor() {
+    this._is_sentry_initilized = false;
+    this._matomo = null;
     this._axios = axios.create({});
     this._keycloak = null;
     this._axios.interceptors.request.use(config => {
@@ -65,7 +68,22 @@ class API {
   setSentry(settings) {
     if (settings && !this._is_sentry_initilized) {
       this._is_sentry_initilized = true;
-      Sentry.init(settings);
+      SentryInit({
+        ...settings,
+        autoSessionTracking: false
+      });
+    }
+  }
+
+  captureException(e) {
+    if (this._is_sentry_initilized) {
+      SentryCaptureException(e);
+    }
+  }
+
+  showReportDialog(report) {
+    if (this._is_sentry_initilized) {
+      SentryShowReportDialog(report);
     }
   }
 
