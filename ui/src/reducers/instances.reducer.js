@@ -24,12 +24,20 @@
 import * as types from "../actions/actions.types";
 
 const initialState = {
+  typeMappings: {},
   error: null,
   isLoading: false,
   currentInstance: null,
   previousInstances: [],
   image: null,
   currentTabByInstance: {}
+};
+
+const setTypeMappings = (state, action) => {
+  return {
+    ...state,
+    typeMappings: action.typeMappings
+  };
 };
 
 const loadInstanceRequest = state => {
@@ -193,6 +201,8 @@ const abortLoadInstance = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.SET_TYPE_MAPPINGS:
+    return setTypeMappings(state, action);
   case types.LOAD_INSTANCE_REQUEST:
     return loadInstanceRequest(state);
   case types.LOAD_INSTANCE_SUCCESS:

@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import { agreeTermsShortNotice } from "../../actions/actions";
+import { agreeTermsShortNotice } from "../../actions/actions.application";
 import { Notice } from "../../components/Notice/Notice";
 import { termsShortNotice, termsShortNoticeUpdate } from "../../data/termsShortNotice";
 

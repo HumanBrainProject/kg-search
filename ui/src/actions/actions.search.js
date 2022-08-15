@@ -27,6 +27,13 @@ import { sessionFailure } from "./actions.auth";
 
 import { getAggregation } from "../helpers/Facets";
 
+export const setSearchSettings = categories => {
+  return {
+    type: types.SET_SEARCH_SETTINGS,
+    types: categories
+  };
+};
+
 export const loadSearchBadRequest = error => {
   return {
     type: types.LOAD_SEARCH_BAD_REQUEST,

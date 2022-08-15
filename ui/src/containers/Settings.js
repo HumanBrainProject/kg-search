@@ -21,39 +21,46 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 
-import { loadSettings as actionLoadSettings, clearSettingsError } from "../actions/actions.settings";
+import { loadSettings as actionLoadSettings, clearSettingsError } from "../actions/actions.application";
 
-import { BgError } from "../components/BgError/BgError";
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
-import View from "./View";
+import { BgError } from "../components/BgError/BgError";
 
-const Settings = ({ error, isLoading, isReady, loadSettings, onRetry}) => {
+const Authentication = React.lazy(() => import("./Authentication"));
+
+const Settings = ({ error, isLoading, hasSettings, sentrySettings, matomoSettings, loadSettings, clearError }) => {
 
   useEffect(() => {
-    if (!isReady && !error && !isLoading) {
+    if (!error && !isLoading && !hasSettings) {
       loadSettings();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady, error, isLoading]);
+  }, [error, isLoading, hasSettings, sentrySettings, matomoSettings]);
+
+  const handleRetry = () => {
+    clearError();
+  };
 
   if (error) {
     return (
-      <BgError message={error} onRetryClick={onRetry} retryVariant="primary" />
+      <BgError message={error} onRetryClick={handleRetry} retryLabel="Retry" retryVariant="primary" />
     );
   }
 
-  if (isLoading) {
+  if(isLoading) {
     return (
-      <FetchingPanel message="Retrieving application settings..." />
+      <FetchingPanel message="Retrieving application configuration..." />
     );
   }
 
-  if (isReady) {
+  if (hasSettings) {
     return (
-      <View />
+      <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
+        <Authentication />
+      </Suspense>
     );
   }
 
@@ -62,16 +69,16 @@ const Settings = ({ error, isLoading, isReady, loadSettings, onRetry}) => {
 
 export default connect(
   state => ({
-    error: state.settings.error,
-    isLoading: state.settings.isLoading,
-    isReady: state.settings.isReady
+    hasSettings: state.application.hasSettings,
+    error: state.application.error,
+    isLoading: state.application.isLoading
   }),
   dispatch => ({
+    clearError: () => {
+      dispatch(clearSettingsError());
+    },
     loadSettings: () => {
       dispatch(actionLoadSettings());
-    },
-    onRetry: () => {
-      dispatch(clearSettingsError());
     }
   })
 )(Settings);

@@ -25,7 +25,6 @@ import * as types from "../actions/actions.types";
 const initialState = {
   isUnavailble: false,
   settings: null,
-  isLoading: false,
   error: null,
   loginRequired: false,
   authenticationInitialized: false,
@@ -35,17 +34,6 @@ const initialState = {
   isLogingOut: false
 };
 
-const loadAuthSettingsRequest = state => ({
-  ...state,
-  isLoading: true
-});
-
-const loadAuthSettingsFailure = (state, action) => ({
-  ...state,
-  isLoading: false,
-  error: action.error
-});
-
 const clearAuthError = state => ({
   ...state,
   error: null
@@ -53,14 +41,8 @@ const clearAuthError = state => ({
 
 const setAuthSettings = (state, action) => ({
   ...state,
-  isLoading: false,
-  settings: action.settings
-});
-
-const setAuthUnavailable = state => ({
-  ...state,
-  isUnavailble: true,
-  isLoading: false
+  settings: action.settings,
+  isUnavailble: !(action.settings instanceof Object)
 });
 
 const setLoginRequired = (state, action) => ({
@@ -157,16 +139,8 @@ const sessionFailure = (state, action) => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_AUTH_SETTINGS_REQUEST:
-    return loadAuthSettingsRequest(state);
-  case types.LOAD_AUTH_SETTINGS_FAILURE:
-    return loadAuthSettingsFailure(state, action);
-  case types.CLEAR_AUTH_SETTINGS_ERROR:
-    return clearAuthError(state);
   case types.SET_AUTH_SETTINGS:
     return setAuthSettings(state, action);
-  case types.SET_AUTH_UNAVAILABLE:
-    return setAuthUnavailable(state);
   case types.AUTH_MODE:
     return setLoginRequired(state, action);
   case types.AUTH_INITIALIZE:
@@ -175,6 +149,8 @@ export function reducer(state = initialState, action = {}) {
     return setAuthReady(state);
   case types.AUTH_INIALIZATION_FAILURE:
     return authInializationFailure(state, action);
+  case types.CLEAR_AUTH_ERROR:
+    return clearAuthError(state);
   case types.LOGIN:
     return login(state);
   case types.AUTH_FAILURE:

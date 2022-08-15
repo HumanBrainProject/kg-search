@@ -30,12 +30,6 @@ export const setAuthSettings = settings => {
   };
 };
 
-export const setAuthUnavailable = () => {
-  return {
-    type: types.SET_AUTH_UNAVAILABLE
-  };
-};
-
 export const setLoginRequired = (required=true) => {
   return {
     type: types.AUTH_MODE,
@@ -53,6 +47,12 @@ export const authInializationFailure = error => {
   return {
     type: types.AUTH_INIALIZATION_FAILURE,
     error: error
+  };
+};
+
+export const clearAuthError = () => {
+  return {
+    type: types.CLEAR_AUTH_ERROR
   };
 };
 
@@ -124,33 +124,42 @@ export const logout = () => {
 };
 
 const initializeKeycloak = (settings, loginRequired, dispatch) => {
-  const keycloak = window.Keycloak(settings);
-  API.setKeycloak(keycloak);
-  keycloak.onReady = () => { // authenticated => {
-    dispatch(setAuthReady());
-  };
-  keycloak.onAuthSuccess = () => {
-    dispatch(loginSuccess());
-  };
-  keycloak.onAuthError = error => {
-    const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
-    dispatch(authFailure(message));
-  };
-  keycloak.onTokenExpired = () => {
-    keycloak
-      .updateToken(30)
-      .catch(() => {
-        dispatch(sessionExpired());
-      });
-  };
-  keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" }).catch(() => {
+  try {
+    const keycloak = window.Keycloak(settings);
+    API.setKeycloak(keycloak);
+    keycloak.onReady = () => { // authenticated => {
+      dispatch(setAuthReady());
+    };
+    keycloak.onAuthSuccess = () => {
+      dispatch(loginSuccess());
+    };
+    keycloak.onAuthError = error => {
+      const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
+      dispatch(authFailure(message));
+    };
+    keycloak.onTokenExpired = () => {
+      keycloak
+        .updateToken(30)
+        .catch(() => {
+          dispatch(sessionExpired());
+        });
+    };
+    keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" }).catch(() => {
+      if (loginRequired) {
+        const message = "Failed to initialize authentication";
+        dispatch(authInializationFailure(message));
+      } else {
+        dispatch(setAuthReady());
+      }
+    });
+  } catch (e) { // if keycloak script url return unexpected content
     if (loginRequired) {
       const message = "Failed to initialize authentication";
       dispatch(authInializationFailure(message));
     } else {
       dispatch(setAuthReady());
     }
-  });
+  }
 };
 
 //authenticate = (group=null)
@@ -183,42 +192,5 @@ export const setUpAuthentication = (settings, loginRequired) => {
         dispatch(setAuthReady());
       }
     }
-  };
-};
-export const loadAuthSettingsRequest = () => {
-  return {
-    type: types.LOAD_AUTH_SETTINGS_REQUEST
-  };
-};
-
-export const loadAuthSettingsFailure = error => {
-  return {
-    type: types.LOAD_AUTH_SETTINGS_FAILURE,
-    error: error
-  };
-};
-
-export const clearAuthSettingsError = () => {
-  return {
-    type: types.CLEAR_AUTH_SETTINGS_ERROR
-  };
-};
-
-export const loadAuthSettings = loginRequired => {
-  return dispatch => {
-    dispatch(loadAuthSettingsRequest());
-    API.axios
-      .get(API.endpoints.authSettings())
-      .then(({ data }) => {
-        dispatch(setAuthSettings(data));
-      })
-      .catch(e => {
-        if (e.response && e.response.status === 503 && !loginRequired) {
-          dispatch(setAuthUnavailable());
-        } else {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
-          dispatch(loadAuthSettingsFailure(error));
-        }
-      });
   };
 };

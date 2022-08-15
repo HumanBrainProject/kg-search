@@ -21,26 +21,42 @@
  *
  */
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
 
+import API from "../services/API";
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
 
 const Search = React.lazy(() => import("./Search/Search"));
 const Instance = React.lazy(() => import("./Instance/Instance"));
 const Preview = React.lazy(() => import("./Instance/Preview"));
 
-const View = () => (
-  <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-    <Routes>
-      <Route path="/" element={<Search />} />
-      <Route path="/instances/:id" element={<Instance />} />
-      <Route path="/instances/:type/:id" element={<Instance />} />
-      <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-      <Route path="/live/:id" element={<Preview />} />
-      <Route path="*" element={<Navigate to="/" replace={true} />} />
-    </Routes>
-  </Suspense>
-);
+const View = ({sentrySettings, matomoSettings}) => {
 
-export default View;
+  useEffect(() => {
+    API.setSentry(sentrySettings);
+    API.setMatomo(matomoSettings);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sentrySettings, matomoSettings]);
+
+  return (
+    <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
+      <Routes>
+        <Route path="/" element={<Search />} />
+        <Route path="/instances/:id" element={<Instance />} />
+        <Route path="/instances/:type/:id" element={<Instance />} />
+        <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
+        <Route path="/live/:id" element={<Preview />} />
+        <Route path="*" element={<Navigate to="/" replace={true} />} />
+      </Routes>
+    </Suspense>
+  );
+};
+
+export default connect(
+  state => ({
+    sentrySettings: state.application.sentrySettings,
+    matomoSettings: state.application.matomoSettings,
+  })
+)(View);

@@ -25,7 +25,7 @@ import React, { useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
 
-import { setLoginRequired as actionSetLoginRequired, login as actionLogin, setUpAuthentication as actionSetUpAuthentication, loadAuthSettings as actionLoadAuthSettings, clearAuthSettingsError } from "../actions/actions.auth";
+import { setLoginRequired as actionSetLoginRequired, login as actionLogin, setUpAuthentication as actionSetUpAuthentication, clearAuthError } from "../actions/actions.auth";
 import { resetGroups } from "../actions/actions.groups";
 
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
@@ -33,26 +33,22 @@ import { BgError } from "../components/BgError/BgError";
 
 const Groups = React.lazy(() => import("./Groups"));
 
-const Authentication = ({ isUnavailble, settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, loadAuthSettings, setLoginRequired, clearError }) => {
+const Authentication = ({ isUnavailble, settings, error, loginRequired, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, login, setUpAuthentication, setLoginRequired, clearError }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogout = !!matchPath({path:"/logout"}, location.pathname);
   const isLive = !!matchPath({path:"/live/*"}, location.pathname);
 
   const authenticate = () => {
-    if (settings) {
-      if (authenticationInitialized) {
-        login();
-      } else {
-        setUpAuthentication(settings, loginRequired);
-      }
+    if (authenticationInitialized) {
+      login();
     } else {
-      loadAuthSettings(loginRequired);
+      setUpAuthentication(settings, loginRequired);
     }
   };
 
   useEffect(() => {
-    if (!error && !isLoading && !authenticationInitializing && !isAuthenticating && !isAuthenticated && !isLogingOut) {
+    if (!error && !authenticationInitializing && !isAuthenticating && !isAuthenticated && !isLogingOut) {
       if (isLogout && loginRequired) {
         navigate("/");
       }
@@ -61,7 +57,7 @@ const Authentication = ({ isUnavailble, settings, error, loginRequired, isLoadin
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings, error, loginRequired, isLoading, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
+  }, [settings, error, loginRequired, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
 
   const cancelLogin = () => {
     if (isLive) {
@@ -94,12 +90,6 @@ const Authentication = ({ isUnavailble, settings, error, loginRequired, isLoadin
   if (isLogout) {
     return (
       <BgError message="You have been successfully logged out" onRetryClick={loginBack} retryLabel="Login" retryVariant="primary" />
-    );
-  }
-
-  if(isLoading) {
-    return (
-      <FetchingPanel message={loginRequired?"Retrieving authentication settings...":"Retrieving application configuration..."} />
     );
   }
 
@@ -138,7 +128,6 @@ export default connect(
     settings: state.auth.settings,
     error: state.auth.error,
     loginRequired: state.auth.loginRequired,
-    isLoading: state.auth.isLoading,
     authenticationInitialized: state.auth.authenticationInitialized,
     authenticationInitializing: state.auth.authenticationInitializing,
     isAuthenticated: state.auth.isAuthenticated,
@@ -153,16 +142,13 @@ export default connect(
       dispatch(actionSetLoginRequired(required));
     },
     clearError: () => {
-      dispatch(clearAuthSettingsError());
+      dispatch(clearAuthError());
     },
     login: () => {
       dispatch(actionLogin());
     },
     setUpAuthentication: (settings, loginRequired) => {
       dispatch(actionSetUpAuthentication(settings, loginRequired));
-    },
-    loadAuthSettings: loginRequired => {
-      dispatch(actionLoadAuthSettings(loginRequired));
     }
   })
 )(Authentication);

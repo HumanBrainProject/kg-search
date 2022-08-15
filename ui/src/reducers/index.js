@@ -24,7 +24,6 @@
 import { combineReducers } from "redux";
 
 import { reducer as application } from "./application.reducer";
-import { reducer as settings } from "./settings.reducer";
 import { reducer as groups } from "./groups.reducer";
 import { reducer as search } from "./search.reducer";
 import { reducer as instances } from "./instances.reducer";
@@ -32,7 +31,6 @@ import { reducer as auth } from "./auth.reducer";
 
 const createRootReducer = () => combineReducers({
   application,
-  settings,
   groups,
   search,
   instances,

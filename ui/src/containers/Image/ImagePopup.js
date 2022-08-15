@@ -23,7 +23,7 @@
 
 import { connect } from "react-redux";
 
-import { showImage } from "../../actions/actions";
+import { showImage } from "../../actions/actions.application";
 import { ImagePopup as Component } from "../../components/ImagePopup/ImagePopup";
 
 export const ImagePopup = connect(

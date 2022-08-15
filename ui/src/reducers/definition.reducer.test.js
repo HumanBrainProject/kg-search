@@ -21,7 +21,7 @@
  *
  */
 
-import { loadSettingsSuccess, loadSettingsFailure } from "../actions/actions.settings";
+import { loadSearchSettingsSuccess, loadSearchSettingsFailure } from "../actions/actions.settings";
 import { reducer as settingsReducer} from "./settings.reducer";
 describe("settings reducer", () => {
   describe("unknown action", () => {
@@ -36,13 +36,13 @@ describe("settings reducer", () => {
     it("should set current settings", () => {
       const state = undefined;
       const typeMappings = {a: 1, b: 2, c: 4};
-      const action = loadSettingsSuccess([], typeMappings);
+      const action = loadSearchSettingsSuccess([], typeMappings);
       const newState = settingsReducer(state, action);
       expect(newState.typeMappings).toBe(typeMappings);
     });
     it("should set is ready to true", () => {
       const state = {isReady: false};
-      const action = loadSettingsSuccess([], null);
+      const action = loadSearchSettingsSuccess([], null);
       const newState = settingsReducer(state, action);
       expect(newState.isReady).toBe(true);
     });
@@ -50,7 +50,7 @@ describe("settings reducer", () => {
   describe("load settings failure", () => {
     it("should set ready to false", () => {
       const state = {error: null};
-      const action = loadSettingsFailure("error");
+      const action = loadSearchSettingsFailure("error");
       const newState = settingsReducer(state, action);
       expect(newState.error).toBe("error");
     });

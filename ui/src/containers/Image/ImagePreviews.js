@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import { showImage } from "../../actions/actions";
+import { showImage } from "../../actions/actions.application";
 import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
 
 export const ImagePreviews = connect(

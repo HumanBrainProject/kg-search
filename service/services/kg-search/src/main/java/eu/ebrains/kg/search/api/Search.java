@@ -74,20 +74,47 @@ public class Search {
         this.doiCitationFormatter = doiCitationFormatter;
     }
 
-    @GetMapping("/auth/settings")
-    public ResponseEntity getAuthSettings(
+    @GetMapping("/settings")
+    public Map<String, Object> getSettings(
+            @Value("${eu.ebrains.kg.commit}") String commit,
             @Value("${keycloak.realm}") String keycloakRealm,
-            @Value("${keycloak.resource}") String keycloakClientId
+            @Value("${keycloak.resource}") String keycloakClientId,
+            @Value("${sentry.dsn.ui}") String sentryDsnUi,
+            @Value("${sentry.environment}") String sentryEnvironment,
+            @Value("${matomo.url}") String matomoUrl,
+            @Value("${matomo.siteId}") String matomoSiteId
     ) {
+        Map<String, Object> result = new HashMap<>();
+        if(StringUtils.isNotBlank(commit) && !commit.equals("\"\"")){
+            result.put("commit", commit);
+
+            // Only provide sentry when commit is available, ie on deployed env
+            if (StringUtils.isNotBlank(sentryDsnUi)) {
+                result.put("sentry", Map.of(
+                        "dsn", sentryDsnUi,
+                        "release", commit,
+                        "environment", sentryEnvironment
+                ));
+            }
+        }
+
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         if (StringUtils.isNotBlank(authEndpoint)) {
-            return ResponseEntity.ok(Map.of(
+            result.put("keycloak", Map.of(
                     "realm", keycloakRealm,
                     "url", authEndpoint,
                     "clientId", keycloakClientId
             ));
         }
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        if (StringUtils.isNotBlank(matomoUrl) && StringUtils.isNotBlank(matomoSiteId)) {
+            result.put("matomo", Map.of(
+                    "url", matomoUrl,
+                    "siteId", matomoSiteId
+            ));
+        }
+        result.put("types", definitionController.generateTypes());
+        result.put("typeMappings", definitionController.generateTypeMappings());
+        return result;
     }
 
     @GetMapping("/citation")
@@ -111,39 +138,6 @@ public class Search {
 //        });
 //        return ResponseEntity.ok(citations);
 //    }
-
-    @GetMapping("/settings")
-    public Map<String, Object> getSettings(
-            @Value("${eu.ebrains.kg.commit}") String commit,
-            @Value("${sentry.dsn.ui}") String sentryDsnUi,
-            @Value("${sentry.environment}") String sentryEnvironment,
-            @Value("${matomo.url}") String matomoUrl,
-            @Value("${matomo.siteId}") String matomoSiteId
-    ) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("types", definitionController.generateTypes());
-        result.put("typeMappings", definitionController.generateTypeMappings());
-        if(StringUtils.isNotBlank(commit) && !commit.equals("\"\"")){
-            result.put("commit", commit);
-
-            // Only provide sentry when commit is available, ie on deployed env
-            if (StringUtils.isNotBlank(sentryDsnUi)) {
-                result.put("sentry", Map.of(
-                        "dsn", sentryDsnUi,
-                        "release", commit,
-                        "environment", sentryEnvironment
-                ));
-            }
-        }
-
-        if (StringUtils.isNotBlank(matomoUrl) && StringUtils.isNotBlank(matomoSiteId)) {
-            result.put("matomo", Map.of(
-                    "url", matomoUrl,
-                    "siteId", matomoSiteId
-            ));
-        }
-        return result;
-    }
 
     @GetMapping("/groups")
     public ResponseEntity<?> getGroups(Principal principal) { 

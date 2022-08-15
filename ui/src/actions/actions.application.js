@@ -21,6 +21,57 @@
  *
  */
 import * as types from "./actions.types";
+import { setAuthSettings } from "./actions.auth";
+import { setTypeMappings } from "./actions.instances";
+import { setSearchSettings } from "./actions.search";
+
+import API from "../services/API";
+
+export const setApplicationSettings = (commit, sentrySettings, matomoSettings) => {
+  return {
+    type: types.SET_APPLICATION_SETTINGS,
+    commit: commit,
+    sentrySettings: sentrySettings,
+    matomoSettings: matomoSettings
+  };
+};
+
+export const loadSettingsRequest = () => {
+  return {
+    type: types.LOAD_SETTINGS_REQUEST
+  };
+};
+
+export const loadSettingsFailure = error => {
+  return {
+    type: types.LOAD_SETTINGS_FAILURE,
+    error: error
+  };
+};
+
+export const clearSettingsError = () => {
+  return {
+    type: types.CLEAR_SETTINGS_ERROR
+  };
+};
+
+export const loadSettings = () => {
+  return dispatch => {
+    dispatch(loadSettingsRequest());
+    API.axios
+      .get(API.endpoints.settings())
+      .then(({ data }) => {
+        dispatch(setApplicationSettings(data?.commit, data?.sentry, data?.matomo));
+        dispatch(setAuthSettings(data?.keycloak));
+        dispatch(setTypeMappings(data?.typeMappings));
+        dispatch(setSearchSettings(data?.types));
+      })
+      .catch(e => {
+        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+        dispatch(loadSettingsFailure(error));
+      });
+  };
+};
 
 export const setApplicationReady = () => {
   return {

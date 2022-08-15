@@ -20,13 +20,15 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import * as types from "../actions/actions.types";
 import { termsCurrentVersion } from "../data/termsShortNotice";
 
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
+  error: false,
+  hasSettings: false,
+  isLoading: false,
   isReady: false,
   info: null,
   showTermsShortNotice:
@@ -39,6 +41,31 @@ const initialState = {
       termsCurrentVersion,
   theme: localStorage.getItem("currentTheme")
 };
+
+const setSettings = (state, action) => ({
+  ...state,
+  hasSettings: true,
+  commit: action.commit,
+  sentrySettings: action.sentrySettings,
+  matomoSettings: action.matomoSettings,
+  isLoading: false
+});
+
+const loadSettingsRequest = state => ({
+  ...state,
+  isLoading: true
+});
+
+const loadSettingsFailure = (state, action) => ({
+  ...state,
+  isLoading: false,
+  error: action.error
+});
+
+const clearSettingsError = state => ({
+  ...state,
+  error: null
+});
 
 const setApplicationReady = state => ({
   ...state,
@@ -71,6 +98,14 @@ const setInfo = (state, action) => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.LOAD_SETTINGS_REQUEST:
+    return loadSettingsRequest(state);
+  case types.LOAD_SETTINGS_FAILURE:
+    return loadSettingsFailure(state, action);
+  case types.SET_APPLICATION_SETTINGS:
+    return setSettings(state, action);
+  case types.CLEAR_SETTINGS_ERROR:
+    return clearSettingsError(state);
   case types.SET_APPLICATION_READY:
     return setApplicationReady(state);
   case types.SET_THEME:

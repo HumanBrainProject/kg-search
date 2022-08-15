@@ -1,4 +1,9 @@
 {
+  "keycloak": {
+    "clientId": "kg",
+    "realm": "hbp",
+    "url": "https://iam-dev.ebrains.eu/auth"
+  },
   "types": [
     { "type": "Project", "label": "Project", "facets": [], "sortFields": [] },
     {
@@ -273,7 +278,7 @@
         },
         "studyTargets": { "label": "Study targets", "layout": "summary" },
         "anatomicalLocationOfTissueSamples": {
-          "hint": "Please see the section \"Tissue samples\" for distribution of the anatomical locations",
+          "hint": "Please see the section \"Specimen\" for distribution of the anatomical locations",
           "label": "Anat. location of tissue samples",
           "layout": "summary"
         },
@@ -363,47 +368,6 @@
             "strain": { "label": "Strain" },
             "genotype": { "label": "Genotype" },
             "samples": { "label": "Samples" }
-          }
-        },
-        "subjectGroupOrSingleSubject": {
-          "isTable": true,
-          "hideLabel": true,
-          "layout": "Subjects",
-          "children": {
-            "label": {},
-            "numberOfSubjects": { "label": "# of subjects" },
-            "species": { "label": "Species", "separator": ", " },
-            "sex": { "label": "Sex", "separator": ", " },
-            "strain": { "label": "Strain" },
-            "geneticStrainType": { "label": "Genetic strain type" },
-            "age": { "label": "Age" },
-            "ageCategory": { "label": "Age category" },
-            "attributes": { "label": "Attributes", "separator": ", " },
-            "weight": { "label": "Weight" },
-            "additionalRemarks": {
-              "label": "Additional remarks",
-              "separator": ", "
-            }
-          }
-        },
-        "tissueSamples": {
-          "isTable": true,
-          "layout": "Tissue samples",
-          "children": {
-            "label": {},
-            "numberOfSamples": { "label": "# of samples" },
-            "tsType": { "label": "Type" },
-            "species": { "label": "Species", "separator": ", " },
-            "sex": { "label": "Sex", "separator": ", " },
-            "origin": { "label": "Origin" },
-            "laterality": { "label": "Laterality" },
-            "anatomicalLocation": { "label": "Anatomical location" },
-            "strain": { "label": "Strain" },
-            "geneticStrainType": { "label": "Genetic strain type" },
-            "age": { "label": "Age" },
-            "ageCategory": { "label": "Age category" },
-            "pathology": { "label": "Pathology" },
-            "weight": { "label": "Weight" }
           }
         }
       }
@@ -1181,6 +1145,26 @@
           "hideLabel": true,
           "layout": "(Meta)Data model contributions",
           "type": "text"
+        },
+        "datasetCitations": {
+          "isCitation": true,
+          "label": "Datasets citations",
+          "layout": "Citations"
+        },
+        "modelCitations": {
+          "isCitation": true,
+          "label": "Models citations",
+          "layout": "Citations"
+        },
+        "softwareCitations": {
+          "isCitation": true,
+          "label": "Software citations",
+          "layout": "Citations"
+        },
+        "metaDataModelCitations": {
+          "isCitation": true,
+          "label": "(Meta)Data models citations",
+          "layout": "Citations"
         }
       }
     },

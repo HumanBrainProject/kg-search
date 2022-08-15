@@ -85,9 +85,9 @@ class FiltersPanelBase extends React.Component {
 
 export const FiltersPanel = connect(
   state => {
-    const facets = (state.settings.isReady && Array.isArray(state.search.selectedType?.facets))?state.search.selectedType.facets:[];
+    const facets = Array.isArray(state.search.selectedType?.facets)?state.search.selectedType.facets:[];
     return {
-      show: state.settings.isReady && facets.length > 0,
+      show: facets.length > 0,
       facets: facets
     };
   },

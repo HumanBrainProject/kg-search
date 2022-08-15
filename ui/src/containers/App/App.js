@@ -25,13 +25,13 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { setApplicationReady as actionSetApplicationReady } from "../../actions/actions";
+import { setApplicationReady as actionSetApplicationReady } from "../../actions/actions.application";
 import { setLoginRequired as actionSetLoginRequired } from "../../actions/actions.auth";
 import { setUseGroups as actionSetUseGroups, setInitialGroup as actionSetInitialGroup } from "../../actions/actions.groups";
 
 import { searchToObj, getHashKey } from "../../helpers/BrowserHelpers";
 import { Notification } from "../Notification/Notification";
-import Authentication from "../Authentication";
+import Settings from "../Settings";
 import { InfoPanel } from "../Info/InfoPanel";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
@@ -84,7 +84,7 @@ const App = ({ isApplicationReady, setInitialGroup, setLoginRequired, setUseGrou
       <Header />
       <main>
         <Notification />
-        <Authentication />
+        <Settings />
         <InfoPanel />
       </main>
       <Footer />

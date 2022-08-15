@@ -27,7 +27,7 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
-import { setInfo } from "../../../actions/actions";
+import { setInfo } from "../../../actions/actions.application";
 import { setQueryString } from "../../../actions/actions.search";
 import { help } from "../../../data/help.js";
 import { withFloatingScrollEventsSubscription } from "../../../helpers/withFloatingScrollEventsSubscription";

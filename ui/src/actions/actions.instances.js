@@ -25,6 +25,13 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions.auth";
 
+export const setTypeMappings = (typeMappings) => {
+  return {
+    type: types.SET_TYPE_MAPPINGS,
+    typeMappings: typeMappings
+  };
+};
+
 export const setInstanceCurrentTab = (instanceId, tabName) => {
   return {
     type: types.SET_INSTANCE_CURRENT_TAB,

@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import { showImage } from "../../actions/actions";
+import { showImage } from "../../actions/actions.application";
 import { Thumbnail as Component} from "../../components/Thumbnail/Thumbnail";
 
 export const Thumbnail = connect(

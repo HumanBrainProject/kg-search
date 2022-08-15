@@ -28,7 +28,7 @@ import { loadGroups as actionLoadGroups, clearGroupError } from "../actions/acti
 
 import { BgError } from "../components/BgError/BgError";
 import { FetchingPanel } from "../components/Fetching/FetchingPanel";
-import Settings from "./Settings";
+import View from "./View";
 
 const Groups = ({ useGroups, error, isLoading, isReady, loadGroups, onCancel, onRetry}) => {
 
@@ -53,7 +53,7 @@ const Groups = ({ useGroups, error, isLoading, isReady, loadGroups, onCancel, on
 
   if (!useGroups || isReady) {
     return (
-      <Settings />
+      <View />
     );
   }
 

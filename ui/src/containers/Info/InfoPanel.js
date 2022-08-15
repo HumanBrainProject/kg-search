@@ -22,7 +22,7 @@
  */
 
 import { connect } from "react-redux";
-import { setInfo } from "../../actions/actions";
+import { setInfo } from "../../actions/actions.application";
 import { InfoPanel as  Component } from "../../components/InfoPanel/InfoPanel";
 
 export const InfoPanel = connect(

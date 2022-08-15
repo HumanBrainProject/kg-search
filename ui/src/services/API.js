@@ -26,7 +26,6 @@ import ReactPiwik from "react-piwik";
 import * as Sentry from "@sentry/browser";
 
 const endpoints = {
-  "authSettings": () => "/api/auth/settings",
   //"settings": () => "/static/data/settings.json",
   "settings": () => "/api/settings",
   "groups": () => "/api/groups",
@@ -63,14 +62,15 @@ class API {
     this._keycloak = keycloak;
   }
 
-  setSentry(sentry) {
-    if (sentry) {
-      Sentry.init(sentry);
+  setSentry(settings) {
+    if (settings && !this._is_sentry_initilized) {
+      this._is_sentry_initilized = true;
+      Sentry.init(settings);
     }
   }
 
   setMatomo(settings) {
-    if (settings?.url && settings?.siteId) {
+    if (settings?.url && settings?.siteId && !this._matomo) {
       this._matomo = new ReactPiwik({
         url: settings.url,
         siteId:settings.siteId,

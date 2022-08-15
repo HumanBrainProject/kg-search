@@ -156,7 +156,7 @@ const Footer = ({ commit, theme }) => (
 
 export default connect(
   state => ({
-    commit: state.settings.commit,
+    commit: state.application.commit,
     theme: state.application.theme
   })
 )(Footer);

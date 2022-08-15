@@ -24,11 +24,11 @@
 import * as types from "../actions/actions.types";
 import { getResetFacets, constructFacet } from "../helpers/Facets";
 
-const resolveType = (type, types) => {
+const resolveType = (type, list) => {
   const value = Array.isArray(type)?type[0]:type;
   let defaultType = null;
   let selectedType = null;
-  types.some(t => {
+  list.some(t => {
     if (!defaultType) {
       defaultType = t;
     }
@@ -94,7 +94,7 @@ const initialState = {
   isUpToDate: false
 };
 
-const setupSearch = (state, action) => {
+const setSearchSettings = (state, action) => {
   if (!action.types) {
     return state;
   }
@@ -406,10 +406,10 @@ const abortLoadSearch = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.SET_SEARCH_SETTINGS:
+    return setSearchSettings(state, action);
   case types.INITIALIZE_SEARCH:
     return initializeSearch(state, action);
-  case types.LOAD_SETTINGS_SUCCESS:
-    return setupSearch(state, action);
   case types.SET_QUERY_STRING:
     return setQueryString(state, action);
   case types.SET_TYPE:
