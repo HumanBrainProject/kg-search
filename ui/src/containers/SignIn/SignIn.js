@@ -35,8 +35,8 @@ import { clearAllInstances } from "../../actions/actions.instances";
 
 import "./SignIn.css";
 
-const SignInComponent = ({ className, Tag, isUnavailble, isAuthenticated, isAuthenticating, isLogingOut, group, groups, login, logout, onGroupChange }) => {
-  if (isUnavailble) {
+const SignInComponent = ({ className, Tag, authenticationInitialized, isUnavailble, isAuthenticated, isAuthenticating, isLogingOut, group, groups, login, logout, onGroupChange }) => {
+  if (!authenticationInitialized || isUnavailble) {
     return null;
   }
   if(isAuthenticated) {
@@ -86,6 +86,7 @@ const SignInComponent = ({ className, Tag, isUnavailble, isAuthenticated, isAuth
 
 export const SignIn = connect(
   (state, props) => ({
+    authenticationInitialized: state.auth.authenticationInitialized,
     isUnavailble: state.auth.isUnavailble,
     isAuthenticated: state.auth.isAuthenticated,
     isAuthenticating: state.auth.isLoading || state.auth.authenticationInitializing || state.auth.isAuthenticating,
