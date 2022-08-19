@@ -33,6 +33,7 @@ import { searchToObj, getHashKey } from "../../helpers/BrowserHelpers";
 import { Notification } from "../Notification/Notification";
 import Settings from "../Settings";
 import { InfoPanel } from "../Info/InfoPanel";
+import ErrorBoundary from "../ErrorBoundary";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import Theme from "../Theme/Theme";
@@ -84,7 +85,9 @@ const App = ({ isApplicationReady, setInitialGroup, setLoginRequired, setUseGrou
       <Header />
       <main>
         <Notification />
-        <Settings />
+        <ErrorBoundary>
+          <Settings/>
+        </ErrorBoundary>
         <InfoPanel />
       </main>
       <Footer />

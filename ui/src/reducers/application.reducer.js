@@ -26,7 +26,7 @@ import { termsCurrentVersion } from "../data/termsShortNotice";
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
-  error: false,
+  settingsError: null,
   hasSettings: false,
   isLoading: false,
   isReady: false,
@@ -59,12 +59,12 @@ const loadSettingsRequest = state => ({
 const loadSettingsFailure = (state, action) => ({
   ...state,
   isLoading: false,
-  error: action.error
+  settingsError: action.error
 });
 
 const clearSettingsError = state => ({
   ...state,
-  error: null
+  settingsError: null
 });
 
 const setApplicationReady = state => ({

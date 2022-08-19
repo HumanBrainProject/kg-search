@@ -21,23 +21,33 @@
  *
  */
 
-import { reducer as applicationReducer} from "./application.reducer";
-import { loadSettingsFailure } from "../actions/actions.application";
-describe("application reducer", () => {
-  describe("unknown action", () => {
-    it("should return same state", () => {
-      const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
-      const action = {type: "ABCDEFGH"};
-      const newState = applicationReducer(state, action);
-      expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-    });
-  });
-  describe("load settings failure", () => {
-    it("should set ready to false", () => {
-      const state = {error: null};
-      const action = loadSettingsFailure("error");
-      const newState = applicationReducer(state, action);
-      expect(newState.settingsError).toBe("error");
-    });
-  });
-});
+import React from "react";
+
+import { BgError } from "../components/BgError/BgError";
+
+class ErrorBoundary extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  retry = () => {
+    this.setState({ hasError: false });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <BgError message="An unexpected error has occured. We are sorry for the inconvenience." onRetryClick={this.retry} retryLabel="Retry" retryVariant="primary" />
+      );
+    }
+
+    return this.props.children;
+  }
+}
+export default ErrorBoundary;
