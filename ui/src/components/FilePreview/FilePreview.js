@@ -24,9 +24,34 @@ import React, { useState } from "react";
 
 const FilePreview = ({ url, title }) => {
 
+  const [tryLoading, setTryLoading] = useState(false);
+  const [tryLoadSuccess, setTryLoadSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
-  const handleOnLoad = () => setLoading(false);
+  const handleOnLoad = async () => setLoading(false);
+
+  const tryLoad = async () => {
+    setTryLoading(true);
+    try {
+      await fetch(url);
+      setTryLoadSuccess(true);
+    } catch (e) {
+      setHasError(true);
+    }
+  };
+
+  if (!tryLoading) {
+    tryLoad();
+  }
+
+  if (hasError) {
+    return (
+      <div className="field-value">
+        External resource at <a href={url} target="_blank" rel="noreferrer">{url}</a>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -36,7 +61,9 @@ const FilePreview = ({ url, title }) => {
           &nbsp;Retrieving {title?title:"file"}...
         </>
       )}
-      <iframe src={url} height="850" style={{width: "100%"}} onLoad={handleOnLoad} ></iframe>
+      {tryLoadSuccess && (
+        <iframe src={url} height="850" style={{width: "100%"}} onLoad={handleOnLoad} ></iframe>
+      )}
     </>
   );
 };
