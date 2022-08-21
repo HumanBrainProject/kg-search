@@ -98,7 +98,7 @@ export const goBackToInstance = id => {
   };
 };
 
-const regLegacyInstanceId = /^.+\/(.+)$/;
+const regLegacyInstanceId = /^.+\/(.+)$/; //NOSONAR
 const isMatchingLegacyInstanceId = (instanceId) => {
   return regLegacyInstanceId.test(instanceId);
 };
