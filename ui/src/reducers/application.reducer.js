@@ -28,7 +28,7 @@ const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent
 const initialState = {
   settingsError: null,
   hasSettings: false,
-  isLoading: false,
+  isLoadingSettings: false,
   isReady: false,
   info: null,
   showTermsShortNotice:
@@ -48,17 +48,17 @@ const setSettings = (state, action) => ({
   commit: action.commit,
   sentrySettings: action.sentrySettings,
   matomoSettings: action.matomoSettings,
-  isLoading: false
+  isLoadingSettings: false
 });
 
 const loadSettingsRequest = state => ({
   ...state,
-  isLoading: true
+  isLoadingSettings: true
 });
 
 const loadSettingsFailure = (state, action) => ({
   ...state,
-  isLoading: false,
+  isLoadingSettings: false,
   settingsError: action.error
 });
 

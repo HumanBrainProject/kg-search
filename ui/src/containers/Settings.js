@@ -70,8 +70,8 @@ const Settings = ({ error, isLoading, hasSettings, loadSettings, clearError }) =
 export default connect(
   state => ({
     hasSettings: state.application.hasSettings,
-    error: state.application.error,
-    isLoading: state.application.isLoading
+    error: state.application.settingsError,
+    isLoading: state.application.isLoadingSettings
   }),
   dispatch => ({
     clearError: () => {
