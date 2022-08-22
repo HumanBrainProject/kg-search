@@ -144,7 +144,11 @@ const initializeKeycloak = (settings, loginRequired, dispatch) => {
           dispatch(sessionExpired());
         });
     };
-    keycloak.init({ onLoad: loginRequired?"login-required":"check-sso", pkceMethod: "S256" }).catch(() => {
+    keycloak.init({
+      onLoad: loginRequired?"login-required":"check-sso",
+      pkceMethod: "S256",
+      checkLoginIframe: !window.location.host.startsWith("localhost") // avoid CORS error with UI running on localhost with Firefox
+    }).catch(() => {
       if (loginRequired) {
         const message = "Failed to initialize authentication";
         dispatch(authInializationFailure(message));
