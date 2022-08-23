@@ -225,6 +225,12 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
+    @FieldInfo(label = "Input data", layout = "Provenance")
+    private List<TargetInternalReference> inputData;
+
+    @FieldInfo(label = "External input data", layout = "Provenance")
+    private List<TargetExternalReference> externalInputData;
+
     @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
 

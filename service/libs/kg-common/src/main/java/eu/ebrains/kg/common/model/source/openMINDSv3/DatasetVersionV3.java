@@ -79,35 +79,35 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<ServiceLink> serviceLinksFromFiles;
     private List<StudiedSpecimen> studiedSpecimen;
     private Integer last30DaysViews;
+    private List<ExtendedFullNameRefForResearchProductVersion> doiInputData;
+    private List<ExtendedFullNameRefForResearchProductVersion> fileBundleInputData;
+    private List<ExtendedFullNameRefForResearchProductVersion> fileInputData;
+    private List<String> inputDataUrl;
 
     @Getter
     @Setter
     @EqualsAndHashCode
-    public static class SpecimenServiceLink{
+    public static class SpecimenServiceLink {
         private String openDataIn;
         private String service;
         private String name;
 
-        public String displayLabel(){
-            return this.getName()!=null && this.getService() != null ? String.format("Open %s in %s", this.getName(), this.getService()) : null;
+        public String displayLabel() {
+            return this.getName() != null && this.getService() != null ? String.format("Open %s in %s", this.getName(), this.getService()) : null;
         }
     }
 
-
     @Getter
     @Setter
-    public static class SpecimenServiceLinkCollection{
+    public static class SpecimenServiceLinkCollection {
         private List<SpecimenServiceLink> fromFileBundle;
         private List<SpecimenServiceLink> fromFile;
 
     }
 
-
-
-
     @Getter
     @Setter
-    public static class StudiedSpecimen{
+    public static class StudiedSpecimen {
         private String id;
         private String internalIdentifier;
         private String lookupLabel;
@@ -129,7 +129,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
 
     @Getter
     @Setter
-    public static class StudiedState{
+    public static class StudiedState {
         private String id;
         private List<String> descendedFrom;
         private List<String> type;
@@ -148,7 +148,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
 
     @Getter
     @Setter
-    public static class QuantitativeValueOrRange{
+    public static class QuantitativeValueOrRange {
         private Double value;
         private FullNameRef unit;
         private Double maxValue;
@@ -156,44 +156,42 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
         private FullNameRef maxValueUnit;
         private FullNameRef minValueUnit;
 
-        private String getValueDisplay(Double value){
-            if(value==null){
+        private String getValueDisplay(Double value) {
+            if (value == null) {
                 return null;
             }
-            if(value%1==0){
+            if (value % 1 == 0) {
                 //It's an integer -> let's remove the floats.
                 return String.valueOf(value.intValue());
-            }
-            else{
+            } else {
                 return String.format("%.2f", value);
             }
         }
 
-        public String displayString(){
+        public String displayString() {
             String valueStr = getValueDisplay(value);
-            if(valueStr!=null){
+            if (valueStr != null) {
                 //Single value
                 return unit == null ? valueStr : String.format("%s %s", valueStr, unit.getFullName());
-            }
-            else{
+            } else {
                 //Value range
                 boolean sameUnit = (minValueUnit == null && maxValueUnit == null) || (minValueUnit != null && minValueUnit.equals(maxValueUnit));
                 String minValueStr = getValueDisplay(minValue);
                 String maxValueStr = getValueDisplay(maxValue);
                 return String.format("%s %s - %s %s",
-                        StringUtils.defaultString(minValueStr, ""),
+                                StringUtils.defaultString(minValueStr, ""),
                                 getString(sameUnit),
-                        StringUtils.defaultString(maxValueStr, ""),
-                        maxValueUnit!=null ? StringUtils.defaultString(maxValueUnit.getFullName(), "") : "").trim()
+                                StringUtils.defaultString(maxValueStr, ""),
+                                maxValueUnit != null ? StringUtils.defaultString(maxValueUnit.getFullName(), "") : "").trim()
                         .replaceAll(" {2,}", " ");
             }
         }
 
         private String getString(boolean sameUnit) {
-            if(sameUnit) {
+            if (sameUnit) {
                 return "";
             }
-            if(minValueUnit != null) {
+            if (minValueUnit != null) {
                 return StringUtils.defaultString(minValueUnit.getFullName(), "");
             }
             return "";
@@ -214,13 +212,13 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
 
     @Getter
     @Setter
-    public static class ParcellationTerminology extends FullNameRef{
+    public static class ParcellationTerminology extends FullNameRef {
         private List<FullNameRef> brainAtlas;
     }
 
     @Getter
     @Setter
-    public static class ParcellationEntity{
+    public static class ParcellationEntity {
         private List<ParcellationTerminology> parcellationTerminology;
     }
 
@@ -246,18 +244,17 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
 
     @Getter
     @Setter
-    public static class Strain extends FullNameRef{
+    public static class Strain extends FullNameRef {
         private FullNameRef species;
         private FullNameRef geneticStrainType;
     }
 
     @Getter
     @Setter
-    public static class SpeciesOrStrain extends FullNameRef{
+    public static class SpeciesOrStrain extends FullNameRef {
         private FullNameRef species;
         private FullNameRef geneticStrainType;
     }
-
 
 
     @Getter
@@ -274,36 +271,35 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
         private List<SubjectOrSubjectGroup> children;
 
 
-        public void calculateSubjectGroupInformationFromChildren(){
-            if(!CollectionUtils.isEmpty(children)) {
-                if(quantity==null){
+        public void calculateSubjectGroupInformationFromChildren() {
+            if (!CollectionUtils.isEmpty(children)) {
+                if (quantity == null) {
                     setQuantity(children.size());
                 }
-                if(CollectionUtils.isEmpty(strain)){
+                if (CollectionUtils.isEmpty(strain)) {
                     setStrain(children.stream().map(SubjectOrSubjectGroup::getStrain).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
-                if(CollectionUtils.isEmpty(species)){
+                if (CollectionUtils.isEmpty(species)) {
                     final List<FullNameRef> speciesFromStrain = children.stream().map(SubjectOrSubjectGroup::getStrain).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(Strain::getSpecies).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList());
-                    if(!CollectionUtils.isEmpty(speciesFromStrain)){
+                    if (!CollectionUtils.isEmpty(speciesFromStrain)) {
                         setSpecies(speciesFromStrain);
-                    }
-                    else {
+                    } else {
                         setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                     }
                 }
-                if(CollectionUtils.isEmpty(biologicalSex)){
+                if (CollectionUtils.isEmpty(biologicalSex)) {
                     setBiologicalSex(children.stream().map(SubjectOrSubjectGroup::getBiologicalSex).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
-                if(CollectionUtils.isEmpty(states)){
+                if (CollectionUtils.isEmpty(states)) {
                     //There is no direct relation between subject group states and subject states -> we therefore can't tell which subject states belong together.
                     // If the states are therefore not explicitly stated, we create one "virtual" state to allow to show the aggregated information.
                     SpecimenOrSpecimenGroupState virtualGroupState = new SpecimenOrSpecimenGroupState();
                     final QuantitativeValueOrRange calculatedAgeRange = calculateRangeForGroup(SpecimenOrSpecimenGroupState::getAge, TIME_UNIT_ORDER, TIME_UNIT_TO_MS);
-                    if(calculatedAgeRange!=null){
+                    if (calculatedAgeRange != null) {
                         virtualGroupState.setAge(calculatedAgeRange);
                     }
                     final QuantitativeValueOrRange calculatedWeightRange = calculateRangeForGroup(SpecimenOrSpecimenGroupState::getWeight, WEIGHT_ORDER, WEIGHT_TO_GRAMS);
-                    if(calculatedWeightRange!=null){
+                    if (calculatedWeightRange != null) {
                         virtualGroupState.setWeight(calculatedWeightRange);
                     }
                     virtualGroupState.setAttribute(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getAttribute).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList()));
@@ -315,54 +311,51 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
         }
 
 
-        private QuantitativeValueOrRange calculateRangeForGroup(Function<SpecimenOrSpecimenGroupState, QuantitativeValueOrRange> f, List<String> orderList, List<Long> translate){
+        private QuantitativeValueOrRange calculateRangeForGroup(Function<SpecimenOrSpecimenGroupState, QuantitativeValueOrRange> f, List<String> orderList, List<Long> translate) {
             long minValueInMinimalUnit = Long.MAX_VALUE;
             long maxValueInMinimalUnit = Long.MIN_VALUE;
             QuantitativeValueOrRange range = new QuantitativeValueOrRange();
             for (SubjectOrSubjectGroup child : children) {
-                if(!CollectionUtils.isEmpty(child.states)){
+                if (!CollectionUtils.isEmpty(child.states)) {
                     for (SpecimenOrSpecimenGroupState state : child.states) {
                         final QuantitativeValueOrRange val = f.apply(state);
-                        if(val!=null){
-                            if(val.unit !=null && val.value!=null){
+                        if (val != null) {
+                            if (val.unit != null && val.value != null) {
                                 int indexOfUnit = orderList.indexOf(val.unit.getFullName());
-                                if(indexOfUnit!=-1){
+                                if (indexOfUnit != -1) {
                                     Long toMinimalUnit = translate.get(indexOfUnit);
                                     final long valueInMinimalUnit = Double.valueOf(val.value * toMinimalUnit).longValue();
-                                    if(valueInMinimalUnit<minValueInMinimalUnit){
+                                    if (valueInMinimalUnit < minValueInMinimalUnit) {
                                         minValueInMinimalUnit = valueInMinimalUnit;
                                         range.setMinValue(val.value);
                                         range.setMinValueUnit(val.unit);
                                     }
-                                    if(valueInMinimalUnit>maxValueInMinimalUnit){
+                                    if (valueInMinimalUnit > maxValueInMinimalUnit) {
                                         maxValueInMinimalUnit = valueInMinimalUnit;
                                         range.setMaxValue(val.value);
                                         range.setMaxValueUnit(val.unit);
                                     }
-                                }
-                                else{
+                                } else {
                                     //Insufficient information -> we have to skip
                                     return null;
                                 }
-                            }
-                            else if(val.minValueUnit != null && val.maxValueUnit!=null && val.minValue!=null && val.maxValue!=null){
+                            } else if (val.minValueUnit != null && val.maxValueUnit != null && val.minValue != null && val.maxValue != null) {
                                 int indexOfMinUnit = orderList.indexOf(val.minValueUnit.getFullName());
                                 int indexOfMaxUnit = orderList.indexOf(val.maxValueUnit.getFullName());
-                                if(indexOfMinUnit!=-1 && indexOfMaxUnit!=-1){
+                                if (indexOfMinUnit != -1 && indexOfMaxUnit != -1) {
                                     final long minInMinimalUnit = Double.valueOf(val.minValue * translate.get(indexOfMinUnit)).longValue();
                                     final long maxInMinimalUnit = Double.valueOf(val.maxValue * translate.get(indexOfMaxUnit)).longValue();
-                                    if(minInMinimalUnit<minValueInMinimalUnit){
+                                    if (minInMinimalUnit < minValueInMinimalUnit) {
                                         minValueInMinimalUnit = minInMinimalUnit;
                                         range.setMinValue(val.minValue);
                                         range.setMinValueUnit(val.minValueUnit);
                                     }
-                                    if(maxInMinimalUnit>maxValueInMinimalUnit){
+                                    if (maxInMinimalUnit > maxValueInMinimalUnit) {
                                         maxValueInMinimalUnit = maxInMinimalUnit;
                                         range.setMaxValue(val.maxValue);
                                         range.setMaxValueUnit(val.maxValueUnit);
                                     }
-                                }
-                                else{
+                                } else {
                                     //Insufficient information -> we have to skip
                                     return null;
                                 }
@@ -371,10 +364,9 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
                     }
                 }
             }
-            if(range.getMinValue()!=null && range.getMinValueUnit()!=null && range.getMaxValue()!=null){
+            if (range.getMinValue() != null && range.getMinValueUnit() != null && range.getMaxValue() != null) {
                 return range;
-            }
-            else{
+            } else {
                 return null;
             }
         }
@@ -384,7 +376,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     //TODO this information should come from openMINDS
     private final static List<String> TIME_UNIT_ORDER = Arrays.asList("millisecond", "second", "minute", "hour", "day", "week", "month", "year");
     //Months are slightly problematic since they ar not stable (so are years) -> let's try to do it with good-enough approximations.
-    private final static List<Long> TIME_UNIT_TO_MS = Arrays.asList(1L, 1000L, 60L*1000L, 60*60*1000L, 24*60*60*1000L, 7*24*60*60*1000L, 28*24*60*60*1000L, 365*24*60*60*1000L);
+    private final static List<Long> TIME_UNIT_TO_MS = Arrays.asList(1L, 1000L, 60L * 1000L, 60 * 60 * 1000L, 24 * 60 * 60 * 1000L, 7 * 24 * 60 * 60 * 1000L, 28 * 24 * 60 * 60 * 1000L, 365 * 24 * 60 * 60 * 1000L);
     private final static List<String> WEIGHT_ORDER = Arrays.asList("gram", "kilogram");
     private final static List<Long> WEIGHT_TO_GRAMS = Arrays.asList(1L, 1000L);
 
@@ -420,7 +412,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
 
     @Getter
     @Setter
-    public static class ParcellationEntityFromStudyTarget extends FullNameRefForResearchProductVersion{
+    public static class ParcellationEntityFromStudyTarget extends FullNameRefForResearchProductVersion {
         private List<FullNameRefForResearchProductVersion> brainAtlasVersionForParcellationTerminologyVersion;
         private List<FullNameRef> brainAtlasForParcellationEntity;
     }

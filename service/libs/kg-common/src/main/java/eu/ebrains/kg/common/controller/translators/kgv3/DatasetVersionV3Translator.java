@@ -34,7 +34,6 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -42,7 +41,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -395,7 +393,29 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             }
             d.setSpecimenBySubject(specimenBySubject);
         }
+
+        Map<String, TargetInternalReference> researchProduct = new HashMap<>();
+        addInputData(researchProduct, datasetVersion.getDoiInputData());
+        addInputData(researchProduct, datasetVersion.getFileBundleInputData());
+        addInputData(researchProduct, datasetVersion.getDoiInputData());
+        if(!researchProduct.isEmpty()) {
+            List<TargetInternalReference> inputData  = new ArrayList<>(researchProduct.values());
+            d.setInputData(inputData.stream().sorted().collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(datasetVersion.getInputDataUrl())) {
+            d.setExternalInputData(datasetVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).sorted().collect(Collectors.toList()));
+        }
         return d;
+    }
+
+    private void addInputData(Map<String, TargetInternalReference> inputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> {
+                if(!inputData.containsKey(l.getId())) {
+                    inputData.put(l.getId(), ref(l));
+                }
+            });
+        }
     }
 
     private String stripFileExtension(File file) {
