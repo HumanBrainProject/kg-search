@@ -25,6 +25,7 @@ package eu.ebrains.kg.common.controller.translators;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FileRepository;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.RelatedPublication;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
@@ -256,6 +257,16 @@ public class Helpers {
             }
         });
 
+    }
+
+    public static void addInputOrOutputData(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> {
+                if (!inputOrOutputData.containsKey(l.getId())) {
+                    inputOrOutputData.put(l.getId(), l);
+                }
+            });
+        }
     }
 
 }

@@ -29,10 +29,7 @@ import eu.ebrains.kg.common.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.ModelVersionV3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.StudyTarget;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -209,7 +206,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         m.setModelFormat(ref(createList(modelVersion.getModelFormat())));
         if (modelVersion.getModel() != null) {
             m.setAbstractionLevel(ref(createList(modelVersion.getModel().getAbstractionLevel())));
-            List<String> brainStructureStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation");
+            List<String> brainStructureStudyTargets = List.of(Constants.OPENMINDS_ROOT + "controlledTerms/UBERONParcellation");
             final Map<Boolean, List<StudyTarget>> brainStructureOrNot = modelVersion.getModel().getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainStructureStudyTargets::contains)));
             m.setStudyTargets(refVersion(brainStructureOrNot.get(Boolean.FALSE), false));
             if(!CollectionUtils.isEmpty(brainStructureOrNot.get(Boolean.TRUE))){
@@ -217,6 +214,29 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             }
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
         }
+
+        Map<String, ExtendedFullNameRefForResearchProductVersion> researchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(researchProduct, modelVersion.getDoiInputData());
+        Helpers.addInputOrOutputData(researchProduct, modelVersion.getFileBundleInputData());
+        Helpers.addInputOrOutputData(researchProduct, modelVersion.getDoiInputData());
+        if (!researchProduct.isEmpty()) {
+            List<TargetInternalReference> inputData = researchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+            m.setInputData(inputData);
+        }
+        if (!CollectionUtils.isEmpty(modelVersion.getInputDataUrl())) {
+            m.setExternalInputData(modelVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).sorted().collect(Collectors.toList()));
+        }
+
+        Map<String, ExtendedFullNameRefForResearchProductVersion> reverseResearchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(reverseResearchProduct, modelVersion.getReverseDoiInputData());
+        Helpers.addInputOrOutputData(reverseResearchProduct, modelVersion.getReverseFileInputData());
+        Helpers.addInputOrOutputData(reverseResearchProduct, modelVersion.getReverseFileBundleInputData());
+        if (!reverseResearchProduct.isEmpty()) {
+            List<TargetInternalReference> outputData = reverseResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+            m.setOutputData(outputData);
+        }
+
+
         return m;
     }
 }

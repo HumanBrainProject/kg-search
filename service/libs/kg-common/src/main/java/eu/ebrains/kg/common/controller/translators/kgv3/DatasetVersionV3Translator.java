@@ -394,37 +394,27 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setSpecimenBySubject(specimenBySubject);
         }
 
-        Map<String, TargetInternalReference> researchProduct = new HashMap<>();
-        addInputOrOutputData(researchProduct, datasetVersion.getDoiInputData());
-        addInputOrOutputData(researchProduct, datasetVersion.getFileBundleInputData());
-        addInputOrOutputData(researchProduct, datasetVersion.getDoiInputData());
+        Map<String, ExtendedFullNameRefForResearchProductVersion> researchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(researchProduct, datasetVersion.getDoiInputData());
+        Helpers.addInputOrOutputData(researchProduct, datasetVersion.getFileBundleInputData());
+        Helpers.addInputOrOutputData(researchProduct, datasetVersion.getDoiInputData());
         if (!researchProduct.isEmpty()) {
-            List<TargetInternalReference> inputData = new ArrayList<>(researchProduct.values());
-            d.setInputData(inputData.stream().sorted().collect(Collectors.toList()));
+            List<TargetInternalReference> inputData = researchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+            d.setInputData(inputData);
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getInputDataUrl())) {
             d.setExternalInputData(datasetVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).sorted().collect(Collectors.toList()));
         }
 
-        Map<String, TargetInternalReference> reverseResearchProduct = new HashMap<>();
-        addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseDoiInputData());
-        addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileInputData());
-        addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileBundleInputData());
+        Map<String, ExtendedFullNameRefForResearchProductVersion> reverseResearchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseDoiInputData());
+        Helpers.addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileInputData());
+        Helpers.addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileBundleInputData());
         if (!reverseResearchProduct.isEmpty()) {
-            List<TargetInternalReference> outputData = new ArrayList<>(reverseResearchProduct.values());
-            d.setOutputData(outputData.stream().sorted().collect(Collectors.toList()));
+            List<TargetInternalReference> outputData = reverseResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+            d.setOutputData(outputData);
         }
         return d;
-    }
-
-    private void addInputOrOutputData(Map<String, TargetInternalReference> inputOrOutputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
-        if (!CollectionUtils.isEmpty(list)) {
-            list.forEach(l -> {
-                if (!inputOrOutputData.containsKey(l.getId())) {
-                    inputOrOutputData.put(l.getId(), ref(l));
-                }
-            });
-        }
     }
 
     private String stripFileExtension(File file) {
