@@ -406,12 +406,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setExternalInputData(datasetVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).sorted().collect(Collectors.toList()));
         }
 
-        Map<String, ExtendedFullNameRefForResearchProductVersion> reverseResearchProduct = new HashMap<>();
-        Helpers.addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseDoiInputData());
-        Helpers.addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileInputData());
-        Helpers.addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileBundleInputData());
-        if (!reverseResearchProduct.isEmpty()) {
-            List<TargetInternalReference> outputData = reverseResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+        Map<String, ExtendedFullNameRefForResearchProductVersion> reversedResearchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(reversedResearchProduct, datasetVersion.getReverseDoiInputData());
+        Helpers.addInputOrOutputData(reversedResearchProduct, datasetVersion.getReverseFileInputData());
+        Helpers.addInputOrOutputData(reversedResearchProduct, datasetVersion.getReverseFileBundleInputData());
+        if (!reversedResearchProduct.isEmpty()) {
+            List<TargetInternalReference> outputData = reversedResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
             d.setOutputData(outputData);
         }
         return d;

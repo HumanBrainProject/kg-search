@@ -227,12 +227,12 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setExternalInputData(modelVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).sorted().collect(Collectors.toList()));
         }
 
-        Map<String, ExtendedFullNameRefForResearchProductVersion> reverseResearchProduct = new HashMap<>();
-        Helpers.addInputOrOutputData(reverseResearchProduct, modelVersion.getReverseDoiInputData());
-        Helpers.addInputOrOutputData(reverseResearchProduct, modelVersion.getReverseFileInputData());
-        Helpers.addInputOrOutputData(reverseResearchProduct, modelVersion.getReverseFileBundleInputData());
-        if (!reverseResearchProduct.isEmpty()) {
-            List<TargetInternalReference> outputData = reverseResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+        Map<String, ExtendedFullNameRefForResearchProductVersion> reversedResearchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(reversedResearchProduct, modelVersion.getReverseDoiInputData());
+        Helpers.addInputOrOutputData(reversedResearchProduct, modelVersion.getReverseFileInputData());
+        Helpers.addInputOrOutputData(reversedResearchProduct, modelVersion.getReverseFileBundleInputData());
+        if (!reversedResearchProduct.isEmpty()) {
+            List<TargetInternalReference> outputData = reversedResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
             m.setOutputData(outputData);
         }
 
