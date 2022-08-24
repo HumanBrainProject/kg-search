@@ -383,8 +383,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
         final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen());
-        if(specimenBySubject!=null) {
-            if(specimenBySubject.getData().getSpecies()!=null) {
+        if (specimenBySubject != null) {
+            if (specimenBySubject.getData().getSpecies() != null) {
                 d.setSpeciesFilter(specimenBySubject.getData().getSpecies().stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).distinct().map(Value::new).collect(Collectors.toList()));
             }
             final Set<TargetInternalReference> anatomicalLocationsOfTissueSamples = specimenBySubject.getData().getAnatomicalLocationsOfTissueSamples();
@@ -395,24 +395,33 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         Map<String, TargetInternalReference> researchProduct = new HashMap<>();
-        addInputData(researchProduct, datasetVersion.getDoiInputData());
-        addInputData(researchProduct, datasetVersion.getFileBundleInputData());
-        addInputData(researchProduct, datasetVersion.getDoiInputData());
-        if(!researchProduct.isEmpty()) {
-            List<TargetInternalReference> inputData  = new ArrayList<>(researchProduct.values());
+        addInputOrOutputData(researchProduct, datasetVersion.getDoiInputData());
+        addInputOrOutputData(researchProduct, datasetVersion.getFileBundleInputData());
+        addInputOrOutputData(researchProduct, datasetVersion.getDoiInputData());
+        if (!researchProduct.isEmpty()) {
+            List<TargetInternalReference> inputData = new ArrayList<>(researchProduct.values());
             d.setInputData(inputData.stream().sorted().collect(Collectors.toList()));
         }
-        if(!CollectionUtils.isEmpty(datasetVersion.getInputDataUrl())) {
+        if (!CollectionUtils.isEmpty(datasetVersion.getInputDataUrl())) {
             d.setExternalInputData(datasetVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).sorted().collect(Collectors.toList()));
+        }
+
+        Map<String, TargetInternalReference> reverseResearchProduct = new HashMap<>();
+        addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseDoiInputData());
+        addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileInputData());
+        addInputOrOutputData(reverseResearchProduct, datasetVersion.getReverseFileBundleInputData());
+        if (!reverseResearchProduct.isEmpty()) {
+            List<TargetInternalReference> outputData = new ArrayList<>(reverseResearchProduct.values());
+            d.setOutputData(outputData.stream().sorted().collect(Collectors.toList()));
         }
         return d;
     }
 
-    private void addInputData(Map<String, TargetInternalReference> inputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
+    private void addInputOrOutputData(Map<String, TargetInternalReference> inputOrOutputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(l -> {
-                if(!inputData.containsKey(l.getId())) {
-                    inputData.put(l.getId(), ref(l));
+                if (!inputOrOutputData.containsKey(l.getId())) {
+                    inputOrOutputData.put(l.getId(), ref(l));
                 }
             });
         }

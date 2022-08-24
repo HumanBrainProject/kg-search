@@ -82,6 +82,9 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<ExtendedFullNameRefForResearchProductVersion> doiInputData;
     private List<ExtendedFullNameRefForResearchProductVersion> fileBundleInputData;
     private List<ExtendedFullNameRefForResearchProductVersion> fileInputData;
+    private List<ExtendedFullNameRefForResearchProductVersion> reverseDoiInputData;
+    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileBundleInputData;
+    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileInputData;
     private List<String> inputDataUrl;
 
     @Getter
