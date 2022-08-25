@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DoiInputData {
+public class DoiInputOrOutputData {
     private ExtendedFullNameRefForResearchProductVersion digitalIdentifier;
     private String identifier;
 }

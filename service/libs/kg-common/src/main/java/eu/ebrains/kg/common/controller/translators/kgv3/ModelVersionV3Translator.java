@@ -216,14 +216,10 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         }
 
         // Input Data and External input data
-        Map<String, ExtendedFullNameRefForResearchProductVersion> researchProduct = new HashMap<>();
-        Helpers.addDoiInputData(researchProduct, modelVersion.getDoiInputData());
-        Helpers.addInputOrOutputData(researchProduct, modelVersion.getFileInputData());
-        Helpers.addInputOrOutputData(researchProduct, modelVersion.getFileBundleInputData());
-        if (!researchProduct.isEmpty()) {
-            List<TargetInternalReference> inputData = researchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
-            m.setInputData(inputData);
-        }
+        Map<String, ExtendedFullNameRefForResearchProductVersion> inputResearchProduct = new HashMap<>();
+        Helpers.addDoiInputOrOutputData(inputResearchProduct, modelVersion.getDoiInputData());
+        Helpers.addInputOrOutputData(inputResearchProduct, modelVersion.getFileInputData());
+        Helpers.addInputOrOutputData(inputResearchProduct, modelVersion.getFileBundleInputData());
         List<TargetExternalReference> externalInputData = new ArrayList<>();
         List<String> externalDOIs = Helpers.getExternalDOIs(modelVersion.getDoiInputData());
         if (!CollectionUtils.isEmpty(modelVersion.getInputDataUrl())) {
@@ -235,19 +231,49 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             externalInputData.addAll(externalDOIUrls);
         }
         if(!CollectionUtils.isEmpty(externalInputData)) {
-            m.setExternalInputData(externalInputData.stream().sorted().collect(Collectors.toList()));
+            m.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue).reversed()).collect(Collectors.toList()));
         }
+
+        // Reverse output -> Input data
+        Helpers.addInputOrOutputData(inputResearchProduct, modelVersion.getReverseDoiOutputData());
+        Helpers.addInputOrOutputData(inputResearchProduct, modelVersion.getReverseFileOutputData());
+        Helpers.addInputOrOutputData(inputResearchProduct, modelVersion.getReverseFileBundleOutputData());
+
+        if (!inputResearchProduct.isEmpty()) {
+            List<TargetInternalReference> inputData = inputResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+            m.setInputData(inputData);
+        }
+
+        // Reverse Input data -> Output data
+        Map<String, ExtendedFullNameRefForResearchProductVersion> outputResearchProduct = new HashMap<>();
+        Helpers.addInputOrOutputData(outputResearchProduct, modelVersion.getReverseDoiInputData());
+        Helpers.addInputOrOutputData(outputResearchProduct, modelVersion.getReverseFileInputData());
+        Helpers.addInputOrOutputData(outputResearchProduct, modelVersion.getReverseFileBundleInputData());
 
         // Output data
-        Map<String, ExtendedFullNameRefForResearchProductVersion> reversedResearchProduct = new HashMap<>();
-        Helpers.addInputOrOutputData(reversedResearchProduct, modelVersion.getReverseDoiInputData());
-        Helpers.addInputOrOutputData(reversedResearchProduct, modelVersion.getReverseFileInputData());
-        Helpers.addInputOrOutputData(reversedResearchProduct, modelVersion.getReverseFileBundleInputData());
-        if (!reversedResearchProduct.isEmpty()) {
-            List<TargetInternalReference> outputData = reversedResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
-            m.setOutputData(outputData);
+        Helpers.addDoiInputOrOutputData(outputResearchProduct, modelVersion.getDoiOutputData());
+        Helpers.addInputOrOutputData(outputResearchProduct, modelVersion.getFileOutputData());
+        Helpers.addInputOrOutputData(outputResearchProduct, modelVersion.getFileBundleOutputData());
+
+
+        List<TargetExternalReference> externalOutputData = new ArrayList<>();
+        List<String> externalOutputDOIs = Helpers.getExternalDOIs(modelVersion.getDoiOutputData());
+        if (!CollectionUtils.isEmpty(modelVersion.getOutputDataUrl())) {
+            List<TargetExternalReference> externalOutputDataUrl = modelVersion.getOutputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toList());
+            externalOutputData.addAll(externalOutputDataUrl);
+        }
+        if (!CollectionUtils.isEmpty(externalOutputDOIs)) {
+            List<TargetExternalReference> externalOutputDOIUrls = externalOutputDOIs.stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toList());
+            externalOutputData.addAll(externalOutputDOIUrls);
+        }
+        if(!CollectionUtils.isEmpty(externalOutputData)) {
+            m.setExternalOutputData(externalOutputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue).reversed()).collect(Collectors.toList()));
         }
 
+        if (!outputResearchProduct.isEmpty()) {
+            List<TargetInternalReference> outputData = outputResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
+            m.setOutputData(outputData);
+        }
 
         return m;
     }

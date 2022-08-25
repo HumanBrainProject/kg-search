@@ -266,7 +266,7 @@ public class Helpers {
         }
     }
 
-    public static void addDoiInputData(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<DoiInputData> list) {
+    public static void addDoiInputOrOutputData(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<DoiInputOrOutputData> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(l -> {
                 if (l.getDigitalIdentifier() != null && !inputOrOutputData.containsKey(l.getDigitalIdentifier().getId())) {
@@ -276,8 +276,8 @@ public class Helpers {
         }
     }
 
-    public static List<String> getExternalDOIs(List<DoiInputData> doiInputData) {
-        return doiInputData.stream().filter(d -> d.getDigitalIdentifier() == null && d.getIdentifier() != null).map(DoiInputData::getIdentifier).sorted().collect(Collectors.toList());
+    public static List<String> getExternalDOIs(List<DoiInputOrOutputData> doiInputOrOutputData) {
+        return doiInputOrOutputData.stream().filter(d -> d.getDigitalIdentifier() == null && d.getIdentifier() != null).map(DoiInputOrOutputData::getIdentifier).sorted().collect(Collectors.toList());
     }
 
 }

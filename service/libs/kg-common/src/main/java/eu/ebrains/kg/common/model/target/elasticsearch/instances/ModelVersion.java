@@ -174,6 +174,9 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Output data", layout = "Related resources")
     private List<TargetInternalReference> outputData;
 
+    @FieldInfo(label = "External output data", layout = "Related resources")
+    private List<TargetExternalReference> externalOutputData;
+
     @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Get model", termsOfUse = true, icon="download")
     private List<TargetExternalReference> allFiles;
