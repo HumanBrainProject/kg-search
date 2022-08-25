@@ -95,7 +95,7 @@ const Authentication = ({ isUnavailble, settings, error, loginRequired, authenti
 
   if (authenticationInitializing) {
     return (
-      <FetchingPanel message={loginRequired?"Initalizing authentication...":"Initalizing application..."} />
+      <FetchingPanel message={loginRequired?"Initializing authentication...":"Initializing application..."} />
     );
   }
 
