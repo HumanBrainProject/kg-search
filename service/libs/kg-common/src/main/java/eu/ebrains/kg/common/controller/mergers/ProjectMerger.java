@@ -16,7 +16,6 @@ public class ProjectMerger extends Merger<Project>{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     protected void merge(Project parent, Project child){
-        boolean mergeActive = false;
         if(child.getDataset()!=null){
             if(parent.getDataset()==null){
                 parent.setDataset(new ArrayList<>());
@@ -24,17 +23,9 @@ public class ProjectMerger extends Merger<Project>{
             final Set<String> datasetReferences = parent.getDataset().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
             if (CollectionUtils.isEmpty(datasetReferences)) {
                 parent.getDataset().addAll(child.getDataset());
-                mergeActive = true;
-            }
-        }
-        if(child.getPublications()!=null){
-            if(parent.getPublications()==null){
-                parent.setPublications(new ArrayList<>());
-            }
-            final List<Value<String>> publications = child.getPublications().stream().filter(d -> !parent.getPublications().contains(d)).collect(Collectors.toList());
-            if(!CollectionUtils.isEmpty(publications)) {
-                mergeActive = true;
-                parent.getPublications().addAll(publications);
+                logger.warn(String.format("Choosing old datasets for project %s", parent.getId()));
+                //Since we're choosing the "old" datasets, we also want the "old" publications to show.
+                parent.setPublications(child.getPublications());
             }
         }
         if (parent.getIdentifier() == null) {
@@ -43,16 +34,13 @@ public class ProjectMerger extends Merger<Project>{
         if(child.getIdentifier()!=null){
             final List<String> identifier = child.getIdentifier().stream().filter(d -> !parent.getIdentifier().contains(d)).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(identifier)) {
-                mergeActive = true;
+                logger.error(String.format("We found at least one identifier in the old representation of instance %s which is not part of the new instance!", parent.getId()));
                 parent.getIdentifier().addAll(identifier);
             }
         }
         if(!parent.getIdentifier().contains(child.getId())){
-            mergeActive = true;
+            logger.error(String.format("We found that the id of the old representation of instance %s is not part of the new instance!", parent.getId()));
             parent.getIdentifier().add(child.getId());
-        }
-        if(mergeActive){
-            logger.warn(String.format("Active merging of project %s", parent.getId()));
         }
     }
 
