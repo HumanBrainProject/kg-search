@@ -165,13 +165,13 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(layout = "Get model")
     private Value<String> embargo;
 
-    @FieldInfo(label = "Input data", layout = "Provenance")
+    @FieldInfo(label = "Input data", layout = "Related resources")
     private List<TargetInternalReference> inputData;
 
-    @FieldInfo(label = "External input data", layout = "Provenance")
+    @FieldInfo(label = "External input data", layout = "Related resources")
     private List<TargetExternalReference> externalInputData;
 
-    @FieldInfo(label = "Output data", layout = "Provenance")
+    @FieldInfo(label = "Output data", layout = "Related resources")
     private List<TargetInternalReference> outputData;
 
     @JsonProperty("allfiles") //TODO: capitalize

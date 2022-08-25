@@ -25,10 +25,7 @@ package eu.ebrains.kg.common.controller.translators;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FileRepository;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.RelatedPublication;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import lombok.AccessLevel;
@@ -267,6 +264,20 @@ public class Helpers {
                 }
             });
         }
+    }
+
+    public static void addDoiInputData(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<DoiInputData> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> {
+                if (l.getDigitalIdentifier() != null && !inputOrOutputData.containsKey(l.getDigitalIdentifier().getId())) {
+                    inputOrOutputData.put(l.getDigitalIdentifier().getId(), l.getDigitalIdentifier());
+                }
+            });
+        }
+    }
+
+    public static List<String> getExternalDOIs(List<DoiInputData> doiInputData) {
+        return doiInputData.stream().filter(d -> d.getDigitalIdentifier() == null && d.getIdentifier() != null).map(DoiInputData::getIdentifier).sorted().collect(Collectors.toList());
     }
 
 }

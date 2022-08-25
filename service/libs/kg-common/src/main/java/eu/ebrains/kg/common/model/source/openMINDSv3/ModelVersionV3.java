@@ -68,7 +68,7 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private List<FullNameRefForResearchProductVersion> usedDatasets;
     private List<FullNameRefForResearchProductVersion> producedDatasets;
     private Integer last30DaysViews;
-    private List<ExtendedFullNameRefForResearchProductVersion> doiInputData;
+    private List<DoiInputData> doiInputData;
     private List<ExtendedFullNameRefForResearchProductVersion> fileBundleInputData;
     private List<ExtendedFullNameRefForResearchProductVersion> fileInputData;
     private List<ExtendedFullNameRefForResearchProductVersion> reverseDoiInputData;
