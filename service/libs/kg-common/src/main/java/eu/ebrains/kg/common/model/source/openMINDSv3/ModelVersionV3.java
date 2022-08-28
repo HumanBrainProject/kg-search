@@ -68,20 +68,20 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private List<FullNameRefForResearchProductVersion> usedDatasets;
     private List<FullNameRefForResearchProductVersion> producedDatasets;
     private Integer last30DaysViews;
-    private List<DoiInputOrOutputData> doiInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileBundleInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseDoiInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileBundleInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileInputData;
-    private List<String> inputDataUrl;
-    private List<DoiInputOrOutputData> doiOutputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileBundleOutputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileOutputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseDoiOutputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileBundleOutputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileOutputData;
-    private List<String> outputDataUrl;
+    private List<DOI> inputDOIs;
+    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromInputFileBundles;
+    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromInputFiles;
+    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
+    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
+    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
+    private List<String> inputURLs;
+    private List<DOI> outputDOIs;
+    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromOutputFileBundles;
+    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromOutputFiles;
+    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
+    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
+    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
+    private List<String> outputURLs;
 
     @Getter
     @Setter

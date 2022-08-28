@@ -256,7 +256,7 @@ public class Helpers {
 
     }
 
-    public static void addInputOrOutputData(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
+    public static void addResearchProducts(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<ExtendedFullNameRefForResearchProductVersion> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(l -> {
                 if (!inputOrOutputData.containsKey(l.getId())) {
@@ -266,18 +266,18 @@ public class Helpers {
         }
     }
 
-    public static void addDoiInputOrOutputData(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<DoiInputOrOutputData> list) {
+    public static void addResearchProductsFromDOIs(Map<String, ExtendedFullNameRefForResearchProductVersion> inputOrOutputData, List<DOI> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(l -> {
-                if (l.getDigitalIdentifier() != null && !inputOrOutputData.containsKey(l.getDigitalIdentifier().getId())) {
-                    inputOrOutputData.put(l.getDigitalIdentifier().getId(), l.getDigitalIdentifier());
+                if (l.getResearchProduct() != null && !inputOrOutputData.containsKey(l.getResearchProduct().getId())) {
+                    inputOrOutputData.put(l.getResearchProduct().getId(), l.getResearchProduct());
                 }
             });
         }
     }
 
-    public static List<String> getExternalDOIs(List<DoiInputOrOutputData> doiInputOrOutputData) {
-        return doiInputOrOutputData.stream().filter(d -> d.getDigitalIdentifier() == null && d.getIdentifier() != null).map(DoiInputOrOutputData::getIdentifier).sorted().collect(Collectors.toList());
+    public static Set<String> getExternalDOIs(List<DOI> doiInputOrOutputData) {
+        return doiInputOrOutputData.stream().filter(d -> d.getResearchProduct() == null && d.getIdentifier() != null).map(DOI::getIdentifier).sorted().collect(Collectors.toSet());
     }
 
 }
