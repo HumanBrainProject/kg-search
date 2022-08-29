@@ -201,8 +201,6 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             Collections.sort(modelVersion.getKeyword());
             m.setKeywords(value(modelVersion.getKeyword()));
         }
-        m.setUsedDataset(refVersion(modelVersion.getUsedDatasets(), true));
-        m.setProducedDataset(refVersion(modelVersion.getProducedDatasets(), true));
         m.setModelFormat(ref(createList(modelVersion.getModelFormat())));
         if (modelVersion.getModel() != null) {
             m.setAbstractionLevel(ref(createList(modelVersion.getModel().getAbstractionLevel())));
@@ -215,17 +213,14 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
         }
 
-        Map<String, ExtendedFullNameRefForResearchProductVersion> inputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProductVersion> inputResearchProducts = new HashMap<>();
         Helpers.addResearchProductsFromDOIs(inputResearchProducts, modelVersion.getInputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromInputFiles());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromInputFileBundles());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromReverseOutputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromReverseOutputFiles());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromReverseOutputFileBundles());
-        if (!inputResearchProducts.isEmpty()) {
-            List<TargetInternalReference> inputData = inputResearchProducts.values().stream().map(this::ref).sorted().collect(Collectors.toList());
-            m.setInputData(inputData);
-        }
+        m.setInputData(refVersion(new ArrayList<>(inputResearchProducts.values()), true));
 
         Set<TargetExternalReference> externalInputData = new HashSet<>();
         Set<String> externalDOIs = Helpers.getExternalDOIs(modelVersion.getInputDOIs());
@@ -241,17 +236,14 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
-        Map<String, ExtendedFullNameRefForResearchProductVersion> outputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProductVersion> outputResearchProducts = new HashMap<>();
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromReverseInputDOIs());
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromReverseInputFiles());
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromReverseInputFileBundles());
         Helpers.addResearchProductsFromDOIs(outputResearchProducts, modelVersion.getOutputDOIs());
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromOutputFiles());
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromOutputFileBundles());
-        if (!outputResearchProducts.isEmpty()) {
-            List<TargetInternalReference> outputData = outputResearchProducts.values().stream().map(this::ref).sorted().collect(Collectors.toList());
-            m.setOutputData(outputData);
-        }
+        m.setOutputData(refVersion(new ArrayList<>(outputResearchProducts.values()), true));
 
         Set<TargetExternalReference> externalOutputData = new HashSet<>();
         Set<String> externalOutputDOIs = Helpers.getExternalDOIs(modelVersion.getOutputDOIs());

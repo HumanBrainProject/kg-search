@@ -31,7 +31,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.common.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.common.controller.translators.TranslatorCommons.firstItemOrNull;
 import static eu.ebrains.kg.common.controller.translators.kgv2.TranslatorOfKGV2Commons.EMBARGOED;
 import static eu.ebrains.kg.common.controller.translators.kgv2.TranslatorOfKGV2Commons.hasEmbargoStatus;
 
@@ -101,7 +100,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
             }
         }
         if (!CollectionUtils.isEmpty(modelV2.getProducedDataset())) {
-            m.setProducedDataset(modelV2.getProducedDataset().stream()
+            m.setOutputData(modelV2.getProducedDataset().stream()
                     .map(pd -> new TargetInternalReference(
                             liveMode ? pd.getRelativeUrl() : String.format("Dataset/%s", pd.getIdentifier()),
                             pd.getName()
@@ -151,7 +150,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
         //m.setBrainStructures(value(modelV2.getBrainStructure()));
 
         if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
-            m.setUsedDataset(modelV2.getUsedDataset().stream()
+            m.setInputData(modelV2.getUsedDataset().stream()
                     .map(ud -> new TargetInternalReference(
                             liveMode ? ud.getRelativeUrl() : String.format("Dataset/%s", ud.getIdentifier()),
                             ud.getName()

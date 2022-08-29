@@ -165,18 +165,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(layout = "Get model")
     private Value<String> embargo;
 
-    @FieldInfo(label = "Input data", layout = "Related resources")
-    private List<TargetInternalReference> inputData;
-
-    @FieldInfo(label = "External input data", layout = "Related resources")
-    private List<TargetExternalReference> externalInputData;
-
-    @FieldInfo(label = "Output data", layout = "Related resources")
-    private List<TargetInternalReference> outputData;
-
-    @FieldInfo(label = "External output data", layout = "Related resources")
-    private List<TargetExternalReference> externalOutputData;
-
     @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Get model", termsOfUse = true, icon="download")
     private List<TargetExternalReference> allFiles;
@@ -203,10 +191,16 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Model format", layout = "summary", separator = "; ", useForSuggestion = true)
     private List<TargetInternalReference> modelFormat;
 
-    @FieldInfo(label = "Used datasets", layout = "Used datasets", labelHidden = true)
-    private List<TargetInternalReference> usedDataset;
+    @FieldInfo(label = "Used resources", layout = "Related resources")
+    private List<TargetInternalReference> inputData;
 
-    @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
-    private List<TargetInternalReference> producedDataset;
+    @FieldInfo(label = "External used resources", layout = "Related resources")
+    private List<TargetExternalReference> externalInputData;
+
+    @FieldInfo(label = "Resources used by this model", layout = "Related resources")
+    private List<TargetInternalReference> outputData;
+
+    @FieldInfo(label = "External resources used by this model", layout = "Related resources")
+    private List<TargetExternalReference> externalOutputData;
 
 }

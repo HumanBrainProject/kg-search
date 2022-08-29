@@ -80,15 +80,15 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<StudiedSpecimen> studiedSpecimen;
     private Integer last30DaysViews;
     private List<DOI> inputDOIs;
-    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromInputFileBundles;
-    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromInputFiles;
-    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
-    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
-    private List<ExtendedFullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFileBundles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFiles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
     private List<String> inputURLs;
-    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
-    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
-    private List<ExtendedFullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
 
     @Getter
     @Setter

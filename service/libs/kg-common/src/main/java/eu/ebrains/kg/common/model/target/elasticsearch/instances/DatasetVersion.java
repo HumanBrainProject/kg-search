@@ -225,15 +225,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    @FieldInfo(label = "Input data", layout = "Related resources")
-    private List<TargetInternalReference> inputData;
-
-    @FieldInfo(label = "External input data", layout = "Related resources")
-    private List<TargetExternalReference> externalInputData;
-
-    @FieldInfo(label = "Output data", layout = "Related resources")
-    private List<TargetInternalReference> outputData;
-
     @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
 
@@ -303,6 +294,15 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
+
+    @FieldInfo(label = "Used resources", layout = "Related resources")
+    private List<TargetInternalReference> inputData;
+
+    @FieldInfo(label = "External used resources", layout = "Related resources")
+    private List<TargetExternalReference> externalInputData;
+
+    @FieldInfo(label = "Resources used by this dataset", layout = "Related resources")
+    private List<TargetInternalReference> outputData;
 
     @Getter
     @Setter
