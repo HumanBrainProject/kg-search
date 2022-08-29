@@ -394,38 +394,35 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setSpecimenBySubject(specimenBySubject);
         }
 
-        // Input Data and External input data
-        Map<String, ExtendedFullNameRefForResearchProductVersion> researchProduct = new HashMap<>();
-        Helpers.addDoiInputData(researchProduct, datasetVersion.getDoiInputData());
-        Helpers.addInputOrOutputData(researchProduct, datasetVersion.getFileInputData());
-        Helpers.addInputOrOutputData(researchProduct, datasetVersion.getFileBundleInputData());
-        if (!researchProduct.isEmpty()) {
-            List<TargetInternalReference> inputData = researchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
-            d.setInputData(inputData);
-        }
-        List<TargetExternalReference> externalInputData = new ArrayList<>();
-        List<String> externalDOIs = Helpers.getExternalDOIs(datasetVersion.getDoiInputData());
-        if (!CollectionUtils.isEmpty(datasetVersion.getInputDataUrl())) {
-            List<TargetExternalReference> externalInputDataUrl = datasetVersion.getInputDataUrl().stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toList());
-            externalInputData.addAll(externalInputDataUrl);
-        }
+        Map<String, FullNameRefForResearchProductVersion> inputResearchProducts = new HashMap<>();
+        Helpers.addResearchProductsFromDOIs(inputResearchProducts, datasetVersion.getInputDOIs());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputFiles());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputFileBundles());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputDOIs());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputFiles());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputFileBundles());
+        d.setInputData(refVersion(new ArrayList<>(inputResearchProducts.values()), true));
+
+        Set<TargetExternalReference> externalInputData = new HashSet<>();
+        Set<String> externalDOIs = Helpers.getExternalDOIs(datasetVersion.getInputDOIs());
         if (!CollectionUtils.isEmpty(externalDOIs)) {
-            List<TargetExternalReference> externalDOIUrls = externalDOIs.stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toList());
+            Set<TargetExternalReference> externalDOIUrls = externalDOIs.stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toSet());
             externalInputData.addAll(externalDOIUrls);
         }
+        if (!CollectionUtils.isEmpty(datasetVersion.getInputURLs())) {
+            Set<TargetExternalReference> externalInputURLs = datasetVersion.getInputURLs().stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toSet());
+            externalInputData.addAll(externalInputURLs);
+        }
         if(!CollectionUtils.isEmpty(externalInputData)) {
-            d.setExternalInputData(externalInputData.stream().sorted().collect(Collectors.toList()));
+            d.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
-        // Output data
-        Map<String, ExtendedFullNameRefForResearchProductVersion> reversedResearchProduct = new HashMap<>();
-        Helpers.addInputOrOutputData(reversedResearchProduct, datasetVersion.getReverseDoiInputData());
-        Helpers.addInputOrOutputData(reversedResearchProduct, datasetVersion.getReverseFileInputData());
-        Helpers.addInputOrOutputData(reversedResearchProduct, datasetVersion.getReverseFileBundleInputData());
-        if (!reversedResearchProduct.isEmpty()) {
-            List<TargetInternalReference> outputData = reversedResearchProduct.values().stream().map(this::ref).sorted().collect(Collectors.toList());
-            d.setOutputData(outputData);
-        }
+        Map<String, FullNameRefForResearchProductVersion> outputResearchProducts = new HashMap<>();
+        Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputDOIs());
+        Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFiles());
+        Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFileBundles());
+        d.setOutputData(refVersion(new ArrayList<>(outputResearchProducts.values()), true));
+
         return d;
     }
 

@@ -79,13 +79,16 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<ServiceLink> serviceLinksFromFiles;
     private List<StudiedSpecimen> studiedSpecimen;
     private Integer last30DaysViews;
-    private List<DoiInputData> doiInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileBundleInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseDoiInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileBundleInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileInputData;
-    private List<String> inputDataUrl;
+    private List<DOI> inputDOIs;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFileBundles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFiles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
+    private List<String> inputURLs;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
 
     @Getter
     @Setter

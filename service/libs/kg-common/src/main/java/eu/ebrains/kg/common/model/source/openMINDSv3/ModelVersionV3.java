@@ -65,16 +65,21 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private String fullDocumentationDOI;
     private File fullDocumentationFile;
     private ModelVersions model;
-    private List<FullNameRefForResearchProductVersion> usedDatasets;
-    private List<FullNameRefForResearchProductVersion> producedDatasets;
     private Integer last30DaysViews;
-    private List<DoiInputData> doiInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileBundleInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> fileInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseDoiInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileBundleInputData;
-    private List<ExtendedFullNameRefForResearchProductVersion> reverseFileInputData;
-    private List<String> inputDataUrl;
+    private List<DOI> inputDOIs;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFileBundles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFiles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
+    private List<String> inputURLs;
+    private List<DOI> outputDOIs;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromOutputFileBundles;
+    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromOutputFiles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
+    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
+    private List<String> outputURLs;
 
     @Getter
     @Setter
