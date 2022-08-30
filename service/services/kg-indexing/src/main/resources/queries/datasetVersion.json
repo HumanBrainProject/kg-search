@@ -1124,7 +1124,6 @@
             {
               "propertyName": "query:ageCategory",
               "path": "https://openminds.ebrains.eu/vocab/ageCategory",
-              "singleValue": "FIRST",
               "structure": [
                 {
                   "propertyName": "query:id",
@@ -1781,7 +1780,6 @@
                 {
                   "propertyName": "query:ageCategory",
                   "path": "https://openminds.ebrains.eu/vocab/ageCategory",
-                  "singleValue": "FIRST",
                   "structure": [
                     {
                       "propertyName": "query:id",

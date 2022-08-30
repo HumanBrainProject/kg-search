@@ -1,6 +1,5 @@
 package eu.ebrains.kg.common.controller.translators.kgv3.helpers;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.ebrains.kg.common.controller.translators.TranslatorBase;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
@@ -290,7 +289,12 @@ public class SpecimenV3Translator extends TranslatorBase {
             }
             else{
                 // We can aggregate the age categories since they are required for every state (the "undefined" state is therefore just to be sure)
-                sub.setAgeCategory(ref(specimen.getStudiedState().stream().map(DatasetVersionV3.StudiedState::getAgeCategory).map(a -> a == null ? undefinedFullnameRef() : a).distinct().collect(Collectors.toList())));
+                sub.setAgeCategory(ref(specimen.getStudiedState().stream().flatMap(ss -> {
+                    if (CollectionUtils.isEmpty(ss.getAgeCategory())) {
+                        return Stream.of(undefinedFullnameRef());
+                    }
+                    return ss.getAgeCategory().stream().map(a -> a == null ? undefinedFullnameRef() : a);
+                }).distinct().collect(Collectors.toList())));
             }
             return sub;
         }
@@ -322,7 +326,9 @@ public class SpecimenV3Translator extends TranslatorBase {
             sub.setHandedness(ref(state.getHandedness()));
             sub.setWeight(value(state.getWeight()!=null ? state.getWeight().displayString() : null));
             sub.setAge(value(state.getAge()!=null ? state.getAge().displayString() : null));
-            sub.setAgeCategory(ref(state.getAgeCategory()!=null ? Collections.singletonList(state.getAgeCategory()) : null));
+            if (!CollectionUtils.isEmpty(state.getAgeCategory())) {
+                sub.setAgeCategory(ref(state.getAgeCategory()));
+            }
         }
 
         private void fillSubjectInformation(DatasetVersion.DSVSubject sub, DatasetVersionV3.StudiedSpecimen specimen){
@@ -403,7 +409,9 @@ public class SpecimenV3Translator extends TranslatorBase {
             subGrp.setHandedness(ref(state.getHandedness()));
             subGrp.setWeight(value(state.getWeight()!=null ? state.getWeight().displayString() : null));
             subGrp.setAge(value(state.getAge()!=null ? state.getAge().displayString() : null));
-            subGrp.setAgeCategory(ref(state.getAgeCategory()!=null ? Collections.singletonList(state.getAgeCategory()) : null));
+            if (!CollectionUtils.isEmpty(state.getAgeCategory())) {
+                subGrp.setAgeCategory(ref(state.getAgeCategory()));
+            }
         }
 
         private void fillSubjectGroupInformation(DatasetVersion.DSVSubjectGroup subGrp, DatasetVersionV3.StudiedSpecimen specimen){
@@ -465,7 +473,9 @@ public class SpecimenV3Translator extends TranslatorBase {
             tissueSample.setPathology(ref(state.getPathology()));
             tissueSample.setWeight(value(state.getWeight()!=null ? state.getWeight().displayString() : null));
             tissueSample.setAge(value(state.getAge()!=null ? state.getAge().displayString() : null));
-            tissueSample.setAgeCategory(ref(state.getAgeCategory()!=null ? Collections.singletonList(state.getAgeCategory()) : null));
+            if (!CollectionUtils.isEmpty(state.getAgeCategory())) {
+                tissueSample.setAgeCategory(ref(state.getAgeCategory()));
+            }
         }
 
         @Override
@@ -566,7 +576,9 @@ public class SpecimenV3Translator extends TranslatorBase {
             tissueSampleCollectionState.setServiceLinks(translateServiceLinks(state.getServiceLinks(), tissueSampleCollectionState.getServiceLinks()));
             tissueSampleCollectionState.setWeight(value(state.getWeight()!=null ? state.getWeight().displayString() : null));
             tissueSampleCollectionState.setAge(value(state.getAge()!=null ? state.getAge().displayString() : null));
-            tissueSampleCollectionState.setAgeCategory(ref(state.getAgeCategory()!=null ? Collections.singletonList(state.getAgeCategory()) : null));
+            if (!CollectionUtils.isEmpty(state.getAgeCategory())) {
+                tissueSampleCollectionState.setAgeCategory(ref(state.getAgeCategory()));
+            }
         }
     }
 

@@ -141,7 +141,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
         private List<String> type;
         private String additionalRemarks;
         private QuantitativeValueOrRange age;
-        private FullNameRef ageCategory;
+        private List<FullNameRef> ageCategory;
         private List<FullNameRef> attribute;
         private FullNameRef handedness;
         private List<FullNameRef> pathology;
