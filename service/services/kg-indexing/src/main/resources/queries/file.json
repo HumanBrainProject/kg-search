@@ -188,6 +188,39 @@
           "path": "https://openminds.ebrains.eu/vocab/algorithm"
         }
       ]
+    },
+    {
+      "propertyName": "query:researchProduct",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/inputData",
+        "reverse": true
+      },
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/fullName"
+          ],
+          "singleValue": "FIRST"
+        }
+      ]
     }
   ]
 }
