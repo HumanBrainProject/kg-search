@@ -723,7 +723,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             if(!map.isEmpty()){
                 stream = stream.map(k -> {
                     final Map<String, Set<String>> count = map.get(k);
-                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
+                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue());
                     targetInternalReference.setCount(count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t).size(), normalizeTypeName(t, count.get(t).size() > 1))).collect(Collectors.toList()));
                     return targetInternalReference;
                 });

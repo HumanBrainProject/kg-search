@@ -33,7 +33,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -108,8 +107,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             d.setCustodians(datasetV1.getOwners().stream()
                     .map(o -> new TargetInternalReference(
                             liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
-                            o.getName(),
-                            null
+                            o.getName()
                     )).collect(Collectors.toList()));
         }
         if (StringUtils.isNotBlank(datasetV1.getDataDescriptorURL())) {
@@ -193,8 +191,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             d.setContributors(datasetV1.getContributors().stream()
                     .map(c -> new TargetInternalReference(
                             liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
-                            c.getName(),
-                            null
+                            c.getName()
                     )).collect(Collectors.toList()));
         }
 
@@ -203,8 +200,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             d.setProjects(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(
                             liveMode ? c.getRelativeUrl() : String.format("Project/%s", c.getIdentifier()),
-                            c.getName(),
-                            null
+                            c.getName()
                     )).collect(Collectors.toList()));
         }
         d.setKeywords(value(emptyToNull(datasetV1.getProtocols())));
@@ -230,8 +226,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                             new DatasetVersion.OldSubject(
                                     new TargetInternalReference(
                                             liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
-                                            s.getName(),
-                                            null
+                                            s.getName()
                                     ),
                                     CollectionUtils.isEmpty(s.getSpecies()) ? null : value(s.getSpecies()),
                                     CollectionUtils.isEmpty(s.getSex()) ? null : value(s.getSex()),
@@ -244,8 +239,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                                             stream().
                                             map(sample -> new TargetInternalReference(
                                                     liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
-                                                    sample.getName(),
-                                                    null
+                                                    sample.getName()
                                             )).collect(Collectors.toList()) : null
                             )
                     ).collect(Collectors.toList())));

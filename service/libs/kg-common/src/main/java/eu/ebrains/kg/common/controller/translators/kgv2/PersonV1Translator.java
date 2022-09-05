@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.source.openMINDSv1.PersonV1;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
@@ -81,7 +80,7 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
                     .map(contribution ->
                             new TargetInternalReference(
                                     liveMode ? contribution.getRelativeUrl() : String.format("Dataset/%s", contribution.getIdentifier()),
-                                    contribution.getName(), null)).collect(Collectors.toList()));
+                                    contribution.getName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(person.getCustodianOf())) {
@@ -89,7 +88,7 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
                     .map(custodianOf ->
                             new TargetInternalReference(
                                     liveMode ? custodianOf.getRelativeUrl() : String.format("Dataset/%s", custodianOf.getIdentifier()),
-                                    custodianOf.getName(), null)).collect(Collectors.toList()));
+                                    custodianOf.getName())).collect(Collectors.toList()));
         }
         if (dataStage == DataStage.IN_PROGRESS) {
             c.setEditorId(value(person.getEditorId()));

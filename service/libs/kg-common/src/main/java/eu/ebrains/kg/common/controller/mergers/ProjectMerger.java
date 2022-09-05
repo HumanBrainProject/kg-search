@@ -2,7 +2,6 @@ package eu.ebrains.kg.common.controller.mergers;
 
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;

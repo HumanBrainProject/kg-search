@@ -25,9 +25,6 @@ package eu.ebrains.kg.common.controller.translators.kgv3;
 
 import eu.ebrains.kg.common.controller.translators.Translator;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.AnatomicalLocation;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 

@@ -32,7 +32,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -113,7 +112,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
                                             .map(i ->
                                                     new TargetInternalReference(
                                                             liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
-                                                            i.getName(), null)
+                                                            i.getName())
                                             ).collect(Collectors.toList())
                             )
                     ).collect(Collectors.toList());
@@ -126,8 +125,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
                             new Sample.Subject(
                                     new TargetInternalReference(
                                             liveMode ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()),
-                                            d.getName(),
-                                            null
+                                            d.getName()
                                     ),
                                     CollectionUtils.isEmpty(d.getSpecies()) ? null : d.getSpecies(),
                                     CollectionUtils.isEmpty(d.getSex()) ? null : d.getSex(),
