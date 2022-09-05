@@ -125,7 +125,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
             groupingTypeList.sort(Comparator.comparing(File.GroupingType::getName));
             f.setGroupingTypes(groupingTypeList);
         }
-        f.setResearchProduct(ref(file.getResearchProduct()));
+        f.setUsedInResearchProducts(ref(file.getUsedInResearchProducts()));
         return f;
     }
 }

@@ -190,12 +190,11 @@
       ]
     },
     {
-      "propertyName": "query:researchProduct",
+      "propertyName": "query:usedInResearchProducts",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/inputData",
         "reverse": true
       },
-      "singleValue": "FIRST",
       "structure": [
         {
           "propertyName": "query:id",

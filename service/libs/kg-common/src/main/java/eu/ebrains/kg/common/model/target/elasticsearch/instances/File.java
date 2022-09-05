@@ -72,7 +72,7 @@ public class File implements TargetInstance {
     @FieldInfo(label = "GroupingTypes", visible = false)
     private List<GroupingType> groupingTypes;
     @FieldInfo(label = "Is used in")
-    private TargetInternalReference researchProduct;
+    private List<TargetInternalReference> usedInResearchProducts;
 
     @Override
     @JsonIgnore
