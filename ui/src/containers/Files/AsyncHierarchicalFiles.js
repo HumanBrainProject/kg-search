@@ -176,24 +176,24 @@ export const AsyncHierarchicalFilesComponent = ({
       })
       .catch(e => {
         switch (e?.response?.status) {
-        case 401: // Unauthorized
-        case 403: // Forbidden
-        case 511: {
-          // Network Authentication Required
-          setIsLoading(false);
-          onSessionFailure();
-          break;
-        }
-        case 500:
-        case 404:
-        default: {
-          setError(
-            `The service is temporarily unavailable. Please retry in a few minutes. (${
-              e.message ? e.message : e
-            })`
-          );
-          setIsLoading(false);
-        }
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: {
+            // Network Authentication Required
+            setIsLoading(false);
+            onSessionFailure();
+            break;
+          }
+          case 500:
+          case 404:
+          default: {
+            setError(
+              `The service is temporarily unavailable. Please retry in a few minutes. (${
+                e.message ? e.message : e
+              })`
+            );
+            setIsLoading(false);
+          }
         }
       });
   };
@@ -205,7 +205,7 @@ export const AsyncHierarchicalFilesComponent = ({
     } else {
       fetch();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReset, groupingType, fileFormat]);
 
   const handleSetFileFormat = useMemo(
@@ -240,22 +240,26 @@ export const AsyncHierarchicalFilesComponent = ({
 
   return (
     <>
-      <FileFilter
-        title="Filter by"
-        show={!isLoading && !error}
-        url={fileFormatsUrl}
-        value={fileFormat}
-        onSelect={handleSetFileFormat}
-        onSessionFailure={onSessionFailure}
-      />
-      <FileFilter
-        title="Group by"
-        show={!isLoading && !error}
-        url={groupingTypesUrl}
-        value={groupingType}
-        onSelect={handleSetGroupingType}
-        onSessionFailure={onSessionFailure}
-      />
+      {showLabel && (
+        <>
+          <FileFilter
+            title="Filter by"
+            show={!isLoading && !error}
+            url={fileFormatsUrl}
+            value={fileFormat}
+            onSelect={handleSetFileFormat}
+            onSessionFailure={onSessionFailure}
+          />
+          <FileFilter
+            title="Group by"
+            show={!isLoading && !error}
+            url={groupingTypesUrl}
+            value={groupingType}
+            onSelect={handleSetGroupingType}
+            onSessionFailure={onSessionFailure}
+          />
+        </>
+      )}
 
       {error ? (
         <FileError error={error} />
@@ -270,7 +274,12 @@ export const AsyncHierarchicalFilesComponent = ({
               length={files.length}
               total={total}
             />
-            <ShowMoreFiles isLoading={isLoading} isAllFetched={isAllFetched} showMoreStyle={showMoreStyle} fetch={fetch}/>
+            <ShowMoreFiles
+              isLoading={isLoading}
+              isAllFetched={isAllFetched}
+              showMoreStyle={showMoreStyle}
+              fetch={fetch}
+            />
           </div>
           <HierarchicalFiles
             data={files}

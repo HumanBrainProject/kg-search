@@ -25,10 +25,7 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
@@ -95,8 +92,8 @@ public class Model implements TargetInstance, HasCitation {
     @FieldInfo(label = "Custodian", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Versions")
-    private List<TargetInternalReference> versions;
+    @FieldInfo(label = "Model versions", isTable = true, layout = "Model versions", labelHidden = true)
+    private List<Children<Version>> models;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
