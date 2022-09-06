@@ -301,7 +301,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "External used resources", layout = "Related resources")
     private List<TargetExternalReference> externalInputData;
 
-    @FieldInfo(label = "Resources used by this dataset", layout = "Related resources")
+    @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
 
     @Getter

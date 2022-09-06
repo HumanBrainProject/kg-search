@@ -197,10 +197,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "External used resources", layout = "Related resources")
     private List<TargetExternalReference> externalInputData;
 
-    @FieldInfo(label = "Resources used by this model", layout = "Related resources")
+    @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
 
-    @FieldInfo(label = "External resources used by this model", layout = "Related resources")
+    @FieldInfo(label = "Used externally by", layout = "Related resources")
     private List<TargetExternalReference> externalOutputData;
 
 }
