@@ -53,8 +53,20 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
     dispatch(setQueryString(searchTerm));
   };
 
+  const getSeparator = () => {
+    if (isSecondLast) {
+      return " or ";
+    }
+    if (isLast) {
+      return ", ";
+    }
+    return "";
+  };
+
+  const separator = getSeparator();
+
   return (
-    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick} title={`search for ${word}`}>{word}</button>{isSecondLast?" or ":isLast?"":", "}</li>
+    <li><button className="kgs-suggestion__btn" role="link" onClick={handleOnClick} title={`search for ${word}`}>{word}</button>{separator}</li>
   );
 };
 
