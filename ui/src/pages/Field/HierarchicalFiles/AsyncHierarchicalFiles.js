@@ -222,6 +222,8 @@ export const AsyncHierarchicalFiles = ({
     [files, total, groupingType, hasFilter]
   );
 
+  const isLoading = isUninitialized || isFetching;
+
   return (
     <>
       <FileFilter
@@ -244,7 +246,7 @@ export const AsyncHierarchicalFiles = ({
       {isError ? (
         <FileError error={getError(error)} />
       ) : files.length === 0 ? (
-        <NoFiles isLoading={isUninitialized || isFetching} handleRetry={handleRetry} />
+        <NoFiles isLoading={isLoading} handleRetry={handleRetry} />
       ) : (
         <>
           <div>
@@ -254,7 +256,7 @@ export const AsyncHierarchicalFiles = ({
               length={files.length}
               total={total}
             />
-            <ShowMoreFiles isLoading={isUninitialized || isFetching} isAllFetched={isAllFetched} showMoreStyle={showMoreStyle} onClick={handleShowMore}/>
+            <ShowMoreFiles isLoading={isLoading} isAllFetched={isAllFetched} showMoreStyle={showMoreStyle} onClick={handleShowMore}/>
           </div>
           <HierarchicalFiles
             data={files}

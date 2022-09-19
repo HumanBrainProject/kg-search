@@ -24,10 +24,9 @@
 import React from "react";
 
 import Tags from "../../../components/Tags/Tags";
-import { Field } from "../../Field/Field";
+import { Field, Title } from "../../Field/Field";
 import FieldsPanel from "../../../components/Field/FieldsPanel";
 import { VersionSelector } from "../../../components/VersionSelector/VersionSelector";
-import { Title } from "../../Field/Field";
 import ShareButtons from "../../../features/ShareButtons";
 
 import "./Header.css";

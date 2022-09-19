@@ -75,9 +75,9 @@ const ObjectField = ({data, mapping, group, type, fieldComponent: FieldComponent
   return (
     <List className={`kgs-field__object ${mapping.enforceList ? "kgs-field__object_enforce_list" : ""}`}>
       {
-        fields.map(({ name, data, mapping, group }, idx) => (
-          <ListItem key={name} separator={mapping.separator} isFirst={!idx}>
-            <FieldComponent name={name} data={data} mapping={mapping} group={group} type={type} />
+        fields.map((field, idx) => (
+          <ListItem key={field.name} separator={field.mapping.separator} isFirst={!idx}>
+            <FieldComponent name={field.name} data={field.data} mapping={field.mapping} group={field.group} type={type} />
           </ListItem>
         ))
       }

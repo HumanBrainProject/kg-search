@@ -56,10 +56,6 @@
     color: var(--link-color-2) !important;
 }
 
-.kgs-error-message a{
-    color: var(--link-color-1) !important;
-}
-
 .kgs-error-navigation {
     position: relative;
     width: 100%;

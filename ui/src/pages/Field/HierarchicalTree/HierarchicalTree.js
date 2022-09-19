@@ -22,7 +22,6 @@
  */
 
 import React, { Suspense, useState } from "react";
-import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import _ from "lodash-uuid";
@@ -72,8 +71,11 @@ const Loading = () => {
   );
 };
 
-const HierarchicalTreeComponent = ({ data, group, defaultExpandAll, defaultExpandedKeys }) => {
-  const [node, setNode] = useState(data);
+const HierarchicalTree = ({ data, group }) => {
+
+  const { data: tree, expandAll: defaultExpandAll, expandedKeys: defaultExpandedKeys } = splitChildren(data);
+
+  const [node, setNode] = useState(tree);
 
   const onSelect = (_selectedKeys, info) => {
     trackEvent("Specimen", "Clicked", info.node.title);
@@ -89,7 +91,7 @@ const HierarchicalTreeComponent = ({ data, group, defaultExpandAll, defaultExpan
       <div className="kgs-hierarchical-tree__body">
         <div className="kgs-hierarchical-tree__content">
           <Suspense fallback={<Loading />}>
-            <Tree data={data} onSelect={onSelect} defaultExpandAll={defaultExpandAll} defaultExpandedKeys={defaultExpandedKeys} />
+            <Tree data={tree} onSelect={onSelect} defaultExpandAll={defaultExpandAll} defaultExpandedKeys={defaultExpandedKeys} />
           </Suspense>
         </div>
         <Node node={node} group={group} />
@@ -188,17 +190,5 @@ const splitChildren = data => {
     };
   }
 };
-
-const HierarchicalTree = connect(
-  (state, props) => {
-    const { data, expandAll, expandedKeys } = splitChildren(props.data);
-    return {
-      data: data,
-      group: props.group,
-      defaultExpandAll: expandAll,
-      defaultExpandedKeys: expandAll?undefined:expandedKeys
-    };
-  }
-)(HierarchicalTreeComponent);
 
 export default HierarchicalTree;

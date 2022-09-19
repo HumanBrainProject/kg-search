@@ -32,6 +32,16 @@ import { setPage } from "./searchSlice";
 
 import "./Pagination.css";
 
+const getAriaLabel = (isPrevious, isNext, title) => {
+  if (isPrevious) {
+    return "previous";
+  }
+  if (isNext) {
+    return "next";
+  }
+  return title;
+};
+
 class PageLinkButton extends React.PureComponent {
 
   onClick = () => {
@@ -41,15 +51,15 @@ class PageLinkButton extends React.PureComponent {
 
   render() {
     const { page: { name, title, active, readOnly}} = this.props;
-    const previous = name === "previous";
-    const next = name === "next";
+    const isPrevious = name === "previous";
+    const isNext = name === "next";
     const ellipsis = name === "ellipsis";
-    const ariaLabel = previous?"previous":(next?"next":title);
+    const ariaLabel = getAriaLabel(isPrevious, isNext, title);
     return (
       <button className={`kgs-page-link ${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly} title={ariaLabel}>
-        {previous && <FontAwesomeIcon icon={faChevronLeft} className="is-previous" />}
-        {!previous && !next && title}
-        {next && <FontAwesomeIcon icon={faChevronRight} className="is-next" />}
+        {isPrevious && <FontAwesomeIcon icon={faChevronLeft} className="is-previous" />}
+        {!isPrevious && !isNext && title}
+        {isNext && <FontAwesomeIcon icon={faChevronRight} className="is-next" />}
       </button>
     );
   }

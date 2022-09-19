@@ -27,9 +27,8 @@ import { useSelector } from "react-redux";
 import { selectTypeMapping } from "../../../features/instance/instanceSlice";
 
 import Badges from "../../../components/Badges/Badges";
-import { PrintViewField } from "../../Field/Field";
+import { PrintViewField, Title } from "../../Field/Field";
 import HighlightsField from "./HighlightsField";
-import { Title } from "../../Field/Field";
 
 import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
 
@@ -98,17 +97,15 @@ const getDescriptionField = (group, data, highlight, mapping) => {
 };
 
 const getField = (group, name, data, highlight, mapping) => {
-  switch (name) {
-  case "description":
+  if (name === "description") {
     return getDescriptionField(group, data, highlight, mapping);
-  default:
-    return {
-      name: name,
-      data: data,
-      mapping: mapping,
-      group: group
-    };
   }
+  return {
+    name: name,
+    data: data,
+    mapping: mapping,
+    group: group
+  };
 };
 
 const getFields = (group, data, highlight, parentMapping) => {

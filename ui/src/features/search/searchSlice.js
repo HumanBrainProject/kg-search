@@ -243,14 +243,14 @@ const searchSlice = createSlice({
       }
     },
     setPage(state, action) {
-      state.page = action.payload,
-      state.from =  (action.payload - 1) * state.hitsPerPage,
+      state.page = action.payload;
+      state.from =  (action.payload - 1) * state.hitsPerPage;
       state.isUpToDate = false;
     },
     setType(state, action) {
       const type = state.types.find(t => t.type === action.payload);
       if (type) {
-        state.selectedType = type.type,
+        state.selectedType = type.type;
         state.page = 1;
         state.from = 0;
         state.isUpToDate = false;

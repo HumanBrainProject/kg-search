@@ -37,15 +37,18 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
 
   const dispatch = useDispatch();
 
-  const handleOnClick = () => {
-    trackEvent("Search", "Refine search using suggestion", searchTerm);
-    let to = "/";
+  const getSuggestionToUrl = () => {
     const find = location.search.split("&").find(p => p.match(/\??q=.*/));
     if (find) {
-      to = location.search.replace(find, `${find.startsWith("?")?"?":""}q=${encodeURIComponent(searchTerm)}`);
-    } else {
-      to = location.search + location.search.endsWith("?")?"q=":"&q=" + encodeURIComponent(searchTerm);
+      return location.search.replace(find, `${find.startsWith("?")?"?":""}q=${encodeURIComponent(searchTerm)}`);
     }
+
+    return location.search + location.search.endsWith("?")?"q=":"&q=" + encodeURIComponent(searchTerm);
+  };
+
+  const handleOnClick = () => {
+    trackEvent("Search", "Refine search using suggestion", searchTerm);
+    const to = getSuggestionToUrl();
     navigate(to);
     dispatch(setQueryString(searchTerm));
   };
@@ -55,13 +58,16 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
   );
 };
 
-const Suggestions =  ({ words }) => (
-  <ul className="kgs-suggestions">
-    {Object.keys(words).map((word, idx) => (
-      <Suggestion key={word} word={word} searchTerm={words[word]} isSecondLast={idx === Object.keys(words).length -2} isLast={idx === Object.keys(words).length -1} />
-    ))}
-  </ul>
-);
+const Suggestions =  ({ words }) => {
+  const list = Object.entries(words);
+  return (
+    <ul className="kgs-suggestions">
+      {list.map(([word, searchTerm], idx) => (
+        <Suggestion key={word} word={word} searchTerm={searchTerm} isSecondLast={idx ===list.length -2} isLast={idx === list.length -1} />
+      ))}
+    </ul>
+  );
+};
 
 const Viewing = ({ hitCount, from, to }) => (
   <>

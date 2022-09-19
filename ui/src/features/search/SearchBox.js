@@ -39,11 +39,18 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
   const textInput = useRef();
   const [value, setValue] = useState(queryString);
 
+  const getQueryFromUrl = () => {
+    const q = searchToObj()["q"];
+    if (q && q.length) {
+      return decodeURIComponent(q);
+    }
+    return "";
+  };
+
   useEffect(() => {
     const popstateHandler = () => {
-      const q = searchToObj()["q"];
-      if (q && q.length) {
-        const query = decodeURIComponent(q);
+      const query = getQueryFromUrl();
+      if (query) {
         setValue(query);
         onQueryStringChange(query);
       }
@@ -53,10 +60,9 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
     window.addEventListener("popstate", popstateHandler, false);
     window.addEventListener("scroll", blur);
 
-    const q = searchToObj()["q"];
-    if (q && q.length) {
-      const query = decodeURIComponent(q);
-      setValue(query);
+    const initialQuery = getQueryFromUrl();
+    if (initialQuery) {
+      setValue(initialQuery);
     }
     textInput && textInput.current.focus();
     return () => {

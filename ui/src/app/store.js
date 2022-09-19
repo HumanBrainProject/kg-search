@@ -25,13 +25,10 @@ import { logger } from "redux-logger";
 
 import { api } from "./services/api";
 import applicationReducer from "../features/application/applicationSlice";
-import authReducer from "../features/auth/authSlice";
+import authReducer, { sessionFailure } from "../features/auth/authSlice";
 import groupsReducer from "../features/groups/groupsSlice";
-import searchReducer from "../features/search/searchSlice";
-import instanceReducer from "../features/instance/instanceSlice";
-import { searchCacheActions } from "../features/search/searchSlice";
-import { instancesCacheActions } from "../features/instance/instanceSlice";
-import { sessionFailure } from "../features/auth/authSlice";
+import searchReducer, { searchCacheActions } from "../features/search/searchSlice";
+import instanceReducer, { instancesCacheActions } from "../features/instance/instanceSlice";
 
 const rootReducer = {
   application: applicationReducer,

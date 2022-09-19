@@ -10,6 +10,14 @@ const isMatchingLegacyInstanceId = (instanceId) => {
   return regLegacyInstanceId.test(instanceId);
 };
 
+const transformInstanceResponse = (data, _meta, arg) => {
+  const id = arg?.id;
+  if (id && isMatchingLegacyInstanceId(id)) {
+    data.id = id;
+  }
+  return data;
+};
+
 const unauthenticatedEndpoints = ["getSettings"];
 
 export const api = createApi({
@@ -29,7 +37,8 @@ export const api = createApi({
   endpoints: builder => ({
     getSettings: builder.query({
       query: () => "/settings",
-      async onQueryStarted(arg,  { queryFulfilled }) { // {dispatch, getState, extra, requestId, queryFulfilled}
+      //async onQueryStarted(arg, {dispatch, getState, extra, requestId, queryFulfilled}) {
+      async onQueryStarted(_arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled; // { data, meta }
           const isLocalDev = window.location.host.startsWith("localhost");
@@ -59,13 +68,8 @@ export const api = createApi({
     getInstance: builder.query({
       //query: () => "/static/data/instance.json",
       query: ({ id, group }) => `/groups/${group}/documents/${id}`,
-      transformResponse: (data, meta, arg) => {
-        const id = arg?.id;
-        if (id && isMatchingLegacyInstanceId(id)) {
-          data.id = id;
-        }
-        return data;
-      },
+      //transformResponse: (data, meta, arg) => data,
+      transformResponse: transformInstanceResponse,
       keepUnusedDataFor: 1800, // 30 minutes cache
       tagTypes: ["Authentication"]
     }),
@@ -154,13 +158,8 @@ export const api = createApi({
     getLinkedInstance: builder.query({
       //query: () => "/static/data/instance.json",
       query: ({ id, group }) => `/groups/${group}/documents/${id}`,
-      transformResponse: (data, meta, arg) => {
-        const id = arg?.id;
-        if (id && isMatchingLegacyInstanceId(id)) {
-          data.id = id;
-        }
-        return data;
-      },
+      //transformResponse: (data, meta, arg) => data,
+      transformResponse: transformInstanceResponse,
       keepUnusedDataFor: 1800, // 30 minutes cache
       tagTypes: ["Authentication"]
     }),

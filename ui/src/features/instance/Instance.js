@@ -60,7 +60,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
   const handleOnCancelClick = () => {
     if (!group) {
       dispatch(logout());
-    };
+    }
     dispatch(reset());
     navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
   };
