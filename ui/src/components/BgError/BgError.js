@@ -31,7 +31,7 @@ import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-export const BgError = ({ message, cancelLabel="Cancel", onCancelClick, cancelVariant, retryLabel="Retry", onRetryClick, retryVariant }) => {
+const BgError = ({ message, cancelLabel="Cancel", onCancelClick, cancelVariant, retryLabel="Retry", onRetryClick, retryVariant }) => {
   const html = converter.makeHtml(message);
   return (
     <div className="kgs-bg-error">

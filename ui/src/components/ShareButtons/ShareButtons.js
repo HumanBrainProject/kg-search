@@ -36,7 +36,7 @@ const getShareEmailToLink = url => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-export const ShareButtons = ({ url }) => {
+const ShareButtons = ({ url }) => {
   const link = getShareEmailToLink(url);
   return (
     <span className="kgs-share-links" >

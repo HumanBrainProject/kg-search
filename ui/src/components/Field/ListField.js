@@ -22,8 +22,7 @@
  */
 
 import React from "react";
-import { ObjectField, PrintViewObjectField } from "./ObjectField";
-import { ValueField, PrintViewValueField } from "./ValueField";
+import ObjectField from "./ObjectField";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,
@@ -32,9 +31,6 @@ import { LIST_SMALL_SIZE_STOP,
 import "./ListField.css";
 
 const ListFieldBase = (renderUserInteractions = true) => {
-
-  const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
-  const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
 
   const DefaultList = ({children}) => {
     return (
@@ -63,7 +59,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandler, toggleLabel}) => {
+  const ListFieldComponent = ({list, separator, fieldComponent, valueFieldComponent: ValueFieldComponent, showAsTag, showToggle, toggleHandler, toggleLabel}) => {
     const isCustom = separator || showAsTag;
     const List = isCustom?CustomList:DefaultList;
     const ListItem = isCustom?CustomListItem:DefaultListItem;
@@ -75,7 +71,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
             list.map(({isObject, key, data, mapping, group}, idx) => (
               <ListItem key={key} separator={separator} isFirst={!idx}>
                 {isObject?
-                  <ObjectFieldComponent data={data} mapping={mapping} group={group} />
+                  <ObjectField data={data} mapping={mapping} group={group} fieldComponent={fieldComponent} />
                   :
                   <ValueFieldComponent data={data} mapping={mapping} group={group} />
                 }
@@ -175,9 +171,9 @@ const ListFieldBase = (renderUserInteractions = true) => {
     };
 
     render() {
-      const { mapping } = this.props;
+      const { mapping, fieldComponent, valueFieldComponent } = this.props;
       return (
-        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
+        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tagIcon && mapping.separator} fieldComponent={fieldComponent} valueFieldComponent={valueFieldComponent} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
       );
     }
   }

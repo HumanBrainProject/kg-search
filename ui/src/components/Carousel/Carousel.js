@@ -64,7 +64,7 @@ const CarouselItem = ({ item, showPrevious, onClose, onBack, itemComponent, navi
     <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
         {item.isActive && item.data && ItemComponent && (
-          <ItemComponent data={item.data} NavigationComponent={NavigationComponent} />
+          <ItemComponent data={item.data} customNavigationComponent={NavigationComponent} />
         )}
       </div>
     </div>
@@ -121,7 +121,7 @@ const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationC
     <div className={classNames} onClick={handleOnClose}>
       <div className="kgs-carousel__panel" ref={wrapperRef}>
         {items.map(item => (
-          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onBack={onBack} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+          <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onBack={onBack} onClose={onClose} itemComponent={itemComponent} CustomNavigationComponent={navigationComponent} />
         ))}
       </div>
     </div>

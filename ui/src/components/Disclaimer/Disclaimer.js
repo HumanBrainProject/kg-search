@@ -29,7 +29,7 @@ import "./Disclaimer.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-export const Disclaimer = ({ content }) => {
+const Disclaimer = ({ content }) => {
   if (!content) {
     return null;
   }
@@ -42,3 +42,5 @@ export const Disclaimer = ({ content }) => {
     <strong className="kgs-instance-disclaimer" dangerouslySetInnerHTML={{ __html: html }} />
   );
 };
+
+export default Disclaimer;

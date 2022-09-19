@@ -31,8 +31,8 @@ import "./Notification.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-export const Notification = ({className, show, text}) => {
-  if (!show || !text) {
+const Notification = ({className, text}) => {
+  if (!text) {
     return null;
   }
 

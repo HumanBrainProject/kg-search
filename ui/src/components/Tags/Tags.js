@@ -24,7 +24,7 @@
 import React from "react";
 import "./Tags.css";
 
-export const Tags = ({tags}) => (
+const Tags = ({tags}) => (
   <div className="kgs-tags">
     {tags.map(tag => (
       <span key={tag} className="kgs-tag">{tag}</span>

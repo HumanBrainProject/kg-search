@@ -35,8 +35,8 @@ const Badge = ({ title, active, className }) => {
 };
 
 
-export const Badges = ({ badges }) => {
-  if (!(badges instanceof Array)) {
+const Badges = ({ badges }) => {
+  if (!Array.isArray(badges)) {
     return null;
   }
   return (
@@ -46,3 +46,5 @@ export const Badges = ({ badges }) => {
     </div>
   );
 };
+
+export default Badges;

@@ -25,12 +25,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import React, { useState } from "react";
-import { Field } from "./Field";
 import { Hint } from "../Hint/Hint";
 import "./TableField.css";
 import { getKey } from "./helpers";
 
-const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
+const CustomTableCell = ({ field, isFirstCell, onCollapseToggle, fieldComponent: FieldComponent }) => {
+
   if (!field.data) {
     return field.level === 1 ? <th></th>:<td className={`kg-cell_level_${field.level}`}></td>;
   }
@@ -43,7 +43,7 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
         {isFirstCell && field.isCollectionCollapsible && (
           <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?faChevronRight:faChevronDown} /></button>
         )}
-        <Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
+        <FieldComponent name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
         {isFirstCell && field.isCollectionASubset && (
           <Hint className="kg-cell-hint" value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():"dataset"}`} />
         )}
@@ -51,15 +51,15 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
     );
   }
   return (
-    <td className={`kg-cell_level_${field.level}`}><Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
+    <td className={`kg-cell_level_${field.level}`}><FieldComponent name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
   );
 };
 
-const CustomTableRow = ({row, onCollapseToggle}) => {
+const CustomTableRow = ({ row, onCollapseToggle, fieldComponent }) => {
   const collapse = row[0].isCollectionCollapsed && row[0].level !== 1;
   return(
     <tr className={collapse?"row-hidden":null}>
-      {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} onCollapseToggle={onCollapseToggle} />)}
+      {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} onCollapseToggle={onCollapseToggle} fieldComponent={fieldComponent} />)}
     </tr>
   );
 };
@@ -124,7 +124,7 @@ const filterRows = table => {
     }, []));
 };
 
-const TableFieldComponent = ({list}) => {
+const TableFieldComponent = ({ list, fieldComponent }) => {
   const initialState = list.reduce((acc, _, index) => {
     acc[index] = true;
     return acc;
@@ -157,7 +157,7 @@ const TableFieldComponent = ({list}) => {
         </tr>
       </thead>
       <tbody>
-        {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} onCollapseToggle={onCollapseToggle} />)}
+        {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} onCollapseToggle={onCollapseToggle} fieldComponent={fieldComponent} />)}
       </tbody>
     </table>
   );
@@ -165,7 +165,7 @@ const TableFieldComponent = ({list}) => {
 
 class TableField extends React.Component {
   getItems = () => {
-    const {items, mapping, group, type} = this.props;
+    const { items, mapping, group, type } = this.props;
     const convertedItem = Array.isArray(items)?items:[items];
     return convertedItem.map((item, idx) => ({
       isObject: !!item.children,
@@ -178,8 +178,9 @@ class TableField extends React.Component {
   };
 
   render() {
+    const { fieldComponent } = this.props;
     return (
-      <TableFieldComponent list={this.getItems()} />
+      <TableFieldComponent list={this.getItems()} fieldComponent={fieldComponent} />
     );
   }
 }

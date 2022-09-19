@@ -23,7 +23,7 @@
 
 import React from "react";
 
-export const FieldsPanel = ({className, fields, fieldComponent}) =>{
+const FieldsPanel = ({className, fields, fieldComponent}) =>{
   if (!fields || !fields.length) {
     return null;
   }
@@ -36,3 +36,5 @@ export const FieldsPanel = ({className, fields, fieldComponent}) =>{
     </div>
   );
 };
+
+export default FieldsPanel;

@@ -23,33 +23,16 @@
 const FACET_DEFAULT_SIZE = 10;
 const FACET_ALL_SIZE = 1000000000;
 
-export const getResetFacets = facets => facets.map(facet => getResetFacet(facet));
-
-const getResetFacet = facet => {
+export const resetFacet = facet => {
   switch (facet.type) {
   case "list":
-    return {
-      ...facet,
-      value: null,
-      size: (facet.isHierarchical || facet.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE
-    };
+    facet.value = null;
+    facet.size = (facet.isHierarchical || facet.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE;
+    break;
   case "exists":
   default:
-    return {
-      ...facet,
-      value: null
-    };
+    facet.value = null;
   }
-};
-
-export const getActiveFacets = facets => {
-  if (!Array.isArray(facets)) {
-    return [];
-  }
-  return facets.filter(f =>
-    f.count > 0 &&
-    (f.type !== "list" || f.keywords.length)
-  );
 };
 
 export const constructFacet = facet => ({

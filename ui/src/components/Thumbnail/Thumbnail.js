@@ -61,7 +61,7 @@ const ThumbnailIcon = ({isAnimated}) => {
     />
   );
 };
-export class Thumbnail extends React.Component {
+class Thumbnail extends React.Component {
   constructor(props) {
     super(props);
     this.state = { src: null, show: false, fetched: false, error: false };
