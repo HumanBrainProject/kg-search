@@ -18,7 +18,7 @@ const transformInstanceResponse = (data, _meta, arg) => {
   return data;
 };
 
-const unauthenticatedEndpoints = ["getSettings"];
+const unauthenticatedEndpoints = ["getSettings", "getCitation", "getBibtex"];
 
 export const api = createApi({
   reducerPath: "api",
