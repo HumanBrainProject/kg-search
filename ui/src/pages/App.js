@@ -80,7 +80,7 @@ const App = () => {
         if (useGroups) {
           dispatch(setUseGroups());
         }
-        dispatch(setLoginRequired());
+        dispatch(setLoginRequired(true));
         dispatch(setApplicationReady());
       } else {
         dispatch(setApplicationReady());
