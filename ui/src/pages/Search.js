@@ -25,7 +25,7 @@ import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useGetSearchQuery, trackCustomUrl, trackPageView } from "../app/services/api";
+import { useGetSearchQuery, setCustomUrl, trackPageView } from "../app/services/api";
 import { initializeSearch, syncSearch, selectActiveFacets } from "../features/search/searchSlice";
 import { syncHistory } from "../features/instance/instanceSlice";
 import { setGroup } from "../features/groups/groupsSlice";
@@ -273,7 +273,7 @@ const SearchBase = () => {
     if (isInitialized && isActive) {
       if (locationSearchRef.current !== window.location.href) {
         locationSearchRef.current = window.location.href;
-        trackCustomUrl(window.location.href);
+        setCustomUrl(window.location.href);
         trackPageView();
       }
     }

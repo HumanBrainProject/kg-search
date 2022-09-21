@@ -26,7 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
-import { useListFilesQuery, useListPreviewFilesQuery, useListFormatsQuery, useListPreviewFormatsQuery, useListGroupingTypesQuery, useListPreviewGroupingTypesQuery, getError } from "../../../app/services/api";
+import { useListFilesQuery, useListPreviewFilesQuery, useListFormatsQuery, useListPreviewFormatsQuery, useListGroupingTypesQuery, useListPreviewGroupingTypesQuery, trackEvent, getError } from "../../../app/services/api";
 
 import { FileFilter } from "./FileFilter";
 import HierarchicalFiles from "./HierarchicalFiles";
@@ -182,21 +182,17 @@ export const AsyncHierarchicalFiles = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  const handleSetFileFormat = useMemo(
-    () => value => {
-      setFileFormat(value);
-      setSearchAfter(null);
-    },
-    []
-  );
+  const handleSetFileFormat = value => {
+    trackEvent("Files", "Filter", value);
+    setFileFormat(value);
+    setSearchAfter(null);
+  };
 
-  const handleSetGroupingType = useMemo(
-    () => value => {
-      setGroupingType(value);
-      setSearchAfter(null);
-    },
-    []
-  );
+  const handleSetGroupingType = value => {
+    trackEvent("Files", "Group by", value);
+    setGroupingType(value);
+    setSearchAfter(null);
+  };
 
   const handleRetry = () => {
     if (!searchAfter) {

@@ -21,16 +21,27 @@
  *
  */
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
+import { setCustomUrl, trackPageView } from "../app/services/api";
 import InstanceContainer from "./Instance/InstanceContainer";
 
 const Preview = () => {
 
+  const initializedRef = useRef(false);
+
   const {org, domain, schema, version, id} = useParams();
 
   const instanceId = (org && domain && schema && version && id)?`${org}/${domain}/${schema}/${version}/${id}`:id;
+
+  useEffect(() => {
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      setCustomUrl(window.location.href);
+      trackPageView();
+    }
+  }, []);
 
   return (
     <InstanceContainer

@@ -174,6 +174,7 @@ class HierarchicalFiles extends React.Component {
 
   onFilterMouseUp = debounce(({ target: { value } }) => {
     const filter = value.trim();
+    trackEvent("Files", "Search", filter);
     this.setState({ filter: filter });
     const tree = getFilteredTree(this.state.initialTree, filter);
     const expandedKeys = [tree.key];

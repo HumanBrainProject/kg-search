@@ -28,6 +28,7 @@ import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 
+import { trackEvent } from "../../app/services/api";
 import { logout, setLoginRequired } from "./authSlice";
 import { setGroup } from "../groups/groupsSlice";
 import { setPage } from "../search/searchSlice";
@@ -42,6 +43,7 @@ const Group = ({ group }) => {
   const current = useSelector(state => state.groups.group);
 
   const handleGroupClick = () => {
+    trackEvent("Group", "Select", group.value);
     dispatch(setGroup(group.value));
     dispatch(reset());
     dispatch(setPage(1));
@@ -73,10 +75,12 @@ const SignIn = ({ className, Tag }) => {
   const groups = useSelector(state => state.groups.groups);
 
   const handleLogoutClick = () => {
+    trackEvent("User", "Logout");
     dispatch(logout());
   };
 
   const handleLoginClick = () => {
+    trackEvent("User", "Login");
     dispatch(setLoginRequired(true));
   };
 

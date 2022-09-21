@@ -49,7 +49,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
 
   useEffect(() => {
     if (id && (!isSearch || isSearchInitialized)) {
-      const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
+      const relativeUrl = `${path}${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
       if (cardOpenedUrlRef.current !== relativeUrl) {
         cardOpenedUrlRef.current = relativeUrl;
         trackEvent("Card", "Opened", relativeUrl);

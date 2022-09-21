@@ -194,7 +194,7 @@ export const captureException = e => Sentry.captureException(e);
 
 export const showReportDialog = customSettings => Sentry.showReportDialog(customSettings);
 
-export const trackCustomUrl = url => Matomo.trackCustomUrl(url);
+export const setCustomUrl = url => Matomo.setCustomUrl(url);
 
 export const trackPageView = () => Matomo.trackPageView();
 
