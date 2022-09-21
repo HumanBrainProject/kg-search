@@ -71,11 +71,11 @@ const groupsSlice = createSlice({
   }
 });
 
-export const selectIsCurated = state => state.group === "curated";
+export const selectIsCurated = state => state.groups.group === "curated";
 
-export const selectIsDefaultGroup = state => state.group ===  state.defaultGroup;
+export const selectIsDefaultGroup = state => state.groups.group === state.groups.defaultGroup;
 
-export const  selectGroupLabel = (state, name) => {
+export const selectGroupLabel = (state, name) => {
   let label = null;
   state.groups.groups.some(group => {
     if (group.value === name) {
