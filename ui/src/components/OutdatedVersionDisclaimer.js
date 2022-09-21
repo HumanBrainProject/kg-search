@@ -25,10 +25,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 
-const OutdatedVersionDisclaimer = ({ type, version, versions, overviewVersion, onVersionChange }) => {
-
-  const latestVersion = Array.isArray(versions) && !!versions.length && !!version && versions[0];
-  const isOutdated = !!latestVersion && latestVersion.label !== version;
+const OutdatedVersionDisclaimer = ({ type, overviewVersion, latestVersion, isOutdated, onVersionChange }) => {
 
   return (
     <div className="kgs-outdated-version-disclaimer" >
