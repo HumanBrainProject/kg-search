@@ -227,7 +227,8 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       items: data,
       mapping: mapping,
       group: group,
-      type: type
+      type: type,
+      fieldComponent: FieldComponent,
     };
     valueComponent = TableField;
 
