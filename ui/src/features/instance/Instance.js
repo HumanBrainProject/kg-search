@@ -54,6 +54,8 @@ const Instance = ({ isPreview, isSearch, path }) => {
         cardOpenedUrlRef.current = relativeUrl;
         trackEvent("Card", "Opened", relativeUrl);
       }
+    } else {
+      cardOpenedUrlRef.current = null;
     }
   }, [id, group, defaultGroup, path, isSearch, isSearchInitialized]);
 
