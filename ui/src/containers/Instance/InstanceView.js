@@ -165,6 +165,9 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
   const version = (data?.version)?data.version:"Current";
   const versions = getVersions(data?.versions);
 
+  const latestVersion = Array.isArray(versions) && !!versions.length && !!version && versions[0];
+  const isOutdated = !!latestVersion && latestVersion.label !== version;
+
   const tags = getTags(groupLabel, isDefaultGroup, data?.category);
 
   const onVersionChange = version => {
@@ -193,9 +196,9 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
   }
 
   return (
-    <div className="kgs-instance" data-type={type}>
+    <div className={`kgs-instance ${isOutdated?"kgs-outdated":""}`} data-type={type}>
       <Header title={data?.title} version={version} tags={tags} fields={headerFields} versions={versions} customNavigationComponent={customNavigationComponent} onVersionChange={onVersionChange} />
-      <OutdatedVersionDisclaimer type={type} version={version} versions={versions} overviewVersion={data?.allVersionRef} onVersionChange={onVersionChange} />
+      <OutdatedVersionDisclaimer type={type} latestVersion={latestVersion} isOutdated={isOutdated} overviewVersion={data?.allVersionRef} onVersionChange={onVersionChange} />
       <Tabs tabs={tabs} selectedTab={selectedTab} onTabClick={handleTabClick} />
       <Disclaimer content={data?.disclaimer} />
       <TermsShortNotice />
