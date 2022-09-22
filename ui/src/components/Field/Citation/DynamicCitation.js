@@ -21,68 +21,41 @@
  *
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
-import sanitizeHtml from "sanitize-html";
-import API from "../../../services/API";
+
+import { useGetCitationQuery, useGetBibtexQuery } from "../../../app/services/api";
+
 import Citation from "./Citation";
 
 import "./DynamicCitation.css";
 
 const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
 
-  const [citation, setCitation] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-  const [bibtex, setBibtex] = useState();
+  const citation = useGetCitationQuery(doi);
+  const bibtex = useGetBibtexQuery(doi);
+  //const { data, currentData, error, isUninitialized, isLoading, isFetching, isSuccess, isError, refetch } = citation;
 
   useEffect(() => {
-    getCitation();
+    if (citation.data && typeof onCitationDownloaded === "function") {
+      onCitationDownloaded(doi, citation.data);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [citation.data, onCitationDownloaded]);
 
-  const getCitation = async () => {
-    setIsLoading(true);
-    setError(null);
-    const apaCitationResult = await API.axios.get(API.endpoints.citation(doi, "apa", "text/x-bibliography"));
-    const apaCitation = apaCitationResult?.data;
-    const bibtexCitationResult = await API.axios.get(API.endpoints.citation(doi, "bibtex", "application/x-bibtex"));
-    const bibtexCitation = bibtexCitationResult?.data;
-    if (apaCitation) {
-      setIsLoading(false);
-      setError(null);
-      const citation = sanitizeHtml(apaCitation, {
-        allowedTags: [],
-        allowedAttributes: {},
-      });
-      setCitation(citation);
-      typeof onCitationDownloaded === "function" && onCitationDownloaded(doi, citation);
-    } else {
-      setIsLoading(false);
-      setCitation(null);
-      setError(title?`The citation for ${title} was not found.`:`The citation for doi ${doi} was not found.`);
-      typeof onCitationDownloaded === "function" && onCitationDownloaded(doi, null);
-    }
-    if (bibtexCitation) {
-      const bibtexUrl = window.URL.createObjectURL(
-        new Blob([bibtexCitation]),
-      );
-      setBibtex(bibtexUrl);
-    }
-  };
-
-  if (error) {
+  if (citation.isError) {
+    const error = title?`The citation for ${title} was not found.`:`The citation for doi ${doi} was not found.`;
     return (
       <div className="kgs-citation kgs-citation-error">
         <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
-        <FontAwesomeIcon icon={faSyncAlt} onClick={getCitation} style={{ cursor: "pointer" }} />
+        <FontAwesomeIcon icon={faSyncAlt} onClick={citation.refetch} style={{ cursor: "pointer" }} />
       </div>
     );
   }
 
-  if (isLoading) {
+  if(citation.isUninitialized || citation.isFetching) {
     return (
       <div className="kgs-citation kgs-citation-spinner">
         <span className="spinner-border spinner-border-sm" role="status"></span>
@@ -92,7 +65,7 @@ const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
   }
 
   return (
-    <Citation title={title} citation={citation} bibtex={bibtex} doi={doi} />
+    <Citation title={title} citation={citation.data} bibtex={bibtex.data} doi={doi} />
   );
 };
 

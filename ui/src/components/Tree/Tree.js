@@ -112,7 +112,7 @@ class CollapisbleNode extends React.Component {
   }
 }
 
-export const Tree = ({ tree, ItemComponent, itemUniqKeyAttribute, onItemClick }) => (
+const Tree = ({ tree, ItemComponent, itemUniqKeyAttribute, onItemClick }) => (
   <div className="kgs-tree">
     {Array.isArray(tree) ?
       <NodeList items={tree} ItemComponent={ItemComponent} itemUniqKeyAttribute={itemUniqKeyAttribute} onItemClick={onItemClick} readOnly={false} />

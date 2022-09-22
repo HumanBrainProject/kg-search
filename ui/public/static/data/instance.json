@@ -166,7 +166,7 @@
         "value": "Schubert, N."
       }
     ],
-    "filesAsyncUrl": "/api/groups/public/repositories/42fdb9bb-6d62-46a0-882a-065df7a9f6da/files",
+    "fileRepositoryId": "42fdb9bb-6d62-46a0-882a-065df7a9f6da",
     "doi": { "value": "10.25493/QFN4-BPS" },
     "publications": [
       {

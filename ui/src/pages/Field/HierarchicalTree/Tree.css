@@ -1,0 +1,60 @@
+
+.kgs-tree {
+  border: 1px solid var(--default-border-color);
+  border-radius: 5px;
+}
+
+.kgs-tree .rc-tree {
+  height: calc(100vh - 500px);
+  overflow-y: auto;
+  padding: 10px;
+  overflow-x: hidden;
+}
+
+.kgs-tree .rc-tree .rc-tree-treenode:hover .rc-tree-title {
+  color: var(--color-8);
+}
+
+.kgs-tree .rc-tree .rc-tree-node-selected {
+  background-color: var(--button-default-background-color);
+  box-shadow: none;
+}
+
+.kgs-tree .rc-tree .rc-tree-treenode span.rc-tree-iconEle  {
+  transform: translateY(4px);
+  vertical-align: top;
+}
+
+.kgs-tree .rc-tree .rc-tree-treenode {
+  display: flex;
+}
+
+.kgs-tree .rc-tree .rc-tree-switcher {
+  transform: translateY(5px);
+}
+
+.kgs-tree .rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
+  color: rgb(157, 165, 171);
+  vertical-align: middle;
+  min-height: 24px;
+  height: auto;
+  width: calc(100% - 40px);
+}
+
+.kgs-tree .rc-tree .rc-tree-title {
+  word-break: break-all;
+  white-space: normal;
+  width: calc(100% - 16px);
+}
+
+.kgs-tree ul.kgs-tree-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kgs-tree ul.kgs-tree-legend li {
+    display: inline-block;
+    margin: 5px;
+    font-size: small;
+}

@@ -64,7 +64,7 @@ const CarouselItem = ({ item, showPrevious, onClose, onBack, itemComponent, navi
     <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
         {item.isActive && item.data && ItemComponent && (
-          <ItemComponent data={item.data} NavigationComponent={NavigationComponent} />
+          <ItemComponent data={item.data} customNavigationComponent={NavigationComponent} />
         )}
       </div>
     </div>

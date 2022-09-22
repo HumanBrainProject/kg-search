@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import showdown from "showdown";
@@ -44,28 +44,29 @@ const Loading = () => (
 
 const Citations = ({ data }) => {
 
-  const [citations, setCitations] = useState(data
-    .map(c => {
-      if (c.citation) {
-        return {
-          ...c,
-          key: c.id,
-          citation: converter.makeHtml(c.citation)
-        };
-      }
+  const list = useMemo(() => data.map(c => {
+    if (c.citation) {
       return {
         ...c,
-        key: c.doi,
-        isDynamic: true
-      };;
-    })
-    .reduce((acc, c) => {
+        key: c.id,
+        citation: converter.makeHtml(c.citation)
+      };
+    }
+    return {
+      ...c,
+      key: c.doi,
+      isDynamic: true
+    };
+  }), [data]);
+
+  const [citations, setCitations] = useState(
+    list.reduce((acc, c) => {
       acc[c.key] = c;
       return acc;
     }, {})
   );
 
-  const handleOnCitationDownloaded = (doi, citation) => {
+  const handleOnCitationDownloaded = useMemo(() => (doi, citation) => {
     setCitations(citations => ({
       ...citations,
       [doi]: citation?
@@ -80,14 +81,16 @@ const Citations = ({ data }) => {
           error: true
         }
     }));
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const list =  Object.values(citations);
-  const allCitations = list.filter(item => item.citation);
-  const errors = list.filter(item => item.error).length;
+  const allCitations = Object.values(citations).filter(item => item.citation);
+  const errors = Object.values(citations).filter(item => item.error).length;
   const number = allCitations.length;
   const total = list.length;
   const text = allCitations.map(item => item.title?`<h6><strong>${item.title}</strong></h6>\n${item.citation}`:item.citation).join("\n\n");
+
+  const copyToClipboardTitle = (number === total)?"Copy all citations":`Copy available citations (${number} out of ${total} )`;
 
   return (
     <div className="kgs-citations">
@@ -97,7 +100,7 @@ const Citations = ({ data }) => {
             {number !== total && (
               <span style={{ color: "var(--code-color)" }} title={`Only ${number} out of ${total} citations available)`}><FontAwesomeIcon icon={faExclamationTriangle} /></span>
             )}
-            <CopyToClipboardButton icon={faClipboard} title={(number === total)?"Copy all citations":`Copy available citations (${number} out of ${total} )`} confirmationText="Citations copied" content={text} />
+            <CopyToClipboardButton icon={faClipboard} title={copyToClipboardTitle} confirmationText="Citations copied" content={text} />
           </>
           :
           <div className="kgs-citations-spinner">
@@ -108,7 +111,7 @@ const Citations = ({ data }) => {
       </div>
       <div className="kgs-citations-body">
         <Suspense fallback={<Loading />}>
-          <CitationsList citations={Object.values(citations)} onCitationDownloaded={handleOnCitationDownloaded} />
+          <CitationsList citations={list} onCitationDownloaded={handleOnCitationDownloaded} />
         </Suspense>
       </div>
     </div>

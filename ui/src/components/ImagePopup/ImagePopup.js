@@ -45,7 +45,7 @@ const Media = ({label, srcState}) => {
   return <img src={srcState} alt={alt} />;
 };
 
-export const ImagePopup = ({ className, src, label, link, onClick }) => {
+const ImagePopup = ({ className, src, label, link, onClick }) => {
   const [srcState, setSrc] = useState();
   const [error, setError] = useState(false);
 

@@ -118,9 +118,13 @@ public class Search {
     }
 
     @GetMapping("/citation")
-    public String getCitation(@RequestParam("doi") String doiWithoutPrefix, @RequestParam("style") String style, @RequestParam("contentType") String contentType) {
+    public ResponseEntity<String> getCitation(@RequestParam("doi") String doiWithoutPrefix, @RequestParam("style") String style, @RequestParam("contentType") String contentType) {
         String doi = String.format("https://doi.org/%s", doiWithoutPrefix);
-        return doiCitationFormatter.getDOICitation(doi, style, contentType);
+        String citation = doiCitationFormatter.getDOICitation(doi, style, contentType);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(citation);
     }
 
 //    @PostMapping("/citations")
@@ -143,9 +147,9 @@ public class Search {
     public ResponseEntity<?> getGroups(Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             return ResponseEntity.ok(Arrays.asList(
-                    Map.of("name", "curated",
+                    Map.of("value", "curated",
                             "label", "in progress"),
-                    Map.of("name", "public",
+                    Map.of("value", "public",
                             "label", "publicly released")
             ));
         } else {

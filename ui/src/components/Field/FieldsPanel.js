@@ -23,16 +23,18 @@
 
 import React from "react";
 
-export const FieldsPanel = ({className, fields, fieldComponent}) =>{
+const FieldsPanel = ({className, fields, fieldComponent}) =>{
   if (!fields || !fields.length) {
     return null;
   }
   const FieldComponent = fieldComponent;
   return (
     <div className={`kgs-fields-panel ${className?className:""}`}>
-      {fields && fields.map(({name, data, mapping, group, type}) => (
-        <FieldComponent key={name} name={name} data={data} mapping={mapping} group={group} type={type} />
+      {fields && fields.map(({name, data, mapping, type}) => (
+        <FieldComponent key={name} name={name} data={data} mapping={mapping} type={type} />
       ))}
     </div>
   );
 };
+
+export default FieldsPanel;

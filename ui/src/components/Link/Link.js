@@ -23,7 +23,7 @@
 
 import React from "react";
 
-import API from "../../services/API";
+import { trackLink } from "../../app/services/api";
 import Count from "../Field/Count";
 
 import "./Link.css";
@@ -42,9 +42,9 @@ export const Link = ({ url, label, isAFileLink, isExternalLink, icon, count }) =
 
   const handleClick = () => {
     if (isAFileLink) {
-      API.trackLink(url, "download");
+      trackLink(url, "download");
     } else if (isExternalLink) {
-      API.trackLink(url, "link");
+      trackLink(url, "link");
     }
   };
 

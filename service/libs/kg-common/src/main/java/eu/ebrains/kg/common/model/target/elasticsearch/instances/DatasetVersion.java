@@ -247,8 +247,15 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(layout = "Get data", isHierarchicalFiles = true, termsOfUse = true, labelHidden = true)
     private List<TargetFile> filesOld;
 
+    /**
+     * Use fileRepositoryId instead, kept until next index (incremental) update
+     */
+    @Deprecated(forRemoval = true)
     @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
     private String filesAsyncUrl;
+
+    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    private String fileRepositoryId;
 
     @FieldInfo(layout = "Get data", termsOfUse = true)
     private TargetExternalReference dataProxyLink;

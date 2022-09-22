@@ -22,76 +22,66 @@
  */
 
 import React from "react";
-import { Field, PrintViewField } from "./Field";
+
 import "./ObjectField.css";
 
-const ObjectFieldBase = (renderUserInteractions = true) => {
-
-  const DefaultList = ({ className, children }) => {
-    return (
-      <ul className={className}>
-        {children}
-      </ul>
-    );
-  };
-
-  const CustomList = ({ className, children }) => (
-    <span className={className}>
+const DefaultList = ({ className, children }) => {
+  return (
+    <ul className={className}>
       {children}
-    </span>
+    </ul>
   );
-
-  const DefaultListItem = ({ children }) => (
-    <li>
-      {children}
-    </li>
-  );
-
-  const CustomListItem = ({ isFirst, separator, children }) => (
-    <span>
-      {isFirst ? null : separator}
-      {children}
-    </span>
-  );
-
-  const ObjectField = ({data, mapping, group, type }) => {
-    if (!mapping) {
-      return null;
-    }
-
-    const List = mapping.separator ? CustomList : DefaultList;
-    const ListItem = mapping.separator ? CustomListItem : DefaultListItem;
-    const FieldComponent = renderUserInteractions ? Field : PrintViewField;
-
-    const fields = Object.entries(mapping.children)
-      .filter(([name, childMapping]) =>
-        childMapping
-        && (data?.[name])
-      )
-      .map(([name, childMapping]) => ({
-        name: name,
-        data: data?.[name],
-        mapping: childMapping,
-        group: group
-      }));
-
-    return (
-      <List className={`kgs-field__object ${mapping.enforceList ? "kgs-field__object_enforce_list" : ""}`}>
-        {
-          fields.map(({ name, data, mapping, group }, idx) => (
-            <ListItem key={name} separator={mapping.separator} isFirst={!idx}>
-              <FieldComponent name={name} data={data} mapping={mapping} group={group} type={type} />
-            </ListItem>
-          ))
-        }
-      </List>
-    );
-  };
-
-  return ObjectField;
 };
 
-export const ObjectField = ObjectFieldBase(true);
-ObjectField.displayName = "ObjectField";
-export const PrintViewObjectField = ObjectFieldBase(false);
-PrintViewObjectField.displayName = "PrintViewObjectField";
+const CustomList = ({ className, children }) => (
+  <span className={className}>
+    {children}
+  </span>
+);
+
+const DefaultListItem = ({ children }) => (
+  <li>
+    {children}
+  </li>
+);
+
+const CustomListItem = ({ isFirst, separator, children }) => (
+  <span>
+    {isFirst ? null : separator}
+    {children}
+  </span>
+);
+
+const ObjectField = ({data, mapping, type, fieldComponent: FieldComponent }) => {
+  if (!mapping) {
+    return null;
+  }
+
+  const List = mapping.separator ? CustomList : DefaultList;
+  const ListItem = mapping.separator ? CustomListItem : DefaultListItem;
+
+  const fields = Object.entries(mapping.children)
+    .filter(([name, childMapping]) =>
+      childMapping
+      && (data?.[name])
+    )
+    .map(([name, childMapping]) => ({
+      name: name,
+      data: data?.[name],
+      mapping: childMapping
+    }));
+
+  return (
+    <List className={`kgs-field__object ${mapping.enforceList ? "kgs-field__object_enforce_list" : ""}`}>
+      {
+        fields.map((field, idx) => (
+          <ListItem key={field.name} separator={field.mapping.separator} isFirst={!idx}>
+            <FieldComponent name={field.name} data={field.data} mapping={field.mapping} type={type} />
+          </ListItem>
+        ))
+      }
+    </List>
+  );
+};
+
+export default ObjectField;
