@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.springframework.util.CollectionUtils;
@@ -93,7 +92,7 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
                     .map(sample ->
                             new TargetInternalReference(
                                     liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
-                                    sample.getName(), null)
+                                    sample.getName())
                     ).collect(Collectors.toList()));
         }
         if(!CollectionUtils.isEmpty(subject.getDatasets())) {
@@ -107,7 +106,7 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
                                                     .map(i ->
                                                             new TargetInternalReference(
                                                                     liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
-                                                                    i.getName(), null)
+                                                                    i.getName())
                                                     ).collect(Collectors.toList()) : null
                             )
                     ).collect(Collectors.toList());

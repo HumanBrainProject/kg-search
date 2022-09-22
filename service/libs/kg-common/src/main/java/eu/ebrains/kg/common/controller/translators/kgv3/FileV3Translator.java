@@ -32,7 +32,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -126,6 +125,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
             groupingTypeList.sort(Comparator.comparing(File.GroupingType::getName));
             f.setGroupingTypes(groupingTypeList);
         }
+        f.setUsedInResearchProducts(refVersion(file.getUsedInResearchProducts(), true));
         return f;
     }
 }

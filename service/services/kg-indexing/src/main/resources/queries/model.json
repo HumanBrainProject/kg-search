@@ -117,23 +117,33 @@
       ]
     },
     {
-      "propertyName": "query:hasVersion",
+      "propertyName": "query:versions",
       "path": "https://openminds.ebrains.eu/vocab/hasVersion",
       "structure": [
         {
-          "propertyName": "query:versionIdentifier",
-          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
-        },
-        {
           "propertyName": "query:id",
           "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier",
+          "required": false
+        },
+        {
+          "propertyName": "query:versionInnovation",
+          "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
         },
         {
           "propertyName": "query:isNewVersionOf",
           "path": [
             "https://openminds.ebrains.eu/vocab/isNewVersionOf",
             "https://openminds.ebrains.eu/vocab/versionIdentifier"
-          ]
+          ],
+          "singleValue": "FIRST"
         }
       ]
     },

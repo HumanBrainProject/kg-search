@@ -71,6 +71,9 @@ public class File implements TargetInstance {
     private List<TargetInternalReference> inputTypeForSoftware;
     @FieldInfo(label = "GroupingTypes", visible = false)
     private List<GroupingType> groupingTypes;
+    @FieldInfo(label = "Is used in")
+    private List<TargetInternalReference> usedInResearchProducts;
+
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() {

@@ -42,6 +42,7 @@ public class FileV3 extends SourceInstanceV3 {
     private Format format;
     private List<FileBundle> fileBundles;
     private List<ServiceLink> serviceLinks;
+    private List<FullNameRefForResearchProductVersion> usedInResearchProducts;
 
     @Getter
     @Setter

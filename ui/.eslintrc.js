@@ -49,6 +49,7 @@ module.exports = {
       "error",
       "all"
     ],
+    "react/no-unknown-property": "warn",
     "no-trailing-spaces": "error",
     "no-throw-literal": "error",
     "strict": 0,

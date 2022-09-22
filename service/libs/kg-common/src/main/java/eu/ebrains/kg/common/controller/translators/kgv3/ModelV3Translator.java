@@ -27,13 +27,11 @@ import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.ModelV3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.RelatedPublication;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Model;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -114,11 +112,14 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         if(m.getCitation()!=null){
             m.setCitationHint(value("Using this citation allows you to reference all versions of this model with one citation.\nUsage of version specific models and metadata should be acknowledged by citing the individual model version."));
         }
-        if (!CollectionUtils.isEmpty(model.getVersions())) {
-            List<Version> sortedVersions = Helpers.sort(model.getVersions());                                         //v.getFullName()
-            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            m.setVersions(references);
-        }
+        List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(model.getVersions());
+        List<Children<eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version>> modelVersions = sortedVersions.stream().map(v -> {
+            eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version version = new eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version();
+            version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));
+            version.setInnovation(v.getVersionInnovation() != null ? new Value<>(v.getVersionInnovation()) : null);
+            return new Children<>(version);
+        }).collect(Collectors.toList());
+        m.setModels(modelVersions);
         return m;
     }
 }

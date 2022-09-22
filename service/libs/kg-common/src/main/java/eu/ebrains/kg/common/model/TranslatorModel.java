@@ -2,7 +2,6 @@ package eu.ebrains.kg.common.model;
 
 import eu.ebrains.kg.common.controller.mergers.ContributorMerger;
 import eu.ebrains.kg.common.controller.mergers.Merger;
-import eu.ebrains.kg.common.controller.mergers.ProjectMerger;
 import eu.ebrains.kg.common.controller.translators.Translator;
 import eu.ebrains.kg.common.controller.translators.kgv2.*;
 import eu.ebrains.kg.common.controller.translators.kgv3.*;
@@ -18,7 +17,7 @@ import java.util.List;
 public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetInstance> {
 
     public static final List<TranslatorModel<?,?,?,?>> MODELS = Arrays.asList(
-            new TranslatorModel<>(Project.class, new ProjectV1Translator(), null, new ProjectV3Translator(), new ProjectMerger(), false, false, 1000),
+            new TranslatorModel<>(Project.class, new ProjectV1Translator(), null, new ProjectV3Translator(), null, false, false, 1000),
             new TranslatorModel<>(Dataset.class, null, null, new DatasetV3Translator(), null, false, false, 1000),
             new TranslatorModel<>(DatasetVersion.class, new DatasetV1Translator(), null, new DatasetVersionV3Translator(), null, false, false, 1),
             new TranslatorModel<>(Subject.class, new SubjectV1Translator(), null, new SubjectV3Translator(), null, false, false, 1000),

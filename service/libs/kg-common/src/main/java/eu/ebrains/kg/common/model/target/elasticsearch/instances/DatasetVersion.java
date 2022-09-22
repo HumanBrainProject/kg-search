@@ -301,7 +301,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "External used resources", layout = "Related resources")
     private List<TargetExternalReference> externalInputData;
 
-    @FieldInfo(label = "Resources used by this dataset", layout = "Related resources")
+    @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
 
     @Getter
@@ -723,7 +723,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             if(!map.isEmpty()){
                 stream = stream.map(k -> {
                     final Map<String, Set<String>> count = map.get(k);
-                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue(), k.getUuid());
+                    final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue());
                     targetInternalReference.setCount(count.keySet().stream().sorted().map(t -> String.format("%d %s", count.get(t).size(), normalizeTypeName(t, count.get(t).size() > 1))).collect(Collectors.toList()));
                     return targetInternalReference;
                 });

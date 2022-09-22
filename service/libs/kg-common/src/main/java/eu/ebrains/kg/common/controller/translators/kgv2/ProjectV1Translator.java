@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -84,7 +83,7 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
                     .map(dataset ->
                             new TargetInternalReference(
                                     liveMode ? dataset.getRelativeUrl() : String.format("Dataset/%s", dataset.getIdentifier()),
-                                    dataset.getName(), null))
+                                    dataset.getName()))
                     .collect(Collectors.toList()));
         }
         p.setTitle(value(projectSource.getTitle()));
