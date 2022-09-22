@@ -56,8 +56,6 @@ export const api = createApi({
     }),
     listGroups: builder.query({
       query: () => "/groups",
-      //transformResponse: (response, meta, arg) => response.data
-      transformResponse: groups => Array.isArray(groups)?groups.map(e => ({ label: e.label, value: e.name })):[],
       providesTags: ["Group"]
     }),
     getSearch: builder.query({

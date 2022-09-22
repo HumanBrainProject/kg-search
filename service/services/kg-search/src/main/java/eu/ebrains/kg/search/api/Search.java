@@ -147,9 +147,9 @@ public class Search {
     public ResponseEntity<?> getGroups(Principal principal) { 
         if (searchController.isInInProgressRole(principal)) {
             return ResponseEntity.ok(Arrays.asList(
-                    Map.of("name", "curated",
+                    Map.of("value", "curated",
                             "label", "in progress"),
-                    Map.of("name", "public",
+                    Map.of("value", "public",
                             "label", "publicly released")
             ));
         } else {
