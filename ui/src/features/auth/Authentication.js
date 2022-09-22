@@ -25,7 +25,7 @@ import React, { useEffect, Suspense, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
 
-import { api, getError } from "../../app/services/api";
+import { tagsToInvalidateOnLogout, api, getError } from "../../app/services/api";
 import { setLoginRequired, login, setUpAuthentication, clearAuthError } from "./authSlice";
 import { resetGroups } from "../groups/groupsSlice";
 
@@ -69,11 +69,7 @@ const Authentication = () => {
         initializedRef.current = false;
       } else if (isLogout) {
         initializedRef.current = false;
-        dispatch(
-          api.util.invalidateTags([
-            { type: "Authentication", id: "LIST" }
-          ])
-        );
+        dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
         if (loginRequired) {
           navigate("/");
         }
