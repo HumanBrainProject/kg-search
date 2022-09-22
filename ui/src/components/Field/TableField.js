@@ -43,7 +43,7 @@ const CustomTableCell = ({ field, isFirstCell, onCollapseToggle, fieldComponent:
         {isFirstCell && field.isCollectionCollapsible && (
           <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?faChevronRight:faChevronDown} /></button>
         )}
-        <FieldComponent name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
+        <FieldComponent name={field.name} data={field.data} mapping={field.mapping} />
         {isFirstCell && field.isCollectionASubset && (
           <Hint className="kg-cell-hint" value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():"dataset"}`} />
         )}
@@ -51,7 +51,7 @@ const CustomTableCell = ({ field, isFirstCell, onCollapseToggle, fieldComponent:
     );
   }
   return (
-    <td className={`kg-cell_level_${field.level}`}><FieldComponent name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
+    <td className={`kg-cell_level_${field.level}`}><FieldComponent name={field.name} data={field.data} mapping={field.mapping} /></td>
   );
 };
 
@@ -64,14 +64,13 @@ const CustomTableRow = ({ row, onCollapseToggle, fieldComponent }) => {
   );
 };
 
-const normalizeCells = (fields, data, type, group, level, collectionIndex, isCollectionCollapsed, isCollectionCollapsible, isCollectionASubset) => {
+const normalizeCells = (fields, data, type, level, collectionIndex, isCollectionCollapsed, isCollectionCollapsible, isCollectionASubset) => {
   return Object.entries(fields)
     .map(([name, field]) => ({
       name: name,
       data: data && data[name],
       mapping: {...field, hideLabel:true},
       type: type,
-      group: group,
       level: level,
       isCollectionCollapsed: isCollectionCollapsed,
       collectionIndex: collectionIndex,
@@ -87,13 +86,13 @@ const normalizeRows = (list, collapsedRowIndexes) => {
     const isSubset = hasChildren && item.data.subset;
     const isCollectionCollapsed = isCollapsible && !!collapsedRowIndexes[index];
     if (item.isObject) {
-      acc.push(normalizeCells(item.mapping.children, item.data, item.type, item.group, 1, index, isCollectionCollapsed, isCollapsible, isSubset));
+      acc.push(normalizeCells(item.mapping.children, item.data, item.type, 1, index, isCollectionCollapsed, isCollapsible, isSubset));
       if (hasChildren) {
         item.data.children.forEach(child => {
-          acc.push(normalizeCells(item.mapping.children, child, item.type, item.group, 2, index, isCollectionCollapsed, false));
+          acc.push(normalizeCells(item.mapping.children, child, item.type, 2, index, isCollectionCollapsed, false));
           if(child.children) {
             child.children.forEach(c => {
-              acc.push(normalizeCells(item.mapping.children, c, item.type, item.group, 3, index, isCollectionCollapsed, false));
+              acc.push(normalizeCells(item.mapping.children, c, item.type, 3, index, isCollectionCollapsed, false));
             });
           }
         });
@@ -165,14 +164,13 @@ const TableFieldComponent = ({ list, fieldComponent }) => {
 
 class TableField extends React.Component {
   getItems = () => {
-    const { items, mapping, group, type } = this.props;
+    const { items, mapping, type } = this.props;
     const convertedItem = Array.isArray(items)?items:[items];
     return convertedItem.map((item, idx) => ({
       isObject: !!item.children,
       key: getKey(item, idx),
       data: item.children?item.children:item,
       mapping: mapping,
-      group: group,
       type: type
     }));
   };

@@ -68,12 +68,12 @@ const ListFieldBase = (renderUserInteractions = true) => {
       <span className={className}>
         <List>
           {
-            list.map(({isObject, key, data, mapping, group}, idx) => (
+            list.map(({isObject, key, data, mapping}, idx) => (
               <ListItem key={key} separator={separator} isFirst={!idx}>
                 {isObject?
-                  <ObjectField data={data} mapping={mapping} group={group} fieldComponent={fieldComponent} />
+                  <ObjectField data={data} mapping={mapping} fieldComponent={fieldComponent} />
                   :
-                  <ValueFieldComponent data={data} mapping={mapping} group={group} />
+                  <ValueFieldComponent data={data} mapping={mapping} />
                 }
               </ListItem>
             ))
@@ -120,7 +120,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     }
 
     getItems = () => {
-      const {items, mapping, group, type} = this.props;
+      const {items, mapping, type} = this.props;
       if (!Array.isArray(items)) {
         return [];
       }
@@ -131,7 +131,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
           key: getKey(item, idx),
           data: item.children?item.children:item,
           mapping: mapping,
-          group: group,
           type: type
         }));
     };

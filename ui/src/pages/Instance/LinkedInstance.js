@@ -29,7 +29,7 @@ import FieldsPanel from "../../components/Field/FieldsPanel";
 
 import "./LinkedInstance.css";
 
-const LinkedInstanceComponent = ({data, mapping, group, type}) => {
+const LinkedInstanceComponent = ({data, mapping, type}) => {
   if (!(data instanceof Object)) {
     return null;
   }
@@ -55,7 +55,6 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
       name: name,
       data: data[name],
       mapping: fieldsMapping,
-      group: group,
       type: type
     }));
   return (
@@ -80,7 +79,6 @@ export const LinkedInstance = connect(
     return {
       data: props.data,
       mapping: mapping,
-      group: props.group,
       type: props.type
     };
   }

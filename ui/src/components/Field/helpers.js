@@ -43,7 +43,7 @@ export const getNextSizeStop = (sizeStop, props) => {
 };
 
 export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
-  const {items, mapping, group} = props;
+  const {items, mapping} = props;
 
   if (!Array.isArray(items)) {
     return [];
@@ -59,8 +59,7 @@ export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
       key: getKey(item, idx),
       show: true,
       data: item.children?item.children:item,
-      mapping: mapping,
-      group: group
+      mapping: mapping
     }));
 };
 
