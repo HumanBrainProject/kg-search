@@ -40,13 +40,12 @@ import Tabs from "./Tabs/Tabs";
 import "./InstanceView.css";
 import "./Fields.css";
 
-const getField = (group, type, name, data, mapping) => {
+const getField = (type, name, data, mapping) => {
   if (name === "type") {
     return {
       name: "type",
       data: { value: type },
       mapping: { },
-      group: group,
       type: type
     };
   }
@@ -54,12 +53,11 @@ const getField = (group, type, name, data, mapping) => {
     name: name,
     data: data,
     mapping: mapping,
-    group: group,
     type: type
   };
 };
 
-const getHeaderFields = (group, type, data, mapping) => {
+const getHeaderFields = (type, data, mapping) => {
   if (!data || !mapping) {
     return [];
   }
@@ -73,11 +71,11 @@ const getHeaderFields = (group, type, data, mapping) => {
         name !== "title"
     )
     .map(([name, fieldsMapping]) =>
-      getField(group, type, name, data[name], fieldsMapping)
+      getField(type, name, data[name], fieldsMapping)
     );
 };
 
-const getFieldsByTabs = (group, type, data, typeMapping, previews) => {
+const getFieldsByTabs = (type, data, typeMapping, previews) => {
   if (!data || !typeMapping) {
     return [];
   }
@@ -94,7 +92,7 @@ const getFieldsByTabs = (group, type, data, typeMapping, previews) => {
     .reduce((acc, [name, mapping]) => {
       const groupName =
         !mapping.layout || mapping.layout === "summary" ? null : mapping.layout;
-      const field = getField(group, type, name, data[name], mapping);
+      const field = getField(type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);
       } else {
@@ -157,10 +155,10 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
   const isDefaultGroup = useSelector(state => selectIsDefaultGroup(state));
   const groupLabel = useSelector(state => selectGroupLabel(state, group));
 
-  const headerFields = getHeaderFields(group, type, fields, mapping);
+  const headerFields = getHeaderFields(type, fields, mapping);
 
   const selectedTab = useSelector(state => state.instance.tab);
-  const tabs = getFieldsByTabs(group, type, data?.fields, mapping, data?.previews);
+  const tabs = getFieldsByTabs(type, data?.fields, mapping, data?.previews);
 
   const version = (data?.version)?data.version:"Current";
   const versions = getVersions(data?.versions);

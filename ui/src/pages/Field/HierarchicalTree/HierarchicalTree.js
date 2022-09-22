@@ -38,7 +38,7 @@ const Icon = ({ color }) => (
   <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : "gray" }} />
 );
 
-const Node = ({ node, group }) => {
+const Node = ({ node }) => {
   return (
     <div className="kgs-hierarchical-tree__details">
       <div className="kgs-hierarchical-tree__info">
@@ -51,7 +51,6 @@ const Node = ({ node, group }) => {
             {node.data && (
               <LinkedInstance
                 data={node.data}
-                group={group}
                 type={node.data.type?.value}
               />
             )}
@@ -71,7 +70,7 @@ const Loading = () => {
   );
 };
 
-const HierarchicalTree = ({ data, group }) => {
+const HierarchicalTree = ({ data }) => {
 
   const { data: tree, expandAll: defaultExpandAll, expandedKeys: defaultExpandedKeys } = splitChildren(data);
 
@@ -94,7 +93,7 @@ const HierarchicalTree = ({ data, group }) => {
             <Tree data={tree} onSelect={onSelect} defaultExpandAll={defaultExpandAll} defaultExpandedKeys={defaultExpandedKeys} />
           </Suspense>
         </div>
-        <Node node={node} group={group} />
+        <Node node={node} />
       </div>
     </div>
   );

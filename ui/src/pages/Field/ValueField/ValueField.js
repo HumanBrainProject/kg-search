@@ -40,7 +40,7 @@ const getUrlLocation = url => {
 
 const ValueFieldBase = (renderUserInteractions = true) => {
 
-  const ValueField = ({ data, mapping, group }) => {
+  const ValueField = ({ data, mapping }) => {
     if (!data || !mapping) {
       return null;
     }
@@ -73,7 +73,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       ValueComponent = InstanceLink;
       valueProps = {
         id: instanceIdLink,
-        group: group,
         text: value ? value : instanceIdLink,
         count: count
       };

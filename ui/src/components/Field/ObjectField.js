@@ -52,7 +52,7 @@ const CustomListItem = ({ isFirst, separator, children }) => (
   </span>
 );
 
-const ObjectField = ({data, mapping, group, type, fieldComponent: FieldComponent }) => {
+const ObjectField = ({data, mapping, type, fieldComponent: FieldComponent }) => {
   if (!mapping) {
     return null;
   }
@@ -68,8 +68,7 @@ const ObjectField = ({data, mapping, group, type, fieldComponent: FieldComponent
     .map(([name, childMapping]) => ({
       name: name,
       data: data?.[name],
-      mapping: childMapping,
-      group: group
+      mapping: childMapping
     }));
 
   return (
@@ -77,7 +76,7 @@ const ObjectField = ({data, mapping, group, type, fieldComponent: FieldComponent
       {
         fields.map((field, idx) => (
           <ListItem key={field.name} separator={field.mapping.separator} isFirst={!idx}>
-            <FieldComponent name={field.name} data={field.data} mapping={field.mapping} group={field.group} type={type} />
+            <FieldComponent name={field.name} data={field.data} mapping={field.mapping} type={type} />
           </ListItem>
         ))
       }

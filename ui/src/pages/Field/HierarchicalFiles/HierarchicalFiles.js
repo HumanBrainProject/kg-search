@@ -58,7 +58,7 @@ const getFilteredTree = (tree, filter) => {
   return filtered;
 };
 
-const Node = ({ node, isRootNode, group, type, hasFilter }) => {
+const Node = ({ node, isRootNode, type, hasFilter }) => {
   const isFile = node.type === "file";
   const icon = isFile ? faFile : faFolder;
 
@@ -91,7 +91,6 @@ const Node = ({ node, isRootNode, group, type, hasFilter }) => {
           {node.type === "file" && (
             <LinkedInstance
               data={node.data}
-              group={group}
               type={node.data?.type?.value || "File"}
             />
           )}
@@ -99,7 +98,6 @@ const Node = ({ node, isRootNode, group, type, hasFilter }) => {
             <AsyncLinkedInstance
               id={node.reference}
               name={node.name}
-              group={group}
               type="FileBundle"
             />
           )}
@@ -208,7 +206,6 @@ class HierarchicalFiles extends React.Component {
           <Node
             node={this.state.node}
             isRootNode={false}
-            group={this.props.group}
             type={this.props.type}
             hasFilter={false}
           />
@@ -250,7 +247,6 @@ class HierarchicalFiles extends React.Component {
           <Node
             node={this.state.node}
             isRootNode={this.state.node.isRootNode}
-            group={this.props.group}
             type={this.props.type}
             hasFilter={hasFilter}
           />

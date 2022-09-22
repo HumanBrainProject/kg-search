@@ -67,7 +67,7 @@ const getTitle = (text, highlight) => {
   return text;
 };
 
-const getDescriptionField = (group, data, highlight, mapping) => {
+const getDescriptionField = (data, highlight, mapping) => {
 
   let fieldData = data;
 
@@ -91,24 +91,22 @@ const getDescriptionField = (group, data, highlight, mapping) => {
   return {
     name: "description",
     data: fieldData,
-    mapping: mapping,
-    group: group
+    mapping: mapping
   };
 };
 
-const getField = (group, name, data, highlight, mapping) => {
+const getField = (name, data, highlight, mapping) => {
   if (name === "description") {
-    return getDescriptionField(group, data, highlight, mapping);
+    return getDescriptionField(data, highlight, mapping);
   }
   return {
     name: name,
     data: data,
-    mapping: mapping,
-    group: group
+    mapping: mapping
   };
 };
 
-const getFields = (group, data, highlight, parentMapping) => {
+const getFields = (data, highlight, parentMapping) => {
   if (!data || !parentMapping) {
     return [];
   }
@@ -117,7 +115,7 @@ const getFields = (group, data, highlight, parentMapping) => {
       mapping
       && (data?.[name])
     )
-    .map(([name, mapping]) => getField(group, name, data[name], highlight, mapping));
+    .map(([name, mapping]) => getField(name, data[name], highlight, mapping));
 };
 
 const filterHighlightFields = (data, excludeFieldNames) => {
@@ -148,11 +146,9 @@ export const Hit = ({ data }) => {
 
   const mapping = useSelector(state => selectTypeMapping(state, type));
 
-  const group = useSelector(state => state.groups.group);
-
   const hasUnknownData = !mapping;
   const title = getTitle(data?.title, data?.highlight);
-  const fields = getFields(group, data?.fields, data?.highlight, mapping);
+  const fields = getFields(data?.fields, data?.highlight, mapping);
   const previewImage = data?.previewImage;
   const badges = (data?.badges && data.badges.length)?data.badges:null;
   const highlightsField = {
@@ -167,8 +163,8 @@ export const Hit = ({ data }) => {
           <Badges badges={badges} />
           <Title key="title" text={title} />
           <HighlightsField key="highlights" {...highlightsField}></HighlightsField>
-          {fields.map(({ name, data, mapping, group }) =>
-            <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
+          {fields.map(({ name, data, mapping }) =>
+            <PrintViewField key={name} name={name} data={data} mapping={mapping} />
           )}
         </div>
         {!!previewImage &&

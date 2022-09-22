@@ -21,6 +21,7 @@
  *
  */
 import React, { useMemo, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useLocation, matchPath } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
@@ -126,7 +127,6 @@ const ShowMoreFiles = ({ isLoading, isAllFetched, showMoreStyle, onClick }) => {
 
 export const AsyncHierarchicalFiles = ({
   mapping,
-  group,
   type,
   repositoryId,
   nameFieldPath,
@@ -142,6 +142,8 @@ export const AsyncHierarchicalFiles = ({
   const [nextSearchAfter, setNextSearchAfter] = useState(null);
   const [fileFormat, setFileFormat] = useState(null);
   const [groupingType, setGroupingType] = useState(null);
+
+  const group = useSelector(state => state.groups.group);
 
   const previewResult = useListPreviewFilesQuery({
     repositoryId: repositoryId,
@@ -257,7 +259,6 @@ export const AsyncHierarchicalFiles = ({
           <HierarchicalFiles
             data={files}
             mapping={mapping}
-            group={group}
             type={type}
             groupingType={groupingType}
             hasDataFilter={hasFilter}

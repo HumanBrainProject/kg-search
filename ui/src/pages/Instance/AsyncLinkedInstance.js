@@ -21,6 +21,7 @@
  *
  */
 import React from "react";
+import { useSelector } from "react-redux";
 import { useLocation, matchPath } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
@@ -33,9 +34,11 @@ import LinkedInstance from "./LinkedInstance";
 
 import "./AsyncLinkedInstance.css";
 
-const AsyncLinkedInstance = ({ id, name, group, type }) => {
+const AsyncLinkedInstance = ({ id, name, type }) => {
 
   const location = useLocation();
+
+  const group = useSelector(state => state.groups.group);
 
   const isLive = !!matchPath({path:"/live/*"}, location.pathname);
 
@@ -85,7 +88,7 @@ const AsyncLinkedInstance = ({ id, name, group, type }) => {
   }
 
   return (
-    <LinkedInstance data={data.fields} group={data.group || group} type={data.type || type} />
+    <LinkedInstance data={data.fields} type={data.type || type} />
   );
 };
 

@@ -75,7 +75,7 @@ const FieldBaseComponent = ({ name, layout, style, className, label, inlineLabel
   );
 };
 
-const getFieldProps = (name, data, mapping, group, type, renderUserInteractions = true) => {
+const getFieldProps = (name, data, mapping, type, renderUserInteractions = true) => {
 
   if (!mapping || !data) {
     return null;
@@ -110,7 +110,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       valueProps = {
         items: singleGroupedLinks,
         mapping: mapping,
-        group: group,
         type: type,
         fieldComponent: FieldComponent,
         valueFieldComponent: ValueFieldComponent
@@ -131,7 +130,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       valueProps = {
         data: data,
         mapping: multipleGroupedLinksMapping,
-        group: group,
         type: type,
         fieldComponent: FieldComponent
       };
@@ -181,7 +179,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
     valueProps = {
       mapping: mapping,
-      group: group,
       type: type,
       data: data
     };
@@ -199,7 +196,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
       valueProps = {
         mapping: mapping,
-        group: group,
         type: type,
         repositoryId: repositoryId,
         nameFieldPath: "title.value",
@@ -212,7 +208,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       valueProps = {
         data: data,
         mapping: mapping,
-        group: group,
         type: type,
         nameFieldPath: "value",
         urlFieldPath: "url"
@@ -226,7 +221,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
     valueProps = {
       items: data,
       mapping: mapping,
-      group: group,
       type: type,
       fieldComponent: FieldComponent,
     };
@@ -247,7 +241,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       valueProps = {
         items: data,
         mapping: mapping,
-        group: group,
         type: type,
         fieldComponent: FieldComponent,
         valueFieldComponent: ValueFieldComponent
@@ -259,7 +252,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       valueProps = {
         items: data,
         mapping: mapping,
-        group: group,
         type: type,
         fieldComponent: FieldComponent
       };
@@ -270,7 +262,6 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
       valueProps = {
         data: data,
         mapping: mapping,
-        group: group,
         type: type
       };
       valueComponent = ValueFieldComponent;
@@ -294,9 +285,9 @@ const getFieldProps = (name, data, mapping, group, type, renderUserInteractions 
 
 export const FieldBase = (renderUserInteractions = true) => {
 
-  const Component = ({ name, data, mapping, group, type }) => {
+  const Component = ({ name, data, mapping, type }) => {
 
-    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, group, type, renderUserInteractions), [name, data, mapping, group, type]);
+    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, type, renderUserInteractions), [name, data, mapping, type]);
 
     if (!fieldProps) {
       return null;
