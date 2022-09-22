@@ -25,7 +25,7 @@ import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useGetSearchQuery, setCustomUrl, trackPageView } from "../app/services/api";
+import { useGetSearchQuery, setCustomUrl, trackPageView, getError } from "../app/services/api";
 import { initializeSearch, syncSearch, selectActiveFacets } from "../features/search/searchSlice";
 import { syncHistory } from "../features/instance/instanceSlice";
 import { setGroup } from "../features/groups/groupsSlice";
@@ -282,7 +282,7 @@ const SearchBase = () => {
   if (isError) {
     return (
       <div className="kgs-search-container">
-        <BgError message={error} onRetryClick={refetch} retryVariant="primary" />
+        <BgError message={getError(error)} onRetryClick={refetch} retryVariant="primary" />
       </div>
     );
   }
