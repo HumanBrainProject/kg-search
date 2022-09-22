@@ -20,6 +20,10 @@ const transformInstanceResponse = (data, _meta, arg) => {
 
 const unauthenticatedEndpoints = ["getSettings", "getCitation", "getBibtex"];
 
+const tagTypes = ["Group", "Search", "Instance", "Preview", "Files", "PreviewFiles", "Format", "PreviewFormat", "GroupingType", "PreviewGroupingType", "LinkedInstance", "LinkedPreview"];
+
+export const tagsToInvalidateOnLogout = tagTypes.map(tag => ({ type: tag, id: "LIST" }));
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -34,6 +38,7 @@ export const api = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Group", "Search", "Instance", "Preview", "Files", "PreviewFiles", "Format", "PreviewFormat", "GroupingType", "PreviewGroupingType", "LinkedInstance", "LinkedPreview"],
   endpoints: builder => ({
     getSettings: builder.query({
       query: () => "/settings",
@@ -53,7 +58,7 @@ export const api = createApi({
       query: () => "/groups",
       //transformResponse: (response, meta, arg) => response.data
       transformResponse: groups => Array.isArray(groups)?groups.map(e => ({ label: e.label, value: e.name })):[],
-      tagTypes: ["Authentication"]
+      providesTags: ["Group"]
     }),
     getSearch: builder.query({
       //query: () => "/static/data/search.json",
@@ -63,7 +68,7 @@ export const api = createApi({
         body: payload
       }),
       keepUnusedDataFor: 600, // 10 minutes cache
-      tagTypes: ["Authentication"]
+      providesTags: ["Search"]
     }),
     getInstance: builder.query({
       //query: () => "/static/data/instance.json",
@@ -71,13 +76,13 @@ export const api = createApi({
       //transformResponse: (data, meta, arg) => data,
       transformResponse: transformInstanceResponse,
       keepUnusedDataFor: 1800, // 30 minutes cache
-      tagTypes: ["Authentication"]
+      providesTags: ["Instance"]
     }),
     getPreview: builder.query({
       //query: () => "/static/data/instance.json",
       query: id => `${id}/live?skipReferenceCheck=true`,
       keepUnusedDataFor: 0.0001, // no cache for live
-      tagTypes: ["Authentication"]
+      providesTags: ["Preview"]
     }),
     getCitation: builder.query({
       query: doi => ({
@@ -113,7 +118,7 @@ export const api = createApi({
         return `/groups/${group}/repositories/${repositoryId}/files${params.length?params:""}`;
       },
       keepUnusedDataFor: 1800, // 30 minutes cache
-      tagTypes: ["Authentication"]
+      providesTags: ["Files"]
     }),
     listPreviewFiles: builder.query({
       query: ({ repositoryId, searchAfter, groupingType, fileFormat, size }) => {
@@ -133,27 +138,27 @@ export const api = createApi({
         return `/repositories/${repositoryId}/files/live${params.length?params:""}`;
       },
       keepUnusedDataFor: 0.0001, // no cache for live
-      tagTypes: ["Authentication"]
+      providesTags: ["PreviewFiles"]
     }),
     listFormats: builder.query({
       query: ({ repositoryId, group }) => `/groups/${group}/repositories/${repositoryId}/files/formats`,
       keepUnusedDataFor: 1800, // 30 minutes cache
-      tagTypes: ["Authentication"]
+      providesTags: ["Format"]
     }),
     listPreviewFormats: builder.query({
       query: repositoryId => `/repositories/${repositoryId}/files/formats/live`,
       keepUnusedDataFor: 0.0001, // no cache for live
-      tagTypes: ["Authentication"]
+      providesTags: ["PreviewFormat"]
     }),
     listGroupingTypes: builder.query({
       query: ({ repositoryId, group }) => `/groups/${group}/repositories/${repositoryId}/files/groupingTypes`,
       keepUnusedDataFor: 1800, // 30 minutes cache
-      tagTypes: ["Authentication"]
+      providesTags: ["GroupingType"]
     }),
     listPreviewGroupingTypes: builder.query({
       query: repositoryId => `/repositories/${repositoryId}/files/groupingTypes/live`,
       keepUnusedDataFor: 0.0001, // no cache for live
-      tagTypes: ["Authentication"]
+      providesTags: ["PreviewGroupingType"]
     }),
     getLinkedInstance: builder.query({
       //query: () => "/static/data/instance.json",
@@ -161,13 +166,13 @@ export const api = createApi({
       //transformResponse: (data, meta, arg) => data,
       transformResponse: transformInstanceResponse,
       keepUnusedDataFor: 1800, // 30 minutes cache
-      tagTypes: ["Authentication"]
+      providesTags: ["LinkedInstance"]
     }),
     getLinkedPreview: builder.query({
       //query: () => "/static/data/instance.json",
       query: id => `${id}/live?skipReferenceCheck=true`,
       keepUnusedDataFor: 0.0001, // no cache for live
-      tagTypes: ["Authentication"]
+      providesTags: ["LinkedPreview"]
     }),
   })
 });

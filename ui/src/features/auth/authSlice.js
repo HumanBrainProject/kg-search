@@ -22,7 +22,7 @@
  */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { api } from "../../app/services/api";
+import { tagsToInvalidateOnLogout, api } from "../../app/services/api";
 
 let keycloak = null;
 
@@ -144,11 +144,7 @@ const initializeKeycloak = (settings, loginRequired, dispatch) => {
         .updateToken(30)
         .catch(() => {
           dispatch(sessionExpired());
-          dispatch(
-            api.util.invalidateTags([
-              { type: "Authentication", id: "LIST" }
-            ])
-          );
+          dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
         });
     };
     keycloak.init({
@@ -237,22 +233,14 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk(
   "logout",
   async (_,  { dispatch}) => {
-    dispatch(
-      api.util.invalidateTags([
-        { type: "Authentication", id: "LIST" }
-      ])
-    );
+    dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
     dispatch(logoutRequest());
     setTimeout(async () => {
       if (keycloak) {
         await keycloak.logout({redirectUri: `${window.location.protocol}//${window.location.host}/logout`});
       }
       dispatch(logoutSuccess());
-      dispatch(
-        api.util.invalidateTags([
-          { type: "Authentication", id: "LIST" }
-        ])
-      );
+      dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
     }, 0);
   }
 );
