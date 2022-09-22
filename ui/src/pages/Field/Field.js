@@ -39,6 +39,7 @@ import Text from "../../components/Text/Text";
 
 import "./Field.css";
 
+//TODO: remove getFileRepositoryIdFromUrl after next index (incremental) update
 const filesUrlRegex = /^\/api\/groups\/.+\/repositories\/(.+)\/files$/;
 const liveFilesUrlRegex = /^\/api\/repositories\/(.+)\/files\/live$/;
 const getFileRepositoryIdFromUrl = url => {
@@ -188,16 +189,14 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
 
     className = "kgs-field__hierarchical-files";
 
-    const asyncFilesUrl = mapping.isAsync ? data : null;
+    const repositoryId = mapping.isAsync ? data : null;
 
-    if (asyncFilesUrl) { // Async Hierarchical Files
-
-      const repositoryId = getFileRepositoryIdFromUrl(asyncFilesUrl);
+    if (repositoryId) { // Async Hierarchical Files
 
       valueProps = {
         mapping: mapping,
         type: type,
-        repositoryId: repositoryId,
+        repositoryId: getFileRepositoryIdFromUrl(repositoryId),
         nameFieldPath: "title.value",
         urlFieldPath: "iri.url"
       };

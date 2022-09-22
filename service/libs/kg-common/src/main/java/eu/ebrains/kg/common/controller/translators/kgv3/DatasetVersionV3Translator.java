@@ -129,13 +129,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                                 //Although the dataset version is supposed to be accessible, it is not indexed (yet). We're forwarding to data proxy
                                 d.setDataProxyLink(new TargetExternalReference(String.format("https://data-proxy.ebrains.eu/datasets/%s", d.getId()), "Browse files"));
                             } else {
-                                String endpoint;
-                                if (liveMode) {
-                                    endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
-                                } else {
-                                    endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
-                                }
-                                d.setFilesAsyncUrl(endpoint);
+                                d.setFileRepositoryId(IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
                             }
                         }
                     }

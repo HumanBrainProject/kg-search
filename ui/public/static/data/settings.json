@@ -318,7 +318,7 @@
           "layout": "Get data",
           "showTermsOfUse": true
         },
-        "filesAsyncUrl": {
+        "fileRepositoryId": {
           "isAsync": true,
           "isHierarchicalFiles": true,
           "hideLabel": true,
@@ -710,7 +710,7 @@
         "embeddedModelSource": { "isFilePreview": true, "layout": "Get model" },
         "externalDownload": { "layout": "Get model" },
         "internalDownload": { "layout": "Get model", "showTermsOfUse": true },
-        "filesAsyncUrl": {
+        "fileRepositoryId": {
           "isAsync": true,
           "isHierarchicalFiles": true,
           "hideLabel": true,
@@ -866,7 +866,7 @@
           "layout": "Get (meta)data model",
           "showTermsOfUse": true
         },
-        "filesAsyncUrl": {
+        "fileRepositoryId": {
           "isAsync": true,
           "isHierarchicalFiles": true,
           "hideLabel": true,
