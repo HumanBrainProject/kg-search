@@ -157,13 +157,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
                 } else {
                     if (metadataModelVersionV3.getFileRepository() != null) {
                         if (Helpers.isCscsContainer(metadataModelVersionV3.getFileRepository()) || Helpers.isDataProxyBucket(metadataModelVersionV3.getFileRepository())) {
-                            String endpoint;
-                            if (liveMode) {
-                                endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(metadataModelVersionV3.getFileRepository().getId()));
-                            } else {
-                                endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(metadataModelVersionV3.getFileRepository().getId()));
-                            }
-                            m.setFilesAsyncUrl(endpoint);
+                            m.setFileRepositoryId(IdUtils.getUUID(metadataModelVersionV3.getFileRepository().getId()));
                         } else {
                             m.setExternalDownload(link(metadataModelVersionV3.getFileRepository()));
                         }

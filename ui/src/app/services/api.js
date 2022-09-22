@@ -41,6 +41,7 @@ export const api = createApi({
   tagTypes: ["Group", "Search", "Instance", "Preview", "Files", "PreviewFiles", "Format", "PreviewFormat", "GroupingType", "PreviewGroupingType", "LinkedInstance", "LinkedPreview"],
   endpoints: builder => ({
     getSettings: builder.query({
+      //query: () => "../static/data/settings.json",
       query: () => "/settings",
       //async onQueryStarted(arg, {dispatch, getState, extra, requestId, queryFulfilled}) {
       async onQueryStarted(_arg, { queryFulfilled }) {
@@ -59,7 +60,7 @@ export const api = createApi({
       providesTags: ["Group"]
     }),
     getSearch: builder.query({
-      //query: () => "/static/data/search.json",
+      //query: () => "../static/data/search.json",
       query: ({ group, q, type, from, size, payload }) => ({
         url: `/groups/${group}/search?${q?("q=" + encodeURIComponent(q) + "&"):""}type=${encodeURIComponent(type)}&from=${from}&size=${size}`,
         method: "POST",
@@ -69,7 +70,11 @@ export const api = createApi({
       providesTags: ["Search"]
     }),
     getInstance: builder.query({
-      //query: () => "/static/data/instance.json",
+      // query: () => "../static/data/instance.json",
+      // transformResponse: (data, _meta, arg) => {
+      //   data.id = arg.id;
+      //   return data;
+      // },
       query: ({ id, group }) => `/groups/${group}/documents/${id}`,
       //transformResponse: (data, meta, arg) => data,
       transformResponse: transformInstanceResponse,
@@ -77,7 +82,7 @@ export const api = createApi({
       providesTags: ["Instance"]
     }),
     getPreview: builder.query({
-      //query: () => "/static/data/instance.json",
+      //query: () => "../static/data/instance.json",
       query: id => `${id}/live?skipReferenceCheck=true`,
       keepUnusedDataFor: 0.0001, // no cache for live
       providesTags: ["Preview"]
