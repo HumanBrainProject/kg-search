@@ -21,13 +21,13 @@
  *
  */
 
-import React from "react";
+import React, { Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faFolder } from "@fortawesome/free-solid-svg-icons/faFolder";
 import { debounce } from "lodash";
-import Tree from "rc-tree";
+const Tree = React.lazy(() => import("rc-tree"));
 
 import { trackEvent } from "../../../app/services/api";
 import Download from "./Download";
@@ -39,6 +39,15 @@ import * as filters from "./helpers";
 
 import "./HierarchicalFiles.css";
 import "rc-tree/assets/index.css";
+
+const Loading = () => {
+  return (
+    <>
+      <div className="spinner-border spinner-border-sm" role="status"></div>
+      &nbsp;Loading files...
+    </>
+  );
+};
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {
@@ -228,14 +237,16 @@ class HierarchicalFiles extends React.Component {
           </div>
         )}
         <div className="kgs-hierarchical-files">
-          <Tree
-            treeData={[this.state.tree]}
-            defaultSelectedKeys={[this.state.tree.key]}
-            expandedKeys={this.state.expandedKeys}
-            onSelect={this.onSelect}
-            onExpand={this.onExpand}
-            icon={Icon}
-          />
+          <Suspense fallback={<Loading />}>
+            <Tree
+              treeData={[this.state.tree]}
+              defaultSelectedKeys={[this.state.tree.key]}
+              expandedKeys={this.state.expandedKeys}
+              onSelect={this.onSelect}
+              onExpand={this.onExpand}
+              icon={Icon}
+            />
+          </Suspense>
           <Node
             node={this.state.node}
             isRootNode={this.state.node.isRootNode}
