@@ -268,7 +268,7 @@ export const getError = error => {
       technicalError = error.status;
     }
   }
-  if (error.data && error.data != technicalError && error.data.indexOf("<") === -1) {
+  if (error.data && error.data != technicalError && typeof error.data === "string" && error.data.indexOf("<") === -1) {
     if (technicalError) {
       technicalError += ": ";
     }
