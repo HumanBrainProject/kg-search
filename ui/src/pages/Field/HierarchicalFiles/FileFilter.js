@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -55,10 +56,10 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
 
   if (isLoading) {
     return (
-      <>
+      <div>
         <div className="spinner-border spinner-border-sm" role="status"></div>
         &nbsp;Retrieving {title}...
-      </>
+      </div>
     );
   }
 
@@ -95,6 +96,7 @@ export const FileFilter = ({ title, show, useQuery, queryParameter, value, onSel
 
   return (
     <FileFilterComponent title={title} value={value} list={Array.isArray(data?.data)?data.data:[]} error={error} isLoading={isUninitialized || isFetching} onSelect={onSelect} onRetry={refetch} />
+    // <FileFilterComponent title={title} value={value} list={Array.isArray(data?.data)?data.data:[]} error={error} isLoading={true} onSelect={onSelect} onRetry={refetch} />
   );
 
 };
