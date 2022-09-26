@@ -266,7 +266,7 @@ public class IndexingController {
     }
 
     public void recreateIndex(DataStage dataStage, Class<? extends TargetInstance> clazz, boolean autorelease, boolean temporary){
-        Map<String, Object> mapping = mappingController.generateMapping(clazz);
+        Map<String, Object> mapping =  mappingController.generateMapping(clazz, !autorelease);
         if(autorelease){
             Map<String, Object> payload = Map.of("mappings", mapping);
             elasticSearchController.recreateAutoReleasedIndex(dataStage, payload, clazz, temporary);

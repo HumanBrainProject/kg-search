@@ -63,7 +63,7 @@ public class MappingController {
         return mapping;
     }
 
-    public Map<String, Object> generateMapping(Class<?> clazz) {
+    public Map<String, Object> generateMapping(Class<?> clazz, boolean useCustomAnalyzer) {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
@@ -73,17 +73,17 @@ public class MappingController {
         properties.put("id", Map.of("type", KEYWORD));
         properties.put("type", Map.of("type", KEYWORD));
         properties.put("@timestamp", timestamp);
-        properties.putAll(handleType(clazz, null));
+        properties.putAll(handleType(clazz, null, useCustomAnalyzer));
         logger.info(String.format("Mapping created: %s", mapping));
         return mapping;
     }
 
-    private Map<String, Object> handleType(Type type, ElasticSearchInfo parentInfo) {
+    private Map<String, Object> handleType(Type type, ElasticSearchInfo parentInfo, boolean useCustomAnalyzer) {
         Map<String, Object> properties = new LinkedHashMap<>();
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
         allFields.sort(Comparator.comparing(f -> utils.getPropertyName(f.getField())));
         allFields.forEach(field -> {
-            Map<String, Object> fieldDefinition = handleField(field, parentInfo);
+            Map<String, Object> fieldDefinition = handleField(field, parentInfo, useCustomAnalyzer);
             if (!fieldDefinition.isEmpty()) {
                 properties.put(utils.getPropertyName(field.getField()), fieldDefinition);
             }
@@ -91,11 +91,15 @@ public class MappingController {
         return properties;
     }
 
-    private Map<String, Object> handleField(MetaModelUtils.FieldWithGenericTypeInfo field, ElasticSearchInfo parentInfo) {
+    private Map<String, Object> handleField(MetaModelUtils.FieldWithGenericTypeInfo field, ElasticSearchInfo parentInfo, boolean useCustomAnalyzer) {
         try {
             ElasticSearchInfo esInfo = field.getField().getAnnotation(ElasticSearchInfo.class);
             FieldInfo fieldInfo = field.getField().getAnnotation(FieldInfo.class);
             boolean isSingleWord = fieldInfo != null && fieldInfo.isSingleWord();
+            String analyzer = KEYWORD;
+            if(useCustomAnalyzer && !isSingleWord) {
+                analyzer = TEXT_ANALYZER;
+            }
             if(esInfo == null && parentInfo != null) {
                 esInfo = parentInfo;
             }
@@ -105,7 +109,7 @@ public class MappingController {
 
 
                 if(topTypeToHandle instanceof ParameterizedType && ((ParameterizedType)topTypeToHandle).getRawType() == Children.class){
-                    Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
+                    Map<String, Object> otherType = handleType(topTypeToHandle, esInfo, useCustomAnalyzer);
                     //TODO check if nested shouldn't be defined one level further up
                     ((Map<String, Object>)otherType.get("children")).put("type", "nested");
                     fieldDefinition.put(PROPERTIES, otherType);
@@ -116,7 +120,7 @@ public class MappingController {
                     Map<String,  Object> fields = new LinkedHashMap<>();
                     value.put("fields", fields);
                     value.put("type", "text");
-                    value.put("analyzer", isSingleWord?KEYWORD:TEXT_ANALYZER);
+                    value.put("analyzer", analyzer);
                     Map<String,  Object> keyword= new LinkedHashMap<>();
                     fields.put(KEYWORD, keyword);
                     keyword.put("type",KEYWORD);
@@ -134,7 +138,7 @@ public class MappingController {
                         if (esInfo != null && esInfo.ignoreAbove() > 0) {
                             keyword.put("ignore_above", esInfo.ignoreAbove());
                         }
-                        fieldDefinition.put("analyzer", isSingleWord?KEYWORD:TEXT_ANALYZER);
+                        fieldDefinition.put("analyzer", analyzer);
                     }
                 } else if (topTypeToHandle == Date.class) {
                     fieldDefinition.put("type", "date");
@@ -143,7 +147,7 @@ public class MappingController {
                 } else if (topTypeToHandle == Integer.class || topTypeToHandle == int.class) {
                     fieldDefinition.put("type", "integer");
                 } else {
-                    Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
+                    Map<String, Object> otherType = handleType(topTypeToHandle, esInfo, useCustomAnalyzer);
                     fieldDefinition.put(PROPERTIES, otherType);
                 }
                 return fieldDefinition;

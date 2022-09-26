@@ -58,10 +58,10 @@ const Label = ({ isAllFetched, number, total }) => {
 };
 
 const FetchingFiles = () => (
-  <span>
+  <>
     <div className="spinner-border spinner-border-sm" role="status"></div>
     &nbsp;Retrieving Files...
-  </span>
+  </>
 );
 
 const FileLabel = ({ showLabel, isAllFetched, length, total }) => {
