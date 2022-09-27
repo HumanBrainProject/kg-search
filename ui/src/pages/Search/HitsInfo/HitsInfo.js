@@ -58,9 +58,9 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
       return " or ";
     }
     if (isLast) {
-      return ", ";
+      return "";
     }
-    return "";
+    return ", ";
   };
 
   const separator = getSeparator();
@@ -75,7 +75,7 @@ const Suggestions =  ({ words }) => {
   return (
     <ul className="kgs-suggestions">
       {list.map(([word, searchTerm], idx) => (
-        <Suggestion key={word} word={word} searchTerm={searchTerm} isSecondLast={idx ===list.length -2} isLast={idx === list.length -1} />
+        <Suggestion key={word} word={word} searchTerm={searchTerm} isSecondLast={idx === (list.length-2)} isLast={idx === (list.length-1)} />
       ))}
     </ul>
   );
