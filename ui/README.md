@@ -15,9 +15,3 @@ npm run start
 # Backend
 The backend for the search UI is an Elasticsearch instance.
 You'll find the backend scripts on GitHub at https://github.com/HumanBrainProject/kg-search
-
-____
-
-**to be implemented**
-
-**_to be documented_**
