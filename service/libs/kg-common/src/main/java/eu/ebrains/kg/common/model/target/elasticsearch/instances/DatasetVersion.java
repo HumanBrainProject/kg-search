@@ -154,7 +154,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Support channel")
     private List<TargetExternalReference> supportChannels;
 
-    @FieldInfo(label = "New in this version", markdown = true, boost = 2, useForSuggestion = true)
+    @FieldInfo(label = "Version specification", markdown = true, boost = 2, useForSuggestion = true)
     private Value<String> newInThisVersion;
 
     @FieldInfo(labelHidden = true, boost = 2, visible = false)

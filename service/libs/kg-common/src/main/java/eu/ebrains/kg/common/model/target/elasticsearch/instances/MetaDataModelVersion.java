@@ -120,7 +120,7 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
     private Value<String> description;
 
-    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
+    @FieldInfo(label = "Version specification", markdown = true, boost = 2)
     private Value<String> newInThisVersion;
 
     @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)

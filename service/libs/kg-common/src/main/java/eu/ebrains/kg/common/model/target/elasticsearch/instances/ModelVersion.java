@@ -132,7 +132,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
     private Value<String> description;
 
-    @FieldInfo(label = "New in this version", markdown = true, boost = 2, useForSuggestion = true)
+    @FieldInfo(label = "Version specification", markdown = true, boost = 2, useForSuggestion = true)
     private Value<String> newInThisVersion;
 
     @FieldInfo(label = "Studied brain region", layout = "summary", useForSuggestion = true)
