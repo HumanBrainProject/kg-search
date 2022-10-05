@@ -92,16 +92,16 @@ public class Contributor implements TargetInstance {
     @FieldInfo(type = FieldInfo.Type.TEXT, layout = "(Meta)Data model contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> metaDataModelContributions;
 
-    @FieldInfo(label = "Datasets citations", layout = "Citations", isCitation=true)
+    @FieldInfo(label = "EBRAINS KG Datasets citations", layout = "Citations", isCitation=true)
     private List<Citation> datasetCitations;
 
-    @FieldInfo(label = "Models citations", layout = "Citations", isCitation=true)
+    @FieldInfo(label = "EBRAINS KG Models citations", layout = "Citations", isCitation=true)
     private List<Citation> modelCitations;
 
-    @FieldInfo(label = "Software citations", layout = "Citations", isCitation=true)
+    @FieldInfo(label = "EBRAINS KG Software citations", layout = "Citations", isCitation=true)
     private List<Citation> softwareCitations;
 
-    @FieldInfo(label = "(Meta)Data models citations", layout = "Citations", isCitation=true)
+    @FieldInfo(label = "EBRAINS KG (Meta)Data models citations", layout = "Citations", isCitation=true)
     private List<Citation> metaDataModelCitations;
 
     @JsonProperty("first_release")

@@ -1148,22 +1148,22 @@
         },
         "datasetCitations": {
           "isCitation": true,
-          "label": "Datasets citations",
+          "label": "EBRAINS KG Datasets citations",
           "layout": "Citations"
         },
         "modelCitations": {
           "isCitation": true,
-          "label": "Models citations",
+          "label": "EBRAINS KG Models citations",
           "layout": "Citations"
         },
         "softwareCitations": {
           "isCitation": true,
-          "label": "Software citations",
+          "label": "EBRAINS KG Software citations",
           "layout": "Citations"
         },
         "metaDataModelCitations": {
           "isCitation": true,
-          "label": "(Meta)Data models citations",
+          "label": "EBRAINS KG (Meta)Data models citations",
           "layout": "Citations"
         }
       }
