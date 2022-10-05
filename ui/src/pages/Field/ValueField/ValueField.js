@@ -44,8 +44,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     if (!data || !mapping) {
       return null;
     }
-    const regInstanceLink = /^(.+)$/;
-    const [, instanceIdLink] = (!!renderUserInteractions && !!data.reference && regInstanceLink.test(data.reference))?data.reference.match(regInstanceLink):[null, null];
+    const instanceIdLink = (!!renderUserInteractions && !!data.reference)?data.reference:null;
     const hasInstanceLink = !!instanceIdLink;
     const hasLink = !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" && data.url.substring(0, 7).toLowerCase() === "mailto:";
@@ -72,9 +71,10 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     if (hasInstanceLink) {
       ValueComponent = InstanceLink;
       valueProps = {
-        id: instanceIdLink,
+        instanceId: instanceIdLink,
         text: value ? value : instanceIdLink,
-        count: count
+        count: count,
+        context: data.context
       };
     } else if (hasLink || isLinkWithIcon) {
       ValueComponent = Link;

@@ -56,7 +56,10 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
   useEffect(() => {
     if (!initializedRef.current !== instanceId) {
       initializedRef.current = instanceId;
-      dispatch(setInstanceId(instanceId));
+      dispatch(setInstanceId({
+        instanceId: instanceId,
+        context: location.state
+      }));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instanceId, group]);

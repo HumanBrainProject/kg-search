@@ -40,7 +40,9 @@ const HitButton = ({ data }) => {
 
   const handleClick = e => {
     if (!e.ctrlKey) {
-      dispatch(setInstanceId(data.id));
+      dispatch(setInstanceId({
+        instanceId: data.id
+      }));
     }
   };
 

@@ -22,6 +22,7 @@
  */
 
 import React, { Suspense, useState } from "react";
+import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import _ from "lodash-uuid";
@@ -70,11 +71,9 @@ const Loading = () => {
   );
 };
 
-const HierarchicalTree = ({ data }) => {
+const HierarchicalTreeComponent = ({ tree, defaultExpandAll, defaultExpandedKeys, initialSelectedNode }) => {
 
-  const { data: tree, expandAll: defaultExpandAll, expandedKeys: defaultExpandedKeys } = splitChildren(data);
-
-  const [node, setNode] = useState(tree);
+  const [node, setNode] = useState(initialSelectedNode);
 
   const onSelect = (_selectedKeys, info) => {
     trackEvent("Specimen", "Clicked", info.node.title);
@@ -84,18 +83,28 @@ const HierarchicalTree = ({ data }) => {
   return (
     <div className="kgs-hierarchical-tree">
       <i className="kgs-hierarchical-tree__advise">
-        Select the items of the tree to get more details about the individual
-        elements.
+        Select the items of the tree to get more details about the individual elements.
       </i>
       <div className="kgs-hierarchical-tree__body">
         <div className="kgs-hierarchical-tree__content">
           <Suspense fallback={<Loading />}>
-            <Tree data={tree} onSelect={onSelect} defaultExpandAll={defaultExpandAll} defaultExpandedKeys={defaultExpandedKeys} />
+            <Tree data={tree} onSelect={onSelect} defaultExpandAll={defaultExpandAll} defaultExpandedKeys={defaultExpandedKeys} defaultSelectedKey={node.key} />
           </Suspense>
         </div>
         <Node node={node} />
       </div>
     </div>
+  );
+};
+
+const HierarchicalTree = ({ data }) => {
+
+  const targetId = useSelector(state => state.instance.context?.targetId);
+
+  const { data: tree, expandAll, expandedKeys, selectedNode } = splitChildren(data, targetId);
+
+  return (
+    <HierarchicalTreeComponent tree={tree} defaultExpandAll={expandAll} defaultExpandedKeys={expandedKeys} initialSelectedNode={selectedNode || tree} />
   );
 };
 
@@ -116,78 +125,116 @@ const getTo = (from , to) => {
   }
 };
 
+const splitNoChildren = (node, targetId) => {
+  if (targetId && targetId === node?.data?.id) {
+    return {
+      data: node,
+      expandAll: true,
+      expandedKeys: [],
+      selectedNode: node
+    };
+  }
+  return {
+    data: node,
+    expandAll: true,
+    expandedKeys: []
+  };
+};
+
+const splitChildrenDefault = (node, targetId) => {
+  const selectedNodeIsCurrentNode = targetId && targetId === node?.data?.id;
+  const { children, expandAll, expandedKeys, selectedNode } = node.children.reduce((acc, c) => {
+    const targetIdToFind = (selectedNodeIsCurrentNode || acc.selectedNode)?null:targetId;
+    const { data, expandAll, expandedKeys, selectedNode } = splitChildren(c, targetIdToFind);
+    acc.children.push(data);
+    acc.expandAll = acc.expandAll && expandAll;
+    expandedKeys.forEach(key => acc.expandedKeys.push(key));
+    if (selectedNode) {
+      acc.selectedNode = selectedNode;
+    }
+    return acc;
+  }, {children: [], expandAll: false, expandedKeys: []});
+  expandedKeys.push(node.key);
+  const currentNode = {
+    ...node,
+    children: children
+  };
+  return {
+    data: currentNode,
+    expandAll: expandAll,
+    expandedKeys: expandedKeys,
+    selectedNode: selectedNodeIsCurrentNode?currentNode:selectedNode
+  };
+};
+
+const splitChildrenForHugeList = (node, targetId) => {
+  const children = [];
+  const selectedNodeIsCurrentNode = targetId && targetId === node?.data?.id;
+  let childSelectedNode = null;
+  const keys = [];
+  const childrenByType = Object.values(node.children.reduce((acc, child) => {
+    if (!acc[child.color]) {
+      acc[child.color] = [];
+    }
+    acc[child.color].push(child);
+    return acc;
+  }, {}));
+  childrenByType.forEach(list => {
+    if (list.length === 1) {
+      const { expandedKeys, selectedNode } = splitChildren(list[0], (selectedNodeIsCurrentNode || childSelectedNode)?null:targetId);
+      expandedKeys.forEach(key => keys.push(key));
+      if (selectedNode) {
+        childSelectedNode = selectedNode;
+      }
+      children.push(list[0]);
+    } else {
+      for (let i = 0; i <  list.length; i += chunkSize) {
+        const chunk =  list.slice(i, i + chunkSize);
+        const chunkKey = _.uuid();
+        chunk.forEach(c => {
+          const { expandedKeys, selectedNode } = splitChildren(c, (selectedNodeIsCurrentNode || childSelectedNode)?null:targetId);
+          expandedKeys.forEach(key => keys.push(key));
+          if (selectedNode) {
+            childSelectedNode = selectedNode;
+            keys.push(chunkKey);
+          }
+        });
+        const from = chunk[0].title;
+        const to = getTo(from, chunk[chunk.length-1].title);
+        children.push({
+          key: chunkKey,
+          title: `from ${from} to ${to}`,
+          color: chunk[0]?.color,
+          children: chunk
+        });
+      }
+    }
+  });
+  if (childSelectedNode || children.length < chunkSize) {
+    keys.push(node.key);
+  }
+  const currentNode = {
+    ...node,
+    children: children
+  };
+  return {
+    data: currentNode,
+    expandAll: false,
+    expandedKeys: keys,
+    selectedNode: selectedNodeIsCurrentNode?currentNode:childSelectedNode
+  };
+};
+
 const chunkSize = 100;
 const chunkThresold = chunkSize * 5;
-const splitChildren = data => {
+const splitChildren = (data, targetId) => {
   if (!Array.isArray(data.children)) {
-    return {
-      data: data,
-      expandAll: true,
-      expandedKeys: []
-    };
+    return splitNoChildren(data, targetId);
   }
   if (data.children.length < chunkThresold) {
-    const { children, expandAll, expandedKeys } = data.children.reduce((acc, c) => {
-      const { data, expandAll, expandedKeys } = splitChildren(c);
-      acc.children.push(data);
-      acc.expandAll = acc.expandAll && expandAll;
-      expandedKeys.forEach(key => acc.expandedKeys.push(key));
-      return acc;
-    }, {children: [], expandAll: false, expandedKeys: []});
-    expandedKeys.push(data.key);
-    return {
-      data: {
-        ...data,
-        children: children
-      },
-      expandAll: expandAll,
-      expandedKeys: expandedKeys
-    };
-  } else {
-    const children = [];
-    const keys = [];
-    const childrenByType = Object.values(data.children.reduce((acc, child) => {
-      if (!acc[child.color]) {
-        acc[child.color] = [];
-      }
-      acc[child.color].push(child);
-      return acc;
-    }, {}));
-    childrenByType.forEach(list => {
-      if (list.length === 1) {
-        const { expandedKeys } = splitChildren(list[0]);
-        expandedKeys.forEach(key => keys.push(key));
-        children.push(list[0]);
-      } else {
-        for (let i = 0; i <  list.length; i += chunkSize) {
-          const chunk =  list.slice(i, i + chunkSize);
-          chunk.forEach(c => {
-            const { expandedKeys } = splitChildren(c);
-            expandedKeys.forEach(key => keys.push(key));
-          });
-          const from = chunk[0].title;
-          const to = getTo(from, chunk[chunk.length-1].title);
-          children.push({
-            key: _.uuid(),
-            title: `from ${from} to ${to}`,
-            color: chunk[0]?.color,
-            children: chunk
-          });
-        }
-      }
-    });
-    if (children.length < chunkSize) {
-      keys.push(data.key);
-    }
-    return {
-      data: {
-        ...data,
-        children: children
-      },
-      expandAll: false,
-      expandedKeys: keys
-    };
+    return splitChildrenDefault(data, targetId);
   }
+  return splitChildrenForHugeList(data, targetId);
 };
 
 export default HierarchicalTree;

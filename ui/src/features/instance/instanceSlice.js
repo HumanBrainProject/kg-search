@@ -47,13 +47,12 @@ const updateInstance = (state, data) => {
       state.history.push({
         id: state.data.id,
         title: state.title,
-        tab: state.tab
+        tab: state.tab // only tab is kept in history, context is reset
       });
     }
-    const tab = state.data?.tab;
     state.data = data;
     state.title = getTitle(data);
-    state.tab = tab;
+    state.tab = state.context?.tab; // tab should keep current view until the data of the new instanceId is successufully fetched
   } else {
     state.instanceId = null;
     state.data = null;
@@ -62,9 +61,11 @@ const updateInstance = (state, data) => {
   }
 };
 
+// WARNING: until instance is successfully fetched data, title, tab and history are not in sync with instanceId & context
 const initialState = {
   typeMappings: {},
   instanceId: null,
+  context: null,
   data: null,
   title: null,
   tab: null,
@@ -77,13 +78,15 @@ const instanceSlice = createSlice({
   initialState,
   reducers: {
     setInstanceId(state, action) {
-      state.instanceId = action.payload;
+      state.instanceId = action.payload?.instanceId;
+      state.context = action.payload?.context;
       // if (Math.round(Math.random()* 10)%2 === 0) {
       //   state.instanceId = "a8478880-596d-4a0d-a14c-199f20ace75a";
       // }
     },
     reset(state) {
       state.instanceId = null;
+      state.context = null;
       state.data = null;
       state.title = null;
       state.tab = null;
@@ -102,7 +105,8 @@ const instanceSlice = createSlice({
           if (entry) {
             if (state.instanceId !== instanceId) {
               state.instanceId = instanceId;
-              state.data = { tab: entry.tab }; // detail should stay open
+              state.context = { tab: entry.tab }; // only tab is kept in history
+              state.data = {}; // detail should stay open
             }
             state.tab = entry.tab;
           }
@@ -111,6 +115,7 @@ const instanceSlice = createSlice({
         }
       } else {
         state.instanceId = null;
+        state.context = null;
         state.data = null;
         state.title = null;
         state.tab = null;

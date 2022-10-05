@@ -166,10 +166,16 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
   const tags = getTags(groupLabel, isDefaultGroup, data?.category);
 
   const onVersionChange = version => {
+    const context = {
+      tab: selectedTab
+    };
     if(isSearch) {
-      dispatch(setInstanceId(version));
+      dispatch(setInstanceId({
+        instanceId: version,
+        context: context
+      }));
     } else {
-      navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`);
+      navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`, { state: context});
     }
   };
 

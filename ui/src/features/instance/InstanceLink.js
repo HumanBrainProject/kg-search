@@ -29,7 +29,7 @@ import { setInstanceId } from "./instanceSlice";
 
 import Count from "../../components/Field/Count";
 
-const InstanceLink = ({id, text, count}) => {
+const InstanceLink = ({instanceId, text, count, context}) => {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +40,7 @@ const InstanceLink = ({id, text, count}) => {
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
   const title = useSelector(state => state.instance.title);
 
-  if (!id) {
+  if (!instanceId) {
     return text;
   }
 
@@ -53,19 +53,23 @@ const InstanceLink = ({id, text, count}) => {
 
   const handleClick = () => {
     if (path) {
-      const url = `${path}${id}${group && group !== defaultGroup?("?group=" + group ):""}`;
-      const context = {
-        title: title
+      const url = `${path}${instanceId}${group && group !== defaultGroup?("?group=" + group ):""}`;
+      const options = {
+        title: title, // TODO: check if not deprecated
+        state: context
       };
-      navigate(url, context);
+      navigate(url, options);
     } else {
-      dispatch(setInstanceId(id));
+      dispatch(setInstanceId({
+        instanceId: instanceId,
+        context: context
+      }));
     }
   };
 
   return (
     <span>
-      <button onClick={handleClick} role="link">{text?text:id}</button>
+      <button onClick={handleClick} role="link">{text?text:instanceId}</button>
       <Count count={count} />
     </span>
   );

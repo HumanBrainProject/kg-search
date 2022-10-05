@@ -48,14 +48,14 @@ const Legend = ({ legend }) => {
   );
 };
 
-const Tree = ({ data, onSelect, defaultExpandAll, defaultExpandedKeys }) => {
+const Tree = ({ data, onSelect, defaultExpandAll, defaultExpandedKeys, defaultSelectedKey }) => {
   return (
     <div className="kgs-tree">
       <TreeComponent
         treeData={[data]}
         defaultExpandAll={defaultExpandAll}
         defaultExpandedKeys={defaultExpandedKeys}
-        defaultSelectedKeys={[data.key]}
+        defaultSelectedKeys={[defaultSelectedKey]}
         onSelect={onSelect}
         icon={Icon}
       />
