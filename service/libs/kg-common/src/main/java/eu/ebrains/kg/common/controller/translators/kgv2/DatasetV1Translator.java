@@ -121,7 +121,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             final String editorId = datasetV1.getEditorId();
             final String[] split = editorId.split("/");
             String uuid = split[split.length - 1];
-            d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, true)));
+            d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid)));
             d.setDataAccessibility(translateAccessibility(value("Controlled access")));
         } else {
             if (dataStage == DataStage.RELEASED) {

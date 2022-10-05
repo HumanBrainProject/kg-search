@@ -108,7 +108,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (accessibility != null) {
             switch (accessibility) {
                 case CONTROLLED_ACCESS:
-                    d.setEmbargo(value(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), true)));
+                    d.setEmbargo(value(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), containerUrl)));
                     break;
                 case UNDER_EMBARGO:
                     if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {

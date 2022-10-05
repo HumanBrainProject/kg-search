@@ -57,11 +57,15 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", endpoint);
     }
 
-    public static String createHDGMessage(String id, boolean html){
-        return html ?
-                String.format("This data requires you to explicitly <a href=\"https://data-proxy.ebrains.eu/datasets/%s\" target=\"_blank\">request access</a> with your EBRAINS account. If you don't have such an account yet, please <a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a>.", id)
-                :
-                String.format("This data requires you to explicitly [request access](https://data-proxy.ebrains.eu/datasets/%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", id);
+    public static String createHDGMessage(String id){
+        return createHDGMessage(id, null);
+    }
+
+    public static String createHDGMessage(String id, String containerUrl) {
+        if (containerUrl != null && !containerUrl.startsWith("https://data-proxy.ebrains.eu") && !containerUrl.startsWith("https://object.cscs.ch")) {
+            return String.format("<a href=\"%s\" target=\"_blank\">%s</a>", containerUrl, containerUrl);
+        }
+        return String.format("This data requires you to explicitly <a href=\"https://data-proxy.ebrains.eu/datasets/%s\" target=\"_blank\">request access</a> with your EBRAINS account. If you don't have such an account yet, please <a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a>.", id);
     }
 
     //Internal
