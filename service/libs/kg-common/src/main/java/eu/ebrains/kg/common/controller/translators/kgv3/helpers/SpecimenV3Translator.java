@@ -280,7 +280,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         public DatasetVersion.DSVSubject translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
             final DatasetVersion.DSVSubject sub = new DatasetVersion.DSVSubject();
             sub.setTitle(value(specimen.getInternalIdentifier()));
-            sub.setId(specimen.getId());
+            sub.setId(IdUtils.getUUID(specimen.getId()));
             fillSubjectInformation(sub, specimen);
             if(specimen.getStudiedState().size()==1){
                 // The single state subjects will be merged -> we therefore add those properties which are state specific
@@ -352,7 +352,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public DatasetVersion.DSVSubjectGroup translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
             final DatasetVersion.DSVSubjectGroup subGrp = new DatasetVersion.DSVSubjectGroup();
-            subGrp.setId(specimen.getId());
+            subGrp.setId(IdUtils.getUUID(specimen.getId()));
             subGrp.setTitle(value(specimen.getInternalIdentifier()));
             if(specimen.getQuantity()!=null){
                 subGrp.setNumberOfSubjects(value(String.valueOf(specimen.getQuantity())));
@@ -435,7 +435,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public DatasetVersion.DSVTissueSample translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
             final DatasetVersion.DSVTissueSample tissueSample = new DatasetVersion.DSVTissueSample();
-            tissueSample.setId(specimen.getId());
+            tissueSample.setId(IdUtils.getUUID(specimen.getId()));
             tissueSample.setTitle(value(specimen.getInternalIdentifier()));
             fillTissueSampleInformation(tissueSample, specimen);
             if(specimen.getStudiedState().size()==1) {
@@ -510,7 +510,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         @Override
         public DatasetVersion.DSVTissueSampleCollection translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
             final DatasetVersion.DSVTissueSampleCollection tissueSampleColl = new DatasetVersion.DSVTissueSampleCollection();
-            tissueSampleColl.setId(specimen.getId());
+            tissueSampleColl.setId(IdUtils.getUUID(specimen.getId()));
             tissueSampleColl.setTitle(value(specimen.getInternalIdentifier()));
             if(specimen.getQuantity()!=null){
                 tissueSampleColl.setTissueSamples(value(String.valueOf(specimen.getQuantity())));
