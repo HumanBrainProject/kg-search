@@ -28,7 +28,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import lombok.EqualsAndHashCode;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 @EqualsAndHashCode
 public class TargetInternalReference implements Comparable<TargetInternalReference> {
@@ -36,6 +37,12 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
     public TargetInternalReference(String reference, String value) {
         this.reference = reference;
         this.value = value;
+    }
+
+    public TargetInternalReference(String reference, String value, Context context) {
+        this.reference = reference;
+        this.value = value;
+        this.context = context;
     }
 
     @ElasticSearchInfo(ignoreAbove = 256)
@@ -46,6 +53,9 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<String> count;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Context context;
 
     public String getReference() {
         return reference;
@@ -68,6 +78,14 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
         this.value = value;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     @Override
     public int compareTo(TargetInternalReference targetInternalReference) {
         return targetInternalReference == null ? -1 : Comparator.comparing(TargetInternalReference::getLowerCaseValue).compare(this, targetInternalReference);
@@ -79,5 +97,37 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
 
     public void setCount(List<String> count) {
         this.count = count;
+    }
+
+    public static class Context {
+
+        private String tab;
+
+        private String targetId;
+
+        public Context(String tab) {
+            this.tab = tab;
+        }
+
+        public Context(String tab, String targetId) {
+            this.tab = tab;
+            this.targetId = targetId;
+        }
+
+        public String getTab() {
+            return tab;
+        }
+
+        public void setTab(String tab) {
+            this.tab = tab;
+        }
+
+        public String getTargetId() {
+            return targetId;
+        }
+
+        public void setTargetId(String targetId) {
+            this.targetId = targetId;
+        }
     }
 }
