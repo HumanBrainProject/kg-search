@@ -128,6 +128,7 @@ const instanceSlice = createSlice({
     },
     setTab(state, action) {
       state.tab = action.payload;
+      state.context = null; // clear context after tab change
     },
     setInstanceFromCache: (state, { payload }) => {
       updateInstance(state, payload);
