@@ -1,4 +1,4 @@
-# Browse results (general)
+# General
 Once an interesting result is found, the detail view can be opened to explore the various detail sections.   
 
 ![Result card](generic_card.png)
