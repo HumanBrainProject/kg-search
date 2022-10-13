@@ -20,5 +20,5 @@ public class BasicHierarchyElement<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> legend;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<? extends BasicHierarchyElement<Object>> children;
+    private List<? extends BasicHierarchyElement<?>> children;
 }

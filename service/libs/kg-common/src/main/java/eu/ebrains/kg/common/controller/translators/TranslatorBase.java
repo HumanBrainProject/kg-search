@@ -101,6 +101,13 @@ public abstract class TranslatorBase {
         return null;
     }
 
+    protected List<TargetExternalReference> simpleLink(List<String> urls) {
+        if (!CollectionUtils.isEmpty(urls)) {
+            return urls.stream().map(this::link).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return null;
+    }
+
     protected List<TargetExternalReference> link(List<ExternalRef> urls) {
         if (!CollectionUtils.isEmpty(urls)) {
             return urls.stream().map(this::link).filter(Objects::nonNull).collect(Collectors.toList());
@@ -119,6 +126,14 @@ public abstract class TranslatorBase {
         if (ref != null) {
             final String uuid = IdUtils.getUUID(ref.getId());
             return new TargetInternalReference(uuid, StringUtils.defaultIfBlank(ref.getFullName(), uuid));
+        }
+        return null;
+    }
+
+    protected TargetInternalReference ref(FullNameRefWithVersion ref) {
+        if (ref != null) {
+            final String uuid = IdUtils.getUUID(ref.getId());
+            return new TargetInternalReference(uuid,  StringUtils.isNotBlank(ref.getFullName()) && StringUtils.isNotBlank(ref.getVersionIdentifier()) ? String.format("%s (%s)", ref.getFullName(), ref.getVersionIdentifier()) : StringUtils.defaultIfBlank(ref.getFullName(), uuid));
         }
         return null;
     }

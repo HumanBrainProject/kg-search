@@ -34,8 +34,10 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(File.class, null, null, new FileV3Translator(), null, true, false, 1000),
             new TranslatorModel<>(FileBundle.class, null, null, new FileBundleV3Translator(), null, true, false, 1000),
             new TranslatorModel<>(ParcellationEntity.class, null, null, new ParcellationEntityV3Translator(), null, false, false, 1000),
-            new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false, 1000)
-    );
+            new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false, 1000),
+            new TranslatorModel<>(BrainAtlas.class, null, null, new BrainAtlasV3Translator(), null, false, false, 1000),
+            new TranslatorModel<>(CoordinateSpace.class, null, null, new CoordinateSpaceV3Translator(), null, false, false, 1000)
+            );
 
     private final Class<Output> targetClass;
     private final Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> v1translator;

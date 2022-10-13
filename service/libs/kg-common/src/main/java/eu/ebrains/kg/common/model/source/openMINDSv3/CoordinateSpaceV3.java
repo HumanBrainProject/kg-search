@@ -21,9 +21,11 @@
  *
  */
 
-package eu.ebrains.kg.common.model.source.openMINDSv3.commons;
+package eu.ebrains.kg.common.model.source.openMINDSv3;
 
-import lombok.EqualsAndHashCode;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRefWithVersion;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,10 +33,14 @@ import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
-public class FullNameRefForResearchProductVersion extends FullNameRefWithVersion {
-    private String fallbackName;
-    private List<String> contributors;
-    private String doi;
-    private String howToCite;
+public class CoordinateSpaceV3 extends SourceInstanceV3 {
+
+    private String fullName;
+    private String description;
+    private String versionIdentifier;
+    private List<String> ontologyIdentifier;
+    private FullNameRef anatomicalAxesOrientation;
+    private FullNameRef nativeUnit;
+    private String homepage;
+
 }

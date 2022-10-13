@@ -168,7 +168,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             elState.setTitle(label);
             elState.setData(translator.translateState(studiedState, label));
             final List<DatasetVersionV3.StudiedState> descendentStates = context.descendentStatesMap.get(studiedState.getId());
-            List<BasicHierarchyElement<Object>> children = new ArrayList<>();
+            List<BasicHierarchyElement<?>> children = new ArrayList<>();
             if(!CollectionUtils.isEmpty(descendentStates)){
                 //There are descendent states. For those which are completely connected to the current state, we can visualize them more naturally by attaching the specimen directly to the state (since it's true that the whole specimen is descendent from this state).
                 final List<DatasetVersionV3.StudiedSpecimen> fullyEnclosedDescendentSpecimen = descendentStates.stream().map(DatasetVersionV3.StudiedState::getParent).distinct().filter(d -> new HashSet<>(descendentStates).containsAll(d.getStudiedState())).collect(Collectors.toList());
@@ -204,8 +204,8 @@ public class SpecimenV3Translator extends TranslatorBase {
         return specimen.getStudiedState().size() == 1;
     }
 
-    private BasicHierarchyElement<Object> mergeBasicHierarchyElements(BasicHierarchyElement<Object> parent, BasicHierarchyElement<Object> child, List<BasicHierarchyElement<Object>> children){
-        BasicHierarchyElement<Object> el = new BasicHierarchyElement<>();
+    private <T> BasicHierarchyElement<T> mergeBasicHierarchyElements(BasicHierarchyElement<T> parent, BasicHierarchyElement<?> child, List<BasicHierarchyElement<?>> children){
+        BasicHierarchyElement<T> el = new BasicHierarchyElement<>();
         el.setKey(parent.getKey());
         //If we can merge an element, it means that there is only a single state and we therefore don't need a "state label" to distinguish. We therefore can just use the parent label.
         el.setTitle(parent.getTitle());
@@ -611,7 +611,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             data = specimenTranslator.translateSpecimen(studiedSpecimen);
             specimenTranslator.aggregateOverview(data, context.overviewAggregator);
         }
-        List<BasicHierarchyElement<Object>> children = new ArrayList<>();
+        List<BasicHierarchyElement<?>> children = new ArrayList<>();
         final List<DatasetVersionV3.StudiedSpecimen> partOfRelation = context.partOfRelations.get(studiedSpecimen.getId());
         if(!CollectionUtils.isEmpty(partOfRelation)){
             children.addAll(partOfRelation.stream().map(p -> translateToBasicHierarchyElement(p, context, false, PART_OF)).filter(Objects::nonNull).collect(Collectors.toList()));
