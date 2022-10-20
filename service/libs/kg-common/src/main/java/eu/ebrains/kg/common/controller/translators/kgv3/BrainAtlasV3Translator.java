@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.common.controller.translators.kgv3;
 
+import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.BrainAtlasV3;
@@ -30,6 +31,7 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.BrainAtlas;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
@@ -37,6 +39,7 @@ import eu.ebrains.kg.common.utils.TranslatorUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,6 +83,16 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         b.setAllIdentifiers(brainAtlasV3.getIdentifier());
         b.setIdentifier(IdUtils.getUUID(brainAtlasV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         b.setTitle(value(brainAtlasV3.getFullName()));
+        b.setDescription(value(brainAtlasV3.getDescription()));
+        if (!CollectionUtils.isEmpty(brainAtlasV3.getAuthor())) {
+            b.setContributors(brainAtlasV3.getAuthor().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        }
+        b.setHomepage(link(brainAtlasV3.getHomepage()));
+        handleCitation(brainAtlasV3, b);
         final List<BrainAtlasVersionGroup> brainAtlasVersionGroups = organizeBrainAtlasVersions(brainAtlasV3.getBrainAtlasVersion());
         b.setParcellationTerminology(buildHierarchyTreeForParcellationTerminology(brainAtlasV3, brainAtlasVersionGroups));
         b.setVersions(buildHierarchyTreeForVersions(brainAtlasV3, brainAtlasVersionGroups));
@@ -93,6 +106,9 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         e.setTitle(brainAtlasV3.getFullName());
         e.setColor("#e3dcdc");
         e.setChildren(organizeParcellationEntities(brainAtlasV3.getTerminology().getParcellationEntity().stream().sorted(Comparator.comparing(BrainAtlasV3.ParcellationEntity::getName, String.CASE_INSENSITIVE_ORDER)).collect(Collectors.toList()), versionGroups));
+        BrainAtlas.BrainAtlasOverview overview = new BrainAtlas.BrainAtlasOverview();
+        e.setData(overview);
+        overview.setNumberOfParcellationEntities(value(brainAtlasV3.getTerminology().getParcellationEntity().size()));
         return e;
     }
 
@@ -249,7 +265,9 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
             e.setColor("#8a1f0d");
             BrainAtlas.ParcellationEntity pe = new BrainAtlas.ParcellationEntity();
             e.setData(pe);
-            if(parcellationEntity.getVersions()!=null) {
+            pe.setDefinition(value(parcellationEntity.getDefinition()));
+            pe.setOntologyIdentifiers(simpleLink(parcellationEntity.getOntologyIdentifier()));
+            if(parcellationEntity.getVersions()!=null && !parcellationEntity.getVersions().isEmpty()) {
                 pe.setVersionGroups(createBrainAtlasVersions(parcellationEntity.getVersions(), versionGroups));
 //                e.setChildren(parcellationEntity.getVersions().stream().map(v -> {
 //                    BasicHierarchyElement<BrainAtlas.ParcellationEntityVersion> pev = new BasicHierarchyElement<>();

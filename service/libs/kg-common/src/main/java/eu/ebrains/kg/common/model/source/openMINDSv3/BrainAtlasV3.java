@@ -24,21 +24,17 @@
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
-public class BrainAtlasV3 extends SourceInstanceV3 {
+public class BrainAtlasV3 extends SourceInstanceV3 implements IsCiteable {
 
     private String fullName;
     private String description;
@@ -46,6 +42,9 @@ public class BrainAtlasV3 extends SourceInstanceV3 {
     private List<PersonOrOrganizationRef> custodian;
     private ParcellationTerminology terminology;
     private List<BrainAtlasVersion> brainAtlasVersion;
+    private String doi;
+    private String howToCite;
+    private String homepage;
 
     @Getter
     @Setter

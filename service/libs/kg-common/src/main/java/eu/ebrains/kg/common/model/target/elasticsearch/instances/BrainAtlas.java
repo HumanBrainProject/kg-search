@@ -38,7 +38,7 @@ import java.util.*;
 @Getter
 @Setter
 @MetaInfo(name = "BrainAtlas")
-public class BrainAtlas implements TargetInstance {
+public class BrainAtlas implements TargetInstance, HasCitation{
     @JsonIgnore
     private List<String> allIdentifiers;
 
@@ -61,8 +61,27 @@ public class BrainAtlas implements TargetInstance {
     @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Name", layout = "header")
+    @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
     private Value<String> title;
+
+    @FieldInfo(label = "Contributors", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true, useForSuggestion = true)
+    private List<TargetInternalReference> contributors;
+
+    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, useForSuggestion = true, overview = true)
+    private Value<String> description;
+
+    //Overview
+    @FieldInfo(label = "DOI", hint = "This is the brain atlas DOI you must cite if you reuse this data in a way that leads to a publication", isSingleWord = true)
+    private Value<String> doi;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    private Value<String> customCitation;
+
+    @FieldInfo(label = "Homepage")
+    private TargetExternalReference homepage;
 
     @FieldInfo(labelHidden = true, isHierarchical = true, layout = "Parcellation terminology")
     private BasicHierarchyElement<BrainAtlasOverview> parcellationTerminology;
@@ -88,6 +107,11 @@ public class BrainAtlas implements TargetInstance {
         @FieldInfo
         private Value<String> title;
 
+        @FieldInfo(label = "Parcellation entities")
+        private Value<Integer> numberOfParcellationEntities;
+
+        @FieldInfo(label = "Available versions")
+        private Value<String> availableVersions;
 
     }
 
@@ -126,6 +150,15 @@ public class BrainAtlas implements TargetInstance {
 
         @FieldInfo
         private Value<String> title;
+
+        @FieldInfo(label = "Alternative name")
+        private Value<String> alternativeName;
+
+        @FieldInfo(markdown = true)
+        private Value<String> definition;
+
+        @FieldInfo(label="Ontology identifiers")
+        private List<TargetExternalReference> ontologyIdentifiers;
 
         @FieldInfo(label = "Available in versions")
         private List<Children<RelevantBrainAtlasVersion>> versionGroups;
