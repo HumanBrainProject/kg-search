@@ -376,7 +376,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator().translateToHierarchy(datasetVersion.getStudiedSpecimen());
+        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId()).translateToHierarchy(datasetVersion.getStudiedSpecimen());
         if (specimenBySubject != null) {
             if (specimenBySubject.getData().getSpecies() != null) {
                 d.setSpeciesFilter(specimenBySubject.getData().getSpecies().stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).distinct().map(Value::new).collect(Collectors.toList()));

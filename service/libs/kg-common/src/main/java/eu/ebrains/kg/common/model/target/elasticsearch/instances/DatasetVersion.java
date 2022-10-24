@@ -412,6 +412,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
         @FieldInfo(labelHidden = true)
         private List<TargetExternalReference> serviceLinks = new ArrayList<>();
+
+        @FieldInfo(label = "This subject group was also used in other data publications")
+        private List<TargetInternalReference> otherPublications;
     }
 
     @Getter
@@ -483,6 +486,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
         @FieldInfo(labelHidden = true)
         private List<TargetExternalReference> serviceLinks = new ArrayList<>();
+
+        @FieldInfo(label = "This specimen was also used in other data publications")
+        private List<TargetInternalReference> otherPublications;
     }
 
     @Getter

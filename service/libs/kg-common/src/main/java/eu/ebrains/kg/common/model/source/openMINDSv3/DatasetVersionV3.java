@@ -130,6 +130,15 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
         private List<String> type;
         private List<StudiedSpecimen> subElements;
         private List<SpecimenServiceLinkCollection> serviceLinks;
+        private List<RelatedProducts> usedInDatasets;
+    }
+
+    @Getter
+    @Setter
+    public static class RelatedProducts{
+        private String id;
+        private String doi;
+        private List<String> groupsWithIndividualSubElementSpecification;
     }
 
 

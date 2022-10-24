@@ -1,5 +1,6 @@
 package eu.ebrains.kg.common.controller.translators.kgv3.helpers;
 
+import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.controller.translators.TranslatorBase;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
@@ -46,6 +47,21 @@ public class SpecimenV3Translator extends TranslatorBase {
     //2d3757b5-afc8-470d-988e-f382884cf382
     //62bb226b-47f7-4294-bdff-66662d86e4d5 TS with multiple species and sex
 
+
+    public SpecimenV3Translator(String datasetVersionId) {
+        this.translators =  Arrays.asList(new SubjectTranslator(datasetVersionId), new SubjectGroupTranslator(datasetVersionId), new TissueSampleTranslator(datasetVersionId), new TissueSampleCollectionTranslator(datasetVersionId));
+    }
+
+    private final List<SpecimenTranslator<?>> translators;
+
+    private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedSpecimen specimen){
+        return (SpecimenTranslator<T>) translators.stream().filter(t -> t.matches(specimen)).findFirst().orElse(null);
+    }
+
+    private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedState state){
+        return  (SpecimenTranslator<T>) translators.stream().filter(t -> t.matches(state)).findFirst().orElse(null);
+    }
+
     /**
      * This method translates the list of studied specimen into a hierarchy to be represented in the KG Search.
      * The logic contains the following rules:
@@ -64,6 +80,8 @@ public class SpecimenV3Translator extends TranslatorBase {
      *   since the tissue sample is in fact descendent from the above state as a whole.
      * - We aggregate some information on the various levels (e.g. the root level aims at giving some key information about the overall specimen)
      */
+
+
 
 
     public BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> translateToHierarchy(List<DatasetVersionV3.StudiedSpecimen> studiedSpecimen) {
@@ -96,7 +114,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         final GlobalTranslationContext translationContext = new GlobalTranslationContext(descendentStates, partOfRelations);
 
         //Start the recursive resolution with the root elements (the ones that either don't have states at all or whose states are disconnected)
-        e.setChildren(studiedSpecimen.stream().filter(s -> CollectionUtils.isEmpty(s.getIsPartOf()) && s.getStudiedState().stream().allMatch(st -> CollectionUtils.isEmpty(st.getDescendedFrom()))).map(s -> translateToBasicHierarchyElement(s, translationContext, false, null)).sorted(Comparator.comparing(BasicHierarchyElement::getTitle)).collect(Collectors.toList()));
+        e.setChildren(studiedSpecimen.stream().filter(s -> CollectionUtils.isEmpty(s.getIsPartOf()) && s.getStudiedState().stream().allMatch(st -> CollectionUtils.isEmpty(st.getDescendedFrom()))).map(s -> translateToBasicHierarchyElement(s, translationContext, false, null, null)).sorted(Comparator.comparing(BasicHierarchyElement::getTitle)).collect(Collectors.toList()));
         e.setLegend(sortLegend(collectLegend(e, new HashMap<>())));
         e.setData(translationContext.overviewAggregator.flush());
         return e;
@@ -173,7 +191,7 @@ public class SpecimenV3Translator extends TranslatorBase {
                 //There are descendent states. For those which are completely connected to the current state, we can visualize them more naturally by attaching the specimen directly to the state (since it's true that the whole specimen is descendent from this state).
                 final List<DatasetVersionV3.StudiedSpecimen> fullyEnclosedDescendentSpecimen = descendentStates.stream().map(DatasetVersionV3.StudiedState::getParent).distinct().filter(d -> new HashSet<>(descendentStates).containsAll(d.getStudiedState())).collect(Collectors.toList());
                 final Set<DatasetVersionV3.StudiedState> fullyEnclosedDescendentStates = fullyEnclosedDescendentSpecimen.stream().map(DatasetVersionV3.StudiedSpecimen::getStudiedState).flatMap(Collection::stream).collect(Collectors.toSet());
-                children.addAll(fullyEnclosedDescendentSpecimen.stream().map(s->translateToBasicHierarchyElement(s, context, false, DESCENDENT_FROM)).filter(Objects::nonNull).collect(Collectors.toList()));
+                children.addAll(fullyEnclosedDescendentSpecimen.stream().map(s->translateToBasicHierarchyElement(s, context, false, DESCENDENT_FROM, null)).filter(Objects::nonNull).collect(Collectors.toList()));
 
                 //Let's also add those which are not fully connected by attaching their state first.
                 final List<DatasetVersionV3.StudiedState> incompleteDescendentStates = descendentStates.stream().filter(d -> !fullyEnclosedDescendentStates.contains(d)).collect(Collectors.toList());
@@ -181,7 +199,7 @@ public class SpecimenV3Translator extends TranslatorBase {
             }
 
             if (attachRootElementAsChild && studiedState.getParent() != null) {
-                final BasicHierarchyElement<Object> parent = translateToBasicHierarchyElement(studiedState.getParent(), context, true, PART_OF);
+                final BasicHierarchyElement<Object> parent = translateToBasicHierarchyElement(studiedState.getParent(), context, true, PART_OF, null);
                     if(parent!=null){
                         if (canMergeHierarchyElements(studiedState.getParent())) {
                             elState = mergeBasicHierarchyElements(parent, elState, children);
@@ -229,15 +247,18 @@ public class SpecimenV3Translator extends TranslatorBase {
         private final String stateType;
         private final String stateColor;
 
-        public SpecimenTranslator(String prefix, String specimenType, String specimenColor, String stateType, String stateColor) {
+        protected final String datasetVersionId;
+
+        public SpecimenTranslator(String prefix, String specimenType, String specimenColor, String stateType, String stateColor, String datasetVersionId) {
             this.prefix = prefix;
             this.specimenType = specimenType;
             this.specimenColor = specimenColor;
             this.stateType = stateType;
             this.stateColor = stateColor;
+            this.datasetVersionId = datasetVersionId;
         }
 
-        public abstract T translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen);
+        public abstract T translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen);
 
         public abstract Object translateState(DatasetVersionV3.StudiedState state, String label);
 
@@ -272,16 +293,17 @@ public class SpecimenV3Translator extends TranslatorBase {
     }
 
     private static class SubjectTranslator extends SpecimenTranslator<DatasetVersion.DSVSubject> {
-        public SubjectTranslator() {
-            super("Subject", "https://openminds.ebrains.eu/core/Subject", "#ffbe00", "https://openminds.ebrains.eu/core/SubjectState", "#e68d0d");
+
+        public SubjectTranslator(String datasetVersionId) {
+            super("Subject", "https://openminds.ebrains.eu/core/Subject", "#ffbe00", "https://openminds.ebrains.eu/core/SubjectState", "#e68d0d", datasetVersionId);
         }
 
         @Override
-        public DatasetVersion.DSVSubject translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
+        public DatasetVersion.DSVSubject translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
             final DatasetVersion.DSVSubject sub = new DatasetVersion.DSVSubject();
             sub.setTitle(value(specimen.getInternalIdentifier()));
             sub.setId(IdUtils.getUUID(specimen.getId()));
-            fillSubjectInformation(sub, specimen);
+            fillSubjectInformation(sub, specimen, parentSpecimen);
             if(specimen.getStudiedState().size()==1){
                 // The single state subjects will be merged -> we therefore add those properties which are state specific
                 // directly to the subject
@@ -303,7 +325,7 @@ public class SpecimenV3Translator extends TranslatorBase {
         public Object translateState(DatasetVersionV3.StudiedState state, String label) {
             final DatasetVersion.DSVSubjectState subState = new DatasetVersion.DSVSubjectState();
             subState.setTitle(value(getFullStateLabel(this, label, state)));
-            fillSubjectInformation(subState, state.getParent());
+            fillSubjectInformation(subState, state.getParent(), null);
             fillSubjectStateInformation(subState, state);
             return subState;
         }
@@ -331,9 +353,10 @@ public class SpecimenV3Translator extends TranslatorBase {
             }
         }
 
-        private void fillSubjectInformation(DatasetVersion.DSVSubject sub, DatasetVersionV3.StudiedSpecimen specimen){
+        private void fillSubjectInformation(DatasetVersion.DSVSubject sub, DatasetVersionV3.StudiedSpecimen specimen,  DatasetVersionV3.StudiedSpecimen parentSpecimen){
             sub.setServiceLinks(translateServiceLinks(specimen.getServiceLinks(), sub.getServiceLinks()));
             sub.setSex(ref(specimen.getBiologicalSex()));
+            sub.setOtherPublications(translateOtherPublications(specimen, datasetVersionId, parentSpecimen));
             List<FullNameRef> indirectSpecies = specimen.getSpecies() != null ? specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getSpecies).filter(Objects::nonNull).collect(Collectors.toList()) : Collections.emptyList();
             sub.setGeneticStrainType(ref(CollectionUtils.isEmpty(specimen.getSpecies()) ? null : specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getGeneticStrainType).filter(Objects::nonNull).distinct().collect(Collectors.toList())));
             sub.setSpecies(ref(CollectionUtils.isEmpty(indirectSpecies) ? specimen.getSpecies() : indirectSpecies));
@@ -342,18 +365,42 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
     }
 
+    private static List<TargetInternalReference> translateOtherPublications(DatasetVersionV3.StudiedSpecimen specimen, String datasetVersionId, DatasetVersionV3.StudiedSpecimen parentSpecimen){
+        Set<DatasetVersionV3.RelatedProducts> allRelatedProducts = new HashSet<>();
+        if(parentSpecimen!=null && !CollectionUtils.isEmpty(parentSpecimen.getUsedInDatasets())){
+            for (DatasetVersionV3.RelatedProducts usedInDataset : parentSpecimen.getUsedInDatasets()) {
+                if(CollectionUtils.isEmpty(usedInDataset.getGroupsWithIndividualSubElementSpecification()) || !usedInDataset.getGroupsWithIndividualSubElementSpecification().contains(parentSpecimen.getId())){
+                   //The parent group doesn't have any additional restrictions by sub element. We therefore can interpret this specimen to be member of the related product by group association.
+                    allRelatedProducts.add(usedInDataset);
+                }
+            }
+        }
+        //Additionally to the (potential) implicit links, we of course also take the explicit references into account
+        if(!CollectionUtils.isEmpty(specimen.getUsedInDatasets())){
+            allRelatedProducts.addAll(specimen.getUsedInDatasets());
+        }
+        final List<TargetInternalReference> otherPublications = allRelatedProducts.stream().filter(i -> !i.getId().equals(datasetVersionId) && i.getId()!=null && i.getDoi()!=null).map(i ->
+                new TargetInternalReference(IdUtils.getUUID(i.getId()), Helpers.stripDOIPrefix(i.getDoi()), new TargetInternalReference.Context("Specimen", IdUtils.getUUID(specimen.getId())))).sorted(Comparator.comparing(TargetInternalReference::getValue)).collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(otherPublications)) {
+            return otherPublications;
+        }
+        else{
+            return null;
+        }
+    }
 
     private static class SubjectGroupTranslator extends SpecimenTranslator<DatasetVersion.DSVSubjectGroup>{
 
-        public SubjectGroupTranslator() {
-            super("Subject group", "https://openminds.ebrains.eu/core/SubjectGroup", "#8a1f0d", "https://openminds.ebrains.eu/core/SubjectGroupState", "#8a1f0d ");
+        public SubjectGroupTranslator(String datasetVersionId) {
+            super("Subject group", "https://openminds.ebrains.eu/core/SubjectGroup", "#8a1f0d", "https://openminds.ebrains.eu/core/SubjectGroupState", "#8a1f0d", datasetVersionId);
         }
 
         @Override
-        public DatasetVersion.DSVSubjectGroup translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
+        public DatasetVersion.DSVSubjectGroup translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
             final DatasetVersion.DSVSubjectGroup subGrp = new DatasetVersion.DSVSubjectGroup();
             subGrp.setId(IdUtils.getUUID(specimen.getId()));
             subGrp.setTitle(value(specimen.getInternalIdentifier()));
+            subGrp.setOtherPublications(translateOtherPublications(specimen, datasetVersionId, parentSpecimen));
             if(specimen.getQuantity()!=null){
                 subGrp.setNumberOfSubjects(value(String.valueOf(specimen.getQuantity())));
             }
@@ -428,12 +475,12 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private static class TissueSampleTranslator extends SpecimenTranslator<DatasetVersion.DSVTissueSample> {
 
-        public TissueSampleTranslator() {
-            super("Tissue sample", "https://openminds.ebrains.eu/core/TissueSample", "#3176e1", "https://openminds.ebrains.eu/core/TissueSampleState", "#393ac6");
+        public TissueSampleTranslator(String datasetVersionId) {
+            super("Tissue sample", "https://openminds.ebrains.eu/core/TissueSample", "#3176e1", "https://openminds.ebrains.eu/core/TissueSampleState", "#393ac6", datasetVersionId);
         }
 
         @Override
-        public DatasetVersion.DSVTissueSample translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
+        public DatasetVersion.DSVTissueSample translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
             final DatasetVersion.DSVTissueSample tissueSample = new DatasetVersion.DSVTissueSample();
             tissueSample.setId(IdUtils.getUUID(specimen.getId()));
             tissueSample.setTitle(value(specimen.getInternalIdentifier()));
@@ -503,12 +550,12 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private static class TissueSampleCollectionTranslator extends SpecimenTranslator<DatasetVersion.DSVTissueSampleCollection> {
 
-        public TissueSampleCollectionTranslator() {
-            super("Tissue sample collection", "https://openminds.ebrains.eu/core/TissueSampleCollection", "#78b5b5", "https://openminds.ebrains.eu/core/TissueSampleCollectionState", "#497d7d");
+        public TissueSampleCollectionTranslator(String datasetVersionId) {
+            super("Tissue sample collection", "https://openminds.ebrains.eu/core/TissueSampleCollection", "#78b5b5", "https://openminds.ebrains.eu/core/TissueSampleCollectionState", "#497d7d", datasetVersionId);
         }
 
         @Override
-        public DatasetVersion.DSVTissueSampleCollection translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen) {
+        public DatasetVersion.DSVTissueSampleCollection translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
             final DatasetVersion.DSVTissueSampleCollection tissueSampleColl = new DatasetVersion.DSVTissueSampleCollection();
             tissueSampleColl.setId(IdUtils.getUUID(specimen.getId()));
             tissueSampleColl.setTitle(value(specimen.getInternalIdentifier()));
@@ -582,17 +629,8 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
     }
 
-    private final static List<SpecimenTranslator<?>> TRANSLATORS = Arrays.asList(new SubjectTranslator(), new SubjectGroupTranslator(), new TissueSampleTranslator(), new TissueSampleCollectionTranslator());
 
-    private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedSpecimen specimen){
-        return (SpecimenTranslator<T>) TRANSLATORS.stream().filter(t -> t.matches(specimen)).findFirst().orElse(null);
-    }
-
-    private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedState state){
-        return  (SpecimenTranslator<T>) TRANSLATORS.stream().filter(t -> t.matches(state)).findFirst().orElse(null);
-    }
-
-    private <T> BasicHierarchyElement<Object> translateToBasicHierarchyElement(DatasetVersionV3.StudiedSpecimen studiedSpecimen, GlobalTranslationContext context, boolean attachRootElementAsChild, String parentRelationType){
+    private <T> BasicHierarchyElement<Object> translateToBasicHierarchyElement(DatasetVersionV3.StudiedSpecimen studiedSpecimen, GlobalTranslationContext context, boolean attachRootElementAsChild, String parentRelationType, DatasetVersionV3.StudiedSpecimen parentSpecimen){
         final String uuid = IdUtils.getUUID(studiedSpecimen.getId());
         if(context.handledInstances.contains(uuid)){
             logger.error("Circular reference detected - breaking at instance {}", uuid);
@@ -608,13 +646,13 @@ public class SpecimenV3Translator extends TranslatorBase {
         if(specimenTranslator!=null){
             el.setColor(specimenTranslator.specimenColor);
             el.setTitle(specimenTranslator.calculateLabel(studiedSpecimen));
-            data = specimenTranslator.translateSpecimen(studiedSpecimen);
+            data = specimenTranslator.translateSpecimen(studiedSpecimen, parentSpecimen);
             specimenTranslator.aggregateOverview(data, context.overviewAggregator);
         }
         List<BasicHierarchyElement<?>> children = new ArrayList<>();
         final List<DatasetVersionV3.StudiedSpecimen> partOfRelation = context.partOfRelations.get(studiedSpecimen.getId());
         if(!CollectionUtils.isEmpty(partOfRelation)){
-            children.addAll(partOfRelation.stream().map(p -> translateToBasicHierarchyElement(p, context, false, PART_OF)).filter(Objects::nonNull).collect(Collectors.toList()));
+            children.addAll(partOfRelation.stream().map(p -> translateToBasicHierarchyElement(p, context, false, PART_OF, studiedSpecimen)).filter(Objects::nonNull).collect(Collectors.toList()));
         }
 
         if(!attachRootElementAsChild){
@@ -643,7 +681,7 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private String findLabelForColor(String color){
         if(color!=null) {
-            final SpecimenTranslator<?> translatorByColor = TRANSLATORS.stream().filter(f -> f.stateColor.equals(color) || f.specimenColor.equals(color)).findFirst().orElse(null);
+            final SpecimenTranslator<?> translatorByColor = translators.stream().filter(f -> f.stateColor.equals(color) || f.specimenColor.equals(color)).findFirst().orElse(null);
             if(translatorByColor!=null){
                 if(translatorByColor.specimenColor.equals(color)){
                     return translatorByColor.prefix;

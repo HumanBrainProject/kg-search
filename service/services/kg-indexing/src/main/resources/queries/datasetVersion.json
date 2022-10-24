@@ -765,6 +765,40 @@
           ]
         },
         {
+          "propertyName": "query:usedInDatasets",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/studiedSpecimen",
+            "reverse": true
+          },
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:doi",
+              "singleValue": "FIRST",
+              "path": [
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+                  "typeFilter": {
+                    "@id": "https://openminds.ebrains.eu/core/DOI"
+                  }
+                },
+                "https://openminds.ebrains.eu/vocab/identifier"
+              ]
+            },
+            {
+              "propertyName": "query:groupsWithIndividualSubElementSpecifications",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/studiedSpecimen",
+                "https://openminds.ebrains.eu/vocab/isPartOf",
+                "@id"
+              ]
+            }
+          ]
+        },
+        {
           "propertyName": "query:species",
           "path": "https://openminds.ebrains.eu/vocab/species",
           "structure": [
