@@ -30,6 +30,7 @@
     "lodash": "^4.17.21",
     "lodash-uuid": "0.0.3",
     "lucene-query-parser": "^1.2.0",
+    "mermaid": "^9.1.7",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.8.1",
     "rc-tree": "^5.7.0",

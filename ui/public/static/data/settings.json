@@ -265,6 +265,7 @@
           "label": "New in this version",
           "isMarkdown": true
         },
+        "workflow": { "layout": "Workflow", "isMermaid": true },
         "viewData": { "isGroupedLinks": true, "label": "View data" },
         "atlas": { "label": "Brain atlas", "layout": "summary" },
         "region": {

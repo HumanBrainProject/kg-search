@@ -69,6 +69,41 @@
       "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
       "value": "Creative Commons Attribution-ShareAlike 4.0 International"
     },
+    "workflow": {
+      "value":  "graph LR \n DOI --> kgimport[unicore_job_kg_import.py] \n executable --> kgimport \n token --> kgimport \n filesystem --> kgimport \n files --> kgimport \n kgimport --> job.json \n job.json --> unicore[unicore_run.py] \n site --> unicore \n kg-token --> unicore\n unicore --> stdout",
+      "details": {
+        "DOI": {
+          "type": { "value": "Dataset.SpecimenOverview" },
+          "title": null,
+          "numberOfSubjectGroups": { "value": "2" },
+          "numberOfSubjects": null,
+          "numberOfTissueSampleCollections": null,
+          "numberOfTissueSamples": null,
+          "species": [
+            {
+              "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+              "value": "Homo sapiens",
+              "count": ["2 subject groups"]
+            }
+          ],
+          "sex": [
+            {
+              "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+              "value": "female",
+              "count": ["1 subject group"]
+            },
+            {
+              "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+              "value": "male",
+              "count": ["1 subject group"]
+            }
+          ],
+          "strains": null,
+          "geneticStrainTypes": null,
+          "pathology": null
+        }
+      }
+    },
     "specimenBySubject": {
       "key": "root",
       "parentRelationType": null,

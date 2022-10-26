@@ -24,9 +24,13 @@
 import React, { useMemo } from "react";
 import { FieldLabel } from "../../components/Field/FieldLabel";
 import { Hint } from "../../components/Hint/Hint";
-import { ListField, PrintViewListField } from "../../components/Field/ListField";
+import {
+  ListField,
+  PrintViewListField
+} from "../../components/Field/ListField";
 import ObjectField from "../../components/Field/ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField/ValueField";
+import Mermaid from "../../components/Field/Mermaid";
 import TableField from "../../components/Field/TableField";
 import HierarchicalTree from "./HierarchicalTree/HierarchicalTree";
 import HierarchicalFiles from "./HierarchicalFiles/HierarchicalFiles";
@@ -58,17 +62,30 @@ const getFileRepositoryIdFromUrl = url => {
   return url; // url is a repositoryId
 };
 
-const FieldBaseComponent = ({ name, layout, style, className, label, inlineLabel=true, labelCounter=null, hint, value, Component }) => {
-
+const FieldBaseComponent = ({
+  name,
+  layout,
+  style,
+  className,
+  label,
+  inlineLabel = true,
+  labelCounter = null,
+  hint,
+  value,
+  Component
+}) => {
   if (!Component) {
     return null;
   }
 
-  const fieldClassName = name?`kgs-field__${name}`:"";
-  const layoutClassName = layout?`kgs-field__layout-${layout}`:"";
+  const fieldClassName = name ? `kgs-field__${name}` : "";
+  const layoutClassName = layout ? `kgs-field__layout-${layout}` : "";
 
   return (
-    <span style={style} className={`kgs-field ${fieldClassName} ${layoutClassName} ${className}`}>
+    <span
+      style={style}
+      className={`kgs-field ${fieldClassName} ${layoutClassName} ${className}`}
+    >
       <FieldLabel value={label} counter={labelCounter} inline={inlineLabel} />
       <Hint value={hint} />
       <Component {...value} />
@@ -76,28 +93,39 @@ const FieldBaseComponent = ({ name, layout, style, className, label, inlineLabel
   );
 };
 
-const getFieldProps = (name, data, mapping, type, renderUserInteractions = true) => {
-
+const getFieldProps = (
+  name,
+  data,
+  mapping,
+  type,
+  renderUserInteractions = true
+) => {
   if (!mapping || !data) {
     return null;
   }
 
-  const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
-  const ValueFieldComponent = renderUserInteractions?ValueField :PrintViewValueField;
-  const FieldComponent = renderUserInteractions?Field:PrintViewField;
+  const ListFieldComponent = renderUserInteractions
+    ? ListField
+    : PrintViewListField;
+  const ValueFieldComponent = renderUserInteractions
+    ? ValueField
+    : PrintViewValueField;
+  const FieldComponent = renderUserInteractions ? Field : PrintViewField;
 
   let className = "";
   let labelCounter = null;
   let valueProps = null;
   let valueComponent = null;
-  let label = mapping.label?mapping.label:null;
+  let label = mapping.label ? mapping.label : null;
 
-  if (mapping.isGroupedLinks) { // Grouped Links
+  if (mapping.isGroupedLinks) {
+    // Grouped Links
 
     const groupedLinksSize = Object.keys(data).length;
     const isSingleGroupedLinks = groupedLinksSize === 1;
 
-    if (isSingleGroupedLinks) { // Single Grouped Links
+    if (isSingleGroupedLinks) {
+      // Single Grouped Links
 
       const singleGroupedLinksLabel = Object.keys(data)[0];
       const singleGroupedLinks = Object.values(data)[0];
@@ -115,15 +143,15 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
         fieldComponent: FieldComponent,
         valueFieldComponent: ValueFieldComponent
       };
-      valueComponent =  ListFieldComponent;
-
-    } else { // Multiple Grouped Links
+      valueComponent = ListFieldComponent;
+    } else {
+      // Multiple Grouped Links
 
       const multipleGroupedLinksMapping = {
         ...mapping,
         enforceList: true,
         children: Object.keys(data).reduce((acc, service) => {
-          acc[service] = {label: service, enforceShowMore: true};
+          acc[service] = { label: service, enforceShowMore: true };
           return acc;
         }, {})
       };
@@ -134,47 +162,43 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
         type: type,
         fieldComponent: FieldComponent
       };
-      valueComponent =  ObjectField;
-
+      valueComponent = ObjectField;
     }
-
-  } else if (mapping.isFilePreview && data.url) { // File Preview
+  } else if (mapping.isFilePreview && data.url) {
+    // File Preview
 
     valueProps = {
       url: data.url,
       title: "data descriptor"
     };
     valueComponent = FilePreview;
-
-  } else if (mapping.isCitation) { // Citation
+  } else if (mapping.isCitation) {
+    // Citation
 
     if (Array.isArray(data)) {
-
       valueProps = {
         data: data
       };
       valueComponent = Citations;
-
     } else {
-
-      if (name === "customCitation") { // MarkDown Citation
+      if (name === "customCitation") {
+        // MarkDown Citation
 
         valueProps = {
-          text: data.value,
+          text: data.value
         };
         valueComponent = MarkDownCitation;
-
-      } else { // Dynamic Citation
+      } else {
+        // Dynamic Citation
 
         valueProps = {
           doi: data.value
         };
         valueComponent = DynamicCitation;
-
       }
     }
-
-  } else if (mapping.isHierarchical) { // Hierarchical
+  } else if (mapping.isHierarchical) {
+    // Hierarchical
 
     className = "kgs-field__hierarchical";
 
@@ -184,14 +208,15 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
       data: data
     };
     valueComponent = HierarchicalTree;
-
-  } else if (mapping.isHierarchicalFiles) { // Hierarchical Files
+  } else if (mapping.isHierarchicalFiles) {
+    // Hierarchical Files
 
     className = "kgs-field__hierarchical-files";
 
     const repositoryId = mapping.isAsync ? data : null;
 
-    if (repositoryId) { // Async Hierarchical Files
+    if (repositoryId) {
+      // Async Hierarchical Files
 
       valueProps = {
         mapping: mapping,
@@ -201,8 +226,8 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
         urlFieldPath: "iri.url"
       };
       valueComponent = AsyncHierarchicalFiles;
-
-    } else { // Old Hierarchical Files
+    } else {
+      // Old Hierarchical Files
 
       valueProps = {
         data: data,
@@ -213,7 +238,8 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
       };
       valueComponent = HierarchicalFiles;
     }
-  } else if (mapping.isTable) { // Table
+  } else if (mapping.isTable) {
+    // Table
 
     className = "kgs-field__table";
 
@@ -221,17 +247,23 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
       items: data,
       mapping: mapping,
       type: type,
-      fieldComponent: FieldComponent,
+      fieldComponent: FieldComponent
     };
     valueComponent = TableField;
-
+  } else if (mapping.isMermaid) {
+    valueProps = {
+      data: data.value,
+      details: data.details,
+      mapping: mapping
+    };
+    valueComponent = Mermaid;
   } else {
-
     if (Array.isArray(data) && data.length === 1) {
       data = data[0];
     }
 
-    if (Array.isArray(data)) { // List
+    if (Array.isArray(data)) {
+      // List
 
       if (mapping.layout === "group") {
         labelCounter = data.length;
@@ -245,8 +277,8 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
         valueFieldComponent: ValueFieldComponent
       };
       valueComponent = ListFieldComponent;
-
-    } else if (mapping.children) { // Object
+    } else if (mapping.children) {
+      // Object
 
       valueProps = {
         items: data,
@@ -255,8 +287,8 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
         fieldComponent: FieldComponent
       };
       valueComponent = ObjectField;
-
-    } else { // Value
+    } else {
+      // Value
 
       valueProps = {
         data: data,
@@ -264,37 +296,41 @@ const getFieldProps = (name, data, mapping, type, renderUserInteractions = true)
         type: type
       };
       valueComponent = ValueFieldComponent;
-
     }
   }
 
   return {
     name: name,
-    layout: ["header", "summary"].includes(mapping.layout)?mapping.layout:null,
-    style: (mapping.order && !renderUserInteractions) ? { order: mapping.order } : null,
+    layout: ["header", "summary"].includes(mapping.layout)
+      ? mapping.layout
+      : null,
+    style:
+      mapping.order && !renderUserInteractions
+        ? { order: mapping.order }
+        : null,
     className: className,
-    label: (label && (!mapping.hideLabel || !renderUserInteractions))?label:null,
+    label:
+      label && (!mapping.hideLabel || !renderUserInteractions) ? label : null,
     inlineLabel: !mapping.tagIcon,
     labelCounter: labelCounter,
-    hint: (renderUserInteractions && mapping.hint)?mapping.hint:null,
+    hint: renderUserInteractions && mapping.hint ? mapping.hint : null,
     value: valueProps,
     Component: valueComponent
   };
 };
 
 export const FieldBase = (renderUserInteractions = true) => {
-
   const Component = ({ name, data, mapping, type }) => {
-
-    const fieldProps = useMemo(() => getFieldProps(name, data, mapping, type, renderUserInteractions), [name, data, mapping, type]);
+    const fieldProps = useMemo(
+      () => getFieldProps(name, data, mapping, type, renderUserInteractions),
+      [name, data, mapping, type]
+    );
 
     if (!fieldProps) {
       return null;
     }
 
-    return (
-      <FieldBaseComponent {...fieldProps} />
-    );
+    return <FieldBaseComponent {...fieldProps} />;
   };
 
   return Component;
