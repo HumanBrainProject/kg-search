@@ -27,31 +27,31 @@ import LinkedInstance from "../../pages/Instance/LinkedInstance";
 
 mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });
 
-const attachCallback = (data, children, callbackFunctionkName) => {
+const attachCallback = (data, children, callbackFunctionName) => {
   if (children && children instanceof Object) {
     Object.keys(children).forEach(key => {
-      data += `\n click ${key} ${callbackFunctionkName}`;
+      data += `\n click ${key} ${callbackFunctionName}`;
     });
   }
   return data;
 };
 
-const MermaidGraph = ({ data, details, callbackFunctionkName }) => {
-  const graph = attachCallback(data, details, callbackFunctionkName);
+const MermaidGraph = ({ data, details, callbackFunctionName }) => {
+  const graph = attachCallback(data, details, callbackFunctionName);
   useEffect(() => {
     mermaid.contentLoaded();
   }, []);
   return <div className="mermaid">{graph}</div>;
 };
 
-const Detail = ({ details, callbackFunctionkName }) => {
+const Detail = ({ details, callbackFunctionName }) => {
   const [detail, setDetail] = useState();
   useEffect(() => {
-    window[callbackFunctionkName] = id => {
+    window[callbackFunctionName] = id => {
       setDetail(details[id]);
     };
     return () => {
-      delete window[callbackFunctionkName];
+      delete window[callbackFunctionName];
     };
   }, []);
 
@@ -63,16 +63,16 @@ const Detail = ({ details, callbackFunctionkName }) => {
 };
 
 const Mermaid = ({ data, details }) => {
-  const callbackFunctionkName = uniqueId("mermaidCallback");
+  const callbackFunctionName = uniqueId("mermaidCallback");
 
   return (
     <div>
       <MermaidGraph
         data={data}
         details={details}
-        callbackFunctionkName={callbackFunctionkName}
+        callbackFunctionName={callbackFunctionName}
       />
-      <Detail details={details} callbackFunctionkName={callbackFunctionkName} />
+      <Detail details={details} callbackFunctionName={callbackFunctionName} />
     </div>
   );
 };
