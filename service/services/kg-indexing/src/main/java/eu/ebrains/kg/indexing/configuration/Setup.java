@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.indexing.configuration;
 
+import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.indexing.controller.queries.QueryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +37,20 @@ public class Setup {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final QueryController queryController;
+
+    private final ElasticSearchController elasticSearchController;
+
     private final boolean uploadQueries;
 
-    public Setup(QueryController queryController, @Value("${UPLOAD_QUERIES:true}") boolean uploadQueries) {
+    public Setup(QueryController queryController, @Value("${UPLOAD_QUERIES:true}") boolean uploadQueries, ElasticSearchController elasticSearchController) {
         this.queryController = queryController;
         this.uploadQueries = uploadQueries;
+        this.elasticSearchController = elasticSearchController;
     }
 
     @PostConstruct
     public void uploadQueries() {
+        elasticSearchController.ensureResourcesIndex();
         if(uploadQueries) {
            queryController.uploadQueries();
         }

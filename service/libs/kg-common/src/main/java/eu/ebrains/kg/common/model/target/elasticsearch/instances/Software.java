@@ -66,7 +66,7 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "Name", layout = "header")
     private Value<String> title;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, overview = true)
+    @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
@@ -75,10 +75,10 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "Developers", separator = "; ", boost = 10)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -87,7 +87,7 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "DOI", hint = "This is the software DOI representing all the underlying software's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    @FieldInfo(label = "Software versions", isTable = true, layout = "Software versions")
+    @FieldInfo(label = "Software versions", fieldType = FieldInfo.FieldType.TABLE, layout = "Software versions")
     private List<Children<Version>> softwareVersions;
 
     @JsonProperty("first_release")
@@ -243,7 +243,7 @@ public class Software implements TargetInstance, HasCitation {
         @FieldInfo(label = "Version")
         private TargetInternalReference version;
 
-        @FieldInfo(label = "Innovation", markdown = true)
+        @FieldInfo(label = "Innovation", fieldType = FieldInfo.FieldType.MARKDOWN)
         private Value<String> innovation;
 
 

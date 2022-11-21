@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 
 @Getter
 @Setter
-@MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
+@MetaInfo(name = "Dataset", defaultSelection = true, searchable=true)
 public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews, HasBadges, HasTrendingInformation{
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -149,7 +149,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, useForSuggestion = true, overview = true)
+    @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Homepage")
@@ -158,13 +158,13 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Support channel")
     private List<TargetExternalReference> supportChannels;
 
-    @FieldInfo(label = "Version specification", markdown = true, boost = 2, useForSuggestion = true)
+    @FieldInfo(label = "Version specification", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true)
     private Value<String> newInThisVersion;
 
     @FieldInfo(labelHidden = true, boost = 2, visible = false)
     private List<PreviewObject> previewObjects;
 
-    @FieldInfo(label = "View data", isGroupedLinks=true)
+    @FieldInfo(label = "View data", fieldType = FieldInfo.FieldType.GROUPED_LINKS)
     private Map<String, List<TargetExternalReference>> viewData;
 
     //TODO how to find in openMINDS? -> studiedSpecimen -> tisseSample(Collection) -> anatomicalLocation  or is it enough through studied brain region?
@@ -226,13 +226,13 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> dataAccessibility;
 
-    @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
+    @FieldInfo(label = "Data-descriptor", fieldType = FieldInfo.FieldType.FILE_PREVIEW, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "Get data", labelHidden = true)
@@ -248,17 +248,17 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
      * Use filesAsyncUrl for openMINDS instead
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, termsOfUse = true, labelHidden = true)
+    @FieldInfo(layout = "Get data", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES, termsOfUse = true, labelHidden = true)
     private List<TargetFile> filesOld;
 
     /**
      * Use fileRepositoryId instead, kept until next index (incremental) update
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get data", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
     private String filesAsyncUrl;
 
-    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get data", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
     private String fileRepositoryId;
 
     @FieldInfo(layout = "Get data", termsOfUse = true)
@@ -272,7 +272,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<TargetExternalReference> viewer;
 
     //Publications
-    @FieldInfo(layout = "Publications", markdown = true, labelHidden = true, useForSuggestion = true)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true, useForSuggestion = true)
     private List<Value<String>> publications;
 
     /**
@@ -293,14 +293,14 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<Value<String>> keywords;
 
 
-    @FieldInfo(layout = "Specimen",  labelHidden = true, isHierarchical = true)
+    @FieldInfo(layout = "Specimen",  labelHidden = true, fieldType = FieldInfo.FieldType.HIERARCHICAL)
     private BasicHierarchyElement specimenBySubject;
 
     /**
      * @deprecated  use specimen for openMINDS instead
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
+    @FieldInfo(layout = "Subjects",  labelHidden = true, fieldType = FieldInfo.FieldType.TABLE)
     private List<Children<OldSubject>> subjectGroupOrSingleSubjectOld;
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
@@ -407,7 +407,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks", markdown = true)
+        @FieldInfo(label = "Additional remarks", fieldType = FieldInfo.FieldType.MARKDOWN)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -481,7 +481,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks", separator = ", ", markdown = true)
+        @FieldInfo(label = "Additional remarks", separator = ", ", fieldType = FieldInfo.FieldType.MARKDOWN)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -560,7 +560,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks", markdown = true)
+        @FieldInfo(label = "Additional remarks", fieldType = FieldInfo.FieldType.MARKDOWN)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)
@@ -642,7 +642,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @FieldInfo(label = "Weight")
         private Value<String> weight;
 
-        @FieldInfo(label = "Additional remarks", markdown = true)
+        @FieldInfo(label = "Additional remarks", fieldType = FieldInfo.FieldType.MARKDOWN)
         private Value<String> additionalRemarks;
 
         @FieldInfo(labelHidden = true)

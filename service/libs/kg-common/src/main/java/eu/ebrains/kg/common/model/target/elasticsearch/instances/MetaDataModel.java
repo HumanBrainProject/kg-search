@@ -61,13 +61,13 @@ public class MetaDataModel implements TargetInstance, HasCitation  {
     @FieldInfo(label = "Name", boost = 20)
     private Value<String> title;
 
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
+    @FieldInfo(label = "Description", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, labelHidden = true, overview = true)
     private Value<String> description;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -85,7 +85,7 @@ public class MetaDataModel implements TargetInstance, HasCitation  {
     @FieldInfo(label = "Custodian", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "(Meta)data model versions", isTable = true, layout = "(Meta)data model versions", labelHidden = true)
+    @FieldInfo(label = "(Meta)data model versions", fieldType = FieldInfo.FieldType.TABLE, layout = "(Meta)data model versions", labelHidden = true)
     private List<Children<Version>> modelVersions;
 
     @JsonProperty("first_release")

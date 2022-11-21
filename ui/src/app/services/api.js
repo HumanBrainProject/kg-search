@@ -41,8 +41,8 @@ export const api = createApi({
   tagTypes: ["Group", "Search", "Instance", "Preview", "Files", "PreviewFiles", "Format", "PreviewFormat", "GroupingType", "PreviewGroupingType", "LinkedInstance", "LinkedPreview"],
   endpoints: builder => ({
     getSettings: builder.query({
-      query: () => "../static/data/settings.json",
-      // query: () => "/settings",
+      //query: () => "../static/data/settings.json",
+      query: () => "/settings",
       //async onQueryStarted(arg, {dispatch, getState, extra, requestId, queryFulfilled}) {
       async onQueryStarted(_arg, { queryFulfilled }) {
         try {
@@ -70,14 +70,14 @@ export const api = createApi({
       providesTags: ["Search"]
     }),
     getInstance: builder.query({
-      query: () => "../static/data/instance.json",
-      transformResponse: (data, _meta, arg) => {
-        data.id = arg.id;
-        return data;
-      },
-      // query: ({ id, group }) => `/groups/${group}/documents/${id}`,
+      //query: () => "../static/data/instance.json",
+      // transformResponse: (data, _meta, arg) => {
+      //   data.id = arg.id;
+      //   return data;
+      // },
+      query: ({ id, group }) => `/groups/${group}/documents/${id}`,
       //transformResponse: (data, meta, arg) => data,
-      // transformResponse: transformInstanceResponse,
+      transformResponse: transformInstanceResponse,
       keepUnusedDataFor: 1800, // 30 minutes cache
       providesTags: ["Instance"]
     }),

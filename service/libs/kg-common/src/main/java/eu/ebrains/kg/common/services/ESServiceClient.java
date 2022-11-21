@@ -303,6 +303,16 @@ public class ESServiceClient {
     }
 
 
+    public Document getDocumentByNativeId(String index, String id){
+        return webClient.get()
+                .uri(String.format("%s/%s/_doc/%s", elasticSearchEndpoint, index, id))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .retrieve()
+                .bodyToMono(Document.class)
+                .block();
+
+    }
+
     public Document getDocument(String index, String id) {
         Result result = webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
@@ -445,6 +455,15 @@ public class ESServiceClient {
         final Map<String, Map<String, String>> payload = Map.of("source", Map.of(INDEX, source), "dest", Map.of(INDEX, target));
          webClient.post().uri(String.format("%s/_reindex", elasticSearchEndpoint))
                 .body(BodyInserters.fromValue(payload)).retrieve().bodyToMono(Void.class).block();
+    }
+
+    public boolean checkIfIndexExists(String index){
+        try{
+            return webClient.head().uri(String.format("%s/%s", elasticSearchEndpoint, index)).retrieve().toBodilessEntity().block().getStatusCode().is2xxSuccessful();
+        }
+        catch (WebClientResponseException.NotFound exception){
+            return false;
+        }
     }
 
 

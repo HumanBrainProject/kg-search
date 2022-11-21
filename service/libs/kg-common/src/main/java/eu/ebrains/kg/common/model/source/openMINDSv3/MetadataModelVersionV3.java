@@ -25,9 +25,9 @@ package eu.ebrains.kg.common.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.common.model.source.HasAccessibility;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
-import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +37,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteable {
+public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasAccessibility {
     private String fullName;
     private String versionIdentifier;
     private List<PersonOrOrganizationRef> developer;

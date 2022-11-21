@@ -35,7 +35,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@MetaInfo(name="Software", order=7, searchable=true)
+@MetaInfo(name="Software", searchable=true)
 @Getter
 @Setter
 public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCitation, HasTrendingInformation, HasBadges {
@@ -78,10 +78,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
     //Overview
@@ -136,7 +136,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
 
 
 
-    @FieldInfo(labelHidden = true, layout = "Publications", markdown = true)
+    @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
     private List<Value<String>> publications;
 
     /**
@@ -162,10 +162,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> outputFormatsForFilter;
 
-    @FieldInfo(label = "Input formats", layout = "Input formats", isTable = true, labelHidden = true)
+    @FieldInfo(label = "Input formats", layout = "Input formats", fieldType = FieldInfo.FieldType.TABLE, labelHidden = true)
     private List<Children<FileFormat>> inputFormat;
 
-    @FieldInfo(label = "Output formats", layout = "Output formats", isTable = true, labelHidden = true)
+    @FieldInfo(label = "Output formats", layout = "Output formats", fieldType = FieldInfo.FieldType.TABLE, labelHidden = true)
     private List<Children<FileFormat>> outputFormats;
 
     /**
@@ -216,7 +216,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Sub-components", layout = "Sub-components", labelHidden = true)
     private List<TargetInternalReference> components;
 
-    @FieldInfo(labelHidden = true, markdown = true, boost = 2, overview = true, useForSuggestion = true)
+    @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true, useForSuggestion = true)
     private Value<String> description;
 
     @JsonProperty("first_release")

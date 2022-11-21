@@ -26,7 +26,6 @@ package eu.ebrains.kg.common.model.source.openMINDSv3;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.common.model.source.HasAccessibility;
-import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
@@ -38,8 +37,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics, HasAccessibility {
+public class WorkflowRecipeVersionV3 extends SourceInstanceV3 implements HasAccessibility {
     private String fullName;
+    private String versionIdentifier;
     private List<PersonOrOrganizationRef> developer;
     private String howToCite;
     private String doi;
@@ -47,7 +47,6 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private String homepage;
     @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> keyword;
-    private String version;
     private String versionInnovation;
     private Date releaseDate;
     private Date firstReleasedAt;
@@ -60,47 +59,25 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private String description;
     private NameWithIdentifier accessibility;
     private FileRepository fileRepository;
-    private FullNameRef modelFormat;
-
     private String fullDocumentationUrl;
-    private String fullDocumentationDOI;
     private File fullDocumentationFile;
-    private ModelVersions model;
-    private Integer last30DaysViews;
-    private List<DOI> inputDOIs;
-    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFileBundles;
-    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromInputFiles;
-    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
-    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
-    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
-    private List<String> inputURLs;
-    private List<DOI> outputDOIs;
-    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromOutputFileBundles;
-    private List<FullNameRefForResearchProductVersion> outputResearchProductsFromOutputFiles;
-    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
-    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
-    private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
-    private List<String> outputURLs;
+    private String fullDocumentationDOI;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
+    private List<String> supportChannel;
+    private WorkflowReceipeVersions workflow;
 
     @Getter
     @Setter
-    public static class ModelVersions extends Versions {
+    public static class WorkflowReceipeVersions extends Versions {
 
-        @JsonProperty("modelCustodian")
-        private List<PersonOrOrganizationRef> custodian;
-
-        @JsonProperty("modelDeveloper")
-        private List<PersonOrOrganizationRef> developer;
-
-        @JsonProperty("modelProjects")
+        @JsonProperty("workflowProjects")
         private List<FullNameRef> projects;
 
-        private List<StudyTarget> studyTarget;
+        @JsonProperty("workflowCustodian")
+        private List<PersonOrOrganizationRef> custodian;
 
-        private FullNameRef abstractionLevel;
-
-        @JsonProperty("modelScope")
-        private FullNameRef scope;
+        @JsonProperty("workflowDeveloper")
+        private List<PersonOrOrganizationRef> developer;
 
     }
 

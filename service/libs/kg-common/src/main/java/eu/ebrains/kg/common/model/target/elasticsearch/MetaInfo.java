@@ -33,12 +33,6 @@ public @interface MetaInfo {
     String name();
 
     /**
-     * @return an ordinal number which decides the sorting order of relative types.
-     * This is only required for searchable types which is why it defaults to -1 for all others.
-     */
-    int order() default -1;
-
-    /**
      * @return true if this is the type that shall be preselected by a UI. This value should be true only for a single
      * type to avoid ambiguity
      */

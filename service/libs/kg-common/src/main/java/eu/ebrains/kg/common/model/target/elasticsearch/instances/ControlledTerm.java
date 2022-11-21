@@ -81,10 +81,10 @@ public class ControlledTerm implements TargetInstance {
     @FieldInfo(label = "Synonyms")
     private List<Value<String>> synonyms;
 
-    @FieldInfo(markdown = true, overview = true)
+    @FieldInfo(fieldType = FieldInfo.FieldType.MARKDOWN, overview = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Definition", markdown = true)
+    @FieldInfo(label = "Definition", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> definition;
 
 

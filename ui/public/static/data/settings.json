@@ -2,7 +2,7 @@
   "keycloak": {
     "clientId": "kg",
     "realm": "hbp",
-    "url": "https://iam-dev.ebrains.eu/auth"
+    "url": "https://iam-int.ebrains.eu/auth"
   },
   "types": [
     { "type": "Project", "label": "Project", "facets": [], "sortFields": [] },

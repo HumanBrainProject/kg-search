@@ -40,7 +40,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Model", order = 5, searchable=true)
+@MetaInfo(name = "Model", searchable=true)
 public class ModelVersion implements TargetInstance, VersionedInstance, HasCitation, HasTrendingInformation, HasBadges{
 
     @JsonIgnore
@@ -129,10 +129,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Main contact", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
     private List<TargetInternalReference> mainContact;
 
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
+    @FieldInfo(label = "Description", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Version specification", markdown = true, boost = 2, useForSuggestion = true)
+    @FieldInfo(label = "Version specification", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true)
     private Value<String> newInThisVersion;
 
     @FieldInfo(label = "Studied brain region", layout = "summary", useForSuggestion = true)
@@ -144,13 +144,13 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> accessibility;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
-    @FieldInfo(layout = "Get model", isFilePreview=true)
+    @FieldInfo(layout = "Get model", fieldType = FieldInfo.FieldType.FILE_PREVIEW)
     private TargetExternalReference embeddedModelSource;
 
     @FieldInfo(layout = "Get model")
@@ -163,10 +163,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
      * Use fileRepositoryId instead, kept until next index (incremental) update
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get model", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get model", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
     private String filesAsyncUrl;
 
-    @FieldInfo(layout = "Get model", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get model", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
     private String fileRepositoryId;
 
     @FieldInfo(layout = "Get model")
@@ -177,7 +177,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     private List<TargetExternalReference> allFiles;
 
     //Publications
-    @FieldInfo(layout = "Publications", markdown = true, labelHidden = true)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true)
     private List<Value<String>> publications;
 
     @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>", useForSuggestion = true)

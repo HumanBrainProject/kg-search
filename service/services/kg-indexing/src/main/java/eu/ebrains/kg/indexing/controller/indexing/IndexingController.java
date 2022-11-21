@@ -39,6 +39,7 @@ import eu.ebrains.kg.common.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -67,6 +68,8 @@ public class IndexingController {
     private final MetricsController metricsController;
     private final SettingsController settingsController;
     private final ElasticSearchController elasticSearchController;
+
+    private final ESServiceClient esServiceClient;
     private final TranslationController translationController;
     private final DOICitationFormatter doiCitationFormatter;
 
@@ -78,8 +81,9 @@ public class IndexingController {
     private final boolean skipKGv2;
 
 
-    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
+    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, @Value("${skipKGv2:false}") boolean skipKGv2, Configuration configuration) {
         this.mappingController = mappingController;
+        this.esServiceClient = esServiceClient;
         this.metricsController = metricsController;
         this.settingsController = settingsController;
         this.elasticSearchController = elasticSearchController;
@@ -100,7 +104,7 @@ public class IndexingController {
                         final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, IdUtils.getUUID(id), true);
                         if (source != null) {
                             try {
-                                return translator.translate(source, dataStage, false, new TranslatorUtils(doiCitationFormatter, null));
+                                return translator.translate(source, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, null));
                             } catch (TranslationException e) {
                                 //We don't take this error any further since only the "old" world is affected.
                                 logger.error(e.getMessage());
@@ -280,6 +284,12 @@ public class IndexingController {
         }
     }
 
+    public void addResource(String id, Map<String, Object> resource){
+        elasticSearchController.addResource(id, resource);
+    }
 
+    public void deleteResource(String id){
+        elasticSearchController.deleteResource(id);
+    }
 
 }

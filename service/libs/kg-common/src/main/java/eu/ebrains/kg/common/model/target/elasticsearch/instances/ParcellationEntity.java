@@ -79,10 +79,10 @@ public class ParcellationEntity implements TargetInstance {
     @FieldInfo(label = "Ontology identifier")
     private List<Value<String>> ontologyIdentifier;
 
-    @FieldInfo(isTable = true, layout = "Versions")
+    @FieldInfo(fieldType = FieldInfo.FieldType.TABLE, layout = "Versions")
     private List<Children<VersionWithServiceLink>> versionsTable;
 
-    @FieldInfo(isTable = true, layout = "Viewers")
+    @FieldInfo(fieldType = FieldInfo.FieldType.TABLE, layout = "Viewers")
     private List<Children<VersionWithServiceLink>> viewerLinks;
 
 

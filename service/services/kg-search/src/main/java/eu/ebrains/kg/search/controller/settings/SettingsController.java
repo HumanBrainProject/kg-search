@@ -110,26 +110,36 @@ public class SettingsController {
             if (StringUtils.isNotBlank(info.icon())) {
                 propertyDefinition.put("icon", info.icon());
             }
-            if (info.isAsync()) {
-                propertyDefinition.put("isAsync", true);
-            }
-            if (info.isCitation()) {
-                propertyDefinition.put("isCitation", true);
-            }
-            if (info.isFilePreview()) {
-                propertyDefinition.put("isFilePreview", true);
-            }
-            if (info.isGroupedLinks()) {
-                propertyDefinition.put("isGroupedLinks", true);
-            }
-            if (info.isHierarchical()) {
-                propertyDefinition.put("isHierarchical", true);
-            }
-            if (info.isHierarchicalFiles()) {
-                propertyDefinition.put("isHierarchicalFiles", true);
-            }
-            if (info.isTable()) {
-                propertyDefinition.put("isTable", true);
+            switch (info.fieldType()){
+                case CITATION:
+                    propertyDefinition.put("isCitation", true);
+                    break;
+                case FILE_PREVIEW:
+                    propertyDefinition.put("isFilePreview", true);
+                    break;
+                case GROUPED_LINKS:
+                    propertyDefinition.put("isGroupedLinks", true);
+                    break;
+                case HIERARCHICAL:
+                    propertyDefinition.put("isHierarchical", true);
+                    break;
+                case HIERARCHICAL_FILES:
+                    propertyDefinition.put("isHierarchicalFiles", true);
+                    break;
+                case HIERARCHICAL_FILES_ASYNC:
+                    propertyDefinition.put("isHierarchicalFiles", true);
+                    propertyDefinition.put("isAsync", true);
+                case TABLE:
+                    propertyDefinition.put("isTable", true);
+                    break;
+                case MERMAID:
+                    propertyDefinition.put("isMermaid", true);
+                    break;
+                case MARKDOWN:
+                    propertyDefinition.put("isMarkdown", true);
+                    break;
+                default:
+                    break;
             }
             if (StringUtils.isNotBlank(info.label())) {
                 propertyDefinition.put("label", info.label());
@@ -142,9 +152,6 @@ public class SettingsController {
             }
             if (StringUtils.isNotBlank(info.linkIcon())) {
                 propertyDefinition.put("linkIcon", info.linkIcon());
-            }
-            if (info.markdown()) {
-                propertyDefinition.put("isMarkdown", true);
             }
             if (info.order() != 0) {
                 propertyDefinition.put("order", info.order());

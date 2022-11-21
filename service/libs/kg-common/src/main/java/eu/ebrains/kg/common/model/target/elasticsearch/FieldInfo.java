@@ -31,23 +31,21 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface FieldInfo {
+
+    enum FieldType{
+        FILE_PREVIEW, MARKDOWN, HIERARCHICAL, HIERARCHICAL_FILES, HIERARCHICAL_FILES_ASYNC, CITATION, TABLE, MERMAID, GROUPED_LINKS, DEFAULT;
+    }
+
     String label() default "";
     String hint() default "";
     String icon() default "";
-    boolean isAsync() default false;
-    boolean isFilePreview() default false;
+    FieldType fieldType() default FieldType.DEFAULT;
     boolean visible() default true;
     boolean labelHidden() default false;
-    boolean markdown() default false;
     boolean overview() default false;
     boolean ignoreForSearch() default false;
     boolean termsOfUse() default false;
     boolean isFilterableFacet() default false;
-    boolean isHierarchical() default false;
-    boolean isHierarchicalFiles() default false;
-    boolean isCitation() default false;
-    boolean isTable() default false;
-    boolean isGroupedLinks() default false;
     boolean useForSuggestion() default false;
     Type type() default Type.UNDEFINED;
     String layout() default "";

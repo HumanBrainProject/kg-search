@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -164,6 +165,20 @@ public class Indexing {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
+
+    @PutMapping(value = "/resources/{id}")
+    @Operation(description="Add/update the JSON resource with the given id")
+    public void addResource(@PathVariable("id") String id, @RequestBody Map<String, Object> payload) {
+        indexingController.addResource(id, payload);
+    }
+
+    @DeleteMapping(value = "/resources/{id}")
+    @Operation(description="Remove the JSON resource with the given id")
+    public void deleteResource(@PathVariable("id") String id) {
+        indexingController.deleteResource(id);
+    }
+
+
 
     private ErrorReportResult.ErrorReportResultByTargetType handleErrorReportResultByTargetType(TranslatorModel<?, ?, ?, ?> m, List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource) {
         if (!errorsBySource.isEmpty()) {
