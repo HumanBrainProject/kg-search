@@ -588,6 +588,7 @@
     {
       "propertyName": "query:behavioralProtocol",
       "path": "https://openminds.ebrains.eu/vocab/behavioralProtocol",
+      "ensureOrder": true,
       "structure": [
         {
           "propertyName": "query:fullName",
@@ -627,6 +628,7 @@
     },
     {
       "propertyName": "query:studyTarget",
+      "ensureOrder": true,
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/studyTarget"
       },
