@@ -71,22 +71,22 @@ public class BrainAtlas implements TargetInstance, HasCitation{
     private Value<String> description;
 
     //Overview
-    @FieldInfo(label = "DOI", hint = "This is the brain atlas DOI you must cite if you reuse this data in a way that leads to a publication", isSingleWord = true)
+    @FieldInfo(label = "DOI", hint = "This is the brain atlas DOI you must cite if you reuse this data in a way that leads to a publication", componentType = FieldInfo.ComponentType.isSingleWord)
     private Value<String> doi;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(labelHidden = true, isHierarchical = true, layout = "Parcellation terminology")
+    @FieldInfo(labelHidden = true, componentType = FieldInfo.ComponentType.isHierarchical, layout = "Parcellation terminology")
     private BasicHierarchyElement<BrainAtlasOverview> parcellationTerminology;
 
-    @FieldInfo(labelHidden = true, isHierarchical = true, layout = "Versions")
+    @FieldInfo(labelHidden = true, componentType = FieldInfo.ComponentType.isHierarchical, layout = "Versions")
     private BasicHierarchyElement<BrainAtlasOverview> versions;
 
     @Override

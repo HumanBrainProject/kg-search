@@ -70,10 +70,10 @@ public class Dataset implements TargetInstance, HasCitation {
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -88,7 +88,7 @@ public class Dataset implements TargetInstance, HasCitation {
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, overview = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Dataset versions", isTable = true, layout = "Dataset versions", labelHidden = true)
+    @FieldInfo(label = "Dataset versions", componentType = FieldInfo.ComponentType.isTable, layout = "Dataset versions", labelHidden = true)
     private List<Children<Version>> datasets;
 
     @JsonProperty("first_release")

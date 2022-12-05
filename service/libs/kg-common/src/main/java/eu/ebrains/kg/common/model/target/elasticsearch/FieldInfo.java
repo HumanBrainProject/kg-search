@@ -35,7 +35,6 @@ public @interface FieldInfo {
     String hint() default "";
     String icon() default "";
     boolean isAsync() default false;
-    boolean isFilePreview() default false;
     boolean visible() default true;
     boolean labelHidden() default false;
     boolean markdown() default false;
@@ -43,11 +42,6 @@ public @interface FieldInfo {
     boolean ignoreForSearch() default false;
     boolean termsOfUse() default false;
     boolean isFilterableFacet() default false;
-    boolean isHierarchical() default false;
-    boolean isHierarchicalFiles() default false;
-    boolean isCitation() default false;
-    boolean isTable() default false;
-    boolean isGroupedLinks() default false;
     boolean useForSuggestion() default false;
     Type type() default Type.UNDEFINED;
     String layout() default "";
@@ -58,15 +52,15 @@ public @interface FieldInfo {
     Facet facet() default Facet.UNDEFINED;
     FacetOrder facetOrder() default  FacetOrder.UNDEFINED;
     Aggregate aggregate() default Aggregate.UNDEFINED;
+    ComponentType componentType() default ComponentType.UNDEFINED;
     int order() default 0;
     int overviewMaxDisplay() default 0;
-    boolean isSingleWord() default false;
 
-    public enum Facet{
+    enum Facet{
         UNDEFINED, EXISTS, LIST
     }
 
-    public enum FacetOrder{
+    enum FacetOrder{
         UNDEFINED, BYCOUNT, BYVALUE
     }
 
@@ -76,5 +70,9 @@ public @interface FieldInfo {
 
     enum Type{
         UNDEFINED, TEXT, DATE
+    }
+
+    enum ComponentType {
+        UNDEFINED, isFilePreview, isHierarchical, isHierarchicalFiles, isCitation, isTable, isMermaid, isGroupedLinks, isSingleWord
     }
 }

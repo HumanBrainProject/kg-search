@@ -75,10 +75,10 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "Developers", separator = "; ", boost = 10)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -87,7 +87,7 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "DOI", hint = "This is the software DOI representing all the underlying software's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    @FieldInfo(label = "Software versions", isTable = true, layout = "Software versions")
+    @FieldInfo(label = "Software versions", componentType = FieldInfo.ComponentType.isTable, layout = "Software versions")
     private List<Children<Version>> softwareVersions;
 
     @JsonProperty("first_release")

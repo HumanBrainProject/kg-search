@@ -126,13 +126,13 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> accessibility;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
-    @FieldInfo(layout = "Get (meta)data model", isFilePreview=true)
+    @FieldInfo(layout = "Get (meta)data model", componentType = FieldInfo.ComponentType.isFilePreview)
     private TargetExternalReference embeddedModelSource;
 
     @FieldInfo(layout = "Get (meta)data model")
@@ -145,10 +145,10 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
      * Use fileRepositoryId instead, kept until next index (incremental) update
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get (meta)data model", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get (meta)data model", componentType = FieldInfo.ComponentType.isHierarchicalFiles, isAsync=true, labelHidden = true)
     private String filesAsyncUrl;
 
-    @FieldInfo(layout = "Get (meta)data model", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get (meta)data model", componentType = FieldInfo.ComponentType.isHierarchicalFiles, isAsync=true, labelHidden = true)
     private String fileRepositoryId;
 
     @FieldInfo(layout = "Get (meta)data model")

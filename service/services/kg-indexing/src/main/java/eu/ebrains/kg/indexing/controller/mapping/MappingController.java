@@ -95,7 +95,7 @@ public class MappingController {
         try {
             ElasticSearchInfo esInfo = field.getField().getAnnotation(ElasticSearchInfo.class);
             FieldInfo fieldInfo = field.getField().getAnnotation(FieldInfo.class);
-            boolean isSingleWord = fieldInfo != null && fieldInfo.isSingleWord();
+            boolean isSingleWord = fieldInfo != null && fieldInfo.componentType().equals(FieldInfo.ComponentType.isSingleWord);
             String analyzer = KEYWORD;
             if(useCustomAnalyzer && !isSingleWord) {
                 analyzer = TEXT_ANALYZER;

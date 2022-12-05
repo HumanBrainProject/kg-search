@@ -78,10 +78,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
     //Overview
@@ -162,10 +162,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> outputFormatsForFilter;
 
-    @FieldInfo(label = "Input formats", layout = "Input formats", isTable = true, labelHidden = true)
+    @FieldInfo(label = "Input formats", layout = "Input formats", componentType = FieldInfo.ComponentType.isTable, labelHidden = true)
     private List<Children<FileFormat>> inputFormat;
 
-    @FieldInfo(label = "Output formats", layout = "Output formats", isTable = true, labelHidden = true)
+    @FieldInfo(label = "Output formats", layout = "Output formats", componentType = FieldInfo.ComponentType.isTable, labelHidden = true)
     private List<Children<FileFormat>> outputFormats;
 
     /**

@@ -24,15 +24,14 @@
 package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -79,10 +78,10 @@ public class ParcellationEntity implements TargetInstance {
     @FieldInfo(label = "Ontology identifier")
     private List<Value<String>> ontologyIdentifier;
 
-    @FieldInfo(isTable = true, layout = "Versions")
+    @FieldInfo(componentType = FieldInfo.ComponentType.isTable, layout = "Versions")
     private List<Children<VersionWithServiceLink>> versionsTable;
 
-    @FieldInfo(isTable = true, layout = "Viewers")
+    @FieldInfo(componentType = FieldInfo.ComponentType.isTable, layout = "Viewers")
     private List<Children<VersionWithServiceLink>> viewerLinks;
 
 

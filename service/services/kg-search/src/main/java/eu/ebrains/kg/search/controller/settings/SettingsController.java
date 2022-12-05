@@ -104,6 +104,9 @@ public class SettingsController {
             if (info.aggregate() != FieldInfo.Aggregate.UNDEFINED) {
                 propertyDefinition.put("aggregate", info.aggregate().name().toLowerCase());
             }
+            if (info.componentType() != FieldInfo.ComponentType.UNDEFINED) {
+                propertyDefinition.put(info.componentType().name(), true);
+            }
             if (StringUtils.isNotBlank(info.hint())) {
                 propertyDefinition.put("hint", info.hint());
             }
@@ -112,24 +115,6 @@ public class SettingsController {
             }
             if (info.isAsync()) {
                 propertyDefinition.put("isAsync", true);
-            }
-            if (info.isCitation()) {
-                propertyDefinition.put("isCitation", true);
-            }
-            if (info.isFilePreview()) {
-                propertyDefinition.put("isFilePreview", true);
-            }
-            if (info.isGroupedLinks()) {
-                propertyDefinition.put("isGroupedLinks", true);
-            }
-            if (info.isHierarchical()) {
-                propertyDefinition.put("isHierarchical", true);
-            }
-            if (info.isHierarchicalFiles()) {
-                propertyDefinition.put("isHierarchicalFiles", true);
-            }
-            if (info.isTable()) {
-                propertyDefinition.put("isTable", true);
             }
             if (StringUtils.isNotBlank(info.label())) {
                 propertyDefinition.put("label", info.label());

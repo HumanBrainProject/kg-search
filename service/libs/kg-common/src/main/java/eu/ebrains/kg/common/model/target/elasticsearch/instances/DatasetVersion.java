@@ -132,7 +132,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<TargetInternalReference> contributors;
 
     //Overview
-    @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication", isSingleWord = true)
+    @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication", componentType = FieldInfo.ComponentType.isSingleWord)
     private Value<String> doi;
 
     //HDG terms of use are going to be a license too
@@ -164,7 +164,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(labelHidden = true, boost = 2, visible = false)
     private List<PreviewObject> previewObjects;
 
-    @FieldInfo(label = "View data", isGroupedLinks=true)
+    @FieldInfo(label = "View data", componentType = FieldInfo.ComponentType.isGroupedLinks)
     private Map<String, List<TargetExternalReference>> viewData;
 
     //TODO how to find in openMINDS? -> studiedSpecimen -> tisseSample(Collection) -> anatomicalLocation  or is it enough through studied brain region?
@@ -226,13 +226,13 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> dataAccessibility;
 
-    @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
+    @FieldInfo(label = "Data-descriptor", componentType = FieldInfo.ComponentType.isFilePreview, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "Get data", labelHidden = true)
@@ -248,17 +248,17 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
      * Use filesAsyncUrl for openMINDS instead
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, termsOfUse = true, labelHidden = true)
+    @FieldInfo(layout = "Get data", componentType = FieldInfo.ComponentType.isHierarchicalFiles, termsOfUse = true, labelHidden = true)
     private List<TargetFile> filesOld;
 
     /**
      * Use fileRepositoryId instead, kept until next index (incremental) update
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get data", componentType = FieldInfo.ComponentType.isHierarchicalFiles, isAsync=true, labelHidden = true)
     private String filesAsyncUrl;
 
-    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    @FieldInfo(layout = "Get data", componentType = FieldInfo.ComponentType.isHierarchicalFiles, isAsync=true, labelHidden = true)
     private String fileRepositoryId;
 
     @FieldInfo(layout = "Get data", termsOfUse = true)
@@ -293,14 +293,14 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<Value<String>> keywords;
 
 
-    @FieldInfo(layout = "Specimen",  labelHidden = true, isHierarchical = true)
+    @FieldInfo(layout = "Specimen",  labelHidden = true, componentType = FieldInfo.ComponentType.isHierarchical)
     private BasicHierarchyElement specimenBySubject;
 
     /**
      * @deprecated  use specimen for openMINDS instead
      */
     @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
+    @FieldInfo(layout = "Subjects",  labelHidden = true, componentType = FieldInfo.ComponentType.isTable)
     private List<Children<OldSubject>> subjectGroupOrSingleSubjectOld;
 
     @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)

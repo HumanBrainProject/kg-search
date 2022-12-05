@@ -62,10 +62,10 @@ public class Model implements TargetInstance, HasCitation {
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true, overview = true)
     private Value<String> description;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, componentType = FieldInfo.ComponentType.isCitation)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -92,7 +92,7 @@ public class Model implements TargetInstance, HasCitation {
     @FieldInfo(label = "Custodian", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Model versions", isTable = true, layout = "Model versions", labelHidden = true)
+    @FieldInfo(label = "Model versions", componentType = FieldInfo.ComponentType.isTable, layout = "Model versions", labelHidden = true)
     private List<Children<Version>> models;
 
     @JsonProperty("first_release")
