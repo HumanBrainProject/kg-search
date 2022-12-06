@@ -23,6 +23,7 @@
 import React, { useEffect, useState } from "react";
 import mermaid from "mermaid";
 import { uniqueId } from "lodash";
+import * as d3 from "d3";
 import LinkedInstance from "../../pages/Instance/LinkedInstance";
 
 mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });
@@ -36,10 +37,21 @@ const attachCallback = (data, children, callbackFunctionName) => {
   return data;
 };
 
+const zoomGraph = () => {
+  const svg_container = d3.select(".mermaid");
+  const svg = svg_container.select("svg");
+  const inner_svg = svg.select("g");
+  const zoom = d3.zoom().on("zoom", function (e) {
+    inner_svg.attr("transform", e.transform);
+  });
+  svg_container.call(zoom);
+};
+
 const MermaidGraph = ({ data, details, callbackFunctionName }) => {
   const graph = attachCallback(data, details, callbackFunctionName);
   useEffect(() => {
     mermaid.contentLoaded();
+    zoomGraph();
   }, []);
   return <div className="mermaid">{graph}</div>;
 };
@@ -55,7 +67,7 @@ const Detail = ({ details, callbackFunctionName }) => {
     };
   }, []);
 
-  if(!detail) {
+  if (!detail) {
     return null;
   }
 
