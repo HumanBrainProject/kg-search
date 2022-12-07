@@ -26,6 +26,8 @@ import { uniqueId } from "lodash";
 import * as d3 from "d3";
 import LinkedInstance from "../../pages/Instance/LinkedInstance";
 
+import "./Mermaid.css";
+
 mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });
 
 const attachCallback = (data, children, callbackFunctionName) => {
@@ -57,28 +59,35 @@ const MermaidGraph = ({ data, details, callbackFunctionName }) => {
 };
 
 const Detail = ({ details, callbackFunctionName }) => {
-  const [detail, setDetail] = useState();
+  const [detailId, setDetailId] = useState();
   useEffect(() => {
     window[callbackFunctionName] = id => {
-      setDetail(details[id]);
+      setDetailId(id);
     };
     return () => {
       delete window[callbackFunctionName];
     };
   }, []);
 
-  if (!detail) {
+  const detail = detailId && details[detailId];
+
+  if (!detailId || !detail) {
     return null;
   }
 
-  return <LinkedInstance data={detail} type={detail.type?.value} />;
+  return (
+    <div className="kgs-mermaid__detail">
+      <div className="kgs-mermaid__detail-title">{detail.title?detail.title:detailId}</div>
+      <LinkedInstance data={detail} type={detail.type?.value} />
+    </div>
+  );
 };
 
 const Mermaid = ({ data, details }) => {
   const callbackFunctionName = uniqueId("mermaidCallback");
 
   return (
-    <div>
+    <div className="kgs-mermaid">
       <MermaidGraph
         data={data}
         details={details}

@@ -72,6 +72,11 @@
     "workflow": {
       "value":  "graph LR \n DOI --> kgimport[unicore_job_kg_import.py] \n executable --> kgimport \n token --> kgimport \n filesystem --> kgimport \n files --> kgimport \n kgimport --> job.json \n job.json --> unicore[unicore_run.py] \n site --> unicore \n kg-token --> unicore\n unicore --> stdout",
       "details": {
+        "kgimport": {
+          "type": { "value": "Dataset.SpecimenOverview" },
+          "title": "unicore_job_kg_import.py",
+          "numberOfSubjectGroups": { "value": "2" }
+        },
         "DOI": {
           "type": { "value": "Dataset.SpecimenOverview" },
           "title": null,
