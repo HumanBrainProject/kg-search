@@ -92,6 +92,30 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return repository != null && repository.getIri() != null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
     }
 
+    private String getRestrictedAccessMessage(String title, String  id) {
+        String restrictedAccessEndpoint = String.format("https://nettskjema.no/a/127835?CBDatasetTitle=%s&LCKDatasetTitle=true&CBDatasetID=%s&LCKDatasetID=true", title, id);
+        return String.format("These data are access restricted and hosted by the data provider. <a class=\"btn btn-secondary\" style=color:#fff href=\"%s\" target=\"_blank\">Request access</a>", restrictedAccessEndpoint);
+
+    }
+
+    private String getTitle(DatasetVersionV3 datasetVersion, DatasetVersionV3.DatasetVersions dataset, boolean hasMultipleVersions) {
+        String title = null;
+        if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
+            if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
+                title = datasetVersion.getFullName();
+            } else {
+                title = String.format("%s (%s)", datasetVersion.getFullName(), datasetVersion.getVersion());
+            }
+        } else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
+            if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
+                title = dataset.getFullName();
+            } else {
+                title = String.format("%s (%s)", dataset.getFullName(), datasetVersion.getVersion());
+            }
+        }
+        return title;
+    }
+
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
         logger.debug("Translating {}", datasetVersion.getId());
@@ -99,16 +123,36 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
         final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
         translatorUtils.defineBadgesAndTrendingState(d, releaseDate, datasetVersion.getLast30DaysViews());
-        d.setId(datasetVersion.getUUID());
+        String uuid = datasetVersion.getUUID();
+        d.setId(uuid);
         d.setFirstRelease(value(releaseDate));
         d.setLastRelease(value(datasetVersion.getLastReleasedAt()));
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
+        List<Version> versions = dataset == null ? null : dataset.getVersions();
+        boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
+        if (hasMultipleVersions) {
+            d.setVersion(datasetVersion.getVersion());
+            List<Version> sortedVersions = Helpers.sort(versions);
+            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
+            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
+            d.setVersions(references);
+            d.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
+            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
+            d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
+        } else {
+            d.setSearchable(true);
+        }
+
+        String title = getTitle(datasetVersion, dataset, hasMultipleVersions);
+        if (title != null) {
+            d.setTitle(value(title));
+        }
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);
         String containerUrl = datasetVersion.getFileRepository() != null ? datasetVersion.getFileRepository().getIri() : null;
         if (accessibility != null) {
             switch (accessibility) {
                 case CONTROLLED_ACCESS:
-                    d.setEmbargo(value(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), containerUrl)));
+                    d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, containerUrl)));
                     break;
                 case UNDER_EMBARGO:
                     if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {
@@ -118,7 +162,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     }
                     break;
                 case RESTRICTED_ACCESS:
-                    d.setEmbargo(value(DatasetVersion.RESTRICTED_ACCESS_MESSAGE));
+                    String restrictedAccessMessage = getRestrictedAccessMessage(title, uuid);
+                    d.setEmbargo(value(restrictedAccessMessage));
                     break;
                 default:
                     if (datasetVersion.getFileRepository() != null) {
@@ -155,20 +200,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         d.setAllIdentifiers(datasetVersion.getIdentifier());
         d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
-        List<Version> versions = dataset == null ? null : dataset.getVersions();
-        boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
-        if (hasMultipleVersions) {
-            d.setVersion(datasetVersion.getVersion());
-            List<Version> sortedVersions = Helpers.sort(versions);
-            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
-            d.setVersions(references);
-            d.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
-            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
-            d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
-        } else {
-            d.setSearchable(true);
-        }
 
         if (StringUtils.isNotBlank(datasetVersion.getDescription())) {
             d.setDescription(value(datasetVersion.getDescription()));
@@ -179,19 +210,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
-        if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
-            if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
-                d.setTitle(value(datasetVersion.getFullName()));
-            } else {
-                d.setTitle(value(String.format("%s (%s)", datasetVersion.getFullName(), datasetVersion.getVersion())));
-            }
-        } else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
-            if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
-                d.setTitle(value(dataset.getFullName()));
-            } else {
-                d.setTitle(value(String.format("%s (%s)", dataset.getFullName(), datasetVersion.getVersion())));
-            }
-        }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
             d.setContributors(datasetVersion.getAuthor().stream()
                     .map(a -> new TargetInternalReference(
@@ -255,17 +273,17 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!dataDescriptors.isEmpty()) {
             TargetExternalReference reference;
             if (dataDescriptors.size() > 1) {
-                logger.warn(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
+                logger.warn(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", "))), uuid);
                 reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
             } else {
                 if (datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())) {
-                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. Falling back to the full documentation file!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), datasetVersion.getUUID());
+                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. Falling back to the full documentation file!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), uuid);
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName());
                 } else if (datasetVersion.getFullDocumentationDOI() != null) {
-                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. Falling back to the full documentation DOI!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), datasetVersion.getUUID());
+                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. Falling back to the full documentation DOI!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), uuid);
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI());
                 } else if (datasetVersion.getFullDocumentationUrl() != null) {
-                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), datasetVersion.getUUID());
+                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), uuid);
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl());
                 } else {
                     reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
@@ -280,7 +298,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
-        List<String> videoExtensions = Arrays.asList(".mp4");
+        List<String> videoExtensions = List.of(".mp4");
         List<String> imageExtensions = Arrays.asList(".gif", ".jpg", ".jpeg", ".png");
 
 
@@ -407,7 +425,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             Set<TargetExternalReference> externalInputURLs = datasetVersion.getInputURLs().stream().map(eid -> new TargetExternalReference(eid, eid)).collect(Collectors.toSet());
             externalInputData.addAll(externalInputURLs);
         }
-        if(!CollectionUtils.isEmpty(externalInputData)) {
+        if (!CollectionUtils.isEmpty(externalInputData)) {
             d.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
