@@ -97,6 +97,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
 
         List<Version> versions = software == null ? null:software.getVersions();
+        boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (!CollectionUtils.isEmpty(versions) && versions.size()>1) {
             s.setVersion(softwareVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
@@ -110,10 +111,18 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
         // title
         if(StringUtils.isNotBlank(softwareVersion.getFullName())){
-            s.setTitle(value(softwareVersion.getFullName()));
+            if (hasMultipleVersions || StringUtils.isBlank(softwareVersion.getVersion())) {
+                s.setTitle(value(softwareVersion.getFullName()));
+            } else {
+                s.setTitle(value(String.format("%s (%s)", softwareVersion.getFullName(), softwareVersion.getVersion())));
+            }
         }
         else if(software!=null && StringUtils.isNotBlank(software.getFullName())){
-            s.setTitle(value(software.getFullName()));
+            if (hasMultipleVersions || StringUtils.isBlank(softwareVersion.getVersion())) {
+                s.setTitle(value(software.getFullName()));
+            } else {
+                s.setTitle(value(String.format("%s (%s)", software.getFullName(), softwareVersion.getVersion())));
+            }
         }
 
         // developers
