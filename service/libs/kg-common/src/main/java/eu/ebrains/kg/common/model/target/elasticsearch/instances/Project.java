@@ -36,7 +36,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name="Project", order=1, searchable=true)
+@MetaInfo(name="Project", searchable=true)
 public class Project implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -64,7 +64,7 @@ public class Project implements TargetInstance {
     @FieldInfo(layout="header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true, overview = true)
+    @FieldInfo(label = "Description", fieldType = FieldInfo.FieldType.MARKDOWN, boost =  7.5f, labelHidden = true, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "Datasets", layout = "Datasets", labelHidden = true)
@@ -79,7 +79,7 @@ public class Project implements TargetInstance {
     @FieldInfo(label = "(Meta)Data models", layout = "(Meta)Data models", labelHidden = true)
     private List<TargetInternalReference> metaDataModels;
 
-    @FieldInfo(label = "Related publications", markdown = true, labelHidden = true, layout = "Publications")
+    @FieldInfo(label = "Related publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true, layout = "Publications")
     private List<Value<String>> publications;
 
     @JsonProperty("first_release")

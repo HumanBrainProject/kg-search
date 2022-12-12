@@ -67,26 +67,26 @@ public class BrainAtlas implements TargetInstance, HasCitation{
     @FieldInfo(label = "Contributors", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> contributors;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, useForSuggestion = true, overview = true)
+    @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
 
     //Overview
     @FieldInfo(label = "DOI", hint = "This is the brain atlas DOI you must cite if you reuse this data in a way that leads to a publication", isSingleWord = true)
     private Value<String> doi;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(labelHidden = true, isHierarchical = true, layout = "Parcellation terminology")
+    @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.HIERARCHICAL, layout = "Parcellation terminology")
     private BasicHierarchyElement<BrainAtlasOverview> parcellationTerminology;
 
-    @FieldInfo(labelHidden = true, isHierarchical = true, layout = "Versions")
+    @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.HIERARCHICAL, layout = "Versions")
     private BasicHierarchyElement<BrainAtlasOverview> versions;
 
     @Override
@@ -154,7 +154,7 @@ public class BrainAtlas implements TargetInstance, HasCitation{
         @FieldInfo(label = "Alternative name")
         private Value<String> alternativeName;
 
-        @FieldInfo(markdown = true)
+        @FieldInfo(fieldType = FieldInfo.FieldType.MARKDOWN)
         private Value<String> definition;
 
         @FieldInfo(label="Ontology identifiers")
@@ -202,7 +202,7 @@ public class BrainAtlas implements TargetInstance, HasCitation{
         @FieldInfo(labelHidden = true)
         private Value<String> name;
 
-        @FieldInfo(markdown = true, label="Color")
+        @FieldInfo(fieldType = FieldInfo.FieldType.MARKDOWN, label="Color")
         private Value<String> color;
     }
 

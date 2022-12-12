@@ -58,4 +58,8 @@ public class ESHelper {
     public static String getAutoReleasedIndex(DataStage dataStage, Class<?> type, boolean temporary) {
         return String.format("%s%s_%s", temporary ? "temporary_" : "", getIndexPrefix(dataStage), MetaModelUtils.getIndexNameForClass(type));
     }
+
+    public static String getResourcesIndex(){
+        return "resources";
+    }
 }

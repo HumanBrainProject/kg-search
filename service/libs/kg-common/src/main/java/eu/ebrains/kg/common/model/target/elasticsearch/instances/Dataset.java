@@ -37,7 +37,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "DatasetVersions", order = 2)
+@MetaInfo(name = "DatasetVersions")
 public class Dataset implements TargetInstance, HasCitation {
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -70,10 +70,10 @@ public class Dataset implements TargetInstance, HasCitation {
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, isCitation=true)
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> customCitation;
 
     @FieldInfo(layout = "How to cite", labelHidden = true)
@@ -85,10 +85,10 @@ public class Dataset implements TargetInstance, HasCitation {
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2, overview = true)
+    @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Dataset versions", isTable = true, layout = "Dataset versions", labelHidden = true)
+    @FieldInfo(label = "Dataset versions", fieldType = FieldInfo.FieldType.TABLE, layout = "Dataset versions", labelHidden = true)
     private List<Children<Version>> datasets;
 
     @JsonProperty("first_release")

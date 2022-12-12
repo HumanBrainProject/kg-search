@@ -70,7 +70,7 @@ export const api = createApi({
       providesTags: ["Search"]
     }),
     getInstance: builder.query({
-      // query: () => "../static/data/instance.json",
+      //query: () => "../static/data/instance.json",
       // transformResponse: (data, _meta, arg) => {
       //   data.id = arg.id;
       //   return data;

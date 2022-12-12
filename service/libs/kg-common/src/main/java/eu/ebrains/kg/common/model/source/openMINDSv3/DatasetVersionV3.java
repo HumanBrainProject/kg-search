@@ -25,6 +25,7 @@ package eu.ebrains.kg.common.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.common.model.source.HasAccessibility;
 import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics {
+public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics, HasAccessibility {
     private String doi;
     private String howToCite;
     private String description;

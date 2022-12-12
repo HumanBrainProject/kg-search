@@ -12,7 +12,7 @@ public class Version {
     @FieldInfo(label = "Version")
     private TargetInternalReference version;
 
-    @FieldInfo(label = "Innovation", markdown = true)
+    @FieldInfo(label = "Innovation", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> innovation;
 
 }

@@ -74,7 +74,7 @@ public class ContentType implements TargetInstance {
     private Value<String> title;
 
 
-    @FieldInfo(markdown = true, overview = true)
+    @FieldInfo(fieldType = FieldInfo.FieldType.MARKDOWN, overview = true)
     private Value<String> description;
 
     @FieldInfo(label = "File extensions")

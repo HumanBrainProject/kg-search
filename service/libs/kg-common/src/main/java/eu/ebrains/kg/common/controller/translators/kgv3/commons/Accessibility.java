@@ -1,5 +1,6 @@
 package eu.ebrains.kg.common.controller.translators.kgv3.commons;
 
+import eu.ebrains.kg.common.model.source.HasAccessibility;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.MetadataModelVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.ModelVersionV3;
@@ -19,15 +20,8 @@ public enum Accessibility {
         this.identifier = identifier;
     }
 
-    public static Accessibility fromPayload(DatasetVersionV3 datasetVersion) {
-        return datasetVersion != null ? from(datasetVersion.getAccessibility()) : null;
-    }
-
-    public static Accessibility fromPayload(MetadataModelVersionV3 metadataModelVersionV3) {
-        return metadataModelVersionV3 != null ? from(metadataModelVersionV3.getAccessibility()) : null;
-    }
-    public static Accessibility fromPayload(ModelVersionV3 modelVersionV3){
-        return modelVersionV3 != null ? from(modelVersionV3.getAccessibility()) : null;
+    public static Accessibility fromPayload(HasAccessibility instance) {
+        return instance != null ? from(instance.getAccessibility()) : null;
     }
 
     private static Accessibility from(NameWithIdentifier nameWithIdentifier){
@@ -36,7 +30,6 @@ public enum Accessibility {
         }
         return null;
     }
-
 
 
 }

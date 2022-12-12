@@ -37,7 +37,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Parcellation entity version", searchable=false)
+@MetaInfo(name = "Parcellation entity version")
 public class ParcellationEntityVersion implements TargetInstance, VersionedInstance {
     @JsonIgnore
     private List<String> allIdentifiers;

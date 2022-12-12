@@ -20,62 +20,17 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-.field-markdown h1{
-    font-size: 1.5rem;
-}
-.field-markdown h2{
-    font-size: 1.4rem;
-}
 
-.field-markdown h3{
-    font-size: 1.3rem;
-}
+package eu.ebrains.kg.common.model.target.elasticsearch.instances.commons;
+import lombok.Getter;
+import java.util.Map;
 
-.field-markdown h4{
-    font-size: 1.2rem;
-}
+@Getter
+public class ValueWithDetails<T extends Comparable<T>> extends Value<T>{
+    private Map<String, Object> details;
 
-.field-markdown h1,
-.field-markdown h2,
-.field-markdown h3 {
-    margin-top: 10px;
-}
-
-.field-markdown blockquote {
-    font-size: unset;
-    border-left-color: var(--color-25);
-    white-space: pre-line;
-}
-
-.field-markdown>p,
-.field-markdown>ul,
-.field-markdown>ol,
-.field-markdown blockquote>p,
-.field-markdown blockquote>ul,
-.field-markdown blockquote>ol {
-    margin: 0;
-}
-
-.field-markdown>p+p,
-.field-markdown>ul+ul,
-.field-markdown>ol+ol,
-.field-markdown>p+ul,
-.field-markdown>p+ol,
-.field-markdown>ul+p,
-.field-markdown>ul+ol,
-.field-markdown>ol+p,
-.field-markdown>ol+ul {
-    margin-top: 1rem;
-}
-
-.field-markdown li+li {
-    margin-top: 0.3rem;
-}
-
-.field-markdown img {
-    max-width: 100%;
-}
-
-.field-markdown code {
-    white-space: break-spaces;
+    public ValueWithDetails(T value, Map<String, Object> details) {
+        super(value);
+        this.details = details;
+    }
 }

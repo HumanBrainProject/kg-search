@@ -1,8 +1,10 @@
 package eu.ebrains.kg.common.utils;
 
+import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInformation;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import lombok.Getter;
 
 import java.util.*;
@@ -11,11 +13,13 @@ import java.util.*;
 public class TranslatorUtils {
 
     private final DOICitationFormatter doiCitationFormatter;
+    private final ESServiceClient esServiceClient;
     private final Integer trendingThreshold;
 
-    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, Integer trendingThreshold) {
+    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold) {
         this.doiCitationFormatter = doiCitationFormatter;
         this.trendingThreshold = trendingThreshold;
+        this.esServiceClient = esServiceClient;
     }
 
     public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, Date firstRelease, Integer last30DaysViews) {
@@ -34,6 +38,11 @@ public class TranslatorUtils {
         }
         target.setBadges(badges);
     }
+
+    public Document getResource(String  id){
+        return this.esServiceClient.getDocumentByNativeId(ESHelper.getResourcesIndex(), id);
+    }
+
 
     private boolean isNew(Date firstRelease) {
         if(firstRelease !=null) {

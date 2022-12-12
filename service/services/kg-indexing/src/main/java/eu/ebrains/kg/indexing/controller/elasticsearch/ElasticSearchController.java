@@ -161,6 +161,31 @@ public class ElasticSearchController {
         }
     }
 
+    public void ensureResourcesIndex(){
+        if(!esServiceClient.checkIfIndexExists(ESHelper.getResourcesIndex())) {
+            esServiceClient.createIndex(ESHelper.getResourcesIndex(), Collections.emptyMap());
+        }
+    }
+
+    public void addResource(String id, Map<String, Object> instance){
+        StringBuilder op = new StringBuilder();
+        op.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", id));
+        try {
+            op.append(objectMapper.writeValueAsString(instance));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        op.append('\n');
+        esServiceClient.updateIndex(ESHelper.getResourcesIndex(), op.toString());
+    }
+
+    public void deleteResource(String id){
+        StringBuilder op = new StringBuilder();
+        op.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", id));
+        esServiceClient.updateIndex(ESHelper.getResourcesIndex(), op.toString());
+    }
+
+
     public void updateSearchIndex(List<? extends TargetInstance> instances, Class<?> type, DataStage dataStage, boolean temporary) {
         updateIndex(ESHelper.getSearchableIndex(dataStage, type, temporary), instances);
     }

@@ -36,8 +36,9 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(ParcellationEntity.class, null, null, new ParcellationEntityV3Translator(), null, false, false, 1000),
             new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false, 1000),
             new TranslatorModel<>(BrainAtlas.class, null, null, new BrainAtlasV3Translator(), null, false, false, 1000),
-            new TranslatorModel<>(CoordinateSpace.class, null, null, new CoordinateSpaceV3Translator(), null, false, false, 1000)
-            );
+            new TranslatorModel<>(CoordinateSpace.class, null, null, new CoordinateSpaceV3Translator(), null, false, false, 1000),
+            new TranslatorModel<>(WorkflowRecipeVersion.class, null, null, new WorkflowRecipeVersionV3Translator(), null, false, false, 1000)
+    );
 
     private final Class<Output> targetClass;
     private final Translator<v1Input, Output, ? extends ResultsOfKGv2<v1Input>> v1translator;

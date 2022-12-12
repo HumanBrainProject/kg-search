@@ -175,8 +175,8 @@ export const setUpAuthentication = createAsyncThunk(
   async (_,  { dispatch, getState}) => {
     const state = getState();
     const { settings, loginRequired } = state.auth;
-    if(settings && settings.url) {
-    //if(settings && settings.url && (loginRequired || !window.location.host.startsWith("localhost"))) { // to test
+    // if(settings && settings.url) {
+    if(settings && settings.url && (loginRequired || !window.location.host.startsWith("localhost"))) { // to test
       dispatch(initializeAuthentication());
       const keycloakScriptSrc = settings.url + "/js/keycloak.js";
       // dev testing

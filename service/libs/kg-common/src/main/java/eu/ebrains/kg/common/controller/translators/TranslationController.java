@@ -35,6 +35,7 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.slf4j.Logger;
@@ -52,13 +53,15 @@ public class TranslationController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
+    private final ESServiceClient esServiceClient;
 
     private final Configuration configuration;
 
-    public TranslationController(KGv3 kgV3, DOICitationFormatter doiCitationFormatter, Configuration configuration) {
+    public TranslationController(KGv3 kgV3, DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Configuration configuration) {
         this.doiCitationFormatter = doiCitationFormatter;
         this.kgV3 = kgV3;
         this.configuration = configuration;
+        this.esServiceClient = esServiceClient;
     }
 
     public <Source , Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
@@ -79,7 +82,7 @@ public class TranslationController {
             instanceResults.setErrors(new ErrorReport());
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                         try {
-                            return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, trendingThreshold));
+                            return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold));
                         } catch (TranslationException e) {
                             if (instanceResults.getErrors().get(e.getIdentifier()) != null) {
                                 instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
@@ -138,7 +141,7 @@ public class TranslationController {
             return null;
         }
         translator.setConfiguration(configuration);
-        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, null));
+        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient,null));
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
         }
