@@ -192,14 +192,17 @@ const SearchBase = () => {
       dispatch(initializeSearch(params));
     }
     const popstateHandler = () => {
+
       const id = getIdFromUrl();
       dispatch(syncHistory(id));
 
       const group = getGroupFromUrl();
       dispatch(setGroup(group));
 
-      const params = getSearchParametersFromUrl();
-      dispatch(syncSearch(params));
+      if (!id) {
+        const params = getSearchParametersFromUrl();
+        dispatch(syncSearch(params));
+      }
     };
     window.addEventListener("popstate", popstateHandler, false);
     return () => {
