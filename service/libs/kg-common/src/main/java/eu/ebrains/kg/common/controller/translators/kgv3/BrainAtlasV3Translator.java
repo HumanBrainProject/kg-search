@@ -105,10 +105,14 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         e.setKey("root");
         e.setTitle(brainAtlasV3.getFullName());
         e.setColor("#e3dcdc");
-        e.setChildren(organizeParcellationEntities(brainAtlasV3.getTerminology().getParcellationEntity().stream().sorted(Comparator.comparing(BrainAtlasV3.ParcellationEntity::getName, String.CASE_INSENSITIVE_ORDER)).collect(Collectors.toList()), versionGroups));
+        if(brainAtlasV3.getTerminology() != null && brainAtlasV3.getTerminology().getParcellationEntity() != null) {
+            e.setChildren(organizeParcellationEntities(brainAtlasV3.getTerminology().getParcellationEntity().stream().sorted(Comparator.comparing(BrainAtlasV3.ParcellationEntity::getName, String.CASE_INSENSITIVE_ORDER)).collect(Collectors.toList()), versionGroups));
+        }
         BrainAtlas.BrainAtlasOverview overview = new BrainAtlas.BrainAtlasOverview();
         e.setData(overview);
-        overview.setNumberOfParcellationEntities(value(brainAtlasV3.getTerminology().getParcellationEntity().size()));
+        if(brainAtlasV3.getTerminology() != null && brainAtlasV3.getTerminology().getParcellationEntity() != null) {
+            overview.setNumberOfParcellationEntities(value(brainAtlasV3.getTerminology().getParcellationEntity().size()));
+        }
         return e;
     }
 
