@@ -213,6 +213,7 @@ public class IndexingController {
         UpdateResult updateResult = new UpdateResult();
         final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
         translator.getQueryIds().forEach(queryId -> {
+            Integer lastTotal = null;
             boolean hasMore = true;
             int from = 0;
             while (hasMore) {
@@ -250,8 +251,11 @@ public class IndexingController {
                         }
                     }
                 }
+                if(result.getTotal()!=null){
+                    lastTotal = result.getTotal();
+                }
                 from = result.getFrom() + result.getSize();
-                hasMore = from < result.getTotal();
+                hasMore = lastTotal != null && from < lastTotal;
             }
         });
         return updateResult;
