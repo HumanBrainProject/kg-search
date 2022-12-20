@@ -69,11 +69,10 @@ public class TranslationController {
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
         if (instanceResults==null){
-            logger.info("No results for {}", translator.getSourceType().getSimpleName());
+            logger.info("Was not able to read results for {} from index {} of size {}", translator.getSourceType().getSimpleName(), from, size);
             result.setTargetInstances(Collections.emptyList());
             result.setFrom(from);
-            result.setSize(0);
-            result.setTotal(0);
+            result.setSize(size);
         }
         else {
             Stats stats = getStats(instanceResults, from);
