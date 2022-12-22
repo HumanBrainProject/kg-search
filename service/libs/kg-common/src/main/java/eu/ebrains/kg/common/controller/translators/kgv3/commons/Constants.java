@@ -14,6 +14,6 @@ public final class Constants {
 
     public static final List<String> VERSION_INNOVATION_DEFAULTS = Arrays.asList("this is the first version of this research product.", "this is the only version of this dataset.");
 
-    public static final List<String> DOMAINS_ALLOWING_EMBEDDING = Arrays.asList();
+    public static final List<String> DOMAINS_ALLOWING_EMBEDDING = List.of();
 
 }

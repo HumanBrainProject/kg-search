@@ -27,6 +27,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,23 @@ public class KGV3ServiceClient extends KGServiceClient {
     public KGV3ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
         super(serviceAccountWebClient, userWebClient);
         this.kgCoreEndpoint = kgCoreEndpoint;
+    }
+
+    @Cacheable(value = "authEndpoint", unless = "#result == null")
+    public String getAuthEndpoint() {
+        String url = String.format("%s/users/authorization", kgCoreEndpoint);
+        try {
+            Map result = serviceAccountWebClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+
+            Map data = (Map) result.get("data");
+            return data.get("endpoint").toString();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Set<UUID> getInvitationsFromKG(){

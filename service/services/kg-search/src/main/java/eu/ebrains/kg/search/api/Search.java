@@ -24,7 +24,6 @@
 package eu.ebrains.kg.search.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.ebrains.kg.common.controller.kg.KGv2;
 import eu.ebrains.kg.common.controller.kg.KGv3;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.model.DataStage;
@@ -32,7 +31,7 @@ import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
-import eu.ebrains.kg.common.services.KGV2ServiceClient;
+import eu.ebrains.kg.common.services.KGV3ServiceClient;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.search.controller.settings.SettingsController;
@@ -54,23 +53,21 @@ import java.util.*;
 @RestController
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class Search {
-    private final KGV2ServiceClient KGV2ServiceClient;
     private final ESServiceClient esServiceClient;
+    private final KGV3ServiceClient kgv3ServiceClient;
     private final SettingsController definitionController;
     private final SearchController searchController;
     private final TranslationController translationController;
-    private final KGv2 kgV2;
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
 
-    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
-        this.KGV2ServiceClient = KGV2ServiceClient;
+    public Search(ESServiceClient esServiceClient, KGV3ServiceClient kgv3ServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
         this.esServiceClient = esServiceClient;
+        this.kgv3ServiceClient = kgv3ServiceClient;
         this.definitionController = definitionController;
         this.searchController = searchController;
         this.translationController = translationController;
         this.kgV3 = kgV3;
-        this.kgV2 = kgV2;
         this.doiCitationFormatter = doiCitationFormatter;
     }
 
@@ -98,7 +95,7 @@ public class Search {
             }
         }
 
-        String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
+        String authEndpoint = kgv3ServiceClient.getAuthEndpoint();
         if (StringUtils.isNotBlank(authEndpoint)) {
             result.put("keycloak", Map.of(
                     "realm", keycloakRealm,
@@ -157,41 +154,13 @@ public class Search {
         }
     }
 
-    @SuppressWarnings("java:S3740") // we keep the generics intentionally
-    @GetMapping("/{org}/{domain}/{schema}/{version}/{id}/live")
-    public ResponseEntity<Map> translate(@PathVariable("org") String org,
-                                         @PathVariable("domain") String domain,
-                                         @PathVariable("schema") String schema,
-                                         @PathVariable("version") String version,
-                                         @PathVariable("id") String id) throws TranslationException{
-        try {
-            String queryId = String.format("%s/%s/%s/%s", org, domain, schema, version);
-            TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV2translator()!=null && m.getV2translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
-            if(translatorModel!=null){
-                TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV2translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
-                if(v!=null){
-                   return ResponseEntity.ok(searchController.getLiveDocument(v));
-                }
-            }
-            translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV1translator()!=null && m.getV1translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
-            if(translatorModel!=null){
-                TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV1translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
-                if(v!=null){
-                    return ResponseEntity.ok(searchController.getLiveDocument(v));
-                }
-            }
-            return ResponseEntity.notFound().build();
-        } catch (HttpClientErrorException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
 
     @SuppressWarnings("java:S3740") // we keep the generics intentionally
     @GetMapping("/{id}/live")
     public ResponseEntity<Map> translate(@PathVariable("id") String id, @RequestParam(required = false, defaultValue = "false") boolean skipReferenceCheck) throws TranslationException {
         try {
             final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
-            final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
+            final TranslatorModel<?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
             if(translatorModel!=null) {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
                 if (queryId != null) {

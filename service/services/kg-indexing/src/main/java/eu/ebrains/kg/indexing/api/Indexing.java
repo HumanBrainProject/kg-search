@@ -180,7 +180,7 @@ public class Indexing {
 
 
 
-    private ErrorReportResult.ErrorReportResultByTargetType handleErrorReportResultByTargetType(TranslatorModel<?, ?, ?, ?> m, List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource) {
+    private ErrorReportResult.ErrorReportResultByTargetType handleErrorReportResultByTargetType(TranslatorModel<?, ?> m, List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource) {
         if (!errorsBySource.isEmpty()) {
             ErrorReportResult.ErrorReportResultByTargetType e = new ErrorReportResult.ErrorReportResultByTargetType();
             e.setTargetType(m.getTargetClass().getSimpleName());

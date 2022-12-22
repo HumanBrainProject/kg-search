@@ -52,7 +52,7 @@ public class SettingsController {
     @Cacheable(value = "typeMappings", unless = "#result == null")
     public Map<String, Object> generateTypeMappings() {
         Map<String, Object> labels = new LinkedHashMap<>();
-        for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
+        for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
             Class<?> targetModel = model.getTargetClass();
             labels.put(MetaModelUtils.getNameForClass(targetModel), generateTypeMappings(targetModel));
             //Also add inner models to the labels
@@ -180,7 +180,7 @@ public class SettingsController {
     @Cacheable(value = "types", unless = "#result == null")
     public List<Object> generateTypes() {
         Map<Integer, Object> types = new LinkedHashMap<>();
-        for (TranslatorModel<?, ?, ?, ?> model : TranslatorModel.MODELS) {
+        for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
             Class<?> targetModel = model.getTargetClass();
             Map<String, Object> type = generateType(targetModel, MetaModelUtils.getNameForClass(targetModel));
             if (type != null) {
@@ -216,7 +216,6 @@ public class SettingsController {
         result.put("type", type);
         result.put("label", label);
         result.put("facets", listFacets(type));
-        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
         List<Map<String, String>> sortFields = new ArrayList<>();
         result.put("sortFields", sortFields);
         if (metaInfo.defaultSelection()) {

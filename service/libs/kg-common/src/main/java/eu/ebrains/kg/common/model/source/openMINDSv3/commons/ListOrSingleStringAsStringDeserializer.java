@@ -21,40 +21,31 @@
  *
  */
 
-package eu.ebrains.kg.common.model.source.commonsV1andV2;
+package eu.ebrains.kg.common.model.source.openMINDSv3.commons;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@SuppressWarnings("java:S3740") // we keep the generics intentionally
-public class ListOrSingleStringAsListDeserializer extends JsonDeserializer<List> { 
+public class ListOrSingleStringAsStringDeserializer extends JsonDeserializer<String> {
 
     @Override
-    public List<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         final TreeNode treeNode = jsonParser.readValueAsTree();
         if(treeNode.isArray()){
-            List<?> list = jsonParser.getCodec().treeToValue(treeNode, List.class);
-            if(CollectionUtils.isEmpty(list)){
+            List<?> asList = jsonParser.getCodec().treeToValue(treeNode, List.class);
+            if(asList == null){
                 return null;
             }
-            else {
-                return list;
-            }
+            return asList.stream().map(Object::toString).collect(Collectors.joining(", "));
         }
         else{
-            String s = jsonParser.getCodec().treeToValue(treeNode, String.class);
-            if(StringUtils.isNotBlank(s)) {
-                return Collections.singletonList(s);
-            }
-            return null;
+            return jsonParser.getCodec().treeToValue(treeNode, String.class);
         }
     }
 }

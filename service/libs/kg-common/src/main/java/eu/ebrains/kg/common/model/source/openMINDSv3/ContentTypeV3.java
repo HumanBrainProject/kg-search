@@ -24,7 +24,7 @@
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
 import lombok.Getter;

@@ -32,47 +32,69 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface FieldInfo {
 
-    enum FieldType{
+    enum FieldType {
         FILE_PREVIEW, MARKDOWN, HIERARCHICAL, HIERARCHICAL_FILES, HIERARCHICAL_FILES_ASYNC, CITATION, TABLE, MERMAID, GROUPED_LINKS, DEFAULT;
     }
 
     String label() default "";
+
     String hint() default "";
+
     String icon() default "";
+
     FieldType fieldType() default FieldType.DEFAULT;
+
     boolean visible() default true;
+
     boolean labelHidden() default false;
+
     boolean overview() default false;
+
     boolean ignoreForSearch() default false;
+
     boolean termsOfUse() default false;
+
     boolean isFilterableFacet() default false;
+
     boolean useForSuggestion() default false;
+
     Type type() default Type.UNDEFINED;
+
     String layout() default "";
+
     String linkIcon() default "";
+
     String tagIcon() default "";
+
     String separator() default "";
+
     double boost() default 1.0;
+
     Facet facet() default Facet.UNDEFINED;
-    FacetOrder facetOrder() default  FacetOrder.UNDEFINED;
+
+    FacetOrder facetOrder() default FacetOrder.UNDEFINED;
+
     Aggregate aggregate() default Aggregate.UNDEFINED;
+
     int order() default 0;
+
     int overviewMaxDisplay() default 0;
+
     boolean isSingleWord() default false;
 
-    public enum Facet{
+    enum Facet {
         UNDEFINED, EXISTS, LIST
     }
 
-    public enum FacetOrder{
+    enum FacetOrder {
         UNDEFINED, BYCOUNT, BYVALUE
     }
 
-    enum Aggregate{
+    enum Aggregate {
         UNDEFINED, COUNT
     }
 
-    enum Type{
+    enum Type {
         UNDEFINED, TEXT, DATE
     }
 }

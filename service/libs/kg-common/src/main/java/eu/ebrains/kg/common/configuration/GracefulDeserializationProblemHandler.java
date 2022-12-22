@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import eu.ebrains.kg.common.model.ErrorReport;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.model.source.SourceInstanceV1andV2;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.utils.IdUtils;
 import org.slf4j.Logger;
@@ -45,27 +44,27 @@ public class GracefulDeserializationProblemHandler extends DeserializationProble
     }
 
     @Override
-    public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) throws IOException {
+    public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) {
         recordError(p, targetType);
         return null;
     }
 
 
     @Override
-    public Object handleWeirdNumberValue(DeserializationContext ctxt, Class<?> targetType, Number valueToConvert, String failureMsg) throws IOException {
+    public Object handleWeirdNumberValue(DeserializationContext ctxt, Class<?> targetType, Number valueToConvert, String failureMsg) {
         recordError(ctxt.getParser(), targetType);
         return null;
     }
 
     @Override
-    public Object handleWeirdStringValue(DeserializationContext ctxt, Class<?> targetType, String valueToConvert, String failureMsg) throws IOException {
+    public Object handleWeirdStringValue(DeserializationContext ctxt, Class<?> targetType, String valueToConvert, String failureMsg) {
         recordError(ctxt.getParser(), targetType);
         return null;
     }
 
 
     @Override
-    public Object handleWeirdNativeValue(DeserializationContext ctxt, JavaType targetType, Object valueToConvert, JsonParser p) throws IOException {
+    public Object handleWeirdNativeValue(DeserializationContext ctxt, JavaType targetType, Object valueToConvert, JsonParser p) {
         recordError(ctxt.getParser(), targetType);
         return null;
     }
@@ -78,10 +77,7 @@ public class GracefulDeserializationProblemHandler extends DeserializationProble
             for (Integer index : errorMap.keySet()) {
                 final Object instance = data.get(index);
                 String identifier;
-                if(instance instanceof SourceInstanceV1andV2) {
-                    identifier = ((SourceInstanceV1andV2) instance).getIdentifier();
-                }
-                else if (instance instanceof SourceInstanceV3){
+                if (instance instanceof SourceInstanceV3){
                     identifier = IdUtils.getUUID(((SourceInstanceV3)instance).getId());
                 }
                 else{
