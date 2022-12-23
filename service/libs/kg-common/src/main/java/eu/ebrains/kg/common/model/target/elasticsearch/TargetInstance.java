@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.List;

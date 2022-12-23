@@ -55,8 +55,8 @@ public class SearchFieldsController {
     private final MetaModelUtils utils;
 
     public SearchFieldsController(
-        MetaModelUtils utils
-) {
+            MetaModelUtils utils
+    ) {
         this.utils = utils;
     }
 
@@ -106,11 +106,12 @@ public class SearchFieldsController {
 //          addChildrenFieldHighlight(highlights, topTypeToHandle, String.format("%s.children", path));
         }
     }
+
     @Cacheable(value = "suggestFields", key = "#type")
     public List<String> getSuggestionFields(String type) {
         Map<String, Double> fieldsWithBoost = new HashMap<>();
         final Class<?> classForType = utils.getClassForType(type);
-        if(classForType!=null){
+        if (classForType != null) {
             reflectFields(fieldsWithBoost, classForType, FieldInfo::useForSuggestion);
         }
         return fieldsWithBoost.keySet().stream().sorted().collect(Collectors.toList());
@@ -135,7 +136,7 @@ public class SearchFieldsController {
         }
         List<String> fields = fieldsWithBoost.entrySet().stream().map(e -> {
             String field = e.getKey();
-            double boost = e.getValue() == null?1.0:(double) e.getValue();
+            double boost = e.getValue() == null ? 1.0 : (double) e.getValue();
             return String.format("%s^%d", field, (int) boost);
         }).sorted().collect(Collectors.toList());
         return fields;

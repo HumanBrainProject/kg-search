@@ -23,19 +23,17 @@
 
 package eu.ebrains.kg.search.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.ebrains.kg.common.controller.kg.KGv3;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
-import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.services.KGV3ServiceClient;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
-import eu.ebrains.kg.search.controller.settings.SettingsController;
 import eu.ebrains.kg.search.controller.search.SearchController;
+import eu.ebrains.kg.search.controller.settings.SettingsController;
 import eu.ebrains.kg.search.model.FacetValue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +51,6 @@ import java.util.*;
 @RestController
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class Search {
-    private final ESServiceClient esServiceClient;
     private final KGV3ServiceClient kgv3ServiceClient;
     private final SettingsController definitionController;
     private final SearchController searchController;
@@ -61,8 +58,7 @@ public class Search {
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
 
-    public Search(ESServiceClient esServiceClient, KGV3ServiceClient kgv3ServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
-        this.esServiceClient = esServiceClient;
+    public Search(KGV3ServiceClient kgv3ServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
         this.kgv3ServiceClient = kgv3ServiceClient;
         this.definitionController = definitionController;
         this.searchController = searchController;
@@ -82,7 +78,7 @@ public class Search {
             @Value("${matomo.siteId}") String matomoSiteId
     ) {
         Map<String, Object> result = new HashMap<>();
-        if(StringUtils.isNotBlank(commit) && !commit.equals("\"\"")){
+        if (StringUtils.isNotBlank(commit) && !commit.equals("\"\"")) {
             result.put("commit", commit);
 
             // Only provide sentry when commit is available, ie on deployed env
@@ -141,7 +137,7 @@ public class Search {
 //    }
 
     @GetMapping("/groups")
-    public ResponseEntity<?> getGroups(Principal principal) { 
+    public ResponseEntity<?> getGroups(Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             return ResponseEntity.ok(Arrays.asList(
                     Map.of("value", "curated",
@@ -161,7 +157,7 @@ public class Search {
         try {
             final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
             final TranslatorModel<?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
-            if(translatorModel!=null) {
+            if (translatorModel != null) {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
                 if (queryId != null) {
                     final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, !skipReferenceCheck);
@@ -193,15 +189,15 @@ public class Search {
 
 
     @GetMapping("/repositories/{id}/files/live")
-    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId, 
+    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId,
                                                      @RequestParam(required = false, name = "searchAfter") String searchAfter,
                                                      @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                      @RequestParam(required = false, defaultValue = "", name = "format") String format,
                                                      @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType,
-                                                       Principal principal) {
+                                                     Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
         final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
-        if(repositoryUUID == null || (StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || size > 10000){
+        if (repositoryUUID == null || (StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || size > 10000) {
             return ResponseEntity.badRequest().build();
         }
         if (searchController.canReadLiveFiles(principal, repositoryUUID)) {
@@ -216,10 +212,10 @@ public class Search {
     }
 
     @GetMapping("/repositories/{id}/files/formats/live")
-    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId, 
-                                                     Principal principal) {
+    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId,
+                                                           Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
-        if(repositoryUUID == null ){
+        if (repositoryUUID == null) {
             return ResponseEntity.badRequest().build();
         }
         if (searchController.canReadLiveFiles(principal, repositoryUUID)) {
@@ -230,10 +226,10 @@ public class Search {
     }
 
     @GetMapping("/repositories/{id}/files/groupingTypes/live")
-    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId, 
-                                                     Principal principal) {
+    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId,
+                                                             Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
-        if(repositoryUUID == null){
+        if (repositoryUUID == null) {
             return ResponseEntity.badRequest().build();
         }
         if (searchController.canReadLiveFiles(principal, repositoryUUID)) {
@@ -247,17 +243,17 @@ public class Search {
     @GetMapping("/groups/public/repositories/{id}/files/formats")
     public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String repositoryId) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
-        if(repositoryUUID == null){
+        if (repositoryUUID == null) {
             return ResponseEntity.badRequest().build();
         }
         return searchController.getFileFormatsFromRepo(DataStage.RELEASED, repositoryUUID);
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files/formats")
-    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId, 
-                                                        Principal principal) {
+    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId,
+                                                              Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
-        if(repositoryUUID == null){
+        if (repositoryUUID == null) {
             return ResponseEntity.badRequest().build();
         }
         if (searchController.isInInProgressRole(principal)) {
@@ -270,15 +266,15 @@ public class Search {
     @GetMapping("/groups/public/repositories/{id}/files/groupingTypes")
     public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String repositoryId) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
-        if(repositoryUUID == null){
+        if (repositoryUUID == null) {
             return ResponseEntity.badRequest().build();
         }
         return searchController.getGroupingTypesFromRepo(DataStage.RELEASED, repositoryUUID);
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId, 
-                                                        Principal principal) {
+    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId,
+                                                                Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
         if (repositoryUUID == null) {
             return ResponseEntity.badRequest().build();
@@ -291,7 +287,7 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id, 
+    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
                                                        @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                        @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -305,7 +301,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id, 
+    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id,
                                                         @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                         @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                         @RequestParam(required = false, defaultValue = "", name = "format") String format,
@@ -337,7 +333,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/documents/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) { 
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             try {
                 Map<String, Object> res = searchController.getSearchDocument(DataStage.IN_PROGRESS, id);
@@ -354,7 +350,7 @@ public class Search {
     }
 
     @GetMapping("/groups/curated/documents/{type}/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) { 
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             try {
                 Map<String, Object> res = searchController.getSearchDocument(DataStage.IN_PROGRESS, String.format("%s/%s", type, id));
@@ -371,7 +367,7 @@ public class Search {
     }
 
     @PostMapping("/groups/public/search")
-    public ResponseEntity<?> searchPublic (
+    public ResponseEntity<?> searchPublic(
             @RequestParam(required = false, defaultValue = "", name = "q") String q,
             @RequestParam(required = false, defaultValue = "", name = "type") String type,
             @RequestParam(required = false, defaultValue = "0", name = "from") int from,
