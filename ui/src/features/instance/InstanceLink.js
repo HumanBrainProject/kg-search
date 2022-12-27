@@ -25,7 +25,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { setInstanceId } from "./instanceSlice";
+import { requestInstance } from "./instanceSlice";
 
 import Count from "../../components/Field/Count";
 
@@ -60,7 +60,7 @@ const InstanceLink = ({instanceId, text, count, context}) => {
       };
       navigate(url, options);
     } else {
-      dispatch(setInstanceId({
+      dispatch(requestInstance({
         instanceId: instanceId,
         context: context
       }));

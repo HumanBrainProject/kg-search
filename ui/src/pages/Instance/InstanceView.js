@@ -25,7 +25,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { setInstanceId, setTab, selectTypeMapping } from "../../features/instance/instanceSlice";
+import { requestInstance, setTab, selectTypeMapping } from "../../features/instance/instanceSlice";
 import { selectIsDefaultGroup, selectGroupLabel } from "../../features/groups/groupsSlice";
 import { trackEvent } from "../../app/services/api";
 
@@ -170,7 +170,7 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
       tab: selectedTab
     };
     if(isSearch) {
-      dispatch(setInstanceId({
+      dispatch(requestInstance({
         instanceId: version,
         context: context
       }));

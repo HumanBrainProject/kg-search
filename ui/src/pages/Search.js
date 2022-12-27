@@ -26,7 +26,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useGetSearchQuery, setCustomUrl, trackPageView, getError } from "../app/services/api";
-import { initializeSearch, syncSearch, selectActiveFacets } from "../features/search/searchSlice";
+import { initializeSearch, syncSearchParameters, setSearchResults, selectFacets } from "../features/search/searchSlice";
 import { syncHistory } from "../features/instance/instanceSlice";
 import { setGroup } from "../features/groups/groupsSlice";
 
@@ -149,7 +149,7 @@ const SearchBase = () => {
 
   const dispatch = useDispatch();
 
-  const isActive = useSelector(state => !state.instance.data && !state.application.info);
+  const isActive = useSelector(state => !state.instance.instanceId && !state.application.info);
   const isInitialized = useSelector(state => state.search.isInitialized);
   const group = useSelector(state => state.groups.group);
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
@@ -158,7 +158,7 @@ const SearchBase = () => {
   const from = useSelector(state => state.search.from);
   const hitsPerPage = useSelector(state => state.search.hitsPerPage);
 
-  const facets = useSelector(state => selectActiveFacets(state, selectedType));
+  const facets = useSelector(state => selectFacets(state, selectedType));
 
   const page = useSelector(state => state.search.page);
   const isUpToDate = useSelector(state => state.search.isUpToDate);
@@ -173,7 +173,7 @@ const SearchBase = () => {
   }:{};
 
   const {
-    //data,
+    data,
     //currentData,
     error,
     //isUninitialized,
@@ -182,7 +182,7 @@ const SearchBase = () => {
     //isSuccess,
     isError,
     refetch,
-  } = useGetSearchQuery(searchParams, { skip: !isInitialized || isUpToDate});
+  } = useGetSearchQuery(searchParams, { skip: !isInitialized});
 
   useEffect(() => {
     document.title = "EBRAINS - Knowledge Graph Search";
@@ -201,7 +201,7 @@ const SearchBase = () => {
 
       if (!id) {
         const params = getSearchParametersFromUrl();
-        dispatch(syncSearch(params));
+        dispatch(syncSearchParameters(params));
       }
     };
     window.addEventListener("popstate", popstateHandler, false);
@@ -281,6 +281,14 @@ const SearchBase = () => {
       }
     }
   }, [isInitialized, isActive, location.search]);
+
+
+  useEffect(() => {
+    if (isInitialized && data) {
+      dispatch(setSearchResults(data));
+    }
+  }, [data, isInitialized, isUpToDate, dispatch]);
+
 
   if (isError) {
     return (

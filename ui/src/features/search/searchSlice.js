@@ -149,17 +149,6 @@ const updateTypesFromResults = (types, selectedType, results) => {
   });
 };
 
-const updateSearchResults = (state, results) => {
-  updateTypesFromResults(state.types, state.selectedType, results);
-
-  state.hits = Array.isArray(results?.hits)?results.hits:[];
-  state.suggestions = (results?.suggestions instanceof Object)?results.suggestions:{};
-
-  const total = isNaN(Number(results?.total))?0:Number(results.total);
-  state.total = total;
-  state.totalPages = Math.ceil(total / state.hitsPerPage);
-};
-
 const resetAllFacets = state => {
   state.types.forEach(type => {
     if (Array.isArray(type.facets)) {
@@ -168,7 +157,7 @@ const resetAllFacets = state => {
   });
 };
 
-const sync = (state, payload) => {
+const syncParameters = (state, payload) => {
   const {q, category, p} = (payload instanceof Object)?payload:{};
 
   const queryString = q?q:"";
@@ -205,11 +194,11 @@ const searchSlice = createSlice({
   initialState,
   reducers: {
     initializeSearch(state, action) {
-      sync(state, action.payload);
+      syncParameters(state, action.payload);
       state.isInitialized = true;
     },
-    syncSearch(state, action) {
-      sync(state, action.payload);
+    syncSearchParameters(state, action) {
+      syncParameters(state, action.payload);
       state.isUpToDate = false;
     },
     setQueryString(state, action) {
@@ -256,8 +245,15 @@ const searchSlice = createSlice({
         state.isUpToDate = false;
       }
     },
-    setSearchResultsFromCache(state, { payload }) {
-      updateSearchResults(state, payload);
+    setSearchResults(state, action) {
+      const results = action.payload;
+      updateTypesFromResults(state.types, state.selectedType, results);
+      state.hits = Array.isArray(results?.hits)?results.hits:[];
+      state.suggestions = (results?.suggestions instanceof Object)?results.suggestions:{};
+
+      const total = isNaN(Number(results?.total))?0:Number(results.total);
+      state.total = total;
+      state.totalPages = Math.ceil(total / state.hitsPerPage);
     }
   },
   extraReducers(builder) {
@@ -279,8 +275,7 @@ const searchSlice = createSlice({
       )
       .addMatcher(
         api.endpoints.getSearch.matchFulfilled,
-        (state, { payload }) => {
-          updateSearchResults(state, payload);
+        state => {
           state.isUpToDate = true;
           state.isFetching = false;
         }
@@ -293,15 +288,13 @@ const searchSlice = createSlice({
       )
       .addMatcher(
         api.endpoints.getSearch.matchRejected,
-        (state, action) => {
-          if (action?.error?.name !== "ConditionError") { // not cached
-            state.hits = [];
-            state.suggestions = {};
-            state.from = 0;
-            state.page = 1;
-            state.totalPages = 0;
-            state.isFetching = false;
-          }
+        state => {
+          state.hits = [];
+          state.suggestions = {};
+          state.from = 0;
+          state.page = 1;
+          state.totalPages = 0;
+          state.isFetching = false;
         }
       );
   }
@@ -317,18 +310,6 @@ export const selectFacets = (state, typeName) => {
   return type.facets;
 };
 
-export const selectActiveFacets = (state, typeName) => {
-  const facets = selectFacets(state, typeName);
-  return facets.filter(facet =>
-    facet.count > 0 &&
-    (facet.type !== "list" || facet.keywords.length)
-  );
-};
-
-export const { initializeSearch, syncSearch, setQueryString, setFacet, resetFacets, setFacetSize, setPage, setType } = searchSlice.actions;
-
-export const searchCacheActions = {
-  "getSearch": searchSlice.actions.setSearchResultsFromCache
-};
+export const { initializeSearch, syncSearchParameters, setQueryString, setFacet, resetFacets, setFacetSize, setPage, setType, setSearchResults} = searchSlice.actions;
 
 export default searchSlice.reducer;

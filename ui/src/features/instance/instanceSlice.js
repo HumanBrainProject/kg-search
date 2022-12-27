@@ -41,26 +41,6 @@ const getTitle = data => {
   return null;
 };
 
-const updateInstance = (state, data) => {
-  if (data.id === state.instanceId) {
-    if (state.data?.id && state.data.id !== data.id) {
-      state.history.push({
-        id: state.data.id,
-        title: state.title,
-        tab: state.tab // only tab is kept in history, context is reset
-      });
-    }
-    state.data = data;
-    state.title = getTitle(data);
-    state.tab = state.context?.tab; // tab should keep current view until the data of the new instanceId is successufully fetched
-  } else {
-    state.instanceId = null;
-    state.data = null;
-    state.title = null;
-    state.tab = null;
-  }
-};
-
 // WARNING: until instance is successfully fetched data, title, tab and history are not in sync with instanceId & context
 const initialState = {
   typeMappings: {},
@@ -77,7 +57,7 @@ const instanceSlice = createSlice({
   name: "instances",
   initialState,
   reducers: {
-    setInstanceId(state, action) {
+    requestInstance(state, action) {
       state.instanceId = action.payload?.instanceId;
       state.context = action.payload?.context;
       // if (Math.round(Math.random()* 10)%2 === 0) {
@@ -92,6 +72,26 @@ const instanceSlice = createSlice({
       state.tab = null;
       state.history = [];
       state.image = null;
+    },
+    setInstance(state, action) {
+      const data = action.payload;
+      if (data.id === state.instanceId) {
+        if (state.data?.id && state.data.id !== data.id) {
+          state.history.push({
+            id: state.data.id,
+            title: state.title,
+            tab: state.tab // only tab is kept in history, context is reset
+          });
+        }
+        state.data = data;
+        state.title = getTitle(data);
+        state.tab = state.context?.tab; // tab should keep current view until the data of the new instanceId is successufully fetched
+      } else {
+        state.instanceId = null;
+        state.data = null;
+        state.title = null;
+        state.tab = null;
+      }
     },
     syncHistory(state, action) {
       const instanceId = action.payload;
@@ -129,9 +129,6 @@ const instanceSlice = createSlice({
     setTab(state, action) {
       state.tab = action.payload;
       state.context = null; // clear context after tab change
-    },
-    setInstanceFromCache: (state, { payload }) => {
-      updateInstance(state, payload);
     }
   },
   extraReducers(builder) {
@@ -143,21 +140,9 @@ const instanceSlice = createSlice({
         }
       )
       .addMatcher(
-        api.endpoints.getInstance.matchFulfilled,
-        (state, { payload }) => {
-          updateInstance(state, payload);
-        }
-      )
-      .addMatcher(
         api.endpoints.getInstance.matchPending,
         state => {
           state.image = null;
-        }
-      )
-      .addMatcher(
-        api.endpoints.getPreview.matchFulfilled,
-        (state, { payload }) => {
-          updateInstance(state, payload);
         }
       )
       .addMatcher(
@@ -173,11 +158,6 @@ export const selectTypeMapping = (state, name) => state.instance.typeMappings[na
 
 export const selectPreviousInstance = state => state.instance.history.length?state.instance.history[state.instance.history.length-1]:null;
 
-export const { setInstanceId, reset, syncHistory, showImage, setTab } = instanceSlice.actions;
-
-export const instancesCacheActions = {
-  "getInstance": instanceSlice.actions.setInstanceFromCache,
-  "getPreview": instanceSlice.actions.setInstanceFromCache
-};
+export const { requestInstance, reset, setInstance, syncHistory, showImage, setTab } = instanceSlice.actions;
 
 export default instanceSlice.reducer;
