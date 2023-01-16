@@ -32,7 +32,7 @@ import Watermark from "../../components/Watermark/Watermark";
 import Notification from "../../components/Notification/Notification";
 
 import { setGroup } from "../../features/groups/groupsSlice";
-import { setInstanceId, syncHistory, selectPreviousInstance } from "../../features/instance/instanceSlice";
+import { requestInstance, syncHistory, selectPreviousInstance } from "../../features/instance/instanceSlice";
 
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
@@ -56,7 +56,7 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
   useEffect(() => {
     if (!initializedRef.current !== instanceId) {
       initializedRef.current = instanceId;
-      dispatch(setInstanceId({
+      dispatch(requestInstance({
         instanceId: instanceId,
         context: location.state
       }));

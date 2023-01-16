@@ -120,22 +120,6 @@ public class Search {
                 .body(citation);
     }
 
-//    @PostMapping("/citations")
-//    public ResponseEntity<Map<String, String>> postCitations(@RequestBody List<String> doisWithoutPrefix, @RequestParam("style") String style, @RequestParam("contentType") String contentType) {
-//        if (CollectionUtils.isEmpty(doisWithoutPrefix)) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        Map<String, String> citations = new HashMap<>();
-//        doisWithoutPrefix.forEach(doiWithoutPrefix -> {
-//            String doi = String.format("https://doi.org/%s", doiWithoutPrefix);
-//            String citation = doiCitationFormatter.getDOICitation(doi, style, contentType);
-//            if (StringUtils.isNotBlank(citation)) {
-//                citations.put(doiWithoutPrefix, citation);
-//            }
-//        });
-//        return ResponseEntity.ok(citations);
-//    }
-
     @GetMapping("/groups")
     public ResponseEntity<?> getGroups(Principal principal) {
         if (searchController.isInInProgressRole(principal)) {

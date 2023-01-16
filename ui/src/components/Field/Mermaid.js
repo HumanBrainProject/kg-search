@@ -67,7 +67,7 @@ const Detail = ({ details, callbackFunctionName }) => {
     return () => {
       delete window[callbackFunctionName];
     };
-  }, []);
+  }, [callbackFunctionName]);
 
   const detail = detailId && details[detailId];
 

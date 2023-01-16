@@ -25,7 +25,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { trackEvent } from "../../../app/services/api";
-import { setInstanceId } from "../../../features/instance/instanceSlice";
+import { requestInstance } from "../../../features/instance/instanceSlice";
 
 import { Hit } from "./Hit";
 
@@ -40,7 +40,7 @@ const HitButton = ({ data }) => {
 
   const handleClick = e => {
     if (!e.ctrlKey) {
-      dispatch(setInstanceId({
+      dispatch(requestInstance({
         instanceId: data.id
       }));
     }

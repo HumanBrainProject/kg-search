@@ -27,8 +27,8 @@ import { api } from "./services/api";
 import applicationReducer from "../features/application/applicationSlice";
 import authReducer, { sessionFailure } from "../features/auth/authSlice";
 import groupsReducer from "../features/groups/groupsSlice";
-import searchReducer, { searchCacheActions } from "../features/search/searchSlice";
-import instanceReducer, { instancesCacheActions } from "../features/instance/instanceSlice";
+import searchReducer from "../features/search/searchSlice";
+import instanceReducer from "../features/instance/instanceSlice";
 
 const rootReducer = {
   application: applicationReducer,
@@ -37,29 +37,6 @@ const rootReducer = {
   search: searchReducer,
   instance: instanceReducer,
   [api.reducerPath]: api.reducer
-};
-
-const cacheActions = [
-  searchCacheActions,
-  instancesCacheActions
-];
-
-const dispatchQueryResultFromCacheMiddleware = ({ dispatch, getState }) => next => action => {
-  if (action?.error?.name === "ConditionError") {
-    const endpointName = action?.meta?.arg?.endpointName;
-    const queryCacheKey = action?.meta?.arg?.queryCacheKey;
-    if (endpointName && queryCacheKey) {
-      const state = getState();
-      const payload = state?.api?.queries?.[queryCacheKey]?.data;
-      cacheActions.forEach(item => {
-        const cacheAction = item[endpointName];
-        if (cacheAction) {
-          dispatch(cacheAction(payload));
-        }
-      });
-    }
-  }
-  return next(action);
 };
 
 const sessionFailureMiddleware = ({ dispatch }) => next => action => {
@@ -78,15 +55,13 @@ const prodConfiguration = {
   middleware: getDefaultMiddleware => getDefaultMiddleware()
     .concat(api.middleware)
     .concat(sessionFailureMiddleware)
-    .concat(dispatchQueryResultFromCacheMiddleware)
 };
 
 const developmentConfiguration = {
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
     .concat(api.middleware)
     .concat(sessionFailureMiddleware)
-    .concat(dispatchQueryResultFromCacheMiddleware)
     .concat(logger)
 };
 

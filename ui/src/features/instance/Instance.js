@@ -26,7 +26,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { useGetInstanceQuery, useGetPreviewQuery, trackEvent, getError } from "../../app/services/api";
-import { reset } from "./instanceSlice";
+import { setInstance, reset } from "./instanceSlice";
 import { selectIsCurated } from "../groups/groupsSlice";
 import { logout } from "../auth/authSlice";
 
@@ -42,6 +42,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
   const dispatch = useDispatch();
 
   const id = useSelector(state => state.instance.instanceId);
+  const instanceData = useSelector(state => state.instance.data);
   const group = useSelector(state => state.groups.group);
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
   const isCurated = useSelector(state => selectIsCurated(state));
@@ -71,7 +72,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
   const instanceResult = useGetInstanceQuery({id: id, group: group}, { skip: !id || isPreview || (isSearch && !isSearchInitialized)});
 
   const {
-    //data,
+    data,
     error,
     isUninitialized,
     //isLoading,
@@ -80,6 +81,12 @@ const Instance = ({ isPreview, isSearch, path }) => {
     isError,
     refetch,
   } = isPreview?previewResult:instanceResult;
+
+  useEffect(() => {
+    if (!isUninitialized && !isFetching && !isError && id !== instanceData?.id) {
+      dispatch(setInstance(data));
+    }
+  }, [id, isUninitialized, data, isFetching, isError, instanceData, dispatch]);
 
   if (!id || (isSearch && !isSearchInitialized)) {
     return null;

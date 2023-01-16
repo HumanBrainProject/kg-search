@@ -44,10 +44,6 @@ const DetailView = () => {
 
   const current = useSelector(state => state.instance.data);
   const history = useSelector(state => state.instance.history);
-  const data = current?[
-    ...history.map(() => null),
-    current
-  ]: [];
 
   const handleOnBack = () => navigate(-1);
 
@@ -55,7 +51,13 @@ const DetailView = () => {
     dispatch(reset());
   };
 
-  if (data.length) {
+  if (current) {
+
+    const data = [
+      ...history.map(() => null),
+      current
+    ];
+
     return (
       <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
         <Carousel className="kgs-detailView" data={data} itemComponent={itemComponent} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />

@@ -38,7 +38,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Group", "Search", "Instance", "Preview", "Files", "PreviewFiles", "Format", "PreviewFormat", "GroupingType", "PreviewGroupingType", "LinkedInstance", "LinkedPreview"],
+  tagTypes: tagTypes,
   endpoints: builder => ({
     getSettings: builder.query({
       //query: () => "../static/data/settings.json",
@@ -66,8 +66,7 @@ export const api = createApi({
         method: "POST",
         body: payload
       }),
-      //keepUnusedDataFor: 600, // 10 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 600, // 10 minutes cache
       providesTags: ["Search"]
     }),
     getInstance: builder.query({
@@ -79,8 +78,7 @@ export const api = createApi({
       query: ({ id, group }) => `/groups/${group}/documents/${id}`,
       //transformResponse: (data, meta, arg) => data,
       transformResponse: transformInstanceResponse,
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
       providesTags: ["Instance"],
     }),
     getPreview: builder.query({
@@ -95,8 +93,7 @@ export const api = createApi({
         responseHandler: "text"
       }),
       transformResponse: citation => sanitizeHtml(citation, { allowedTags: [], allowedAttributes: {} }),
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
     }),
     getBibtex: builder.query({
       query: doi => ({
@@ -104,8 +101,7 @@ export const api = createApi({
         responseHandler: "text"
       }),
       transformResponse: bibtex => window.URL.createObjectURL(new Blob([bibtex])),
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
     }),
     listFiles: builder.query({
       query: ({ repositoryId, group, searchAfter, groupingType, fileFormat, size }) => {
@@ -124,8 +120,7 @@ export const api = createApi({
         }
         return `/groups/${group}/repositories/${repositoryId}/files${params.length?params:""}`;
       },
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
       providesTags: ["Files"]
     }),
     listPreviewFiles: builder.query({
@@ -150,8 +145,7 @@ export const api = createApi({
     }),
     listFormats: builder.query({
       query: ({ repositoryId, group }) => `/groups/${group}/repositories/${repositoryId}/files/formats`,
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
       providesTags: ["Format"]
     }),
     listPreviewFormats: builder.query({
@@ -161,8 +155,7 @@ export const api = createApi({
     }),
     listGroupingTypes: builder.query({
       query: ({ repositoryId, group }) => `/groups/${group}/repositories/${repositoryId}/files/groupingTypes`,
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
       providesTags: ["GroupingType"]
     }),
     listPreviewGroupingTypes: builder.query({
@@ -175,8 +168,7 @@ export const api = createApi({
       query: ({ id, group }) => `/groups/${group}/documents/${id}`,
       //transformResponse: (data, meta, arg) => data,
       transformResponse: transformInstanceResponse,
-      //keepUnusedDataFor: 1800, // 30 minutes cache
-      keepUnusedDataFor: 0.0001, // TODO: reenable cache when bug fixed
+      keepUnusedDataFor: 1800, // 30 minutes cache
       providesTags: ["LinkedInstance"]
     }),
     getLinkedPreview: builder.query({

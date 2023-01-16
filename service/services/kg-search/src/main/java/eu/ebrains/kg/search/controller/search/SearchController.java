@@ -89,6 +89,10 @@ public class SearchController extends FacetAggregationUtils {
         this.kg = kg;
     }
 
+    public boolean isKGDev(Principal principal) {
+        return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "group", "group-kg-devs");
+    }
+
     public boolean isInInProgressRole(Principal principal) {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }

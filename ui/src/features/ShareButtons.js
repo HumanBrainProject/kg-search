@@ -27,13 +27,10 @@ import { useLocation } from "react-router-dom";
 
 import ShareButtonsComponent from "../components/ShareButtons/ShareButtons";
 
-const getUrlToShare = (location, data, group, defaultGroup) => {
-  if (location.pathname === "/" && data) {
-    const id = data.id;
-    if (id) {
-      const rootPath = window.location.pathname.substring(0, window.location.pathname.length - location.pathname.length);
-      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup ? ("?group=" + group) : ""}`;
-    }
+const getUrlToShare = (location, instanceId, group, defaultGroup) => {
+  if (location.pathname === "/" && instanceId) {
+    const rootPath = window.location.pathname.substring(0, window.location.pathname.length - location.pathname.length);
+    return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${instanceId}${group !== defaultGroup ? ("?group=" + group) : ""}`;
   }
   return window.location.href;
 };
@@ -41,11 +38,11 @@ const getUrlToShare = (location, data, group, defaultGroup) => {
 const ShareButtons = () => {
   const location = useLocation();
 
-  const data = useSelector(state => state.instance.data);
+  const instanceId = useSelector(state => state.instance.instanceId);
   const group = useSelector(state => state.groups.group);
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
 
-  const url = getUrlToShare(location, data, group, defaultGroup);
+  const url = getUrlToShare(location, instanceId, group, defaultGroup);
 
   return (
     <ShareButtonsComponent url={url} />
