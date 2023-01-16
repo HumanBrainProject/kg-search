@@ -55,7 +55,6 @@ import java.util.*;
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class Search {
     private final KGV2ServiceClient KGV2ServiceClient;
-    private final ESServiceClient esServiceClient;
     private final SettingsController definitionController;
     private final SearchController searchController;
     private final TranslationController translationController;
@@ -63,9 +62,8 @@ public class Search {
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
 
-    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
+    public Search(KGV2ServiceClient KGV2ServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
         this.KGV2ServiceClient = KGV2ServiceClient;
-        this.esServiceClient = esServiceClient;
         this.definitionController = definitionController;
         this.searchController = searchController;
         this.translationController = translationController;
@@ -126,22 +124,6 @@ public class Search {
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(citation);
     }
-
-//    @PostMapping("/citations")
-//    public ResponseEntity<Map<String, String>> postCitations(@RequestBody List<String> doisWithoutPrefix, @RequestParam("style") String style, @RequestParam("contentType") String contentType) {
-//        if (CollectionUtils.isEmpty(doisWithoutPrefix)) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        Map<String, String> citations = new HashMap<>();
-//        doisWithoutPrefix.forEach(doiWithoutPrefix -> {
-//            String doi = String.format("https://doi.org/%s", doiWithoutPrefix);
-//            String citation = doiCitationFormatter.getDOICitation(doi, style, contentType);
-//            if (StringUtils.isNotBlank(citation)) {
-//                citations.put(doiWithoutPrefix, citation);
-//            }
-//        });
-//        return ResponseEntity.ok(citations);
-//    }
 
     @GetMapping("/groups")
     public ResponseEntity<?> getGroups(Principal principal) { 
