@@ -23,7 +23,7 @@ class Matomo {
     if (this.reactPiwik && url) {
       ReactPiwik.push(["setCustomUrl", url]);
     } else {
-      console.info("%cMatomo:trackCustomUrl", style, url);
+      console.info("%cMatomo:setCustomUrl", style, url);
     }
   }
 

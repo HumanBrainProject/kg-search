@@ -32,7 +32,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class FullNameRefForResearchProductVersion extends FullNameRefWithVersion {
+public class FullNameRefForResearchProductVersion extends FullNameRefWithVersion implements FullNameRefForResearchProduct {
     private String fallbackName;
     private List<String> contributors;
     private String doi;

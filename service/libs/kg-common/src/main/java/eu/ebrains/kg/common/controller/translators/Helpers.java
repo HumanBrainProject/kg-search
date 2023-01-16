@@ -256,7 +256,7 @@ public class Helpers {
 
     }
 
-    public static void addResearchProducts(Map<String, FullNameRefForResearchProductVersion> inputOrOutputData, List<FullNameRefForResearchProductVersion> list) {
+    public static void addResearchProducts(Map<String, FullNameRefForResearchProduct> inputOrOutputData, List<FullNameRefForResearchProductVersion> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(l -> {
                 if (!inputOrOutputData.containsKey(l.getId())) {
@@ -266,7 +266,18 @@ public class Helpers {
         }
     }
 
-    public static void addResearchProductsFromDOIs(Map<String, FullNameRefForResearchProductVersion> inputOrOutputData, List<DOI> list) {
+    public static void addResearchProducts(Map<String, FullNameRefForResearchProduct> inputOrOutputData, List<FullNameRefForResearchProductVersionTarget> list, String tab) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> {
+                if (!inputOrOutputData.containsKey(l.getId())) {
+                    l.setTab(tab);
+                    inputOrOutputData.put(l.getId(), l);
+                }
+            });
+        }
+    }
+
+    public static void addResearchProductsFromDOIs(Map<String, FullNameRefForResearchProduct> inputOrOutputData, List<DOI> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(l -> {
                 if (l.getResearchProduct() != null && !inputOrOutputData.containsKey(l.getResearchProduct().getId())) {

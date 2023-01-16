@@ -214,10 +214,11 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
 
     private BasicHierarchyElement<BrainAtlas.BrainAtlasVersion> buildHierarchyTree(BrainAtlasV3 brainAtlasV3, BrainAtlasVersionGroup versionGroup, BrainAtlasV3.BrainAtlasVersion version) {
         BasicHierarchyElement<BrainAtlas.BrainAtlasVersion> e = new BasicHierarchyElement<>();
-        e.setKey(version.getId());
+        e.setKey(IdUtils.getUUID(version.getId()));
         e.setTitle(versionGroup != null ? versionGroup.getReducedVersionName(version) : version.getVersionIdentifier());
         e.setColor("#ffbe00");
         BrainAtlas.BrainAtlasVersion data = new BrainAtlas.BrainAtlasVersion();
+        data.setId(IdUtils.getUUID(version.getId()));
         data.setCoordinateSpace(ref(version.getCoordinateSpace()));
         data.setTitle(value(version.getVersionIdentifier()));
         data.setDefinedIn(ref(version.getDefinedIn()));

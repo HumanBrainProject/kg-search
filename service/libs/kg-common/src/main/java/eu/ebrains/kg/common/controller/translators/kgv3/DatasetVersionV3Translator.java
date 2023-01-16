@@ -406,13 +406,14 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setSpecimenBySubject(specimenBySubject);
         }
 
-        Map<String, FullNameRefForResearchProductVersion> inputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProduct> inputResearchProducts = new HashMap<>();
         Helpers.addResearchProductsFromDOIs(inputResearchProducts, datasetVersion.getInputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputFiles());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputFileBundles());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputFiles());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputFileBundles());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputBrainAtlasVersions(), "Versions");
         d.setInputData(refVersion(new ArrayList<>(inputResearchProducts.values()), true));
 
         Set<TargetExternalReference> externalInputData = new HashSet<>();
@@ -429,7 +430,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
-        Map<String, FullNameRefForResearchProductVersion> outputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProduct> outputResearchProducts = new HashMap<>();
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputDOIs());
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFiles());
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFileBundles());
