@@ -90,7 +90,7 @@ public class SearchController extends FacetAggregationUtils {
     }
 
     public boolean isKGDev(Principal principal) {
-        return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "groups", "group-kg-devs");
+        return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "group", "group-kg-devs");
     }
 
     public boolean isInInProgressRole(Principal principal) {
