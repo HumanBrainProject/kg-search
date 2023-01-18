@@ -23,11 +23,11 @@
 
 package eu.ebrains.kg.indexing.api;
 
-import eu.ebrains.kg.indexing.controller.indexing.IndexingController;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.ErrorReportResult;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
+import eu.ebrains.kg.indexing.controller.indexing.IndexingController;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,10 +72,10 @@ public class Indexing {
                 //In full replacement mode, we first create a temporary index
                 indexingController.recreateIndex(dataStage, m.getTargetClass(), m.isAutoRelease(), true);
                 //Which we're then going to populate.
-                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage, true);
+                final ErrorReportResult.ErrorReportResultByTargetType errorsByTargetType = indexingController.populateIndex(m, dataStage, true);
                 //Eventually, we're reindexing the temporary index to the real one
                 indexingController.reindexTemporaryToReal(dataStage, m.getTargetClass(), m.isAutoRelease());
-                return handleErrorReportResultByTargetType(m, errorsBySource);
+                return errorsByTargetType;
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
@@ -92,10 +92,10 @@ public class Indexing {
                 //In full replacement mode, we first create a temporary index
                 indexingController.recreateIndex(dataStage, m.getTargetClass(), m.isAutoRelease(), true);
                 //Which we're then going to populate.
-                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource =  indexingController.populateIndex(m, dataStage, true);
+                final ErrorReportResult.ErrorReportResultByTargetType errorsByTargetType =  indexingController.populateIndex(m, dataStage, true);
                 //Eventually, we're reindexing the temporary index to the real one
                 indexingController.reindexTemporaryToReal(dataStage, m.getTargetClass(), m.isAutoRelease());
-                return handleErrorReportResultByTargetType(m, errorsBySource);
+                return errorsByTargetType;
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
@@ -110,9 +110,9 @@ public class Indexing {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
                 indexingController.recreateIndex(dataStage, m.getTargetClass(), m.isAutoRelease(), true);
-                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage, true);
+                ErrorReportResult.ErrorReportResultByTargetType errorsByTargetType = indexingController.populateIndex(m, dataStage, true);
                 indexingController.reindexTemporaryToReal(dataStage, m.getTargetClass(), m.isAutoRelease());
-                return handleErrorReportResultByTargetType(m, errorsBySource);
+                return errorsByTargetType;
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
@@ -125,10 +125,7 @@ public class Indexing {
     @Operation(summary="incremental update")
     public ResponseEntity<ErrorReportResult> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage) {
         try {
-            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).map(m -> {
-                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage, false);
-                return handleErrorReportResultByTargetType(m, errorsBySource);
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).map(m -> indexingController.populateIndex(m, dataStage, false)).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);
@@ -140,10 +137,7 @@ public class Indexing {
     @Operation(summary="incremental update by type")
     public ResponseEntity<ErrorReportResult> incrementalUpdateByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
         try {
-            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).map(m -> {
-                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource =  indexingController.populateIndex(m, dataStage, false);
-                return handleErrorReportResultByTargetType(m, errorsBySource);
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).map(m -> indexingController.populateIndex(m, dataStage, false)).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);
@@ -155,10 +149,7 @@ public class Indexing {
     @Operation(summary="incremental auto release")
     public ResponseEntity<ErrorReportResult> incrementalUpdateAutoRelease(@RequestParam("databaseScope") DataStage dataStage) {
         try {
-            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
-                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage, false);
-                return  handleErrorReportResultByTargetType(m, errorsBySource);
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> indexingController.populateIndex(m, dataStage, false)).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental autorelease indexing", e);
@@ -176,18 +167,6 @@ public class Indexing {
     @Operation(description="Remove the JSON resource with the given id")
     public void deleteResource(@PathVariable("id") String id) {
         indexingController.deleteResource(id);
-    }
-
-
-
-    private ErrorReportResult.ErrorReportResultByTargetType handleErrorReportResultByTargetType(TranslatorModel<?, ?> m, List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource) {
-        if (!errorsBySource.isEmpty()) {
-            ErrorReportResult.ErrorReportResultByTargetType e = new ErrorReportResult.ErrorReportResultByTargetType();
-            e.setTargetType(m.getTargetClass().getSimpleName());
-            e.setErrorsBySource(errorsBySource);
-            return e;
-        }
-        return null;
     }
 
     private ResponseEntity<ErrorReportResult> handleErrorReportResult(List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget) {

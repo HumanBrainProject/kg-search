@@ -68,17 +68,16 @@ public class IndexingController {
         this.kgV3 = kgV3;
     }
 
-    public <v3Input, Target extends TargetInstance> List<ErrorReportResult.ErrorReportResultBySourceType> populateIndex(TranslatorModel<v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
-        List<ErrorReportResult.ErrorReportResultBySourceType> errorReportBySourceType = new ArrayList<>();
+    public <v3Input, Target extends TargetInstance> ErrorReportResult.ErrorReportResultByTargetType populateIndex(TranslatorModel<v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
+        ErrorReportResult.ErrorReportResultByTargetType errorReportByTargetType =  null;
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
         if (translatorModel.getV3translator() != null) {
             final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.emptySet(), instance -> instance, translatorModel.isAutoRelease(), temporary);
             if (!updateResultV3.errors.isEmpty()) {
-                ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
-                e.setSourceType(translatorModel.getV3translator().getSourceType().getSimpleName());
-                e.setErrors(updateResultV3.errors);
-                errorReportBySourceType.add(e);
+                errorReportByTargetType = new ErrorReportResult.ErrorReportResultByTargetType();
+                errorReportByTargetType.setTargetType(translatorModel.getV3translator().getTargetType().getSimpleName());
+                errorReportByTargetType.setErrors(updateResultV3.errors);
             }
             searchableIds.addAll(updateResultV3.searchableIds);
             nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
@@ -89,7 +88,7 @@ public class IndexingController {
             elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(translatorModel.getTargetClass(), dataStage, searchableIds, temporary);
             elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds);
         }
-        return errorReportBySourceType;
+        return errorReportByTargetType;
     }
 
     private static class UpdateResult {
