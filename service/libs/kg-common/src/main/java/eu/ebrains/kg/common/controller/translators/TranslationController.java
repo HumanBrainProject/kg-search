@@ -36,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
+import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.common.controller.translators.Helpers.*;
+import static eu.ebrains.kg.common.controller.translators.Helpers.getStats;
 
 @Component
 public class TranslationController {
@@ -80,30 +81,25 @@ public class TranslationController {
             logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
             instanceResults.setErrors(new ErrorReport());
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
-                        try {
-                            return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold));
-                        } catch (TranslationException e) {
-                            if (instanceResults.getErrors().get(e.getIdentifier()) != null) {
-                                instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
-                            } else {
-                                List<String> errors = new ArrayList<>();
-                                errors.add(e.getMessage());
-                                instanceResults.getErrors().put(e.getIdentifier(), errors);
-                            }
-                            return null;
-                        } catch (Exception e) {
-                            String id = "unknown";
-                            if (s instanceof SourceInstanceV3) {
-                                id = ((SourceInstanceV3) s).getId();
-                            } else if (s instanceof SourceInstanceV1andV2) {
-                                id = ((SourceInstanceV1andV2) s).getIdentifier();
-                            }
-                            instanceResults.getErrors().put(id, Collections.singletonList(String.format("Unexpected exception: %s", e.getMessage())));
-                            logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
-                            return null;
-                        }
+                try {
+                    return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold));
+                } catch (TranslationException e) {
+                    String id = IdUtils.getUUID(e.getIdentifier());
+                    List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
+                    errors.add(e.getMessage());
+                    return null;
+                } catch (Exception e) {
+                    String id = "unknown";
+                    if (s instanceof SourceInstanceV3) {
+                        id = IdUtils.getUUID(((SourceInstanceV3) s).getId());
+                    } else if (s instanceof SourceInstanceV1andV2) {
+                        id = IdUtils.getUUID(((SourceInstanceV1andV2) s).getIdentifier());
                     }
-            ).filter(Objects::nonNull).collect(Collectors.toList());
+                    instanceResults.getErrors().put(id, Collections.singletonList(String.format("Unexpected exception: %s", e.getMessage())));
+                    logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
+                    return null;
+                }
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             result.setTargetInstances(instances);
             result.setFrom(instanceResults.getFrom());
             result.setSize(instanceResults.getSize());
