@@ -23,11 +23,11 @@
 
 package eu.ebrains.kg.indexing.api;
 
-import eu.ebrains.kg.indexing.controller.indexing.IndexingController;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.ErrorReportResult;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
+import eu.ebrains.kg.indexing.controller.indexing.IndexingController;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,7 +194,7 @@ public class Indexing {
         if (!errorsByTarget.isEmpty()) {
             final ErrorReportResult result = new ErrorReportResult();
             result.setErrorsByTarget(errorsByTarget);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }
         return ResponseEntity.ok().build();
     }
