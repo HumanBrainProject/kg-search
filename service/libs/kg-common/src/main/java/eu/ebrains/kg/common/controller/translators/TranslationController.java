@@ -95,7 +95,8 @@ public class TranslationController {
                     } else if (s instanceof SourceInstanceV1andV2) {
                         id = IdUtils.getUUID(((SourceInstanceV1andV2) s).getIdentifier());
                     }
-                    instanceResults.getErrors().put(id, Collections.singletonList(String.format("Unexpected exception: %s", e.getMessage())));
+                    List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
+                    errors.add(String.format("Unexpected exception: %s", e.getMessage()));
                     logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
                     return null;
                 }
