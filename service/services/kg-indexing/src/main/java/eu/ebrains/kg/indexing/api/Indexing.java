@@ -125,6 +125,12 @@ public class Indexing {
     @Operation(summary="incremental update")
     public ResponseEntity<ErrorReportResult> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage) {
         try {
+//            ErrorReport rep = new ErrorReport();
+//            rep.put("44cfbba7-33d7-49bf-856d-e67b9335d51a", Collections.singletonList("foobar"));
+//            ErrorReportResult.ErrorReportResultByTargetType report = new ErrorReportResult.ErrorReportResultByTargetType();
+//            report.setTargetType("DatasetVersion");
+//            report.setErrors(rep);
+//            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget =Collections.singletonList(report);
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).map(m -> indexingController.populateIndex(m, dataStage, false)).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
