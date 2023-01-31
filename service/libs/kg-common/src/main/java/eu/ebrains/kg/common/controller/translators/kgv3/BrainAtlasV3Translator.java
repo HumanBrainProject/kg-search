@@ -93,7 +93,7 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         }
         b.setHomepage(link(brainAtlasV3.getHomepage()));
         handleCitation(brainAtlasV3, b);
-        final List<BrainAtlasVersionGroup> brainAtlasVersionGroups = organizeBrainAtlasVersions(brainAtlasV3.getBrainAtlasVersion());
+        final List<BrainAtlasVersionGroup> brainAtlasVersionGroups = organizeBrainAtlasVersions(brainAtlasV3.getBrainAtlasVersion(), translatorUtils.getErrors());
         b.setParcellationTerminology(buildHierarchyTreeForParcellationTerminology(brainAtlasV3, brainAtlasVersionGroups));
         b.setVersions(buildHierarchyTreeForVersions(brainAtlasV3, brainAtlasVersionGroups));
         return b;
@@ -143,7 +143,7 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         }
     }
 
-    private List<BrainAtlasVersionGroup> organizeBrainAtlasVersions(List<BrainAtlasV3.BrainAtlasVersion> brainAtlasVersions) {
+    private List<BrainAtlasVersionGroup> organizeBrainAtlasVersions(List<BrainAtlasV3.BrainAtlasVersion> brainAtlasVersions, List<String> errors) {
         List<BrainAtlasVersionGroup> brainAtlasVersionGroups = new ArrayList<>();
 
         // Group by alternative versions
@@ -175,7 +175,9 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
                     if (previous.isPresent()) {
                         final int index = sortedResult.indexOf(previous.get());
                         if (evaluatedPosition != null && evaluatedPosition != index) {
-                            logger.error("Contradicting sorting order of the brain atlas version group {} - its versions provide different orders in sequence", version.getId());
+                            String error = String.format("Contradicting sorting order of the brain atlas version group %s - its versions provide different orders in sequence", version.getId());
+                            logger.error(error);
+                            errors.add(error);
                         } else {
                             evaluatedPosition = index;
                         }
@@ -184,7 +186,9 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
                     if (newest == null) {
                         newest = true;
                     } else {
-                        logger.error("Contradicting information - brain atlas version {} is meant to be the newest but its alternative versions say something else", version.getId());
+                        final String error = String.format("Contradicting information - brain atlas version %s is meant to be the newest but its alternative versions say something else", version.getId());
+                        logger.error(error);
+                        errors.add(error);
                     }
                 }
             }

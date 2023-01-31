@@ -100,7 +100,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (!CollectionUtils.isEmpty(versions) && versions.size()>1) {
             s.setVersion(softwareVersion.getVersion());
-            List<Version> sortedVersions = Helpers.sort(versions);
+            List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(software.getId()), "version overview"));
             s.setVersions(references);

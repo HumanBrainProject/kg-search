@@ -112,7 +112,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         if(m.getCitation()!=null){
             m.setCitationHint(value("Using this citation allows you to reference all versions of this model with one citation.\nUsage of version specific models and metadata should be acknowledged by citing the individual model version."));
         }
-        List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(model.getVersions());
+        List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(model.getVersions(), translatorUtils.getErrors());
         List<Children<eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version>> modelVersions = sortedVersions.stream().map(v -> {
             eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version version = new eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version();
             version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));

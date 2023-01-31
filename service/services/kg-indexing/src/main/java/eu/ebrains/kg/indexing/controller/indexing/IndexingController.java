@@ -104,7 +104,7 @@ public class IndexingController {
                         final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, IdUtils.getUUID(id), true);
                         if (source != null) {
                             try {
-                                return translator.translate(source, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, null));
+                                return translator.translate(source, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, null, null));
                             } catch (TranslationException e) {
                                 //We don't take this error any further since only the "old" world is affected.
                                 logger.error(e.getMessage());

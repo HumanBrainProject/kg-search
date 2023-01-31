@@ -94,7 +94,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
             m.setVersion(modelVersion.getVersion());
-            List<Version> sortedVersions = Helpers.sort(versions);
+            List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(model.getId()), "version overview"));
             m.setVersions(references);

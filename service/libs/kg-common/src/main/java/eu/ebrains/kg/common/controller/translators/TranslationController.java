@@ -42,6 +42,7 @@ import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
@@ -65,7 +66,7 @@ public class TranslationController {
         this.esServiceClient = esServiceClient;
     }
 
-    public <Source , Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
+    public <Source , Target extends TargetInstance> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
@@ -79,10 +80,22 @@ public class TranslationController {
             Stats stats = getStats(instanceResults, from);
             translator.setConfiguration(configuration);
             logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-            instanceResults.setErrors(new ErrorReport());
+            if(instanceResults.getErrors() ==null){
+                instanceResults.setErrors(new ErrorReport());
+            }
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                 try {
-                    return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold));
+                    List<String> errors = new ArrayList<>();
+                    final Target r = translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold, errors));
+                    if(!CollectionUtils.isEmpty(errors)) {
+                        String id = IdUtils.getUUID(r.getId());
+                        if (instanceResults.getErrors().get(id) != null) {
+                            instanceResults.getErrors().get(id).addAll(errors);
+                        } else {
+                            instanceResults.getErrors().put(id, errors);
+                        }
+                    }
+                    return r;
                 } catch (TranslationException e) {
                     String id = IdUtils.getUUID(e.getIdentifier());
                     List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
@@ -137,7 +150,7 @@ public class TranslationController {
             return null;
         }
         translator.setConfiguration(configuration);
-        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient,null));
+        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient,null, null));
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
         }

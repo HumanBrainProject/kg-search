@@ -125,10 +125,12 @@ public class Helpers {
         return getFullName(familyName, givenName);
     }
 
-    private static Version getByPreviousVersion(String previousVersion, List<Version> versions) {
+    private static Version getByPreviousVersion(String previousVersion, List<Version> versions, List<String> errors) {
         List<Version> previous = versions.stream().filter(v -> previousVersion == null ? v.getIsNewVersionOf() == null : v.getIsNewVersionOf() != null && v.getIsNewVersionOf().equals(previousVersion)).collect(Collectors.toList());
         if (previous.size() > 1) {
-            logger.error(String.format("Ambiguous new versions detected. This is not valid. %s", previous.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+            final String error = String.format("Ambiguous new versions detected. This is not valid. %s", previous.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", ")));
+            logger.error(error);
+            errors.add(error);
             return null;
         } else if (CollectionUtils.isEmpty(previous)) {
             return null;
@@ -138,22 +140,18 @@ public class Helpers {
     }
 
 
-    public static List<Version> sort(List<Version> unsortedVersions) {
+    public static List<Version> sort(List<Version> unsortedVersions, List<String> errors) {
         List<Version> versions = new ArrayList<>();
         String previousVersion = null;
         Version v;
-        while ((v = getByPreviousVersion(previousVersion, unsortedVersions)) != null) {
+        while ((v = getByPreviousVersion(previousVersion, unsortedVersions, errors)) != null) {
             if (versions.contains(v)) {
-                logger.error(String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
-                versions.sort(Comparator.comparing(Version::getNaturalSortValue));
-                return unsortedVersions;
+                return circularDependencyError(unsortedVersions, errors, versions);
             }
             versions.add(v);
             previousVersion = v.getVersionIdentifier();
             if (previousVersion == null) {
-                logger.error(String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
-                versions.sort(Comparator.comparing(Version::getNaturalSortValue));
-                return unsortedVersions;
+                return circularDependencyError(unsortedVersions, errors, versions);
             }
         }
         if (CollectionUtils.isEmpty(versions)) {
@@ -167,6 +165,14 @@ public class Helpers {
             }
         }
         return versions;
+    }
+
+    private static List<Version> circularDependencyError(List<Version> unsortedVersions, List<String> errors, List<Version> versions) {
+        final String error = String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", ")));
+        logger.error(error);
+        errors.add(error);
+        versions.sort(Comparator.comparing(Version::getNaturalSortValue));
+        return unsortedVersions;
     }
 
     public static <E> Stats getStats(ResultsOfKG<E> result, int from) {

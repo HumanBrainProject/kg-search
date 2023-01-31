@@ -97,7 +97,7 @@ public class WorkflowRecipeVersionV3Translator extends TranslatorV3<WorkflowReci
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
             w.setVersion(workflowRecipeVersionV3.getVersionIdentifier());
-            List<Version> sortedVersions = Helpers.sort(versions);
+            List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(workflow.getId()), "version overview"));
             w.setVersions(references);

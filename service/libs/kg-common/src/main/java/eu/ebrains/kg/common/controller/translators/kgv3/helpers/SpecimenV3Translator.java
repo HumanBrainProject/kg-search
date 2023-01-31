@@ -48,11 +48,13 @@ public class SpecimenV3Translator extends TranslatorBase {
     //62bb226b-47f7-4294-bdff-66662d86e4d5 TS with multiple species and sex
 
 
-    public SpecimenV3Translator(String datasetVersionId) {
+    public SpecimenV3Translator(String datasetVersionId, List<String> errors) {
         this.translators = Arrays.asList(new SubjectTranslator(datasetVersionId), new SubjectGroupTranslator(datasetVersionId), new TissueSampleTranslator(datasetVersionId), new TissueSampleCollectionTranslator(datasetVersionId));
+        this.errors = errors;
     }
 
     private final List<SpecimenTranslator<?>> translators;
+    private final List<String> errors;
 
     private <T> SpecimenTranslator<T> getTranslator(DatasetVersionV3.StudiedSpecimen specimen) {
         return (SpecimenTranslator<T>) translators.stream().filter(t -> t.matches(specimen)).findFirst().orElse(null);
@@ -162,7 +164,9 @@ public class SpecimenV3Translator extends TranslatorBase {
     private BasicHierarchyElement<Object> translateToBasicHierarchyElement(DatasetVersionV3.StudiedState studiedState, GlobalTranslationContext context, boolean attachRootElementAsChild, int order, String parentRelationType) {
         final String uuid = IdUtils.getUUID(studiedState.getId());
         if (context.handledInstances.contains(uuid)) {
-            logger.error("Circular reference detected - breaking at instance {}", uuid);
+            String error = String.format("Circular reference detected - breaking at instance %s", uuid);
+            logger.error(error);
+            errors.add(error);
             return null;
         }
         BasicHierarchyElement<Object> elState = new BasicHierarchyElement<>();
@@ -625,7 +629,9 @@ public class SpecimenV3Translator extends TranslatorBase {
     private <T> BasicHierarchyElement<Object> translateToBasicHierarchyElement(DatasetVersionV3.StudiedSpecimen studiedSpecimen, GlobalTranslationContext context, boolean attachRootElementAsChild, String parentRelationType, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
         final String uuid = IdUtils.getUUID(studiedSpecimen.getId());
         if (context.handledInstances.contains(uuid)) {
-            logger.error("Circular reference detected - breaking at instance {}", uuid);
+            String error = String.format("Circular reference detected - breaking at instance %s", uuid);
+            logger.error(error);
+            errors.add(error);
             return null;
         }
         context.handledInstances.push(uuid);

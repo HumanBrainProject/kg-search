@@ -78,7 +78,7 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
             d.setCategory(new Value<>("Dataset Overview"));
             d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
-            List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(dataset.getVersions());
+            List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(dataset.getVersions(), translatorUtils.getErrors());
             List<Children<Version>> datasetVersions = sortedVersions.stream().map(v -> {
                 Version version = new Version();
                 version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));
