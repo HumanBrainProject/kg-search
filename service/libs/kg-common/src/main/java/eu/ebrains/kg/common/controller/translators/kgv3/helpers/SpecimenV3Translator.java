@@ -189,14 +189,20 @@ public class SpecimenV3Translator extends TranslatorBase {
             List<BasicHierarchyElement<?>> children = new ArrayList<>();
             if (!CollectionUtils.isEmpty(descendentStates)) {
                 //There are descendent states. For those which are completely connected to the current state, we can visualize them more naturally by attaching the specimen directly to the state (since it's true that the whole specimen is descendent from this state).
-                final List<DatasetVersionV3.StudiedSpecimen> fullyEnclosedDescendentSpecimen = descendentStates.stream().map(DatasetVersionV3.StudiedState::getParent).distinct().filter(d -> new HashSet<>(descendentStates).containsAll(d.getStudiedState())).collect(Collectors.toList());
+                final List<DatasetVersionV3.StudiedSpecimen> fullyEnclosedDescendentSpecimen = findFullyEnclosedDescendentSpecimen(descendentStates);
                 final Set<DatasetVersionV3.StudiedState> fullyEnclosedDescendentStates = fullyEnclosedDescendentSpecimen.stream().map(DatasetVersionV3.StudiedSpecimen::getStudiedState).flatMap(Collection::stream).collect(Collectors.toSet());
                 children.addAll(fullyEnclosedDescendentSpecimen.stream().map(s -> translateToBasicHierarchyElement(s, context, false, DESCENDENT_FROM, null)).filter(Objects::nonNull).collect(Collectors.toList()));
 
                 //Let's also add those which are not fully connected by attaching their state first.
                 final List<DatasetVersionV3.StudiedState> incompleteDescendentStates = descendentStates.stream().filter(d -> !fullyEnclosedDescendentStates.contains(d)).collect(Collectors.toList());
-                children.addAll(IntStream.range(0, incompleteDescendentStates.size()).mapToObj(idx -> translateToBasicHierarchyElement(incompleteDescendentStates.get(idx), context, true, idx, DESCENDENT_FROM)).filter(Objects::nonNull).collect(Collectors.toList()));
+                children.addAll(IntStream.range(0, incompleteDescendentStates.size()).mapToObj(idx -> {
+                    final DatasetVersionV3.StudiedState descendendState = incompleteDescendentStates.get(idx);
+                    boolean isDescendendWithinSameSpecimen = studiedState.getParent().getId().equals(descendendState.getParent().getId());
+                    return translateToBasicHierarchyElement(descendendState, context, !isDescendendWithinSameSpecimen, idx+(isDescendendWithinSameSpecimen ? order+1 : 0), DESCENDENT_FROM);
+                }).filter(Objects::nonNull).collect(Collectors.toList()));
             }
+
+
 
             if (attachRootElementAsChild && studiedState.getParent() != null) {
                 final BasicHierarchyElement<Object> parent = translateToBasicHierarchyElement(studiedState.getParent(), context, true, PART_OF, null);
@@ -215,6 +221,25 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
         context.handledInstances.pop();
         return elState;
+    }
+
+    private List<DatasetVersionV3.StudiedSpecimen> findFullyEnclosedDescendentSpecimen(List<DatasetVersionV3.StudiedState> descendentStates) {
+        Map<String, Set<String>> parentWithDescendendIds = new HashMap<>();
+        descendentStates.forEach(state -> {
+            final Set<String> includedIds = new HashSet<>();
+            includedIds.add(state.getId());
+            int includedIdsSize = 0;
+            // As long as we're still adding new inclusion ids, we continue
+            while(includedIds.size() > includedIdsSize) {
+                includedIdsSize = includedIds.size();
+                includedIds.addAll(state.getParent().getStudiedState().stream().filter(st -> st.getDescendedFrom().stream().anyMatch(includedIds::contains)).map(DatasetVersionV3.StudiedState::getId).collect(Collectors.toSet()));
+            }
+            if(!parentWithDescendendIds.containsKey(state.getParent().getId())){
+                parentWithDescendendIds.put(state.getParent().getId(), new HashSet<>());
+            }
+            parentWithDescendendIds.get(state.getParent().getId()).addAll(includedIds);
+        });
+        return descendentStates.stream().filter(st -> st.getParent().getStudiedState().stream().allMatch(s -> parentWithDescendendIds.get(st.getParent().getId()).contains(s.getId()))).map(DatasetVersionV3.StudiedState::getParent).distinct().collect(Collectors.toList());
     }
 
     // If there is only a single state available for this studied specimen, we can simplify the structure by merging it.
@@ -660,7 +685,8 @@ public class SpecimenV3Translator extends TranslatorBase {
                     el = mergeBasicHierarchyElements(el, singleState, children);
                 }
             } else {
-                children.addAll(IntStream.range(0, studiedSpecimen.getStudiedState().size()).mapToObj(idx -> translateToBasicHierarchyElement(studiedSpecimen.getStudiedState().get(idx), context, false, idx, DESCENDENT_FROM)).filter(Objects::nonNull).collect(Collectors.toList()));
+                final List<DatasetVersionV3.StudiedState> rootStates = getStudiedStateWithoutInternalDescendence(studiedSpecimen.getStudiedState());
+                children.addAll(IntStream.range(0, rootStates.size()).mapToObj(idx -> translateToBasicHierarchyElement(rootStates.get(idx), context, false, idx, DESCENDENT_FROM)).filter(Objects::nonNull).collect(Collectors.toList()));
             }
         }
         if (!CollectionUtils.isEmpty(children)) {
@@ -673,6 +699,11 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
         context.handledInstances.pop();
         return el;
+    }
+
+    private List<DatasetVersionV3.StudiedState> getStudiedStateWithoutInternalDescendence(List<DatasetVersionV3.StudiedState> original){
+        final Set<String> allIds = original.stream().map(DatasetVersionV3.StudiedState::getId).collect(Collectors.toSet());
+        return original.stream().filter(o -> o.getDescendedFrom() == null || o.getDescendedFrom().stream().noneMatch(allIds::contains)).collect(Collectors.toList());
     }
 
 
