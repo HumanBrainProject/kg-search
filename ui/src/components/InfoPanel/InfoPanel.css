@@ -57,6 +57,9 @@
     padding: 0 20px;
     overflow: hidden;
     overflow-y: auto;
+    text-align: justify;
+    text-align-last: left;
+    line-height: 1.1;
 }
 
 .kgs-info__content code {
