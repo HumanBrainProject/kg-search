@@ -59,7 +59,11 @@
     overflow-y: auto;
     text-align: justify;
     text-align-last: left;
-    line-height: 1.1;
+    line-height: 1;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    word-break: break-word;
 }
 
 .kgs-info__content code {
