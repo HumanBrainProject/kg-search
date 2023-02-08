@@ -131,24 +131,6 @@ public class SearchController extends FacetAggregationUtils {
         return result;
     }
 
-    private Map<String, Object> formatFilesResponse(Result filesFromRepo) {
-        Map<String, Object> result = new HashMap<>();
-        if (filesFromRepo != null && filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
-            List<Document> hits = filesFromRepo.getHits().getHits();
-            List<Object> data = hits.stream().map(Document::getSource).filter(Objects::nonNull).collect(Collectors.toList());
-            Result.Total total = filesFromRepo.getHits().getTotal();
-            result.put(TOTAL, total.getValue());
-            result.put("data", data);
-            if (!CollectionUtils.isEmpty(hits)) {
-                result.put("searchAfter", hits.get(hits.size() - 1).getId());
-            }
-        } else {
-            result.put(TOTAL, 0);
-            result.put("data", Collections.emptyList());
-        }
-        return result;
-    }
-
     private ResponseEntity<?> getFileAggregationFromRepo(DataStage stage, UUID id, String field) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
@@ -169,15 +151,31 @@ public class SearchController extends FacetAggregationUtils {
         return getFileAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, UUID id, UUID searchAfter, int size, String format, String groupingType) {
-        try {
-            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
-            Result filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);
-            Map<String, Object> result = formatFilesResponse(filesFromRepo);
-            return ResponseEntity.ok(result);
-        } catch (WebClientResponseException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, UUID id, String format, String groupingType) {
+        List<Object> data = new ArrayList<>();
+        UUID searchAfterUUID = null;
+        int total = 0;
+        boolean isFirstRequest = true;
+        String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
+        while (isFirstRequest || searchAfterUUID != null) {
+            isFirstRequest = false;
+            try {
+                Result filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfterUUID, 10000, format, groupingType);
+                List<Document> hits = filesFromRepo.getHits().getHits();
+                List<Object> paginatedData = hits.stream().map(Document::getSource).filter(Objects::nonNull).collect(Collectors.toList());
+                data.addAll(paginatedData);
+                if (!CollectionUtils.isEmpty(hits)) {
+                    searchAfterUUID = MetaModelUtils.castToUUID(hits.get(hits.size() - 1).getId());
+                } else {
+                    searchAfterUUID = null;
+                }
+                total = filesFromRepo.getHits().getTotal().getValue();
+            } catch (WebClientResponseException e) {
+                return ResponseEntity.status(e.getStatusCode()).build();
+            }
         }
+        Map<String, Object> result = Map.of(TOTAL, total, "data", data);
+        return ResponseEntity.ok(result);
     }
 
 

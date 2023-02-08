@@ -104,19 +104,13 @@ export const api = createApi({
       keepUnusedDataFor: 1800, // 30 minutes cache
     }),
     listFiles: builder.query({
-      query: ({ repositoryId, group, searchAfter, groupingType, fileFormat, size }) => {
+      query: ({ repositoryId, group, groupingType, fileFormat }) => {
         let params = "";
-        if (searchAfter) {
-          params += `?searchAfter=${encodeURIComponent(searchAfter)}`;
-        }
         if (groupingType) {
           params += `${params.length?"&":"?"}groupingType=${encodeURIComponent(groupingType)}`;
         }
         if (fileFormat) {
           params += `${params.length?"&":"?"}format=${encodeURIComponent(fileFormat)}`;
-        }
-        if (size) {
-          params += `${params.length?"&":"?"}size=${size}`;
         }
         return `/groups/${group}/repositories/${repositoryId}/files${params.length?params:""}`;
       },
@@ -124,19 +118,13 @@ export const api = createApi({
       providesTags: ["Files"]
     }),
     listPreviewFiles: builder.query({
-      query: ({ repositoryId, searchAfter, groupingType, fileFormat, size }) => {
+      query: ({ repositoryId, groupingType, fileFormat }) => {
         let params = "";
-        if (searchAfter) {
-          params += `?searchAfter=${encodeURIComponent(searchAfter)}`;
-        }
         if (groupingType) {
           params += `${params.length?"&":"?"}groupingType=${encodeURIComponent(groupingType)}`;
         }
         if (fileFormat) {
           params += `${params.length?"&":"?"}format=${encodeURIComponent(fileFormat)}`;
-        }
-        if (size) {
-          params += `${params.length?"&":"?"}size=${size}`;
         }
         return `/repositories/${repositoryId}/files/live${params.length?params:""}`;
       },

@@ -34,7 +34,7 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
 
   const handleChange = useMemo(() => v => onSelect(v?v:null), [onSelect]);
 
-  const selectList = useMemo(() => {
+  const normalizedList = useMemo(() => {
     if (!Array.isArray(list) || !list.length) {
       return [];
     }
@@ -46,7 +46,7 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
 
   if (error) {
     return (
-      <div>
+      <div className="kgs-fileFilter__info">
         <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
         <FontAwesomeIcon icon={faSyncAlt} onClick={onRetry} style={{cursor: "pointer"}}/>
       </div>
@@ -55,24 +55,24 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
 
   if (isLoading) {
     return (
-      <div>
+      <div className="kgs-fileFilter__info">
         <div className="spinner-border spinner-border-sm" role="status"></div>
         &nbsp;Retrieving {title}...
       </div>
     );
   }
 
-  if (!selectList.length) {
+  if (!normalizedList.length) {
     return null;
   }
 
   return (
-    <div><Select className="kgs-fileFilter" label={title} value={value} list={selectList} onChange={handleChange} /></div>
+    <div><Select className="kgs-fileFilter" label={title} value={value} list={normalizedList} onChange={handleChange} /></div>
   );
 
 };
 
-export const FileFilter = ({ title, show, useQuery, queryParameter, value, onSelect }) => {
+export const FileFilter = ({ title, useQuery, queryParameter, value, onSelect }) => {
 
   if (!useQuery) {
     throw new Error("FileFilter is missing prop useQuery");
@@ -87,15 +87,10 @@ export const FileFilter = ({ title, show, useQuery, queryParameter, value, onSel
     //isSuccess,
     //isError,
     refetch,
-  } = useQuery(queryParameter, { skip: !show });
-
-  if (!show) {
-    return null;
-  }
+  } = useQuery(queryParameter);
 
   return (
     <FileFilterComponent title={title} value={value} list={Array.isArray(data?.data)?data.data:[]} error={error} isLoading={isUninitialized || isFetching} onSelect={onSelect} onRetry={refetch} />
-    // <FileFilterComponent title={title} value={value} list={Array.isArray(data?.data)?data.data:[]} error={error} isLoading={true} onSelect={onSelect} onRetry={refetch} />
   );
 
 };

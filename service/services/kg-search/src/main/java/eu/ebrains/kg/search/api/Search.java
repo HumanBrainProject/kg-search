@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.ebrains.kg.common.controller.kg.KGv2;
 import eu.ebrains.kg.common.controller.kg.KGv3;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
@@ -31,12 +30,11 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
-import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.services.KGV2ServiceClient;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
-import eu.ebrains.kg.search.controller.settings.SettingsController;
 import eu.ebrains.kg.search.controller.search.SearchController;
+import eu.ebrains.kg.search.controller.settings.SettingsController;
 import eu.ebrains.kg.search.model.FacetValue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -206,20 +204,17 @@ public class Search {
 
 
     @GetMapping("/repositories/{id}/files/live")
-    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId, 
-                                                     @RequestParam(required = false, name = "searchAfter") String searchAfter,
-                                                     @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+    public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId,
                                                      @RequestParam(required = false, defaultValue = "", name = "format") String format,
                                                      @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType,
                                                        Principal principal) {
         final UUID repositoryUUID = MetaModelUtils.castToUUID(repositoryId);
-        final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
-        if(repositoryUUID == null || (StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || size > 10000){
+        if(repositoryUUID == null){
             return ResponseEntity.badRequest().build();
         }
         if (searchController.canReadLiveFiles(principal, repositoryUUID)) {
             try {
-                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryUUID, searchAfterUUID, size, format, groupingType);
+                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryUUID, format, groupingType);
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }
@@ -304,33 +299,27 @@ public class Search {
     }
 
     @GetMapping("/groups/public/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id, 
-                                                       @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
-                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
                                                        @RequestParam(required = false, defaultValue = "", name = "format") String format,
                                                        @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType) {
-        final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
         final UUID uuid = MetaModelUtils.castToUUID(id);
-        if ((StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || uuid == null || size > 10000) {
+        if (uuid == null) {
             return ResponseEntity.badRequest().build();
         }
-        return searchController.getFilesFromRepo(DataStage.RELEASED, uuid, searchAfterUUID, size, format, groupingType);
+        return searchController.getFilesFromRepo(DataStage.RELEASED, uuid, format, groupingType);
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id, 
-                                                        @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
-                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id,
                                                         @RequestParam(required = false, defaultValue = "", name = "format") String format,
                                                         @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType,
                                                         Principal principal) {
-        final UUID searchAfterUUID = MetaModelUtils.castToUUID(searchAfter);
         final UUID uuid = MetaModelUtils.castToUUID(id);
-        if ((StringUtils.isNotBlank(searchAfter) && searchAfterUUID == null) || uuid == null || size > 10000) {
+        if (uuid == null) {
             return ResponseEntity.badRequest().build();
         }
         if (searchController.isInInProgressRole(principal)) {
-            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, uuid, searchAfterUUID, size, format, groupingType);
+            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, uuid, format, groupingType);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
