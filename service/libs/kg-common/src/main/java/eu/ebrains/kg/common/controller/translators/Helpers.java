@@ -81,7 +81,7 @@ public class Helpers {
     public static String translateInternalFileRepoToUrl(FileRepository repository) {
         if (repository != null && repository.getIri() != null) {
             if (isDataProxyBucket(repository)) {
-                String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/buckets/", "");
+                String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/v1/buckets/", "");
                 return String.format("https://data-proxy.ebrains.eu/%s", id);
             } else if (isCscsContainer(repository)) {
                 return String.format("https://data.kg.ebrains.eu/files/list?url=%s", repository.getIri());

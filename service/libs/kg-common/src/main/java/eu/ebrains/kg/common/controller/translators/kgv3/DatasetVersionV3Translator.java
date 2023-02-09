@@ -92,7 +92,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return repository != null && repository.getIri() != null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
     }
 
-    private String getRestrictedAccessMessage(String title, String  id) {
+    private String getRestrictedAccessMessage(String title, String id) {
         String restrictedAccessEndpoint = String.format("https://nettskjema.no/a/127835?CBDatasetTitle=%s&LCKDatasetTitle=true&CBDatasetID=%s&LCKDatasetID=true", title, id);
         return String.format("These data are access restricted and hosted by the data provider. <a class=\"btn btn-secondary\" style=color:#fff href=\"%s\" target=\"_blank\">Request access</a>", restrictedAccessEndpoint);
 
@@ -357,7 +357,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     viewData.put(s.getService(), new ArrayList<>());
                 }
                 List<TargetExternalReference> targetExternalReferences = viewData.get(s.getService());
-                targetExternalReferences.add(new TargetExternalReference(s.getUrl(), s.getLabel()));
+                String label = s.getLabel();
+                if(StringUtils.isBlank(label)) {
+                    translatorUtils.getErrors().add(String.format("Service link %s is missing the label!", s.getUrl()));
+                    label = s.getUrl();
+                }
+                targetExternalReferences.add(new TargetExternalReference(s.getUrl(), label));
                 targetExternalReferences.sort(Comparator.comparing(TargetExternalReference::getValue));
             });
             d.setViewData(viewData);
