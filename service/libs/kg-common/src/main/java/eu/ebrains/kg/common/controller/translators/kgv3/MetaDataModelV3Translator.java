@@ -80,7 +80,7 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
         m.setCategory(new Value<>("Meta Data Model Overview"));
         m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
-        List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(model.getVersions());
+        List<eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(model.getVersions(), translatorUtils.getErrors());
         List<Children<eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version>> metaDataModelVersions = sortedVersions.stream().map(v -> {
             eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version version = new eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Version();
             version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));

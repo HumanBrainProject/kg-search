@@ -34,10 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -164,9 +161,17 @@ public abstract class TranslatorBase {
         return null;
     }
 
-    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProductVersion> refs, boolean sorted) {
+    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProduct> refs, boolean sorted) {
         if (!CollectionUtils.isEmpty(refs)) {
-            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(this::ref).filter(Objects::nonNull);
+            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(r -> {
+                if (r instanceof FullNameRefForResearchProductVersion) {
+                    return this.ref((FullNameRefForResearchProductVersion) r);
+                }
+                if (r instanceof FullNameRefForResearchProductVersionTarget) {
+                    return this.ref((FullNameRefForResearchProductVersionTarget) r);
+                }
+                return null;
+            }).filter(Objects::nonNull);
             if (sorted) {
                 targetInternalReferenceStream = targetInternalReferenceStream.sorted();
             }
@@ -186,7 +191,6 @@ public abstract class TranslatorBase {
         return null;
     }
 
-
     protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref) {
         if (ref != null) {
             String name = StringUtils.defaultIfBlank(ref.getFullName(), ref.getFallbackName());
@@ -196,6 +200,22 @@ public abstract class TranslatorBase {
             }
             String versionedName = StringUtils.isNotBlank(ref.getVersionIdentifier()) ? String.format("%s %s", name, ref.getVersionIdentifier()) : name;
             return new TargetInternalReference(uuid, versionedName);
+        }
+        return null;
+    }
+
+    protected TargetInternalReference ref(FullNameRefForResearchProductVersionTarget ref) {
+        if (ref != null) {
+            FullNameRef researchProduct = ref.getResearchProduct();
+            String name = StringUtils.defaultIfBlank(ref.getFullName(), researchProduct.getFullName());
+            String uuid = IdUtils.getUUID(researchProduct.getId());
+            if (name == null) {
+                name = uuid;
+            }
+            String versionedName = StringUtils.isNotBlank(ref.getVersionIdentifier()) ? String.format("%s %s", name, ref.getVersionIdentifier()) : name;
+            //TODO enable link when BrainAtals card should be enable
+            return new TargetInternalReference(null, versionedName);
+            //return new TargetInternalReference(uuid, versionedName, new TargetInternalReference.Context(ref.getTab(), IdUtils.getUUID(ref.getId())));
         }
         return null;
     }

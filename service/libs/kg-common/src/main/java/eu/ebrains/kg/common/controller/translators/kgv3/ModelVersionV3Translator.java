@@ -94,7 +94,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
             m.setVersion(modelVersion.getVersion());
-            List<Version> sortedVersions = Helpers.sort(versions);
+            List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(model.getId()), "version overview"));
             m.setVersions(references);
@@ -207,7 +207,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
         }
 
-        Map<String, FullNameRefForResearchProductVersion> inputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProduct> inputResearchProducts = new HashMap<>();
         Helpers.addResearchProductsFromDOIs(inputResearchProducts, modelVersion.getInputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromInputFiles());
         Helpers.addResearchProducts(inputResearchProducts, modelVersion.getInputResearchProductsFromInputFileBundles());
@@ -230,7 +230,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
-        Map<String, FullNameRefForResearchProductVersion> outputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProduct> outputResearchProducts = new HashMap<>();
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromReverseInputDOIs());
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromReverseInputFiles());
         Helpers.addResearchProducts(outputResearchProducts, modelVersion.getOutputResearchProductsFromReverseInputFileBundles());

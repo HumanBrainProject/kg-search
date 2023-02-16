@@ -127,9 +127,7 @@ class HierarchicalFiles extends React.Component {
     super(props);
     this.state = {
       node: {},
-      tree: {
-        children: []
-      },
+      tree: null,
       initialTree: {
         children: []
       },
@@ -139,8 +137,7 @@ class HierarchicalFiles extends React.Component {
   }
 
   setTree() {
-    const { data, groupingType, hasDataFilter, nameFieldPath, urlFieldPath } =
-      this.props;
+    const { data, groupingType, hasDataFilter, nameFieldPath, urlFieldPath } = this.props;
     if (data && data.length === 1 && !hasDataFilter) {
       const node = {
         data: data[0],
@@ -148,17 +145,18 @@ class HierarchicalFiles extends React.Component {
         url: JSONPath(data[0], urlFieldPath),
         type: "file"
       };
-      this.setState({ tree: {}, node: node, initialTree: {} });
+      this.setState({ tree: {}, node: node, initialTree: {}, filter: "" });
     } else {
       const initialTree = groupingType
         ? getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType)
         : getTreeByFolder(data, nameFieldPath, urlFieldPath);
-      const tree = getFilteredTree(initialTree, this.state.filter);
+      const tree = getFilteredTree(initialTree, "");
       this.setState({
         tree: tree,
         node: tree,
         initialTree: initialTree,
-        expandedKeys: [tree.key]
+        expandedKeys: [tree.key],
+        filter: ""
       });
     }
   }
@@ -182,11 +180,10 @@ class HierarchicalFiles extends React.Component {
   onFilterMouseUp = debounce(({ target: { value } }) => {
     const filter = value.trim();
     trackEvent("Files", "Search", filter);
-    this.setState({ filter: filter });
     const tree = getFilteredTree(this.state.initialTree, filter);
     const expandedKeys = [tree.key];
     addExpandedKeys(tree, expandedKeys);
-    this.setState({ tree: tree, expandedKeys: expandedKeys });
+    this.setState({ tree: tree, expandedKeys: expandedKeys, filter: filter });
   }, 500);
 
   onSelect = (_selectedKeys, info) => {
@@ -199,6 +196,10 @@ class HierarchicalFiles extends React.Component {
   render() {
     const filesLength = this.props.data && this.props.data.length;
     const hasFilter = this.props.hasDataFilter || this.state.filter !== "";
+
+    if (!this.state.tree) {
+      return null;
+    }
 
     if (filesLength === 1 && !hasFilter) {
       return (
@@ -213,13 +214,9 @@ class HierarchicalFiles extends React.Component {
       );
     }
 
-    if (this.state.tree.children.length === 0) {
-      return null;
-    }
-
     return (
       <>
-        {filesLength < 5000 && (
+        {filesLength < 5000 && filesLength > 1 && (
           <div className="kgs-files-search">
             <FontAwesomeIcon
               icon={faSearch}

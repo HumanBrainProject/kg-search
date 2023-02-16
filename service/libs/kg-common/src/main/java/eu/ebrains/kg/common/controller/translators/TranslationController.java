@@ -77,17 +77,29 @@ public class TranslationController {
             Stats stats = getStats(instanceResults, from);
             translator.setConfiguration(configuration);
             logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-            instanceResults.setErrors(new ErrorReport());
+            if(instanceResults.getErrors() ==null){
+                instanceResults.setErrors(new ErrorReport());
+            }
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                 try {
-                    return translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold));
+                    List<String> errors = new ArrayList<>();
+                    final Target r = translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold, errors));
+                    if(!CollectionUtils.isEmpty(errors)) {
+                        String id = IdUtils.getUUID(r.getId());
+                        if (instanceResults.getErrors().get(id) != null) {
+                            instanceResults.getErrors().get(id).addAll(errors);
+                        } else {
+                            instanceResults.getErrors().put(id, errors);
+                        }
+                    }
+                    return r;
                 } catch (TranslationException e) {
                     String id = IdUtils.getUUID(e.getIdentifier());
                     List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
                     errors.add(e.getMessage());
                     return null;
                 } catch (Exception e) {
-                    String id = s instanceof SourceInstanceV3 ? IdUtils.getUUID(((SourceInstanceV3) s).getId()) : "unknown";
+                    String id = IdUtils.getUUID(((SourceInstanceV3) s).getId());
                     List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
                     errors.add(String.format("Unexpected exception: %s", e.getMessage()));
                     logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
@@ -146,11 +158,12 @@ public class TranslationController {
             boolean reset = false;
             if (t.getReference() != null) {
                 final Boolean fromCache = cachedReferences.get(t.getReference());
-                if (fromCache != null) {
-                    if (fromCache) {
+                if(fromCache !=null){
+                    if(fromCache){
                         reset = true;
                     }
-                } else {
+                }
+                else {
                     TargetInstance reference = null;
                     try {
                         final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);

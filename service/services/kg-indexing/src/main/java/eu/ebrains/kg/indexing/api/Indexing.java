@@ -179,7 +179,7 @@ public class Indexing {
         if (!errorsByTarget.isEmpty()) {
             final ErrorReportResult result = new ErrorReportResult();
             result.setErrorsByTarget(errorsByTarget);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }
         return ResponseEntity.ok().build();
     }

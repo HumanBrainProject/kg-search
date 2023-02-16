@@ -1,5 +1,6 @@
 package eu.ebrains.kg.common.utils;
 
+import eu.ebrains.kg.common.model.ErrorReport;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInformation;
@@ -16,10 +17,14 @@ public class TranslatorUtils {
     private final ESServiceClient esServiceClient;
     private final Integer trendingThreshold;
 
-    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold) {
+    private final List<String> errors;
+
+
+    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold, List<String> errors) {
         this.doiCitationFormatter = doiCitationFormatter;
-        this.trendingThreshold = trendingThreshold;
         this.esServiceClient = esServiceClient;
+        this.trendingThreshold = trendingThreshold;
+        this.errors = errors != null ? errors : new ArrayList<>();
     }
 
     public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, Date firstRelease, Integer last30DaysViews) {

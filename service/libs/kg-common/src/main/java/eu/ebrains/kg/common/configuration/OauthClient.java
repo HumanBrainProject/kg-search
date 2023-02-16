@@ -68,7 +68,7 @@ public class OauthClient {
 
     @Bean
     @Primary
-    WebClient standardWebClient(){
+    WebClient standardWebClient() {
         return WebClient.builder().exchangeStrategies(exchangeStrategies).build();
     }
 
@@ -76,7 +76,7 @@ public class OauthClient {
     @Qualifier("asServiceAccount")
     WebClient serviceAccountWebClient(ClientRegistrationRepository clientRegistrations, OAuth2AuthorizedClientService authorizedClientService) {
         AuthorizedClientServiceOAuth2AuthorizedClientManager clientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrations, authorizedClientService);
-        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 =  new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientManager);
+        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 = new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientManager);
         oauth2.setAuthorizationFailureHandler(new RemoveAuthorizedClientOAuth2AuthorizationFailureHandler(
                 (clientRegistrationId, principal, attributes) -> {
                     logger.info("Resource server authorization failure for clientRegistrationId={}", clientRegistrationId);
@@ -84,7 +84,7 @@ public class OauthClient {
                 })
         );
         oauth2.setDefaultClientRegistrationId("kg");
-        return WebClient.builder().exchangeStrategies(exchangeStrategies).apply(oauth2.oauth2Configuration()).filter((clientRequest, nextFilter) ->{
+        return WebClient.builder().exchangeStrategies(exchangeStrategies).apply(oauth2.oauth2Configuration()).filter((clientRequest, nextFilter) -> {
             ClientRequest updatedHeaders = ClientRequest.from(clientRequest).headers(h -> {
                 h.put("Client-Authorization", h.get(Constants.AUTHORIZATION));
             }).build();
@@ -94,27 +94,14 @@ public class OauthClient {
 
     @Bean
     @Qualifier("asUser")
-    WebClient userWebClient(ClientRegistrationRepository clientRegistrations, OAuth2AuthorizedClientService authorizedClientService, HttpServletRequest request) {
-        AuthorizedClientServiceOAuth2AuthorizedClientManager clientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrations, authorizedClientService);
-        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 =  new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientManager);
-        oauth2.setDefaultClientRegistrationId("kg");
-        return WebClient.builder().exchangeStrategies(exchangeStrategies).apply(oauth2.oauth2Configuration()).filter((clientRequest, nextFilter) ->{
-            ClientRequest updatedHeaders = ClientRequest.from(clientRequest).headers(h -> {
-                //Spring adds the oauth2 bearer token to the standard "Authorization" header -> we want it to be sent as
-                // "Client-Authorization" though to let the user token be handed in properly.
-                h.put("Client-Authorization", h.get(Constants.AUTHORIZATION));
-                List<String> userAuth = h.get(Constants.USER_AUTHORIZATION);
-                h.put(Constants.AUTHORIZATION, userAuth);
-                h.remove(Constants.USER_AUTHORIZATION);
-            }).build();
-            return nextFilter.exchange(updatedHeaders);
-        }).defaultRequest(r -> {
+    WebClient userWebClient(HttpServletRequest request) {
+        return WebClient.builder().exchangeStrategies(exchangeStrategies).defaultRequest(r -> {
             /**
-             *  We have to add the user access token to the request here, because this consumer is executed in the original
-             *  thread and we therefore have access to the original request. We store it in a temporary header since otherwise
-             *  it would be overwritten by the above exchange filter.
+             * We just reuse the original authorization header for the given request and we
+             * explicitly don't want a client authorization to make the mechanism work with private
+             * spaces too.
              */
-            r.header(Constants.USER_AUTHORIZATION, request.getHeader(Constants.AUTHORIZATION));
+            r.header(Constants.AUTHORIZATION, request.getHeader(Constants.AUTHORIZATION));
         }).build();
     }
 

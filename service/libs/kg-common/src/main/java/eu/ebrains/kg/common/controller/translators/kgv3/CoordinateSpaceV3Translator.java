@@ -160,7 +160,8 @@ public class CoordinateSpaceV3Translator extends TranslatorV3<CoordinateSpaceV3,
                     if (previous.isPresent()) {
                         final int index = sortedResult.indexOf(previous.get());
                         if (evaluatedPosition != null && evaluatedPosition != index) {
-                            logger.error("Contradicting sorting order of the brain atlas version group {} - its versions provide different orders in sequence", version.getId());
+                            String error = String.format("Contradicting sorting order of the brain atlas version group %s - its versions provide different orders in sequence", version.getId());
+                            logger.error(error);
                         } else {
                             evaluatedPosition = index;
                         }
@@ -169,7 +170,8 @@ public class CoordinateSpaceV3Translator extends TranslatorV3<CoordinateSpaceV3,
                     if (newest == null) {
                         newest = true;
                     } else {
-                        logger.error("Contradicting information - brain atlas version {} is meant to be the newest but its alternative versions say something else", version.getId());
+                        String error = String.format("Contradicting information - brain atlas version %s is meant to be the newest but its alternative versions say something else", version.getId());
+                        logger.error(error);
                     }
                 }
             }

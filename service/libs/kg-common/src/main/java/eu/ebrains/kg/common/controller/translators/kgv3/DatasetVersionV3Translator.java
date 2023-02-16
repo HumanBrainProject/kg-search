@@ -92,7 +92,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return repository != null && repository.getIri() != null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
     }
 
-    private String getRestrictedAccessMessage(String title, String  id) {
+    private String getRestrictedAccessMessage(String title, String id) {
         String restrictedAccessEndpoint = String.format("https://nettskjema.no/a/127835?CBDatasetTitle=%s&LCKDatasetTitle=true&CBDatasetID=%s&LCKDatasetID=true", title, id);
         return String.format("These data are access restricted and hosted by the data provider. <a class=\"btn btn-secondary\" style=color:#fff href=\"%s\" target=\"_blank\">Request access</a>", restrictedAccessEndpoint);
 
@@ -132,7 +132,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
             d.setVersion(datasetVersion.getVersion());
-            List<Version> sortedVersions = Helpers.sort(versions);
+            List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "version overview"));
             d.setVersions(references);
@@ -273,17 +273,25 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!dataDescriptors.isEmpty()) {
             TargetExternalReference reference;
             if (dataDescriptors.size() > 1) {
-                logger.warn(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", "))), uuid);
+                String warning = String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(File::getIri).collect(Collectors.joining(", ")));
+                logger.warn(warning, uuid);
+                translatorUtils.getErrors().add(warning);
                 reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
             } else {
                 if (datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())) {
-                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. Falling back to the full documentation file!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), uuid);
+                    final String warning = String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. Falling back to the full documentation file!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri());
+                    logger.warn(warning, uuid);
+                    translatorUtils.getErrors().add(warning);
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName());
                 } else if (datasetVersion.getFullDocumentationDOI() != null) {
-                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. Falling back to the full documentation DOI!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), uuid);
+                    final String warning = String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. Falling back to the full documentation DOI!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI());
+                    logger.warn(warning, uuid);
+                    translatorUtils.getErrors().add(warning);
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI());
                 } else if (datasetVersion.getFullDocumentationUrl() != null) {
-                    logger.warn(String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), uuid);
+                    final String warning = String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl());
+                    logger.warn(warning, uuid);
+                    translatorUtils.getErrors().add(warning);
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl());
                 } else {
                     reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
@@ -349,7 +357,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     viewData.put(s.getService(), new ArrayList<>());
                 }
                 List<TargetExternalReference> targetExternalReferences = viewData.get(s.getService());
-                targetExternalReferences.add(new TargetExternalReference(s.getUrl(), s.getLabel()));
+                String label = s.getLabel();
+                if(StringUtils.isBlank(label)) {
+                    translatorUtils.getErrors().add(String.format("Service link %s is missing the label!", s.getUrl()));
+                    label = s.getUrl();
+                }
+                targetExternalReferences.add(new TargetExternalReference(s.getUrl(), label));
                 targetExternalReferences.sort(Comparator.comparing(TargetExternalReference::getValue));
             });
             d.setViewData(viewData);
@@ -394,7 +407,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId()).translateToHierarchy(datasetVersion.getStudiedSpecimen());
+        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId(), translatorUtils.getErrors()).translateToHierarchy(datasetVersion.getStudiedSpecimen());
         if (specimenBySubject != null) {
             if (specimenBySubject.getData().getSpecies() != null) {
                 d.setSpeciesFilter(specimenBySubject.getData().getSpecies().stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).distinct().map(Value::new).collect(Collectors.toList()));
@@ -406,13 +419,14 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setSpecimenBySubject(specimenBySubject);
         }
 
-        Map<String, FullNameRefForResearchProductVersion> inputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProduct> inputResearchProducts = new HashMap<>();
         Helpers.addResearchProductsFromDOIs(inputResearchProducts, datasetVersion.getInputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputFiles());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputFileBundles());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputDOIs());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputFiles());
         Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromReverseOutputFileBundles());
+        Helpers.addResearchProducts(inputResearchProducts, datasetVersion.getInputResearchProductsFromInputBrainAtlasVersions(), "Versions");
         d.setInputData(refVersion(new ArrayList<>(inputResearchProducts.values()), true));
 
         Set<TargetExternalReference> externalInputData = new HashSet<>();
@@ -429,7 +443,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setExternalInputData(externalInputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
-        Map<String, FullNameRefForResearchProductVersion> outputResearchProducts = new HashMap<>();
+        Map<String, FullNameRefForResearchProduct> outputResearchProducts = new HashMap<>();
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputDOIs());
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFiles());
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFileBundles());

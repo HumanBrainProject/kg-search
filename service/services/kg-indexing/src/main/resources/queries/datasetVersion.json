@@ -2542,6 +2542,47 @@
           "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
         }
       ]
+    },
+    {
+      "propertyName": "query:inputResearchProductsFromInputBrainAtlasVersions",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/inputData",
+        "typeFilter": {
+          "@id": "https://openminds.ebrains.eu/sands/BrainAtlasVersion"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:researchProduct",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+            "reverse": true
+          },
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        }
+      ]
     }
   ]
 }

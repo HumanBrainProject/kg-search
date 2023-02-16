@@ -77,7 +77,7 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
         s.setCategory(new Value<>("Software Overview"));
         s.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
 
-        List<Version> sortedVersions = Helpers.sort(software.getVersions());
+        List<Version> sortedVersions = Helpers.sort(software.getVersions(), translatorUtils.getErrors());
         List<Children<Software.Version>> softwareVersions = sortedVersions.stream().map(v -> {
             Software.Version version = new Software.Version();
             version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));

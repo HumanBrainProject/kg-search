@@ -96,7 +96,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
             m.setVersion(metadataModelVersionV3.getVersionIdentifier());
-            List<Version> sortedVersions = Helpers.sort(versions);
+            List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "version overview"));
             m.setVersions(references);
