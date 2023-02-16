@@ -67,12 +67,14 @@ public class KGV3ServiceClient  {
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
-
-            Map data = (Map) result.get("data");
-            return data.get("endpoint").toString();
-        } catch (Exception e) {
-            return null;
+            if(result!=null) {
+                Map data = (Map) result.get("data");
+                return data.get("endpoint").toString();
+            }
+        } catch (WebClientResponseException e) {
+            logger.error("Was not able to fetch the auth endpoint from KG", e);
         }
+        return null;
     }
 
     public Set<UUID> getInvitationsFromKG(){

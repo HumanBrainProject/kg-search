@@ -129,6 +129,7 @@ public class SettingsController {
                 case HIERARCHICAL_FILES_ASYNC:
                     propertyDefinition.put("isHierarchicalFiles", true);
                     propertyDefinition.put("isAsync", true);
+                    break;
                 case TABLE:
                     propertyDefinition.put("isTable", true);
                     break;
