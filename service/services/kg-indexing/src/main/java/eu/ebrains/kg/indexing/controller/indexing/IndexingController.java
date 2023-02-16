@@ -32,6 +32,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.ErrorReport;
 import eu.ebrains.kg.common.model.ErrorReportResult;
 import eu.ebrains.kg.common.model.TranslatorModel;
+import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
@@ -68,7 +69,7 @@ public class IndexingController {
         this.kgV3 = kgV3;
     }
 
-    public <v3Input, Target extends TargetInstance> ErrorReportResult.ErrorReportResultByTargetType populateIndex(TranslatorModel<v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
+    public <v3Input extends SourceInstanceV3, Target extends TargetInstance> ErrorReportResult.ErrorReportResultByTargetType populateIndex(TranslatorModel<v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
         ErrorReportResult.ErrorReportResultByTargetType errorReportByTargetType =  null;
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
@@ -109,7 +110,7 @@ public class IndexingController {
         });
     }
 
-    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<?, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
+    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<? extends SourceInstanceV3, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
         final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
         translator.getQueryIds().forEach(queryId -> {

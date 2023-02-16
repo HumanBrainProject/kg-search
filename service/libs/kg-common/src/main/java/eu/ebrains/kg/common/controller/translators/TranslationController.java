@@ -41,6 +41,7 @@ import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
@@ -64,7 +65,7 @@ public class TranslationController {
         this.esServiceClient = esServiceClient;
     }
 
-    public <Source, Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
+    public <Source extends SourceInstanceV3, Target extends TargetInstance> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
@@ -99,7 +100,7 @@ public class TranslationController {
                     errors.add(e.getMessage());
                     return null;
                 } catch (Exception e) {
-                    String id = IdUtils.getUUID(((SourceInstanceV3) s).getId());
+                    String id =  IdUtils.getUUID(s.getId());
                     List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
                     errors.add(String.format("Unexpected exception: %s", e.getMessage()));
                     logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
@@ -142,7 +143,7 @@ public class TranslationController {
             return null;
         }
         translator.setConfiguration(configuration);
-        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient, null));
+        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient, null, null));
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
         }

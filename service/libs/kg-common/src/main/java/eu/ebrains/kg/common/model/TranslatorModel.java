@@ -2,6 +2,7 @@ package eu.ebrains.kg.common.model;
 
 import eu.ebrains.kg.common.controller.translators.kgv3.*;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
+import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.*;
 
@@ -9,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
-public class TranslatorModel<v3Input, Output extends TargetInstance> {
+public class TranslatorModel<v3Input extends SourceInstanceV3, Output extends TargetInstance> {
 
     public static final List<TranslatorModel<?, ?>> MODELS = Arrays.asList(
             new TranslatorModel<>(Project.class, new ProjectV3Translator(), false, 1000),
