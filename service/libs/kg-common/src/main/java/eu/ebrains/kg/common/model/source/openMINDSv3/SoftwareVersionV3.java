@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
-import eu.ebrains.kg.common.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
 import lombok.Setter;

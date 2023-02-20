@@ -23,10 +23,14 @@
 
 package eu.ebrains.kg.common.services;
 
+import eu.ebrains.kg.common.configuration.GracefulDeserializationProblemHandler;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -34,18 +38,43 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class KGV3ServiceClient extends KGServiceClient {
+public class KGV3ServiceClient  {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final int MAX_RETRIES = 5;
     private final String kgCoreEndpoint;
+    private final WebClient serviceAccountWebClient;
+    private final WebClient userWebClient;
+
 
     public KGV3ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
-        super(serviceAccountWebClient, userWebClient);
         this.kgCoreEndpoint = kgCoreEndpoint;
+        this.serviceAccountWebClient = serviceAccountWebClient;
+        this.userWebClient = userWebClient;
+    }
+
+    @Cacheable(value = "authEndpoint", unless = "#result == null")
+    public String getAuthEndpoint() {
+        String url = String.format("%s/users/authorization", kgCoreEndpoint);
+        try {
+            Map result = serviceAccountWebClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            if(result!=null) {
+                Map data = (Map) result.get("data");
+                return data.get("endpoint").toString();
+            }
+        } catch (WebClientResponseException e) {
+            logger.error("Was not able to fetch the auth endpoint from KG", e);
+        }
+        return null;
     }
 
     public Set<UUID> getInvitationsFromKG(){
@@ -68,29 +97,12 @@ public class KGV3ServiceClient extends KGServiceClient {
         return Collections.emptySet();
     }
 
-    public <T> T executeQueryForIndexing(String queryId, DataStage dataStage, Class<T> clazz) {
-        String url = String.format("%s/queries/%s/instances?stage=%s", kgCoreEndpoint, queryId, dataStage);
-        return executeCallForIndexing(clazz, url);
-    }
 
     public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size) {
         String url = String.format("%s/queries/%s/instances?stage=%s&from=%d&size=%d", kgCoreEndpoint, queryId, dataStage, from, size);
         return executeCallForIndexing(clazz, url);
     }
 
-    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size, Map<String, String> params) {
-        StringBuilder p = new StringBuilder();
-        for (Map.Entry<String, String> param : params.entrySet()) {
-            p.append(String.format("&%s=%s", param.getKey(), URLEncoder.encode(param.getValue(), StandardCharsets.UTF_8)));
-        }
-        String url = String.format("%s/queries/%s/instances?stage=%s&from=%d&size=%d%s", kgCoreEndpoint, queryId, dataStage, from, size, p);
-        return executeCallForIndexing(clazz, url);
-    }
-
-    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, String id) {
-        String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
-        return executeCallForIndexing(clazz, url);
-    }
 
     public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount) {
         String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
@@ -118,4 +130,50 @@ public class KGV3ServiceClient extends KGServiceClient {
                 .block();
     }
 
+    private <T> T executeCallForInstance(Class<T> clazz, String url, boolean asServiceAccount) {
+        WebClient webClient = asServiceAccount ? this.serviceAccountWebClient : this.userWebClient;
+        return webClient.get()
+                .uri(url)
+                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(clazz)
+                .doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
+                .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
+                .block();
+    }
+
+    private <T> T executeCallForIndexing(Class<T> clazz, String url) {
+        return doExecuteCallForIndexing(clazz, url, 0);
+    }
+
+    private <T> T doExecuteCallForIndexing(Class<T> clazz, String url, int currentTry) {
+        try{
+            return serviceAccountWebClient.get()
+                    .uri(url)
+                    .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+                    .retrieve()
+                    .bodyToMono(clazz).doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
+                    .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
+                    .block();
+        }
+        catch (WebClientResponseException e){
+            logger.warn("Was not able to execute call for indexing", e);
+            if(currentTry<MAX_RETRIES){
+                final long waitingTime = currentTry * currentTry * 10000L;
+                logger.warn("Retrying to execute call for indexing for max {} more times - next time in {} seconds", MAX_RETRIES-currentTry, waitingTime/1000);
+                try{
+                    Thread.sleep(waitingTime);
+                    return doExecuteCallForIndexing(clazz, url, currentTry+1);
+                }
+                catch (InterruptedException ie){
+                    Thread.currentThread().interrupt();
+                    return null;
+                }
+            }
+            else{
+                logger.error("Was not able to execute the call for indexing. Going to skip it.", e);
+                return null;
+            }
+        }
+    }
 }

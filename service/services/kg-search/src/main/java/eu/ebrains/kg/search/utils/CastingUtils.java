@@ -10,38 +10,21 @@ public class CastingUtils {
     public static String getStringField(Map<String, Object> source, String fieldName) {
         if (source.containsKey(fieldName)) {
             try {
-                String value = (String) source.get(fieldName);
-                return value;
+                return (String) source.get(fieldName);
             } catch (ClassCastException ignored) {
             }
         }
         return null;
     }
 
-    public static boolean getBooleanField(Map<String, Object> source, String fieldName) {
-        return getBooleanField(source, fieldName, false);
-    }
-
     public static boolean getBooleanField(Map<String, Object> source, String fieldName, boolean defaultValue) {
         if (source.containsKey(fieldName)) {
             try {
-                boolean value = (boolean) source.get(fieldName);
-                return value;
+                return (boolean) source.get(fieldName);
             } catch (ClassCastException ignored) {
             }
         }
         return defaultValue;
-    }
-
-    public static int getIntField(Map<String, Object> source, String fieldName) {
-        if (source.containsKey(fieldName)) {
-            try {
-                int value = (int) source.get(fieldName);
-                return value;
-            } catch (ClassCastException ignored) {
-            }
-        }
-        return 0;
     }
 
     public static String getObjectFieldStringProperty(Map<String, Object> source, String fieldName, String propertyName) {
@@ -91,24 +74,11 @@ public class CastingUtils {
         Object o = getValueField(source, fieldName);
         if (o != null) {
             try {
-                String value = (String) o;
-                return value;
+                return (String) o;
             } catch (ClassCastException ignored) {
             }
         }
         return null;
-    }
-
-    public static int getIntValueField(Map<String, Object> source, String fieldName) {
-        Object o = getValueField(source, fieldName);
-        if (o != null) {
-            try {
-                int value = (int) o;
-                return value;
-            } catch (ClassCastException ignored) {
-            }
-        }
-        return 0;
     }
 
     public static List<Object> getListField(Map<String, Object> source, String fieldName) {

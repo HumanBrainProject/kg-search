@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;

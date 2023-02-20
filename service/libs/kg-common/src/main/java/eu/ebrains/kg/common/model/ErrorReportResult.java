@@ -25,7 +25,7 @@ public class ErrorReportResult {
 
     public static class ErrorReportResultByTargetType{
         private String targetType;
-        private List<ErrorReportResultBySourceType> errorsBySource;
+        private ErrorReport errors;
 
         public String getTargetType() {
             return targetType;
@@ -33,27 +33,6 @@ public class ErrorReportResult {
 
         public void setTargetType(String targetType) {
             this.targetType = targetType;
-        }
-
-        public List<ErrorReportResultBySourceType> getErrorsBySource() {
-            return errorsBySource;
-        }
-
-        public void setErrorsBySource(List<ErrorReportResultBySourceType> errorsBySource) {
-            this.errorsBySource = errorsBySource;
-        }
-    }
-
-    public static class ErrorReportResultBySourceType{
-        private String sourceType;
-        private ErrorReport errors;
-
-        public String getSourceType() {
-            return sourceType;
-        }
-
-        public void setSourceType(String sourceType) {
-            this.sourceType = sourceType;
         }
 
         public ErrorReport getErrors() {
@@ -64,7 +43,5 @@ public class ErrorReportResult {
             this.errors = errors;
         }
     }
-
-
 
 }

@@ -341,7 +341,7 @@ public class ESServiceClient {
         boolean continueSearch = true;
         while (continueSearch) {
             Result documents = getPaginatedDocuments(index, searchAfter);
-            if (documents.getHits() != null) {
+            if (documents != null && documents.getHits() != null) {
                 List<Document> hits = documents.getHits().getHits();
                 result.addAll(hits);
                 searchAfter = hits.size() < ES_QUERY_SIZE ? null : hits.get(hits.size() - 1).getId();

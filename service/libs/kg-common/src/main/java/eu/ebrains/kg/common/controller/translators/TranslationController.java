@@ -30,7 +30,6 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.ErrorReport;
 import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.model.source.SourceInstanceV1andV2;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -66,17 +65,16 @@ public class TranslationController {
         this.esServiceClient = esServiceClient;
     }
 
-    public <Source , Target extends TargetInstance> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
+    public <Source extends SourceInstanceV3, Target extends TargetInstance> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
-        if (instanceResults==null){
+        if (instanceResults == null) {
             logger.info("Was not able to read results for {} from index {} of size {}", translator.getSourceType().getSimpleName(), from, size);
             result.setTargetInstances(Collections.emptyList());
             result.setFrom(from);
             result.setSize(size);
-        }
-        else {
+        } else {
             Stats stats = getStats(instanceResults, from);
             translator.setConfiguration(configuration);
             logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
@@ -102,12 +100,7 @@ public class TranslationController {
                     errors.add(e.getMessage());
                     return null;
                 } catch (Exception e) {
-                    String id = "unknown";
-                    if (s instanceof SourceInstanceV3) {
-                        id = IdUtils.getUUID(((SourceInstanceV3) s).getId());
-                    } else if (s instanceof SourceInstanceV1andV2) {
-                        id = IdUtils.getUUID(((SourceInstanceV1andV2) s).getIdentifier());
-                    }
+                    String id =  IdUtils.getUUID(s.getId());
                     List<String> errors = instanceResults.getErrors().computeIfAbsent(id, k -> new ArrayList<>());
                     errors.add(String.format("Unexpected exception: %s", e.getMessage()));
                     logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
@@ -150,7 +143,7 @@ public class TranslationController {
             return null;
         }
         translator.setConfiguration(configuration);
-        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient,null, null));
+        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient, null, null));
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
         }
@@ -176,7 +169,7 @@ public class TranslationController {
                     try {
                         final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);
                         if (typesOfReference != null) {
-                            final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
+                            final TranslatorModel<?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
                             if (referenceTranslatorModel != null) {
                                 final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
                                 reference = translateTargetInstance(dataStage, useSourceType, t, reference, referenceTranslatorModel, referenceQueryId);
@@ -184,7 +177,7 @@ public class TranslationController {
                         }
                         reset = reference == null;
                         cachedReferences.put(t.getReference(), reset);
-                    } catch (WebClientResponseException ignored){
+                    } catch (WebClientResponseException ignored) {
                         logger.error("A web client exception occurred - ignoring");
                     }
                 }
@@ -195,7 +188,7 @@ public class TranslationController {
         });
     }
 
-    private TargetInstance translateTargetInstance(DataStage dataStage, boolean useSourceType, TargetInternalReference t, TargetInstance reference, TranslatorModel<?, ?, ?, ?> referenceTranslatorModel, String referenceQueryId) {
+    private TargetInstance translateTargetInstance(DataStage dataStage, boolean useSourceType, TargetInternalReference t, TargetInstance reference, TranslatorModel<?, ?> referenceTranslatorModel, String referenceQueryId) {
         try {
             reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
         } catch (TranslationException ignored) {

@@ -95,7 +95,7 @@ public class FacetAggregationUtils {
         if (keywords == null || keywords.getSumOtherDocCount() == null) {
             return 0;
         }
-        return (int) keywords.getSumOtherDocCount();
+        return keywords.getSumOtherDocCount();
     }
 
     private static Map<String, Object> getHierarchicalFacetList(Aggregation agg, FacetValue facetValue, boolean hasResults) {
@@ -183,9 +183,6 @@ public class FacetAggregationUtils {
                     if (!matchingFacets.isEmpty()) {
                         Facet facet = matchingFacets.get(0);
                         if (facet.getType() == FieldInfo.Facet.LIST) {
-//                        if (facet.isChild() && facet.getIsHierarchical()) {
-//
-//                        } else {
                             List<Map<String, Object>> keywords = new ArrayList<>();
                             for (String keyword : values) {
                                 keywords.add(Map.of(
