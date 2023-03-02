@@ -402,11 +402,6 @@ public class SearchController extends FacetAggregationUtils {
                     previews.add(getPreview(o.getDescription(), o.getLink(), o.getImageUrl(), o.getVideoUrl(), true));
                 });
             };
-            if (!CollectionUtils.isEmpty(hasPreviews.getFilesOld())) {
-                hasPreviews.getFilesOld().forEach(o -> {
-                    previews.add(getPreview(o.getValue(), o.getStaticImageUrl(), o.getPreviewUrl()));
-                });
-            }
             if (!CollectionUtils.isEmpty(previews)) {
                 res.put("previews", previews);
             }

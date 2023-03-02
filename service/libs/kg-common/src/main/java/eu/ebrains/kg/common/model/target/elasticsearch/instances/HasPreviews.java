@@ -9,7 +9,4 @@ public interface HasPreviews {
 
     List<PreviewObject> getPreviewObjects();
 
-    @Deprecated(forRemoval = true)
-    List<TargetFile> getFilesOld();
-
 }

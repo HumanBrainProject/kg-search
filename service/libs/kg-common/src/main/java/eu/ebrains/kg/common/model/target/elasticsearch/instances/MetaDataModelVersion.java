@@ -141,13 +141,6 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(layout = "Get (meta)data model", termsOfUse = true)
     private TargetExternalReference internalDownload;
 
-    /**
-     * Use fileRepositoryId instead, kept until next index (incremental) update
-     */
-    @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get (meta)data model", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
-    private String filesAsyncUrl;
-
     @FieldInfo(layout = "Get (meta)data model", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
     private String fileRepositoryId;
 

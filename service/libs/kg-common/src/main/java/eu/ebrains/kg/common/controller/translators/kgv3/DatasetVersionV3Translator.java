@@ -186,7 +186,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(datasetVersion.getExperimentalApproach())) {
             final List<String> experimentalApproachesForFilter = datasetVersion.getExperimentalApproach().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(experimentalApproachesForFilter)) {
-                d.setModalityForFilter(value(experimentalApproachesForFilter));
+                d.setExperimentalApproachForFilter(value(experimentalApproachesForFilter));
             }
         }
         d.setBehavioralProtocols(ref(datasetVersion.getBehavioralProtocol()));
@@ -195,7 +195,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(datasetVersion.getTechnique())) {
             final List<String> techniquesForFilter = datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(techniquesForFilter)) {
-                d.setMethodsForFilter(value(techniquesForFilter));
+                d.setTechniquesForFilter(value(techniquesForFilter));
             }
         }
         d.setAllIdentifiers(datasetVersion.getIdentifier());

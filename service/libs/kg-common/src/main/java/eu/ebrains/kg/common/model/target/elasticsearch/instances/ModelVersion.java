@@ -98,13 +98,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
     private Value<String> title;
 
-    /**
-     * @deprecated not needed in openMINDS anymore since the id is consistent across systems
-     */
-    @FieldInfo(layout = "header")
-    @Deprecated(forRemoval = true)
-    private Value<String> editorId;
-
     @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> contributors;
 
@@ -158,13 +151,6 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
 
     @FieldInfo(layout = "Get model", termsOfUse = true)
     private TargetExternalReference internalDownload;
-
-    /**
-     * Use fileRepositoryId instead, kept until next index (incremental) update
-     */
-    @Deprecated(forRemoval = true)
-    @FieldInfo(layout = "Get model", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
-    private String filesAsyncUrl;
 
     @FieldInfo(layout = "Get model", fieldType = FieldInfo.FieldType.HIERARCHICAL_FILES_ASYNC, labelHidden = true)
     private String fileRepositoryId;
