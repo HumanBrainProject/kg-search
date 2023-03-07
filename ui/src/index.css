@@ -59,6 +59,7 @@
   --color-35: #e6e6e6;
   --color-36: var(--color-8);
   --color-37: #ef8503;
+  --color-38: #198754;
   --color-selected: var(--color-30);
   --color-highlight: #f5d864;
   --color-unselected: var(--color-23);
@@ -158,6 +159,7 @@
   --color-35: #e6e6e6;
   --color-36: #333;
   --color-37: #ef8503;
+  --color-38: #198754;
   --color-selected: var(--color-30);
   --color-highlight: #f5d864;
   --color-unselected: var(--color-13);

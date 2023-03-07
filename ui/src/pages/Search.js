@@ -25,8 +25,18 @@ import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useGetSearchQuery, setCustomUrl, trackPageView, getError } from "../app/services/api";
-import { initializeSearch, syncSearchParameters, setSearchResults, selectFacets } from "../features/search/searchSlice";
+import {
+  useGetSearchQuery,
+  setCustomUrl,
+  trackPageView,
+  getError,
+} from "../app/services/api";
+import {
+  initializeSearch,
+  syncSearchParameters,
+  setSearchResults,
+  selectFacets
+} from "../features/search/searchSlice";
 import { syncHistory } from "../features/instance/instanceSlice";
 import { setGroup } from "../features/groups/groupsSlice";
 
@@ -50,6 +60,7 @@ import {
 } from "../helpers/BrowserHelpers";
 
 import "./Search.css";
+import Notification from "./Search/Notification/Notification";
 
 const calculateFacetList = facets => {
   return facets.reduce((acc, facet) => {
@@ -58,17 +69,17 @@ const calculateFacetList = facets => {
       if (facet.isHierarchical) {
         facet.keywords.forEach(keyword => {
           keyword.children &&
-            Array.isArray(keyword.children.keywords) &&
-            keyword.children.keywords.forEach(child => {
-              acc.push({
-                name: facet.name,
-                value: child.value,
-                checked: Array.isArray(facet.value)
-                  ? facet.value.includes(child.value)
-                  : false,
-                many: true
+              Array.isArray(keyword.children.keywords) &&
+              keyword.children.keywords.forEach(child => {
+                acc.push({
+                  name: facet.name,
+                  value: child.value,
+                  checked: Array.isArray(facet.value)
+                    ? facet.value.includes(child.value)
+                    : false,
+                  many: true
+                });
               });
-            });
         });
       } else {
         facet.keywords.forEach(keyword => {
@@ -139,7 +150,6 @@ const getGroupFromUrl = () => {
 };
 
 const SearchBase = () => {
-
   const initializedRef = useRef(false);
   const locationSearchRef = useRef(null);
   const newLocationSearchRef = useRef(null);
@@ -149,7 +159,9 @@ const SearchBase = () => {
 
   const dispatch = useDispatch();
 
-  const isActive = useSelector(state => !state.instance.instanceId && !state.application.info);
+  const isActive = useSelector(
+    state => !state.instance.instanceId && !state.application.info
+  );
   const isInitialized = useSelector(state => state.search.isInitialized);
   const group = useSelector(state => state.groups.group);
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
@@ -163,14 +175,16 @@ const SearchBase = () => {
   const page = useSelector(state => state.search.page);
   const isUpToDate = useSelector(state => state.search.isUpToDate);
 
-  const searchParams = isInitialized?{
-    group: group,
-    q: queryString,
-    type: selectedType,
-    from: from,
-    size: hitsPerPage,
-    payload: getAggregation(facets)
-  }:{};
+  const searchParams = isInitialized
+    ? {
+      group: group,
+      q: queryString,
+      type: selectedType,
+      from: from,
+      size: hitsPerPage,
+      payload: getAggregation(facets)
+    }
+    : {};
 
   const {
     data,
@@ -181,8 +195,8 @@ const SearchBase = () => {
     //isFetching,
     //isSuccess,
     isError,
-    refetch,
-  } = useGetSearchQuery(searchParams, { skip: !isInitialized});
+    refetch
+  } = useGetSearchQuery(searchParams, { skip: !isInitialized });
 
   useEffect(() => {
     document.title = "EBRAINS - Knowledge Graph Search";
@@ -192,7 +206,6 @@ const SearchBase = () => {
       dispatch(initializeSearch(params));
     }
     const popstateHandler = () => {
-
       const id = getIdFromUrl();
       dispatch(syncHistory(id));
 
@@ -208,7 +221,7 @@ const SearchBase = () => {
     return () => {
       window.removeEventListener("popstate", popstateHandler);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -261,16 +274,8 @@ const SearchBase = () => {
         }); // replace no type at initialisation
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    isActive,
-    isInitialized,
-    queryString,
-    selectedType,
-    page,
-    group,
-    facets
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive, isInitialized, queryString, selectedType, page, group, facets]);
 
   useEffect(() => {
     if (isInitialized && isActive) {
@@ -282,18 +287,20 @@ const SearchBase = () => {
     }
   }, [isInitialized, isActive, location.search]);
 
-
   useEffect(() => {
     if (isInitialized && data) {
       dispatch(setSearchResults(data));
     }
   }, [data, isInitialized, isUpToDate, dispatch]);
 
-
   if (isError) {
     return (
       <div className="kgs-search-container">
-        <BgError message={getError(error)} onRetryClick={refetch} retryVariant="primary" />
+        <BgError
+          message={getError(error)}
+          onRetryClick={refetch}
+          retryVariant="primary"
+        />
       </div>
     );
   }
@@ -309,6 +316,7 @@ const SearchBase = () => {
             <FiltersPanel />
             <div className="kgs-search__main">
               <HitsInfo />
+              <Notification />
               <Hits />
               <KnowledgeSpaceLink />
             </div>
