@@ -27,6 +27,12 @@
     color: var(--color-15);
 }
 
+@media screen and (max-width: 1078px) {  
+    .kgs-search__notification { 
+        display: none;
+    }
+}
+
 .kgs-search__notification .kgs-search__notification-link {
     text-decoration: none;
     color: var(--link-color-1);
