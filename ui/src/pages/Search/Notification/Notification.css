@@ -24,6 +24,7 @@
  .kgs-search__notification {
     margin: 15px 0;
     float: right;
+    color: var(--color-15);
 }
 
 .kgs-search__notification .kgs-search__notification-link {
