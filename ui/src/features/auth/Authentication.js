@@ -135,13 +135,13 @@ const Authentication = () => {
 
   if (isAuthenticating) {
     return (
-      <FetchingPanel message="Authenicating..." />
+      <FetchingPanel message="Authenticating..." />
     );
   }
 
   if (isLogingOut) {
     return (
-      <FetchingPanel message="Loging out..." />
+      <FetchingPanel message="Logging out..." />
     );
   }
 

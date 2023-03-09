@@ -21,19 +21,18 @@
  *
  */
 
-const { createProxyMiddleware } = require("http-proxy-middleware");
+ .kgs-search__notification {
+    margin: 15px 0;
+    float: right;
+    color: var(--color-15);
+}
 
-module.exports = function(app) {
-  app.use(
-    "/api",
-    createProxyMiddleware({
-      //target: "https://search.kg.ebrains.eu",
-      //target: "https://search.kg-ppd.ebrains.eu",
-      // target: "https://search.kg-int.ebrains.eu",
-      target: "https://search.kg-dev.ebrains.eu",
-      // target:"http://localhost:8080",
-      secure:false,
-      changeOrigin: true
-    })
-  );
-};
+.kgs-search__notification .kgs-search__notification-link {
+    text-decoration: none;
+    color: var(--link-color-1);
+    cursor: pointer;
+}
+
+.kgs-search__notification .kgs-search__notification-check {
+    color: var(--color-38);
+}

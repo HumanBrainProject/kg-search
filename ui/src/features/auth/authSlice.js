@@ -29,6 +29,7 @@ let keycloak = null;
 const initialState = {
   isUnavailble: false,
   settings: null,
+  userId: null,
   error: null,
   loginRequired: false,
   authenticationInitialized: false,
@@ -70,13 +71,16 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.isAuthenticated = false;
       state.isAuthenticating = false;
+      state.userId = null;
     },
-    loginSuccess(state) {
+    loginSuccess(state, action) {
       state.isAuthenticated = true;
       state.isAuthenticating = false;
+      state.userId = action.payload;
     },
     loginRequest(state) {
       state.error = null;
+      state.userId = null;
       state.loginRequired = true;
       state.isAuthenticated = false;
       state.isAuthenticating = true;
@@ -93,6 +97,7 @@ const authSlice = createSlice({
       state.authenticationInitialized = false;
       state.authenticationInitializing = true;
       state.isLogingOut = false;
+      state.userId = null;
     },
     sessionExpired(state) {
       localStorage.removeItem("group");
@@ -101,6 +106,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isAuthenticating = false;
       state.isLogingOut = false;
+      state.userId = null;
     },
     sessionFailure(state, action) {
       localStorage.removeItem("group");
@@ -109,6 +115,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isAuthenticating = false;
       state.isLogingOut = false;
+      state.userId = null;
     }
   },
   extraReducers(builder) {
@@ -133,7 +140,7 @@ const initializeKeycloak = (settings, loginRequired, dispatch) => {
       dispatch(setAuthReady());
     };
     keycloak.onAuthSuccess = () => {
-      dispatch(loginSuccess());
+      dispatch(loginSuccess(keycloak.subject));
     };
     keycloak.onAuthError = error => {
       const message = (error && error.error_description)?error.error_description:"Failed to authenticate";
@@ -175,8 +182,8 @@ export const setUpAuthentication = createAsyncThunk(
   async (_,  { dispatch, getState}) => {
     const state = getState();
     const { settings, loginRequired } = state.auth;
-    // if(settings && settings.url) {
-    if(settings && settings.url && (loginRequired || !window.location.host.startsWith("localhost"))) { // to test
+    if(settings && settings.url) {
+    // if(settings && settings.url && (loginRequired || !window.location.host.startsWith("localhost"))) { // to test
       dispatch(initializeAuthentication());
       const keycloakScriptSrc = settings.url + "/js/keycloak.js";
       // dev testing
