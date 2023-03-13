@@ -24,6 +24,7 @@
 package eu.ebrains.kg.common.controller.translators.kgv3;
 
 import eu.ebrains.kg.common.controller.translators.Helpers;
+import eu.ebrains.kg.common.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.WebServiceVersionV3;
@@ -175,6 +176,10 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
             w.setDescription(value(webServiceVersion.getDescription()));
         } else if (webservice != null) {
             w.setDescription(value(webservice.getDescription()));
+        }
+
+        if (StringUtils.isNotBlank(webServiceVersion.getVersionInnovation()) && !Constants.VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(webServiceVersion.getVersionInnovation()).toLowerCase())) {
+            w.setNewInThisVersion(new Value<>(webServiceVersion.getVersionInnovation()));
         }
 
         if(!CollectionUtils.isEmpty(webServiceVersion.getPublications())){

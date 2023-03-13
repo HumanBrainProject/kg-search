@@ -9,6 +9,8 @@ To create a new model, you need to follow these steps:
 5. Register the translator in `libs/kg-common/src/main/java/eu/ebrains/kg/common/model/TranslatorModel.java`.
 6. Run the `KGIndexingApplication` to upload the queries at least once (or multiple times if you have updates)
 7. Run the `KGSearchApplication` together with the UI (make sure it points to your development instance). Now you should be able to see the card in live mode and adapt to your needs.
+8. At deployment time: Make sure, you rebuild the index for the newly created type
+
 
 ## Configure a target model
 A target model is - again in the first place a POJO carrying the information which is going to be serialized and stored in ElasticSearch ready to be consumed by the UI.
