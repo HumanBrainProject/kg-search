@@ -25,7 +25,7 @@ import React, { useEffect, Suspense, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {useLocation, useNavigate, matchPath} from "react-router-dom";
 
-import { tagsToInvalidateOnLogout, api, getError } from "../../app/services/api";
+import { getError } from "../../app/services/api";
 import { setLoginRequired, login, setUpAuthentication, clearAuthError } from "./authSlice";
 import { resetGroups } from "../groups/groupsSlice";
 
@@ -40,7 +40,6 @@ const Authentication = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const isLogout = !!matchPath({path:"/logout"}, location.pathname);
   const isLive = !!matchPath({path:"/live/*"}, location.pathname);
 
   const dispatch = useDispatch();
@@ -67,12 +66,6 @@ const Authentication = () => {
     if (!authenticationInitializing && !isAuthenticating && !isLogingOut) {
       if (error) {
         initializedRef.current = false;
-      } else if (isLogout) {
-        initializedRef.current = false;
-        dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
-        if (loginRequired) {
-          navigate("/");
-        }
       } else {
         if (authenticationInitialized && !isAuthenticated && loginRequired && initializedRef.current) { // user clicked on login button
           initializedRef.current = false;
@@ -84,7 +77,7 @@ const Authentication = () => {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings, error, loginRequired, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut, isLogout]);
+  }, [settings, error, loginRequired, authenticationInitialized, authenticationInitializing, isAuthenticated, isAuthenticating, isLogingOut]);
 
   const requireLogin = required => {
     if (!required) {
@@ -104,10 +97,6 @@ const Authentication = () => {
     dispatch(clearAuthError());
   };
 
-  const loginBack = () => {
-    requireLogin(true);
-  };
-
   if (error) {
 
     if (loginRequired) {
@@ -118,12 +107,6 @@ const Authentication = () => {
 
     return (
       <BgError message={error} onRetryClick={handleRetry} retryLabel="Retry" retryVariant="primary" />
-    );
-  }
-
-  if (isLogout) {
-    return (
-      <BgError message="You have been successfully logged out" onRetryClick={loginBack} retryLabel="Login" retryVariant="primary" />
     );
   }
 

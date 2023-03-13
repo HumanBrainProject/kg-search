@@ -26,7 +26,7 @@ const Header = () => {
     navigate(`/${group !== defaultGroup?("?group=" + group):""}`);
   };
 
-  const showSearchLink  = location.pathname.startsWith("/instances") || location.pathname.startsWith("/logout");
+  const showSearchLink  = location.pathname.startsWith("/instances");
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light kgs-navbar">

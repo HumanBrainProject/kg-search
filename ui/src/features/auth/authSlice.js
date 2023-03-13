@@ -242,13 +242,10 @@ export const logout = createAsyncThunk(
   async (_,  { dispatch}) => {
     dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
     dispatch(logoutRequest());
-    setTimeout(async () => {
-      if (keycloak) {
-        await keycloak.logout({redirectUri: `${window.location.protocol}//${window.location.host}/logout`});
-      }
-      dispatch(logoutSuccess());
-      dispatch(api.util.invalidateTags(tagsToInvalidateOnLogout));
-    }, 0);
+    if (keycloak) {
+      await keycloak.logout({redirectUri: `${window.location.protocol}//${window.location.host}`});
+    }
+    dispatch(logoutSuccess());
   }
 );
 
