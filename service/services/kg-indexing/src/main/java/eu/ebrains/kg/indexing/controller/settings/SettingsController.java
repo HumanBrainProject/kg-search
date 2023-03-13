@@ -42,7 +42,7 @@ public class SettingsController {
                                 ),
                                 TEXT_ANALYZER, Map.of(
                                         "tokenizer", "custom_text_tokenizer",
-                                        "filter", List.of("custom_word_delimiter_graph", "flatten_graph", "custom_length", "lowercase", "stop")
+                                        "filter", List.of("custom_word_delimiter_graph", "flatten_graph", "custom_length", "lowercase", "asciifolding", "stop")
                                 )
                         ),
                         "tokenizer", Map.of(
