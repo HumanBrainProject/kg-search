@@ -40,8 +40,4 @@ public class SourceInstanceV3 implements SourceInstance {
         return IdUtils.getUUID(id);
     }
 
-    public List<String> getSimpleIdentifiers(){
-        return IdUtils.getUUID(identifier);
-    }
-
 }

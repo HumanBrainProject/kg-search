@@ -155,10 +155,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, containerUrl)));
                     break;
                 case UNDER_EMBARGO:
+                    Value<String> embargoMessage = value(Helpers.createEmbargoMessage("dataset", datasetVersion.getFileRepository(), dataStage));
                     if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {
-                        d.setEmbargoRestrictedAccess(value(DatasetVersion.createEmbargoInProgressMessage(containerUrl)));
+                        d.setEmbargoRestrictedAccess(embargoMessage);
                     } else {
-                        d.setEmbargo(value(DatasetVersion.EMBARGO_MESSAGE));
+                        d.setEmbargo(embargoMessage);
                     }
                     break;
                 case RESTRICTED_ACCESS:

@@ -39,8 +39,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class TranslatorBase {
-    public static final String FILE_PROXY = "https://data.kg.ebrains.eu/files";
-
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private transient Configuration configuration;
@@ -110,6 +108,10 @@ public abstract class TranslatorBase {
             return urls.stream().map(this::link).filter(Objects::nonNull).collect(Collectors.toList());
         }
         return null;
+    }
+
+    protected <T> List<T> emptyToNull(List<T> list) {
+        return CollectionUtils.isEmpty(list) ? null : list;
     }
 
     protected TargetExternalReference link(String url) {

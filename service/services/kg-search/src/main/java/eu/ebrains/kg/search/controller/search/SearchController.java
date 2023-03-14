@@ -35,7 +35,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasPreviews;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
@@ -409,18 +408,6 @@ public class SearchController extends FacetAggregationUtils {
 
         res.put("fields", v);
         return res;
-    }
-
-    private Map<String, Object> getPreview(String label, TargetFile.FileImage staticImageUrl, TargetFile.FileImage previewUrl) {
-        String imageUrl = staticImageUrl != null?staticImageUrl.getUrl():null;
-        String videoUrl = previewUrl != null?previewUrl.getUrl():null;
-        return getPreview(
-                label,
-                null,
-                imageUrl,
-                videoUrl,
-                previewUrl != null && previewUrl.getIsAnimated()
-        );
     }
 
     private Map<String, Object> getPreview(String label, Object link, String imageUrl, String videoUrl, boolean isVideoAnimated) {

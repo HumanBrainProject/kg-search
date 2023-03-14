@@ -24,6 +24,8 @@
 package eu.ebrains.kg.search.controller.authentication;
 
 import eu.ebrains.kg.common.configuration.Constants;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,25 +50,11 @@ public class UserInfoRepository {
         this.userInfoUrl = userInfoUrl;
     }
 
+    @Getter
+    @Setter
     public static class UserInfo implements Serializable {
         private RolesByClient roles;
         private String sub;
-
-        public RolesByClient getRoles() {
-            return roles;
-        }
-
-        public void setRoles(RolesByClient roles) {
-            this.roles = roles;
-        }
-
-        public String getSub() {
-            return sub;
-        }
-
-        public void setSub(String sub) {
-            this.sub = sub;
-        }
 
         public boolean isInRole(String client, String role){
             if(getRoles()!=null && getRoles().get(client)!=null){

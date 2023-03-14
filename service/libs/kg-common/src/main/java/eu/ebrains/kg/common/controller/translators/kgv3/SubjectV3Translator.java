@@ -36,8 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.common.controller.translators.TranslatorCommons.*;
-
 public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, SubjectV3Translator.Result> {
 
     public static class Result extends ResultsOfKGv3<SubjectV3> {

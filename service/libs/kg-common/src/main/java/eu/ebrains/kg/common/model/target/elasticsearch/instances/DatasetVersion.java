@@ -25,15 +25,12 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,13 +46,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @JsonIgnore
     private List<String> allIdentifiers;
 
-    public static final String EMBARGO_MESSAGE =  "This dataset is temporarily under embargo. The data will become available for download after the embargo period.";
     public static final String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
-
-    public static String createEmbargoInProgressMessage(String containerUrl){
-        String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replace("api/buckets/", "") : String.format("https://data.kg.ebrains.eu/files/list?url=%s", containerUrl);
-        return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", endpoint);
-    }
 
     public static String createHDGMessage(String id, String containerUrl) {
         if (containerUrl != null && !containerUrl.startsWith("https://data-proxy.ebrains.eu") && !containerUrl.startsWith("https://object.cscs.ch")) {
@@ -243,43 +234,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class OldSubject {
-
-        @JsonProperty("subject_name")
-        @FieldInfo(label = "Name")
-        private TargetInternalReference subjectName;
-
-        @FieldInfo(label = "Species")
-        private List<Value<String>> species;
-
-        @FieldInfo(label = "Sex")
-        private List<Value<String>> sex;
-
-        @FieldInfo(label = "Age")
-        private Value<String> age;
-
-        @JsonProperty("agecategory") //TODO: Fix the typo and put it in camelCase
-        @FieldInfo(label = "Age category")
-        private List<Value<String>> ageCategory;
-
-        @FieldInfo(label = "Weight")
-        private Value<String> weight;
-
-        @FieldInfo(label = "Strain")
-        private Value<String> strain;
-
-        @FieldInfo(label = "Genotype")
-        private Value<String> genotype;
-
-        @FieldInfo(label = "Samples")
-        private List<TargetInternalReference> samples;
-
-    }
 
     @Getter
     @Setter

@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.common.controller.translators.kgv3;
 
-import eu.ebrains.kg.common.controller.translators.Translator;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.FileV3;
@@ -87,11 +86,11 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         f.setAllIdentifiers(file.getIdentifier());
         f.setIdentifier(IdUtils.getUUID(file.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         f.setFileRepository(IdUtils.getUUID(fileRepository));
-        f.setTitle(value(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName()));
+        f.setTitle(value(file.getName()));
         if(!CollectionUtils.isEmpty(file.getServiceLinks())){
             f.setViewer(file.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open %s in %s", s.getLabel(), s.getService()))).collect(Collectors.toList()));
         }
-        String iri = file.isPrivateAccess() ? String.format("%s?url=%s", Translator.FILE_PROXY, file.getIri()) : file.getIri();
+        String iri = file.getIri();
         if (StringUtils.isNotBlank(iri)) {
             f.setIri(new TargetExternalReference(iri, iri));
         }

@@ -62,10 +62,6 @@ public class ESServiceClient {
 
     private final String elasticSearchEndpoint;
 
-
-
-
-
     private static String metricsQuery(int size){
         return "{\n" +
                 "  \"fields\": [\n" +

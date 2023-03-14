@@ -54,7 +54,7 @@ public class Helpers {
                     return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
                 }
             }
-            return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://data.kg.ebrains.eu/files/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileRepository.getIri());
+            return message;
         }
         return null;
     }
@@ -78,13 +78,11 @@ public class Helpers {
         return false;
     }
 
-    public static String translateInternalFileRepoToUrl(FileRepository repository) {
+    private static String translateInternalFileRepoToUrl(FileRepository repository) {
         if (repository != null && repository.getIri() != null) {
             if (isDataProxyBucket(repository)) {
-                String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/v1/buckets/", "");
+                String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/v1/buckets/", "").replace("https://data-proxy.ebrains.eu/api/v1/public/buckets/", "");
                 return String.format("https://data-proxy.ebrains.eu/%s", id);
-            } else if (isCscsContainer(repository)) {
-                return String.format("https://data.kg.ebrains.eu/files/list?url=%s", repository.getIri());
             }
         }
         return null;

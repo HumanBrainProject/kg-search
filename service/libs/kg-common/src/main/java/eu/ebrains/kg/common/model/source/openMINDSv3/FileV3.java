@@ -38,7 +38,6 @@ public class FileV3 extends SourceInstanceV3 {
     private String iri;
     private String fileRepository;
     private Size size;
-    private boolean privateAccess;
     private Format format;
     private List<FileBundle> fileBundles;
     private List<ServiceLink> serviceLinks;
