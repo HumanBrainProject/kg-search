@@ -51,7 +51,7 @@ public class Helpers {
             if (stage == DataStage.IN_PROGRESS) {
                 final String url = translateInternalFileRepoToUrl(fileRepository);
                 if (url != null) {
-                    return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
+                    return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>.", message, url);
                 }
             }
             return message;
