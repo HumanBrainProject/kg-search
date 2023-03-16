@@ -61,11 +61,15 @@ const Instance = ({ isPreview, isSearch, path }) => {
   }, [id, group, defaultGroup, path, isSearch, isSearchInitialized]);
 
   const handleOnCancelClick = () => {
-    if (!group) {
-      dispatch(logout());
+    if (!isSearch && instanceData?.id && instanceData.id !== id) {
+      navigate(-1);
+    } else {
+      if (!group) {
+        dispatch(logout());
+      }
+      dispatch(reset());
+      navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
     }
-    dispatch(reset());
-    navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
   };
 
   const previewResult = useGetPreviewQuery(id, { skip: !id || !isPreview || (isSearch && !isSearchInitialized)});
@@ -104,8 +108,10 @@ const Instance = ({ isPreview, isSearch, path }) => {
       }
     }
 
+    let cancelLabel = (isSearch || (instanceData?.id && instanceData.id !== id))?"Cancel":"Back to search";
+
     return (
-      <ErrorPanel message={message} cancelLabel={isSearch?"Cancel":"Back to search"} onCancelClick={handleOnCancelClick}  onRetryClick={refetch} retryVariant="primary" />
+      <ErrorPanel message={message} cancelLabel={cancelLabel} onCancelClick={handleOnCancelClick}  onRetryClick={refetch} retryVariant="primary" />
     );
   }
 
