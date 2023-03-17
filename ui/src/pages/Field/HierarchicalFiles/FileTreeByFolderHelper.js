@@ -22,13 +22,21 @@
  */
 import { JSONPath } from "./FileTreeByGroupingTypeHelper";
 
-const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSeparator, nameFieldPath, urlFieldPath) => {
+const buildTreeStructureForFile = (
+  rootNode,
+  file,
+  nbOfPathToSkip,
+  rootUrlSeparator,
+  nameFieldPath,
+  urlFieldPath
+) => {
   const fileUrl = JSONPath(file, urlFieldPath);
   if (fileUrl && typeof fileUrl === "string") {
     const path = fileUrl.split("/").slice(nbOfPathToSkip);
     let node = rootNode;
     path.forEach((name, index) => {
-      if(index === (path.length - 1)) { // file
+      if (index === path.length - 1) {
+        // file
         node.paths[name] = {
           //name: name.replace(/\?.+$/, ""),
           title: JSONPath(file, nameFieldPath),
@@ -38,14 +46,20 @@ const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSepara
           data: file,
           key: fileUrl
         };
-      } else { // folder
-        if(!node.paths[name]) { // is not already created
+      } else {
+        // folder
+        if (!node.paths[name]) {
+          // is not already created
           node.paths[name] = {
             title: name,
-            url: `${node.url}${node === rootNode?rootUrlSeparator:"/"}${name}`,
+            url: `${node.url}${
+              node === rootNode ? rootUrlSeparator : "/"
+            }${name}`,
             type: "folder",
             paths: {},
-            key: `${node.url}${node === rootNode?rootUrlSeparator:"/"}${name}`
+            key: `${node.url}${
+              node === rootNode ? rootUrlSeparator : "/"
+            }${name}`
           };
         }
         node = node.paths[name];
@@ -55,16 +69,21 @@ const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSepara
 };
 
 const setChildren = node => {
-  if(node.type === "folder") {
+  if (node.type === "folder") {
     node.children = [];
     const paths = Object.values(node.paths);
-    if(!paths.every(el => el.type === "folder") && !paths.every(el => el.type === "file")) {
-      paths.sort((a, b) => b.type.toLowerCase().localeCompare(a.type.toLowerCase()));
+    if (
+      !paths.every(el => el.type === "folder") &&
+      !paths.every(el => el.type === "file")
+    ) {
+      paths.sort((a, b) =>
+        b.type.toLowerCase().localeCompare(a.type.toLowerCase())
+      );
     }
     delete node.paths;
     paths.forEach(child => {
       node.children.push(child);
-      if(child.type === "folder") {
+      if (child.type === "folder") {
         setChildren(child);
       }
     });
@@ -76,54 +95,73 @@ const getPath = url => {
     return [];
   }
   const segments = url.split("/");
-  return segments.slice(0, segments.length-1);
+  return segments.slice(0, segments.length - 1);
 };
 
 const getCommonPath = (files, urlFieldPath) => {
   const urls = files.map(file => JSONPath(file, urlFieldPath)).sort();
   const firstFilePath = getPath(urls[0]);
   const lastFilePath = getPath(urls.pop());
-  const max = firstFilePath.length > lastFilePath.length?lastFilePath.length:firstFilePath.length;
+  const max =
+    firstFilePath.length > lastFilePath.length
+      ? lastFilePath.length
+      : firstFilePath.length;
   let index = 0;
-  while(index<max && firstFilePath[index] === lastFilePath[index]) {
+  while (index < max && firstFilePath[index] === lastFilePath[index]) {
     index++;
   }
   return firstFilePath.splice(0, index);
 };
 
-const getUrl = commonPath => {
-  if(isCscsContainer(commonPath)) {
-    const rootPathIndex = 6;
-    return commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
+const getRootPathIndex = path => {
+  if (path.startsWith("https://data-proxy.ebrains.eu")) {
+    if (path.startsWith("https://data-proxy.ebrains.eu/api/v1/buckets")) {
+      return 7; // Container url does not contain "public" in the path
+    }
+    return 8; // Container url contains "public" in the path
   }
-  return commonPath.join("/");
+  return 6; // CSCS container
 };
 
-const isCscsContainer = commonPath => commonPath.join("/").startsWith("https://object.cscs");
+const getUrl = commonPath => {
+  const joinedPath = commonPath.join("/");
+  const rootPathIndex = getRootPathIndex(joinedPath);
+  return commonPath.length <= rootPathIndex
+    ? joinedPath
+    : `${commonPath.slice(0, rootPathIndex).join("/")}?prefix=${commonPath
+      .slice(rootPathIndex)
+      .join("/")}`;
+};
 
 const getRootUrlSeparator = (commonPath, nbOfPathToSkip) => {
-  const rootPathIndex = isCscsContainer(commonPath)?6:8;
-  return  nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
+  const rootPathIndex = getRootPathIndex(commonPath.join("/"));
+  return nbOfPathToSkip > rootPathIndex ? "/" : "?prefix=";
 };
 
 const getSortedFiles = (files, urlFieldPath) => {
   if (!files) {
     return [];
   }
-  if (!Array.isArray(files)) { // To be checked with the new indexer
+  if (!Array.isArray(files)) {
+    // To be checked with the new indexer
     return [files];
   }
-  return files.slice().sort((a, b) => JSONPath(a, urlFieldPath).toLowerCase().localeCompare(JSONPath(b, urlFieldPath).toLowerCase()));
+  return files
+    .slice()
+    .sort((a, b) =>
+      JSONPath(a, urlFieldPath)
+        .toLowerCase()
+        .localeCompare(JSONPath(b, urlFieldPath).toLowerCase())
+    );
 };
 
 export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
-
   const list = getSortedFiles(files, urlFieldPath);
 
   const commonPath = getCommonPath(list, urlFieldPath);
   const url = getUrl(commonPath);
   const tree = {
-    title: commonPath[commonPath.length-1],
+    title: commonPath[commonPath.length - 1],
     url: `https://data.kg.ebrains.eu/zip?container=${url}`,
     isRootNode: true,
     type: "folder",
@@ -134,7 +172,16 @@ export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
   };
   const nbOfPathToSkip = commonPath.length;
   const rootUrlSeparator = getRootUrlSeparator(commonPath, nbOfPathToSkip);
-  list.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator, nameFieldPath, urlFieldPath));
+  list.forEach(file =>
+    buildTreeStructureForFile(
+      tree,
+      file,
+      nbOfPathToSkip,
+      rootUrlSeparator,
+      nameFieldPath,
+      urlFieldPath
+    )
+  );
   setChildren(tree);
   return tree;
 };
