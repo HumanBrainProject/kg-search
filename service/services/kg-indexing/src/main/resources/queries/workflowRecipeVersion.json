@@ -98,16 +98,15 @@
     },
     {
       "propertyName": "query:homepage",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/homepage",
-        "https://openminds.ebrains.eu/vocab/URL"
-      ],
-      "singleValue": "FIRST"
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
       "propertyName": "query:keyword",
-      "path": "https://openminds.ebrains.eu/vocab/keyword",
-      "sort": true
+      "ensureOrder": true,
+      "path": [
+        "https://openminds.ebrains.eu/vocab/keyword",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
     },
     {
       "propertyName": "query:versionInnovation",
@@ -195,7 +194,7 @@
     {
       "propertyName": "query:projects",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "reverse": true
       },
       "structure": [
@@ -278,11 +277,11 @@
           "@id": "https://openminds.ebrains.eu/vocab/fullDocumentation",
           "typeFilter": [
             {
-              "@id": "https://openminds.ebrains.eu/core/URL"
+              "@id": "https://openminds.ebrains.eu/core/WebResource"
             }
           ]
         },
-        "https://openminds.ebrains.eu/vocab/URL"
+        "https://openminds.ebrains.eu/vocab/IRI"
       ]
     },
     {
@@ -351,7 +350,7 @@
         {
           "propertyName": "query:workflowProjects",
           "path": {
-            "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+            "@id": "https://openminds.ebrains.eu/vocab/hasPart",
             "reverse": true
           },
           "structure": [

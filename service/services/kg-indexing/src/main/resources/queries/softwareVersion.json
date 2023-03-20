@@ -150,7 +150,7 @@
     {
       "propertyName": "query:projects",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "reverse": true
       },
       "structure": [
@@ -313,11 +313,7 @@
     },
     {
       "propertyName": "query:homepage",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/homepage",
-        "https://openminds.ebrains.eu/vocab/URL"
-      ],
-      "singleValue": "FIRST"
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
       "propertyName": "query:repository",
@@ -364,11 +360,11 @@
           "@id": "https://openminds.ebrains.eu/vocab/fullDocumentation",
           "typeFilter": [
             {
-              "@id": "https://openminds.ebrains.eu/core/URL"
+              "@id": "https://openminds.ebrains.eu/core/WebResource"
             }
           ]
         },
-        "https://openminds.ebrains.eu/vocab/URL"
+        "https://openminds.ebrains.eu/vocab/IRI"
       ],
       "singleValue": "FIRST"
     },
@@ -426,7 +422,7 @@
     },
     {
       "propertyName": "query:components",
-      "path": "https://openminds.ebrains.eu/vocab/hasComponent",
+      "path": "https://openminds.ebrains.eu/vocab/hasPart",
       "structure": [
         {
           "propertyName": "query:id",
@@ -476,7 +472,7 @@
         {
           "propertyName": "query:softwareProjects",
           "path": {
-            "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+            "@id": "https://openminds.ebrains.eu/vocab/hasPart",
             "reverse": true
           },
           "structure": [
@@ -515,11 +511,7 @@
         },
         {
           "propertyName": "query:softwareHomepage",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/homepage",
-            "https://openminds.ebrains.eu/vocab/URL"
-          ],
-          "singleValue": "FIRST"
+          "path": "https://openminds.ebrains.eu/vocab/homepage"
         },
         {
           "propertyName": "query:softwareDeveloper",

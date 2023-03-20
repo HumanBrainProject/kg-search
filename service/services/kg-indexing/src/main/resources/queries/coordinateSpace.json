@@ -68,11 +68,7 @@
     },
     {
       "propertyName": "query:homepage",
-      "singleValue": "FIRST",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/homepage",
-        "https://openminds.ebrains.eu/vocab/URL"
-      ]
+      "path":  "https://openminds.ebrains.eu/vocab/homepage"
     }
   ]
 }

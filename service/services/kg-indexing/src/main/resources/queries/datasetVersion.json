@@ -60,11 +60,7 @@
     },
     {
       "propertyName": "query:homepage",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/homepage",
-        "https://openminds.ebrains.eu/vocab/URL"
-      ],
-      "singleValue": "FIRST"
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
       "propertyName": "query:supportChannels",
@@ -72,7 +68,11 @@
     },
     {
       "propertyName": "query:keyword",
-      "path": "https://openminds.ebrains.eu/vocab/keyword"
+      "ensureOrder": true,
+      "path": [
+        "https://openminds.ebrains.eu/vocab/keyword",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
     },
     {
       "propertyName": "query:version",
@@ -151,7 +151,7 @@
     {
       "propertyName": "query:projects",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "reverse": true
       },
       "structure": [
@@ -204,11 +204,7 @@
       "structure": [
         {
           "propertyName": "query:url",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/openDataIn",
-            "https://openminds.ebrains.eu/vocab/URL"
-          ],
-          "singleValue": "FIRST"
+          "path": "https://openminds.ebrains.eu/vocab/openDataIn"
         },
         {
           "propertyName": "query:service",
@@ -255,11 +251,7 @@
       "structure": [
         {
           "propertyName": "query:url",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/openDataIn",
-            "https://openminds.ebrains.eu/vocab/URL"
-          ],
-          "singleValue": "FIRST"
+          "path": "https://openminds.ebrains.eu/vocab/openDataIn"
         },
         {
           "propertyName": "query:service",
@@ -305,7 +297,7 @@
         {
           "propertyName": "query:datasetProjects",
           "path": {
-            "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+            "@id": "https://openminds.ebrains.eu/vocab/hasPart",
             "reverse": true
           },
           "structure": [
@@ -400,11 +392,11 @@
           "@id": "https://openminds.ebrains.eu/vocab/fullDocumentation",
           "typeFilter": [
             {
-              "@id": "https://openminds.ebrains.eu/core/URL"
+              "@id": "https://openminds.ebrains.eu/core/WebResource"
             }
           ]
         },
-        "https://openminds.ebrains.eu/vocab/URL"
+        "https://openminds.ebrains.eu/vocab/IRI"
       ]
     },
     {
@@ -685,7 +677,7 @@
               "reverse": true
             },
             {
-              "@id": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+              "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
               "reverse": true
             }
           ],
@@ -744,8 +736,12 @@
           "path": "https://openminds.ebrains.eu/vocab/lookupLabel"
         },
         {
-          "propertyName": "query:quantity",
-          "path": "https://openminds.ebrains.eu/vocab/quantity"
+          "propertyName": "query:numberOfSubjects",
+          "path": "https://openminds.ebrains.eu/vocab/numberOfSubjects"
+        },
+        {
+          "propertyName": "query:numberOfTissueSamples",
+          "path": "https://openminds.ebrains.eu/vocab/numberOfTissueSamples"
         },
         {
           "propertyName": "query:additionalRemarks",
@@ -894,7 +890,7 @@
                   "reverse": true
                 },
                 {
-                  "@id": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+                  "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
                   "reverse": true
                 }
               ],
@@ -970,7 +966,7 @@
         {
           "propertyName": "query:serviceLinks",
           "path": {
-            "@id": "https://openminds.ebrains.eu/vocab/descendedFrom",
+            "@id": "https://openminds.ebrains.eu/vocab/groupedBy",
             "reverse": true,
             "typeFilter": [
               {
@@ -994,11 +990,7 @@
               "structure": [
                 {
                   "propertyName": "query:openDataIn",
-                  "singleValue": "FIRST",
-                  "path": [
-                    "https://openminds.ebrains.eu/vocab/openDataIn",
-                    "https://openminds.ebrains.eu/vocab/URL"
-                  ]
+                  "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                 },
                 {
                   "propertyName": "query:service",
@@ -1039,11 +1031,7 @@
               "structure": [
                 {
                   "propertyName": "query:openDataIn",
-                  "singleValue": "FIRST",
-                  "path": [
-                    "https://openminds.ebrains.eu/vocab/openDataIn",
-                    "https://openminds.ebrains.eu/vocab/URL"
-                  ]
+                  "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                 },
                 {
                   "propertyName": "query:service",
@@ -1304,7 +1292,7 @@
             {
               "propertyName": "query:descendedFrom",
               "path": [
-                "https://openminds.ebrains.eu/vocab/descendedFrom",
+                "https://openminds.ebrains.eu/vocab/groupedBy",
                 "@id"
               ]
             },
@@ -1319,7 +1307,7 @@
             {
               "propertyName": "query:serviceLinks",
               "path": {
-                "@id": "https://openminds.ebrains.eu/vocab/descendedFrom",
+                "@id": "https://openminds.ebrains.eu/vocab/groupedBy",
                 "reverse": true,
                 "typeFilter": [
                   {
@@ -1343,11 +1331,7 @@
                   "structure": [
                     {
                       "propertyName": "query:openDataIn",
-                      "singleValue": "FIRST",
-                      "path": [
-                        "https://openminds.ebrains.eu/vocab/openDataIn",
-                        "https://openminds.ebrains.eu/vocab/URL"
-                      ]
+                      "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                     },
                     {
                       "propertyName": "query:service",
@@ -1388,11 +1372,7 @@
                   "structure": [
                     {
                       "propertyName": "query:openDataIn",
-                      "singleValue": "FIRST",
-                      "path": [
-                        "https://openminds.ebrains.eu/vocab/openDataIn",
-                        "https://openminds.ebrains.eu/vocab/URL"
-                      ]
+                      "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                     },
                     {
                       "propertyName": "query:service",
@@ -1550,7 +1530,7 @@
                       "reverse": true
                     },
                     {
-                      "@id": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+                      "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
                       "reverse": true
                     }
                   ],
@@ -1626,7 +1606,7 @@
             {
               "propertyName": "query:serviceLinks",
               "path": {
-                "@id": "https://openminds.ebrains.eu/vocab/descendedFrom",
+                "@id": "https://openminds.ebrains.eu/vocab/groupedBy",
                 "reverse": true,
                 "typeFilter": [
                   {
@@ -1650,11 +1630,7 @@
                   "structure": [
                     {
                       "propertyName": "query:openDataIn",
-                      "singleValue": "FIRST",
-                      "path": [
-                        "https://openminds.ebrains.eu/vocab/openDataIn",
-                        "https://openminds.ebrains.eu/vocab/URL"
-                      ]
+                      "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                     },
                     {
                       "propertyName": "query:service",
@@ -1695,11 +1671,7 @@
                   "structure": [
                     {
                       "propertyName": "query:openDataIn",
-                      "singleValue": "FIRST",
-                      "path": [
-                        "https://openminds.ebrains.eu/vocab/openDataIn",
-                        "https://openminds.ebrains.eu/vocab/URL"
-                      ]
+                      "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                     },
                     {
                       "propertyName": "query:service",
@@ -1960,7 +1932,7 @@
                 {
                   "propertyName": "query:descendedFrom",
                   "path": [
-                    "https://openminds.ebrains.eu/vocab/descendedFrom",
+                    "https://openminds.ebrains.eu/vocab/groupedBy",
                     "@id"
                   ]
                 },
@@ -1975,7 +1947,7 @@
                 {
                   "propertyName": "query:serviceLinks",
                   "path": {
-                    "@id": "https://openminds.ebrains.eu/vocab/descendedFrom",
+                    "@id": "https://openminds.ebrains.eu/vocab/groupedBy",
                     "reverse": true,
                     "typeFilter": [
                       {
@@ -1999,11 +1971,7 @@
                       "structure": [
                         {
                           "propertyName": "query:openDataIn",
-                          "singleValue": "FIRST",
-                          "path": [
-                            "https://openminds.ebrains.eu/vocab/openDataIn",
-                            "https://openminds.ebrains.eu/vocab/URL"
-                          ]
+                          "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                         },
                         {
                           "propertyName": "query:service",
@@ -2044,11 +2012,7 @@
                       "structure": [
                         {
                           "propertyName": "query:openDataIn",
-                          "singleValue": "FIRST",
-                          "path": [
-                            "https://openminds.ebrains.eu/vocab/openDataIn",
-                            "https://openminds.ebrains.eu/vocab/URL"
-                          ]
+                          "path": "https://openminds.ebrains.eu/vocab/openDataIn"
                         },
                         {
                           "propertyName": "query:service",
@@ -2258,11 +2222,11 @@
           "@id": "https://openminds.ebrains.eu/vocab/inputData",
           "typeFilter": [
             {
-              "@id": "https://openminds.ebrains.eu/core/URL"
+              "@id": "https://openminds.ebrains.eu/core/WebResource"
             }
           ]
         },
-        "https://openminds.ebrains.eu/vocab/URL"
+        "https://openminds.ebrains.eu/vocab/IRI"
       ]
     },
     {

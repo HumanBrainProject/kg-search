@@ -104,7 +104,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         }
         Map<String, File.GroupingType> groupingTypes = new HashMap<>();
         file.getFileBundles().forEach(fileBundle -> {
-            String groupingTypeName = fileBundle.getGroupingType();
+            String groupingTypeName = fileBundle.groupingTypeLabel();
             TargetInternalReference fb =  new TargetInternalReference(
                     IdUtils.getUUID(fileBundle.getId()), fileBundle.getName());
             if (!groupingTypes.containsKey(groupingTypeName)) {

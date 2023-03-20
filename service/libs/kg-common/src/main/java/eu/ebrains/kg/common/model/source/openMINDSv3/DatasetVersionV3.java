@@ -119,7 +119,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
         private String id;
         private String internalIdentifier;
         private String lookupLabel;
-        private Long quantity;
+        private Long numberOfSubjects;
+        private Long numberOfTissueSamples;
         private String additionalRemarks;
         private FullNameRef origin;
         private List<SpeciesOrStrain> species;

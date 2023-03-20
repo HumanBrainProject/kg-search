@@ -28,8 +28,11 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRefForResea
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ServiceLink;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -61,6 +64,13 @@ public class FileV3 extends SourceInstanceV3 {
     public static class FileBundle {
         private String id;
         private String name;
-        private String groupingType;
+        private List<String> groupingType;
+
+        public String groupingTypeLabel(){
+            if(CollectionUtils.isEmpty(groupingType)){
+                return null;
+            }
+            return groupingType.stream().filter(Objects::nonNull).sorted().collect(Collectors.joining(", "));
+        }
     }
 }

@@ -48,11 +48,11 @@
           "@id": "https://openminds.ebrains.eu/vocab/describedIn",
           "typeFilter": [
             {
-              "@id": "https://openminds.ebrains.eu/core/URL"
+              "@id": "https://openminds.ebrains.eu/core/WebResource"
             }
           ]
         },
-        "https://openminds.ebrains.eu/vocab/URL"
+        "https://openminds.ebrains.eu/vocab/IRI"
       ]
     },
     {

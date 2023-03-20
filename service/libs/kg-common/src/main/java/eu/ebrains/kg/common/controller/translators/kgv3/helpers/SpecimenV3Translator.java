@@ -424,8 +424,8 @@ public class SpecimenV3Translator extends TranslatorBase {
             subGrp.setId(IdUtils.getUUID(specimen.getId()));
             subGrp.setTitle(value(specimen.getInternalIdentifier()));
             subGrp.setOtherPublications(translateOtherPublications(specimen, datasetVersionId, parentSpecimen));
-            if (specimen.getQuantity() != null) {
-                subGrp.setNumberOfSubjects(value(String.valueOf(specimen.getQuantity())));
+            if (specimen.getNumberOfSubjects() != null) {
+                subGrp.setNumberOfSubjects(value(String.valueOf(specimen.getNumberOfSubjects())));
             }
             fillSubjectGroupInformation(subGrp, specimen);
             if (specimen.getStudiedState().size() == 1) {
@@ -580,8 +580,8 @@ public class SpecimenV3Translator extends TranslatorBase {
             final DatasetVersion.DSVTissueSampleCollection tissueSampleColl = new DatasetVersion.DSVTissueSampleCollection();
             tissueSampleColl.setId(IdUtils.getUUID(specimen.getId()));
             tissueSampleColl.setTitle(value(specimen.getInternalIdentifier()));
-            if (specimen.getQuantity() != null) {
-                tissueSampleColl.setTissueSamples(value(String.valueOf(specimen.getQuantity())));
+            if (specimen.getNumberOfTissueSamples() != null) {
+                tissueSampleColl.setTissueSamples(value(String.valueOf(specimen.getNumberOfTissueSamples())));
             }
             fillTissueSampleCollectionInformation(tissueSampleColl, specimen);
             if (specimen.getStudiedState().size() == 1) {

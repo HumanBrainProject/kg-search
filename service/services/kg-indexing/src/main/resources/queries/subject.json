@@ -114,7 +114,7 @@
           "propertyName": "query:componentName",
           "path": [
             {
-              "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+              "@id": "https://openminds.ebrains.eu/vocab/hasPart",
               "reverse": true
             },
             "https://openminds.ebrains.eu/vocab/fullName"

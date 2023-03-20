@@ -38,7 +38,7 @@
     {
       "propertyName": "query:datasets",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "typeFilter": [
           {
             "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
@@ -113,7 +113,7 @@
     {
       "propertyName": "query:models",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "typeFilter": [
           {
             "@id": "https://openminds.ebrains.eu/core/ModelVersion"
@@ -188,7 +188,7 @@
     {
       "propertyName": "query:metaDataModels",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "typeFilter": [
           {
             "@id": "https://openminds.ebrains.eu/core/MetaDataModelVersion"
@@ -263,7 +263,7 @@
     {
       "propertyName": "query:software",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "@id": "https://openminds.ebrains.eu/vocab/hasPart",
         "typeFilter": [
           {
             "@id": "https://openminds.ebrains.eu/core/SoftwareVersion"
@@ -339,7 +339,7 @@
       "propertyName": "query:publications",
       "path": [
         {
-          "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+          "@id": "https://openminds.ebrains.eu/vocab/hasPart",
           "typeFilter": [
             {
               "@id": "https://openminds.ebrains.eu/core/DatasetVersion"

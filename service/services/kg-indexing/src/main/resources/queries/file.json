@@ -50,11 +50,7 @@
       "structure": [
         {
           "propertyName": "query:url",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/openDataIn",
-            "https://openminds.ebrains.eu/vocab/URL"
-          ],
-          "singleValue": "FIRST"
+          "path": "https://openminds.ebrains.eu/vocab/openDataIn"
         },
         {
           "propertyName": "query:service",
@@ -170,8 +166,7 @@
           "path": [
             "https://openminds.ebrains.eu/vocab/groupingType",
             "https://openminds.ebrains.eu/vocab/name"
-          ],
-          "singleValue": "FIRST"
+          ]
         }
       ]
     },

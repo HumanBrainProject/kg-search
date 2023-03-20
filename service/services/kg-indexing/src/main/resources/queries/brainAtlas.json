@@ -76,11 +76,7 @@
     },
     {
       "propertyName": "query:homepage",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/homepage",
-        "https://openminds.ebrains.eu/vocab/URL"
-      ],
-      "singleValue": "FIRST"
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
       "propertyName": "query:custodian",
@@ -168,7 +164,7 @@
                       }
                     },
                     {
-                      "@id": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+                      "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
                       "reverse": true
                     },
                     "@id"
@@ -314,7 +310,7 @@
         },
         {
           "propertyName": "query:terminologyVersion",
-          "path": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+          "path": "https://openminds.ebrains.eu/vocab/hasTerminology",
           "singleValue": "FIRST",
           "structure": [
             {
@@ -402,7 +398,7 @@
             {
               "propertyName": "query:definingProduct",
               "path": [
-                "https://openminds.ebrains.eu/vocab/definedIn",
+                "https://openminds.ebrains.eu/vocab/dataLocation",
                 "https://openminds.ebrains.eu/vocab/fileRepository",
                 {
                   "@id": "https://openminds.ebrains.eu/vocab/repository",
