@@ -7,6 +7,8 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInfo
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
 
@@ -45,7 +47,15 @@ public class TranslatorUtils {
     }
 
     public Document getResource(String  id){
-        return this.esServiceClient.getDocumentByNativeId(ESHelper.getResourcesIndex(), id);
+        try {
+            return this.esServiceClient.getDocumentByNativeId(ESHelper.getResourcesIndex(), id);
+        }
+        catch (WebClientResponseException e){
+            if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+                return null;
+            }
+            throw e;
+        }
     }
 
 

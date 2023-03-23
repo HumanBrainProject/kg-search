@@ -93,6 +93,9 @@ const Mermaid = ({ data, details }) => {
         details={details}
         callbackFunctionName={callbackFunctionName}
       />
+      <i className="kgs-mermaid__advise">
+        Select the items of the graph to get more details about the individual elements.
+      </i>
       <Detail details={details} callbackFunctionName={callbackFunctionName} />
     </div>
   );

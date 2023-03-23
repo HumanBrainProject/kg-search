@@ -37,8 +37,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Workflow")
-public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance, HasCitation {
+@MetaInfo(name = "Workflow", searchable=false) //Currently disable the searchability of workflows to keep them "hidden"
+public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance, HasBadges, HasTrendingInformation {
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -59,6 +59,64 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     @ElasticSearchInfo(type = "keyword")
     private Value<String> disclaimer;
 
+    @ElasticSearchInfo(type = "keyword")
+    private List<String> badges;
+
+    private boolean trending;
+
+    private int last30DaysViews;
+
+    @FieldInfo(label = "Name", boost = 20, useForSuggestion = true)
+    private Value<String> title;
+
+    @FieldInfo(label = "Contributors",  separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true,  useForSuggestion = true)
+    private List<TargetInternalReference> contributors;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
+    private Value<String> citation;
+
+    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
+    private Value<String> customCitation;
+
+    @FieldInfo(label = "Copyright", type = FieldInfo.Type.TEXT)
+    private Value<String> copyright;
+
+    @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
+    private List<TargetInternalReference> projects;
+
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the web service.", boost = 10, useForSuggestion = true)
+    private List<TargetInternalReference> custodians;
+
+    @FieldInfo(label = "Accessibility", facet = FieldInfo.Facet.LIST)
+    private Value<String> accessibility;
+
+    @FieldInfo(label = "Homepage")
+    private TargetExternalReference homepage;
+
+    @FieldInfo(label = "Documentation")
+    private List<TargetExternalReference> documentation;
+
+    @FieldInfo(label = "Support")
+    private List<TargetExternalReference> support;
+
+    @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
+    private List<Value<String>> publications;
+
+    @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
+    private List<Value<String>> inputFormatsForFilter;
+
+    @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
+    private List<Value<String>> outputFormatsForFilter;
+
+    @FieldInfo(fieldType = FieldInfo.FieldType.MERMAID)
+    private ValueWithDetails<String> workflow;
+
+    @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true, useForSuggestion = true)
+    private Value<String> description;
+
+    @FieldInfo(label = "Version specification", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true)
+    private Value<String> newInThisVersion;
+
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
@@ -74,6 +132,10 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
 
     private List<TargetInternalReference> versions;
 
+    public TargetInternalReference getAllVersionRef() {
+        return null;
+    }
+
     @JsonIgnore
     private boolean isSearchable;
 
@@ -82,54 +144,66 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
         return isSearchable;
     }
 
+    public void setSearchable(boolean searchable) {
+        isSearchable = searchable;
+    }
 
-    //Global
-    @FieldInfo(label = "Name", layout = "header", boost = 20, useForSuggestion = true)
-    private Value<String> title;
+    @Getter
+    @Setter
+    @MetaInfo(name="Parameter")
+    public static class Parameter {
 
-    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10, useForSuggestion = true)
-    private List<TargetInternalReference> contributors;
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Workflow.Parameter");
 
-    //Overview
-    @FieldInfo(label = "DOI", hint = "This is the model DOI you must cite if you reuse this model in a way that leads to a publication")
-    private Value<String> doi;
+        @FieldInfo
+        private String title;
 
-    @JsonProperty("license_info")
-    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
-    private List<TargetExternalReference> licenseInfo;
+        @FieldInfo(label = "Type")
+        private Value<String> humanReadableType;
 
-    @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
-    private List<TargetInternalReference> projects;
+        @FieldInfo(label = "Data type")
+        private Value<String> dataType;
+    }
 
-    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, useForSuggestion = true, hint = "A custodian is the person responsible for the data bundle.")
-    private List<TargetInternalReference> custodians;
+    @Getter
+    @Setter
+    @MetaInfo(name="Run")
+    public static class Run {
 
-    @FieldInfo(label = "Homepage")
-    private TargetExternalReference homepage;
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Workflow.Run");
 
+        @FieldInfo
+        private String title;
 
-    @FieldInfo(label = "Description", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, labelHidden = true, overview = true, useForSuggestion = true)
-    private Value<String> description;
+        @FieldInfo(label = "Type")
+        private Value<String> humanReadableType;
 
-    @FieldInfo(layout = "Workflow", fieldType = FieldInfo.FieldType.MERMAID)
-    private ValueWithDetails<String> workflow;
+        @FieldInfo(label = "Inputs")
+        private List<Value<String>> inputs;
 
+        @FieldInfo(label = "Outputs")
+        private List<Value<String>> outputs;
 
-    @FieldInfo(label = "Version specification", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2)
-    private Value<String> newInThisVersion;
+    }
+    @Getter
+    @Setter
+    @MetaInfo(name="Output")
+    public static class Output {
 
-    @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
-    private Value<String> accessibility;
+        @ElasticSearchInfo(type = "keyword")
+        private Value<String> type = new Value<>("Workflow.Output");
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
-    private Value<String> citation;
+        @FieldInfo
+        private String title;
 
-    @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
-    private Value<String> customCitation;
+        @FieldInfo(label = "Type")
+        private Value<String> humanReadableType;
 
-    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
-    private List<Value<String>> keywords;
+        @FieldInfo(label = "Data type")
+        private Value<String> dataType;
 
-
+    }
 
 }

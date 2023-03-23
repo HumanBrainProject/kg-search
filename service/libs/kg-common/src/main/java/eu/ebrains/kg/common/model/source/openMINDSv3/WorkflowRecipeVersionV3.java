@@ -25,7 +25,7 @@ package eu.ebrains.kg.common.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import eu.ebrains.kg.common.model.source.HasAccessibility;
+import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
@@ -36,41 +36,36 @@ import java.util.List;
 
 @Getter
 @Setter
-public class WorkflowRecipeVersionV3 extends SourceInstanceV3 implements HasAccessibility {
+public class WorkflowRecipeVersionV3 extends SourceInstanceV3 implements HasMetrics {
     private String fullName;
     private String versionIdentifier;
     private List<PersonOrOrganizationRef> developer;
     private String howToCite;
-    private String doi;
-    private String swhid;
-    private String homepage;
-    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
-    private List<String> keyword;
-    private String versionInnovation;
-    private Date releaseDate;
-    private Date firstReleasedAt;
-    private Date lastReleasedAt;
-    private List<RelatedPublication> relatedPublications;
-    private List<ExternalRef> license;
     private Copyright copyright;
     private List<FullNameRef> projects;
     private List<PersonOrOrganizationRef> custodian;
     private String description;
-    private NameWithIdentifier accessibility;
-    private FileRepository fileRepository;
-    private String fullDocumentationUrl;
-    private File fullDocumentationFile;
-    private String fullDocumentationDOI;
+    private String versionInnovation;
+    private Date releaseDate;
+    private Date firstReleasedAt;
+    private Date lastReleasedAt;
+    private List<RelatedPublication> publications;
+    private String homepage;
+    private String repository;
+    private String documentationDOI;
+    private String documentationURL;
+    private String documentationFile;
+    private String accessibility;
+
     @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> supportChannel;
     private WorkflowReceipeVersions workflow;
+    private String version;
+    private Integer last30DaysViews;
 
     @Getter
     @Setter
     public static class WorkflowReceipeVersions extends Versions {
-
-        @JsonProperty("workflowProjects")
-        private List<FullNameRef> projects;
 
         @JsonProperty("workflowCustodian")
         private List<PersonOrOrganizationRef> custodian;
@@ -78,6 +73,11 @@ public class WorkflowRecipeVersionV3 extends SourceInstanceV3 implements HasAcce
         @JsonProperty("workflowDeveloper")
         private List<PersonOrOrganizationRef> developer;
 
+        @JsonProperty("workflowProjects")
+        private List<FullNameRef> projects;
+
+        @JsonProperty("workflowHomepage")
+        private String homepage;
     }
 
 }

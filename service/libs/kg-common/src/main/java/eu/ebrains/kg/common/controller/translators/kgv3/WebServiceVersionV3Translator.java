@@ -81,90 +81,90 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
         return Collections.singletonList("https://openminds.ebrains.eu/core/WebServiceVersion");
     }
 
-    public WebServiceVersion translate(WebServiceVersionV3 webServiceVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
+    public WebServiceVersion translate(WebServiceVersionV3 source, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         WebServiceVersion w = new WebServiceVersion();
 
         w.setCategory(new Value<>("Web service"));
         w.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the web service, so we can forward this information to the custodian responsible."));
 
-        WebServiceVersionV3.WebServiceVersions webservice = webServiceVersion.getWebservice();
-        w.setId(IdUtils.getUUID(webServiceVersion.getId()));
-        final Date releaseDate = webServiceVersion.getReleaseDate() != null && webServiceVersion.getReleaseDate().before(new Date()) ? webServiceVersion.getReleaseDate() : webServiceVersion.getFirstReleasedAt();
-        translatorUtils.defineBadgesAndTrendingState(w, releaseDate, webServiceVersion.getLast30DaysViews());
+        WebServiceVersionV3.WebServiceVersions parent = source.getWebservice();
+        w.setId(IdUtils.getUUID(source.getId()));
+        final Date releaseDate = source.getReleaseDate() != null && source.getReleaseDate().before(new Date()) ? source.getReleaseDate() : source.getFirstReleasedAt();
+        translatorUtils.defineBadgesAndTrendingState(w, releaseDate, source.getLast30DaysViews());
         w.setFirstRelease(value(releaseDate));
-        w.setLastRelease(value(webServiceVersion.getLastReleasedAt()));
-        w.setAllIdentifiers(webServiceVersion.getIdentifier());
-        List<Version> versions = webservice == null ? null:webservice.getVersions();
+        w.setLastRelease(value(source.getLastReleasedAt()));
+        w.setAllIdentifiers(source.getIdentifier());
+        List<Version> versions = parent == null ? null:parent.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (!CollectionUtils.isEmpty(versions) && versions.size()>1) {
-            w.setVersion(webServiceVersion.getVersion());
+            w.setVersion(source.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(webservice.getId()), "version overview"));
+            references.add(new TargetInternalReference(IdUtils.getUUID(parent.getId()), "version overview"));
             w.setVersions(references);
-            w.setSearchable(sortedVersions.get(sortedVersions.size()-1).getId().equals(webServiceVersion.getId()));
+            w.setSearchable(sortedVersions.get(sortedVersions.size()-1).getId().equals(source.getId()));
         } else {
             w.setSearchable(true);
         }
 
         // title
-        if(StringUtils.isNotBlank(webServiceVersion.getFullName())){
-            if (hasMultipleVersions || StringUtils.isBlank(webServiceVersion.getVersion())) {
-                w.setTitle(value(webServiceVersion.getFullName()));
+        if(StringUtils.isNotBlank(source.getFullName())){
+            if (hasMultipleVersions || StringUtils.isBlank(source.getVersion())) {
+                w.setTitle(value(source.getFullName()));
             } else {
-                w.setTitle(value(String.format("%s (%s)", webServiceVersion.getFullName(), webServiceVersion.getVersion())));
+                w.setTitle(value(String.format("%s (%s)", source.getFullName(), source.getVersion())));
             }
         }
-        else if(webservice!=null && StringUtils.isNotBlank(webservice.getFullName())){
-            if (hasMultipleVersions || StringUtils.isBlank(webServiceVersion.getVersion())) {
-                w.setTitle(value(webservice.getFullName()));
+        else if(parent!=null && StringUtils.isNotBlank(parent.getFullName())){
+            if (hasMultipleVersions || StringUtils.isBlank(source.getVersion())) {
+                w.setTitle(value(parent.getFullName()));
             } else {
-                w.setTitle(value(String.format("%s (%s)", webservice.getFullName(), webServiceVersion.getVersion())));
+                w.setTitle(value(String.format("%s (%s)", parent.getFullName(), source.getVersion())));
             }
         }
 
         // developers
-        if (!CollectionUtils.isEmpty(webServiceVersion.getDeveloper())) {
-            w.setDevelopers(webServiceVersion.getDeveloper().stream()
+        if (!CollectionUtils.isEmpty(source.getDeveloper())) {
+            w.setDevelopers(source.getDeveloper().stream()
                     .map(a -> new TargetInternalReference(
                             IdUtils.getUUID(a.getId()),
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
-        } else if (webservice != null && !CollectionUtils.isEmpty(webservice.getDeveloper())) {
-            w.setDevelopers(webservice.getDeveloper().stream()
+        } else if (parent != null && !CollectionUtils.isEmpty(parent.getDeveloper())) {
+            w.setDevelopers(parent.getDeveloper().stream()
                     .map(a -> new TargetInternalReference(
                             IdUtils.getUUID(a.getId()),
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-        String howToCite = webServiceVersion.getHowToCite();
+        String howToCite = source.getHowToCite();
         if(howToCite != null){
             w.setCitation(value(howToCite));
         }
-        if(webServiceVersion.getCopyright()!=null){
-            final String copyrightHolders = webServiceVersion.getCopyright().getHolder().stream().map(h -> Helpers.getFullName(h.getFullName(), h.getFamilyName(), h.getGivenName())).filter(Objects::nonNull).collect(Collectors.joining(", "));
-            w.setCopyright(new Value<>(String.format("%s %s", webServiceVersion.getCopyright().getYear(), copyrightHolders)));
+        if(source.getCopyright()!=null){
+            final String copyrightHolders = source.getCopyright().getHolder().stream().map(h -> Helpers.getFullName(h.getFullName(), h.getFamilyName(), h.getGivenName())).filter(Objects::nonNull).collect(Collectors.joining(", "));
+            w.setCopyright(new Value<>(String.format("%s %s", source.getCopyright().getYear(), copyrightHolders)));
         }
 
         List<TargetInternalReference> projects = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(webServiceVersion.getProjects())){
-            projects.addAll(webServiceVersion.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).collect(Collectors.toList()));
+        if(!CollectionUtils.isEmpty(source.getProjects())){
+            projects.addAll(source.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).collect(Collectors.toList()));
         }
-        if(webservice!=null && !CollectionUtils.isEmpty(webservice.getProjects())){
-            projects.addAll(webservice.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p-> !projects.contains(p)).collect(Collectors.toList()));
+        if(parent!=null && !CollectionUtils.isEmpty(parent.getProjects())){
+            projects.addAll(parent.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p-> !projects.contains(p)).collect(Collectors.toList()));
         }
         if(!CollectionUtils.isEmpty(projects)){
             w.setProjects(projects);
         }
 
-        if (!CollectionUtils.isEmpty(webServiceVersion.getCustodian())) {
-            w.setCustodians(webServiceVersion.getCustodian().stream()
+        if (!CollectionUtils.isEmpty(source.getCustodian())) {
+            w.setCustodians(source.getCustodian().stream()
                     .map(a -> new TargetInternalReference(
                             IdUtils.getUUID(a.getId()),
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
-        } else if (webservice != null && !CollectionUtils.isEmpty(webservice.getCustodian())) {
-            w.setCustodians(webservice.getCustodian().stream()
+        } else if (parent != null && !CollectionUtils.isEmpty(parent.getCustodian())) {
+            w.setCustodians(parent.getCustodian().stream()
                     .map(a -> new TargetInternalReference(
                             IdUtils.getUUID(a.getId()),
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
@@ -172,53 +172,53 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
         }
 
 
-        if (StringUtils.isNotBlank(webServiceVersion.getDescription())) {
-            w.setDescription(value(webServiceVersion.getDescription()));
-        } else if (webservice != null) {
-            w.setDescription(value(webservice.getDescription()));
+        if (StringUtils.isNotBlank(source.getDescription())) {
+            w.setDescription(value(source.getDescription()));
+        } else if (parent != null) {
+            w.setDescription(value(parent.getDescription()));
         }
 
-        if (StringUtils.isNotBlank(webServiceVersion.getVersionInnovation()) && !Constants.VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(webServiceVersion.getVersionInnovation()).toLowerCase())) {
-            w.setNewInThisVersion(new Value<>(webServiceVersion.getVersionInnovation()));
+        if (StringUtils.isNotBlank(source.getVersionInnovation()) && !Constants.VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(source.getVersionInnovation()).toLowerCase())) {
+            w.setNewInThisVersion(new Value<>(source.getVersionInnovation()));
         }
 
-        if(!CollectionUtils.isEmpty(webServiceVersion.getPublications())){
-            w.setPublications(webServiceVersion.getPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+        if(!CollectionUtils.isEmpty(source.getPublications())){
+            w.setPublications(source.getPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
-        w.setAccessibility(value(webServiceVersion.getAccessibility()));
+        w.setAccessibility(value(source.getAccessibility()));
 
-        if(webServiceVersion.getHomepage()!=null){
-            w.setHomepage(new TargetExternalReference(webServiceVersion.getHomepage(), webServiceVersion.getHomepage()));
+        if(source.getHomepage()!=null){
+            w.setHomepage(new TargetExternalReference(source.getHomepage(), source.getHomepage()));
         }
-        else if(webservice!=null && webservice.getHomepage()!=null){
-            w.setHomepage(new TargetExternalReference(webservice.getHomepage(), webservice.getHomepage()));
+        else if(parent!=null && parent.getHomepage()!=null){
+            w.setHomepage(new TargetExternalReference(parent.getHomepage(), parent.getHomepage()));
         }
 
-        if(webServiceVersion.getRepository()!=null){
-            w.setSourceCode(new TargetExternalReference(webServiceVersion.getRepository(), webServiceVersion.getRepository()));
+        if(source.getRepository()!=null){
+            w.setSourceCode(new TargetExternalReference(source.getRepository(), source.getRepository()));
         }
 
         List<TargetExternalReference> documentationElements = new ArrayList<>();
-        if(webServiceVersion.getDocumentationDOI()!=null){
-            documentationElements.add(new TargetExternalReference(webServiceVersion.getDocumentationDOI(), webServiceVersion.getDocumentationDOI()));
+        if(source.getDocumentationDOI()!=null){
+            documentationElements.add(new TargetExternalReference(source.getDocumentationDOI(), source.getDocumentationDOI()));
         }
-        if(webServiceVersion.getDocumentationURL()!=null){
-            documentationElements.add(new TargetExternalReference(webServiceVersion.getDocumentationURL(), webServiceVersion.getDocumentationURL()));
+        if(source.getDocumentationURL()!=null){
+            documentationElements.add(new TargetExternalReference(source.getDocumentationURL(), source.getDocumentationURL()));
         }
-        if(webServiceVersion.getDocumentationFile()!=null){
+        if(source.getDocumentationFile()!=null){
             //TODO make this a little bit prettier (maybe just show the relative file name or similar)
-            documentationElements.add(new TargetExternalReference(webServiceVersion.getDocumentationFile(), webServiceVersion.getDocumentationFile()));
+            documentationElements.add(new TargetExternalReference(source.getDocumentationFile(), source.getDocumentationFile()));
         }
         if(!documentationElements.isEmpty()){
             w.setDocumentation(documentationElements);
         }
-        if(!CollectionUtils.isEmpty(webServiceVersion.getSupportChannel())){
-            final List<TargetExternalReference> links = webServiceVersion.getSupportChannel().stream().filter(channel -> channel.startsWith("http")).
+        if(!CollectionUtils.isEmpty(source.getSupportChannel())){
+            final List<TargetExternalReference> links = source.getSupportChannel().stream().filter(channel -> channel.startsWith("http")).
                     map(url -> new TargetExternalReference(url, url)).collect(Collectors.toList());
             if(links.isEmpty()){
                 //Decision from Oct 2th 2021: we only show e-mail addresses if there are no links available
-                final List<TargetExternalReference> emailAddresses = webServiceVersion.getSupportChannel().stream().filter(channel -> channel.contains("@")).map(email -> new TargetExternalReference(String.format("mailto:%s", email), email)).collect(Collectors.toList());
+                final List<TargetExternalReference> emailAddresses = source.getSupportChannel().stream().filter(channel -> channel.contains("@")).map(email -> new TargetExternalReference(String.format("mailto:%s", email), email)).collect(Collectors.toList());
                 if(!emailAddresses.isEmpty()){
                     w.setSupport(emailAddresses);
                 }
@@ -228,18 +228,18 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
             }
         }
 
-        if(!CollectionUtils.isEmpty(webServiceVersion.getInputFormat())){
-            w.setInputFormat(webServiceVersion.getInputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
-            w.setInputFormatsForFilter(webServiceVersion.getInputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
+        if(!CollectionUtils.isEmpty(source.getInputFormat())){
+            w.setInputFormat(source.getInputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
+            w.setInputFormatsForFilter(source.getInputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(webServiceVersion.getOutputFormat())){
-            w.setOutputFormats(webServiceVersion.getOutputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
-            w.setOutputFormatsForFilter(webServiceVersion.getOutputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
+        if(!CollectionUtils.isEmpty(source.getOutputFormat())){
+            w.setOutputFormats(source.getOutputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
+            w.setOutputFormatsForFilter(source.getOutputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(webServiceVersion.getComponents())){
-            w.setComponents(webServiceVersion.getComponents().stream().map(c -> {
+        if(!CollectionUtils.isEmpty(source.getComponents())){
+            w.setComponents(source.getComponents().stream().map(c -> {
                 String name = getName(c);
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
             }).collect(Collectors.toList()));

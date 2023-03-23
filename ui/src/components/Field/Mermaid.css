@@ -39,3 +39,8 @@
   color: #333;
   padding: 10px;
 }
+.kgs-mermaid .kgs-mermaid__advise {
+  display: inline-block;
+  padding-bottom: 5px;
+  font-size: small;
+}
