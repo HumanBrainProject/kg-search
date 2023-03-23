@@ -37,4 +37,5 @@ public class FullNameRefForResearchProductVersion extends FullNameRefWithVersion
     private List<String> contributors;
     private String doi;
     private String howToCite;
+    private String grouping;
 }

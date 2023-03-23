@@ -184,11 +184,27 @@ public abstract class TranslatorBase {
 
     protected List<TargetInternalReference> refExtendedVersion(List<? extends ExtendedFullNameRefForResearchProductVersion> refs, boolean sort) {
         if (!CollectionUtils.isEmpty(refs)) {
-            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(this::ref).filter(Objects::nonNull);
+            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().filter(r -> r.getGrouping() == null).map(this::ref).filter(Objects::nonNull);
             if (sort) {
                 targetInternalReferenceStream = targetInternalReferenceStream.sorted();
             }
-            return targetInternalReferenceStream.collect(Collectors.toList());
+            List<TargetInternalReference> result = targetInternalReferenceStream.collect(Collectors.toList());
+            final Map<String, ? extends List<? extends ExtendedFullNameRefForResearchProductVersion>> byGrouping = refs.stream().filter(r -> r.getGrouping() != null).collect(Collectors.groupingBy(r -> r.getGrouping()));
+            byGrouping.keySet().stream().sorted().forEach(group -> {
+                if(!result.isEmpty()) {
+                    result.add(new TargetInternalReference(null, ""));
+                }
+                result.add(new TargetInternalReference(null, group));
+                final List<? extends ExtendedFullNameRefForResearchProductVersion> instances = byGrouping.get(group);
+                Stream<TargetInternalReference> targetInternalReferenceStreamForGroups = instances.stream().map(this::ref).filter(Objects::nonNull);
+                if (sort) {
+                    targetInternalReferenceStreamForGroups = targetInternalReferenceStreamForGroups.sorted();
+                }
+                result.addAll(targetInternalReferenceStreamForGroups.collect(Collectors.toList()));
+            });
+            if(!CollectionUtils.isEmpty(result)){
+                return result;
+            }
         }
         return null;
     }

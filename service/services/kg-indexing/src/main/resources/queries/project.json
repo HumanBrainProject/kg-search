@@ -54,6 +54,20 @@
           "path": "https://openminds.ebrains.eu/vocab/fullName"
         },
         {
+          "propertyName": "query:grouping",
+          "singleValue": "FIRST",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasPart",
+              "reverse": true,
+              "typeFilter": {
+                "@id": "https://openminds.ebrains.eu/core/ResearchProductGroup"
+              }
+            },
+            "https://openminds.ebrains.eu/vocab/context"
+          ]
+        },
+        {
           "propertyName": "query:id",
           "path": "@id"
         },
@@ -127,6 +141,20 @@
         {
           "propertyName": "query:fullName",
           "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:grouping",
+          "singleValue": "FIRST",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasPart",
+              "reverse": true,
+              "typeFilter": {
+                "@id": "https://openminds.ebrains.eu/core/ResearchProductGroup"
+              }
+            },
+            "https://openminds.ebrains.eu/vocab/context"
+          ]
         },
         {
           "propertyName": "query:id",
@@ -204,6 +232,20 @@
           "path": "https://openminds.ebrains.eu/vocab/fullName"
         },
         {
+          "propertyName": "query:grouping",
+          "singleValue": "FIRST",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasPart",
+              "reverse": true,
+              "typeFilter": {
+                "@id": "https://openminds.ebrains.eu/core/ResearchProductGroup"
+              }
+            },
+            "https://openminds.ebrains.eu/vocab/context"
+          ]
+        },
+        {
           "propertyName": "query:id",
           "path": "@id"
         },
@@ -277,6 +319,20 @@
         {
           "propertyName": "query:fullName",
           "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:grouping",
+          "singleValue": "FIRST",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasPart",
+              "reverse": true,
+              "typeFilter": {
+                "@id": "https://openminds.ebrains.eu/core/ResearchProductGroup"
+              }
+            },
+            "https://openminds.ebrains.eu/vocab/context"
+          ]
         },
         {
           "propertyName": "query:id",
