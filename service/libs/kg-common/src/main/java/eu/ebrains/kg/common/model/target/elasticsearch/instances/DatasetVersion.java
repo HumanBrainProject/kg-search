@@ -147,7 +147,18 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "View data", fieldType = FieldInfo.FieldType.GROUPED_LINKS)
     private Map<String, List<TargetExternalReference>> viewData;
 
-    @FieldInfo(label = "Studied brain region", layout = "summary", useForSuggestion = true)
+    //Start filter only
+    @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
+    private Value<String> dataAccessibility;
+
+    @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, visible = false, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
+    private List<Value<String>> speciesFilter;
+
+    @FieldInfo(label = "Experimental approach", type = FieldInfo.Type.TEXT, visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
+    private List<Value<String>> experimentalApproachForFilter;
+    //End filter only
+
+    @FieldInfo(label = "Studied brain region", layout = "summary", useForSuggestion = true, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
     private List<TargetInternalReference> studiedBrainRegion;
 
     @FieldInfo(label = "Study targets", layout = "summary", useForSuggestion = true)
@@ -162,21 +173,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Preparation", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> preparation;
 
-    @FieldInfo(label = "Experimental approach", type = FieldInfo.Type.TEXT, visible = false, facet = FieldInfo.Facet.LIST, useForSuggestion = true)
-    private List<Value<String>> experimentalApproachForFilter;
-
     @FieldInfo(label = "Experimental approach", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> experimentalApproach;
 
     @FieldInfo(label = "Technique", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> technique;
-
-    //Filter only
-    @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, visible = false, type = FieldInfo.Type.TEXT)
-    private List<Value<String>> speciesFilter;
-
-    @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
-    private Value<String> dataAccessibility;
 
     @FieldInfo(label = "Data-descriptor", fieldType = FieldInfo.FieldType.FILE_PREVIEW, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
