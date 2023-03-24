@@ -20,7 +20,7 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { uniqueId } from "lodash";
 import * as d3 from "d3";
@@ -50,12 +50,18 @@ const zoomGraph = () => {
 };
 
 const MermaidGraph = ({ data, details, callbackFunctionName }) => {
+  const ref = useRef();
   const graph = attachCallback(data, details, callbackFunctionName);
+
   useEffect(() => {
-    mermaid.contentLoaded();
+    if(!ref.current?.firstChild.tagName) {
+      ref.current?.removeAttribute("data-processed");
+      mermaid.contentLoaded();
+    }
     zoomGraph();
-  }, []);
-  return <div className="mermaid">{graph}</div>;
+  }, [callbackFunctionName]);
+
+  return <div ref={ref} className="mermaid">{graph}</div>;
 };
 
 const Detail = ({ details, callbackFunctionName }) => {

@@ -20,12 +20,14 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React from "react";
+import React, { useEffect } from "react";
 import { Field } from "../../Field/Field";
 import FieldsPanel from "../../../components/Field/FieldsPanel";
 import { ImagePreviews } from "../../../features/image/ImagePreviews";
 import "./Tabs.css";
 import "./Overview.css";
+import { useDispatch } from "react-redux";
+import { setTab } from "../../../features/instance/instanceSlice";
 
 const Tab = ({tab, active, onClick}) => {
 
@@ -62,25 +64,32 @@ const TabsView = ({tab}) => {
 };
 
 const Tabs = ({tabs, selectedTab, onTabClick }) => {
-  if (!Array.isArray(tabs) || !tabs.length) {
-    return null;
+  const dispatch = useDispatch();
+  const hasContent = Array.isArray(tabs) && tabs.length>0;
+  let activeTab = selectedTab?tabs.find(t => t.name === selectedTab):null;
+  if (!activeTab && hasContent) {
+    activeTab = tabs[0];
   }
+  useEffect(() => {
+    if(activeTab && selectedTab !== activeTab.name) {
+      dispatch(setTab(activeTab.name));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
-  let tab = selectedTab?tabs.find(t => t.name === selectedTab):null;
-  if (!tab) {
-    tab = tabs[0];
-    selectedTab = tab.name;
+  if (!hasContent) {
+    return null;
   }
 
   return (
     <>
       <div className="kgs-tabs__buttons">
         {tabs.map(t => (
-          <Tab key={t.name} tab={t} active={t && t.name === selectedTab} onClick={onTabClick} />
+          <Tab key={t.name} tab={t} active={t && t.name === activeTab.name} onClick={onTabClick} />
         ))}
       </div>
       <div className="kgs-tabs__content">
-        <TabsView tab={tab}/>
+        <TabsView tab={activeTab}/>
       </div>
     </>
   );

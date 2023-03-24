@@ -180,8 +180,10 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
   };
 
   const handleTabClick = tab => {
-    trackEvent("Tab", "Clicked", tab);
-    dispatch(setTab(tab));
+    if(tab !== selectedTab) {
+      trackEvent("Tab", "Clicked", tab);
+      dispatch(setTab(tab));
+    }
   };
 
   if (hasNoData) {
