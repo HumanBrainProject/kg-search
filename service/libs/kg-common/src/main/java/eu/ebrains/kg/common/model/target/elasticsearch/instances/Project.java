@@ -26,9 +26,7 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 

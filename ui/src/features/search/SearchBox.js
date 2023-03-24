@@ -101,7 +101,7 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
           <FontAwesomeIcon icon={faSearch} size="2x" className="kg-search-bar__icon" />
           <input className="kg-search-bar"
             type="text"
-            placeholder="Search (e.g. brain or neuroscience)"
+            placeholder="Search (e.g. mouse hippocampus or calbindin)"
             aria-label="Search"
             value={value}
             onChange={handleChange}
