@@ -60,7 +60,6 @@ import {
 } from "../helpers/BrowserHelpers";
 
 import "./Search.css";
-import Notification from "./Search/Notification/Notification";
 
 const calculateFacetList = facets => {
   return facets.reduce((acc, facet) => {
@@ -316,7 +315,6 @@ const SearchBase = () => {
             <FiltersPanel />
             <div className="kgs-search__main">
               <HitsInfo />
-              <Notification />
               <Hits />
               <KnowledgeSpaceLink />
             </div>
