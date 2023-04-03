@@ -301,7 +301,10 @@
           "propertyName": "query:datasetProjects",
           "path": {
             "@id": "https://openminds.ebrains.eu/vocab/hasPart",
-            "reverse": true
+            "reverse": true,
+            "typeFilter": {
+              "@id": "https://openminds.ebrains.eu/core/Project"
+            }
           },
           "structure": [
             {
