@@ -24,34 +24,37 @@
 import React from "react";
 import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons/faInfoCircle";
 
 import "./Hint.css";
 
-export const Hint = ({className, value}) => {
+const hintId = encodeURI(uniqueId("kgs-hint_content-"));
+
+export const Hint = ({ className, value }) => {
   if (!value && value !== 0) {
     return null;
   }
   const classNames = ["kgs-hint", className].join(" ");
-  const hint_id = encodeURI(uniqueId("kgs-hint_content-"));
   return (
     <span className={classNames}>
-      <FontAwesomeIcon icon={faInfoCircle} data-tip data-for={hint_id} aria-hidden="true" />
-      <ReactTooltip id={hint_id} place="right" type="dark" effect="solid">
+      <FontAwesomeIcon
+        icon={faInfoCircle}
+        data-tip
+        data-for={hintId}
+        aria-hidden="true"
+      />
+      <Tooltip id={hintId} place="right" type="dark" effect="solid">
         <span>{value}</span>
-      </ReactTooltip>
+      </Tooltip>
     </span>
   );
 };
 
 Hint.propTypes = {
   className: PropTypes.string,
-  value: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ])
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
 
 export default Hint;

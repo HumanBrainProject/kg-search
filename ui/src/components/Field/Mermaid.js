@@ -28,7 +28,7 @@ import LinkedInstance from "../../pages/Instance/LinkedInstance";
 
 import "./Mermaid.css";
 
-mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });
+mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
 
 const attachCallback = (data, children, callbackFunctionName) => {
   if (children && children instanceof Object) {
@@ -54,14 +54,23 @@ const MermaidGraph = ({ data, details, callbackFunctionName }) => {
   const graph = attachCallback(data, details, callbackFunctionName);
 
   useEffect(() => {
-    if(!ref.current?.firstChild.tagName) {
+    const loadMermaid = async () => {
+      await mermaid.run({
+        querySelector: ".mermaid"
+      });
+      zoomGraph();
+    };
+    if (!ref.current?.firstChild.tagName) {
       ref.current?.removeAttribute("data-processed");
-      mermaid.contentLoaded();
+      loadMermaid();
     }
-    zoomGraph();
   }, [callbackFunctionName]);
 
-  return <div ref={ref} className="mermaid">{graph}</div>;
+  return (
+    <div ref={ref} className="mermaid">
+      {graph}
+    </div>
+  );
 };
 
 const Detail = ({ details, callbackFunctionName }) => {
@@ -83,7 +92,9 @@ const Detail = ({ details, callbackFunctionName }) => {
 
   return (
     <div className="kgs-mermaid__detail">
-      <div className="kgs-mermaid__detail-title">{detail.title?detail.title:detailId}</div>
+      <div className="kgs-mermaid__detail-title">
+        {detail.title ? detail.title : detailId}
+      </div>
       <LinkedInstance data={detail} type={detail.type?.value} />
     </div>
   );
@@ -100,7 +111,8 @@ const Mermaid = ({ data, details }) => {
         callbackFunctionName={callbackFunctionName}
       />
       <i className="kgs-mermaid__advise">
-        Select the items of the graph to get more details about the individual elements.
+        Select the items of the graph to get more details about the individual
+        elements.
       </i>
       <Detail details={details} callbackFunctionName={callbackFunctionName} />
     </div>
