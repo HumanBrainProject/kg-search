@@ -1298,7 +1298,7 @@
             {
               "propertyName": "query:descendedFrom",
               "path": [
-                "https://openminds.ebrains.eu/vocab/groupedBy",
+                "https://openminds.ebrains.eu/vocab/descendedFrom",
                 "@id"
               ]
             },
@@ -1938,7 +1938,7 @@
                 {
                   "propertyName": "query:descendedFrom",
                   "path": [
-                    "https://openminds.ebrains.eu/vocab/groupedBy",
+                    "https://openminds.ebrains.eu/vocab/descendedFrom",
                     "@id"
                   ]
                 },
