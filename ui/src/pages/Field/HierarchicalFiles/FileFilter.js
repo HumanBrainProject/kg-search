@@ -35,7 +35,7 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
   const handleChange = useMemo(() => v => onSelect(v?v:null), [onSelect]);
 
   const normalizedList = useMemo(() => {
-    if (!Array.isArray(list)) {
+    if (!Array.isArray(list) || list.length === 0) {
       return [];
     }
     return list.reduce((acc, v) => {
