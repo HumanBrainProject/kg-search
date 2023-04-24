@@ -33,6 +33,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODate
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,6 +56,9 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
+
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private SchemaOrgInstance meta;
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> category;

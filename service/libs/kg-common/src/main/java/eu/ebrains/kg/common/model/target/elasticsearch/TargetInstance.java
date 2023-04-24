@@ -24,6 +24,7 @@
 package eu.ebrains.kg.common.model.target.elasticsearch;
 
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 
 import java.util.List;
 
@@ -43,6 +44,9 @@ public interface TargetInstance {
     Value<String> getCategory();
     Value<String> getTitle();
     Value<String> getDisclaimer();
+
+    SchemaOrgInstance getMeta();
+    void setMeta(SchemaOrgInstance meta);
 
     /**
      * @return true if this instance shall be available for search.

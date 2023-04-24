@@ -33,9 +33,9 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Childre
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -56,6 +56,9 @@ public class WebService implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
+
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private SchemaOrgInstance meta;
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> category;

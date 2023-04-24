@@ -26,6 +26,7 @@ package eu.ebrains.kg.common.controller.translators.kgv3;
 import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.controller.translators.kgv3.commons.Accessibility;
 import eu.ebrains.kg.common.controller.translators.kgv3.commons.Constants;
+import eu.ebrains.kg.common.controller.translators.kgv3.helpers.SchemaOrgConverter;
 import eu.ebrains.kg.common.controller.translators.kgv3.helpers.SpecimenV3Translator;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
@@ -121,7 +122,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         logger.debug("Translating {}", datasetVersion.getId());
         d.setCategory(new Value<>("Dataset"));
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
-        final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
+         final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
         translatorUtils.defineBadgesAndTrendingState(d, releaseDate, datasetVersion.getLast30DaysViews());
         String uuid = datasetVersion.getUUID();
         d.setId(uuid);
@@ -450,6 +451,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         Helpers.addResearchProducts(outputResearchProducts, datasetVersion.getOutputResearchProductsFromReverseInputFileBundles());
         d.setOutputData(refVersion(new ArrayList<>(outputResearchProducts.values()), true));
 
+        d.setMeta(SchemaOrgConverter.translateDatasetVersion(datasetVersion));
         return d;
     }
 

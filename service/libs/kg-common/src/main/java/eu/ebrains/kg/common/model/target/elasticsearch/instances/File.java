@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,6 +48,8 @@ public class File implements TargetInstance {
     private final Value<String> type = new Value<>("File");
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private SchemaOrgInstance meta;
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;

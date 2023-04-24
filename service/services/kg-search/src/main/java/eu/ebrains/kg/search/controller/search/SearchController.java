@@ -282,6 +282,13 @@ public class SearchController extends FacetAggregationUtils {
             res.put("disclaimer", disclaimer);
         }
 
+        Object meta = source.get("meta");
+        if (meta!=null) {
+            res.put("meta", meta);
+            source.remove("meta");
+        }
+
+
         String version = CastingUtils.getStringField(source, "version");
         if (StringUtils.isNotBlank(version)) {
             res.put("version", version);
@@ -377,6 +384,11 @@ public class SearchController extends FacetAggregationUtils {
 
         if (v.getDisclaimer() != null && StringUtils.isNotBlank(v.getDisclaimer().getValue())) {
             res.put("disclaimer", v.getDisclaimer().getValue());
+        }
+
+        if (v.getMeta() != null) {
+            res.put("meta", v.getMeta());
+            v.setMeta(null);
         }
 
         if (v instanceof VersionedInstance) {

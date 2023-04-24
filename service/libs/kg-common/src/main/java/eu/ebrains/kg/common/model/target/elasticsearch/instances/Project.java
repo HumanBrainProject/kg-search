@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.common.model.target.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,6 +48,9 @@ public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
+
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private SchemaOrgInstance meta;
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> category;

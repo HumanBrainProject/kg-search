@@ -30,6 +30,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,6 +49,9 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
+
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private SchemaOrgInstance meta;
 
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false, ignoreForSearch = true)
