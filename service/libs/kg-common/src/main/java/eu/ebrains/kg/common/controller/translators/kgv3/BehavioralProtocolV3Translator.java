@@ -73,8 +73,8 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
     public BehavioralProtocol translate(BehavioralProtocolV3 behavioralProtocolV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
        BehavioralProtocol b = new BehavioralProtocol();
 
-        b.setCategory(new Value<>("Behaviour Protocol"));
-        b.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+        b.setCategory(new Value<>("Behavioral Protocol"));
+        b.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns, so we can forward this information to the custodian responsible."));
 
         b.setId(IdUtils.getUUID(behavioralProtocolV3.getId()));
        b.setAllIdentifiers(behavioralProtocolV3.getIdentifier());

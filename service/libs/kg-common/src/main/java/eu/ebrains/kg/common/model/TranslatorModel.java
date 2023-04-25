@@ -34,7 +34,8 @@ public class TranslatorModel<v3Input extends SourceInstanceV3, Output extends Ta
             new TranslatorModel<>(BehavioralProtocol.class, new BehavioralProtocolV3Translator(), false, 1000),
             new TranslatorModel<>(BrainAtlas.class, new BrainAtlasV3Translator(), false, 1000),
             new TranslatorModel<>(CoordinateSpace.class, new CoordinateSpaceV3Translator(), false, 1000),
-            new TranslatorModel<>(WorkflowRecipeVersion.class, new WorkflowRecipeVersionV3Translator(), false, 1000)
+            new TranslatorModel<>(WorkflowRecipeVersion.class, new WorkflowRecipeVersionV3Translator(), false, 1000),
+            new TranslatorModel<>(Protocol.class, new ProtocolV3Translator(), false, 1000)
     );
 
     private final Class<Output> targetClass;
