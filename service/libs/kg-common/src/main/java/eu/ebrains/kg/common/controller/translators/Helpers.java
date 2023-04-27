@@ -92,8 +92,7 @@ public class Helpers {
     public static String abbreviateGivenName(String givenName) {
         if (givenName != null) {
             return Arrays.stream(givenName.split(" ")).filter(e -> e.length() > 0).
-                    map(e -> String.format("%s.", e.charAt(0))).
-                    collect(Collectors.joining(" "));
+                    map(e -> Arrays.stream(e.split("-")).filter(x -> x.length() > 0).map(x -> String.format("%s.", x.charAt(0))).collect(Collectors.joining("-"))).collect(Collectors.joining(" "));
         }
         return null;
 
