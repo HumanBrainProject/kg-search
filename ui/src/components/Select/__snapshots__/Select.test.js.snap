@@ -12,11 +12,13 @@ exports[`Select component renders initially 1`] = `
     value=""
   >
     <option
+      disabled={false}
       value="a value"
     >
       a label
     </option>
     <option
+      disabled={false}
       value="another value"
     >
       another label
