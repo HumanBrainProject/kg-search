@@ -47,6 +47,7 @@ const initialState = {
   instanceId: null,
   context: null,
   data: null,
+  meta: null,
   title: null,
   tab: null,
   history: [],
@@ -68,6 +69,7 @@ const instanceSlice = createSlice({
       state.instanceId = null;
       state.context = null;
       state.data = null;
+      state.meta = null;
       state.title = null;
       state.tab = null;
       state.history = [];
@@ -84,11 +86,13 @@ const instanceSlice = createSlice({
           });
         }
         state.data = data;
+        state.meta = data.meta;
         state.title = getTitle(data);
         state.tab = state.context?.tab; // tab should keep current view until the data of the new instanceId is successufully fetched
       } else {
         state.instanceId = null;
         state.data = null;
+        state.meta = null;
         state.title = null;
         state.tab = null;
       }
@@ -117,6 +121,7 @@ const instanceSlice = createSlice({
         state.instanceId = null;
         state.context = null;
         state.data = null;
+        state.meta = null;
         state.title = null;
         state.tab = null;
         state.history = [];

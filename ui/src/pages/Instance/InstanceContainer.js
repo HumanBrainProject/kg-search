@@ -37,6 +37,7 @@ import { requestInstance, syncHistory, selectPreviousInstance } from "../../feat
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
+import useScript from "../../app/hooks/useScript";
 
 const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) => {
 
@@ -48,10 +49,13 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
   const navigate = useNavigate();
 
   const data = useSelector(state => state.instance.data);
+  const meta = useSelector(state => state.instance.meta);
   const title = useSelector(state => state.instance.title);
   const previousInstance = useSelector(state => selectPreviousInstance(state));
   const group = useSelector(state => state.groups.group);
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
+
+  useScript("application/ld+json", meta);
 
   useEffect(() => {
     if (!initializedRef.current !== instanceId) {
