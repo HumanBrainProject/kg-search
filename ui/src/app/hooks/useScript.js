@@ -31,11 +31,13 @@ const useScript = (type, content) => {
     }
     if (content) {
       script.textContent = JSON.stringify(content);
+      document.head.appendChild(script);
     }
-    document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      if(content) {
+        document.head.removeChild(script);
+      }
     };
   }, [type, content]);
 };
