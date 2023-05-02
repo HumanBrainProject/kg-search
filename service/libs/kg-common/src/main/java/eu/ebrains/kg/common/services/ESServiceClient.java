@@ -82,40 +82,56 @@ public class ESServiceClient {
 
     private String getQuery(String id) {
         String normalizeId = id.replace("/", "\\/");
-        return String.format("{\n" +
-                "  \"query\": {\n" +
-                "    \"bool\": {\n" +
-                "      \"must\": [\n" +
-                "        {\n" +
-                "          \"term\": {\n" +
-                "            \"identifier\": \"%s\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}", normalizeId);
+        return String.format("""
+                {
+                  "query": {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "identifier": "%s"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }""", normalizeId);
     }
 
 
-    private String getPaginatedQuery(String id) {
+    private String getPaginatedQueryForSitemap(String id, Set<String> relevantTypes) {
+        final String types = String.join(", ", relevantTypes.stream().filter(r -> r.matches("[a-zA-Z()\\d ]*")).map(r-> String.format("\"%s\"", r)).collect(Collectors.toSet()));
         if (id == null) {
-            return String.format("{\n" +
-                    " \"size\": %d,\n" +
-                    " \"sort\": [\n" +
-                    "    {\"_id\": \"asc\"}\n" +
-                    " ]\n" +
-                    "}", ES_QUERY_SIZE);
+            return String.format("""
+                    {
+                     "size": %d,
+                     "sort": [
+                        {"_id": "asc"}
+                     ],
+                     "query": {
+                        "terms":{
+                            "type.value":[%s]
+                        }
+                     },
+                     "_source": false
+                    }""", ES_QUERY_SIZE, types);
         }
-        return String.format("{\n" +
-                " \"size\": %d,\n" +
-                " \"sort\": [\n" +
-                "    {\"_id\": \"asc\"}\n" +
-                "  ],\n" +
-                "  \"search_after\": [\n" +
-                "      \"%s\"\n" +
-                "   ]\n" +
-                "}", ES_QUERY_SIZE, id);
+        return String.format("""
+                {
+                 "size": %d,
+                 "sort": [
+                    {"_id": "asc"}
+                  ],
+                  "search_after": [
+                      "%s"
+                   ],
+                   "query": {
+                        "terms":{
+                            "type.value":[%s]
+                        }
+                     },
+                     "_source": false
+                }""", ES_QUERY_SIZE, id, relevantTypes);
     }
 
     private String getAgg(String field) {
@@ -123,12 +139,13 @@ public class ESServiceClient {
             return null;
         }
         return String.format(
-            "{\n" +
-            "  \"terms\": {\n" +
-            "    \"field\": \"%s\",\n" +
-            "    \"size\": 1000000000\n" +
-            "  }\n" +
-            "}", field);
+                """
+                        {
+                          "terms": {
+                            "field": "%s",
+                            "size": 1000000000
+                          }
+                        }""", field);
     }
 
     private String getAggs(Map<String, String> aggs) {
@@ -155,11 +172,12 @@ public class ESServiceClient {
             return null;
         }
         return String.format(
-                "      {\n" +
-                "        \"term\": {\n" +
-                "          \"%s\": \"%s\"\n" +
-                "        }\n" +
-                "      }", term, value);
+                """
+                        {
+                          "term": {
+                            "%s": "%s"
+                          }
+                        }""".indent(6), term, value);
     }
 
     private String getQuery(Map<String, String> terms) {
@@ -179,11 +197,12 @@ public class ESServiceClient {
         }
 
         return String.format(
-                "  {\n" +
-                "    \"bool\": {\n" +
-                "      \"must\": %s\n" +
-                "    }\n" +
-                "  }", must);
+                """
+                        {
+                          "bool": {
+                            "must": %s
+                          }
+                        }""".indent(2), must);
     }
 
     private String getPayload(Map<String, String> parameters) {
@@ -331,12 +350,12 @@ public class ESServiceClient {
         return doc;
     }
 
-    public List<Document> getDocuments(String index) {
+    public List<Document> getDocumentsForSitemap(String index, Set<String> relevantTypes) {
         List<Document> result = new ArrayList<>();
         String searchAfter = null;
         boolean continueSearch = true;
         while (continueSearch) {
-            Result documents = getPaginatedDocuments(index, searchAfter);
+            Result documents = getPaginatedDocumentsForSitemap(index, searchAfter, relevantTypes);
             if (documents != null && documents.getHits() != null) {
                 List<Document> hits = documents.getHits().getHits();
                 result.addAll(hits);
@@ -370,8 +389,8 @@ public class ESServiceClient {
     }
 
 
-    private Result getPaginatedDocuments(String index, String searchAfter) {
-        String paginatedQuery = getPaginatedQuery(searchAfter);
+    private Result getPaginatedDocumentsForSitemap(String index, String searchAfter, Set<String> relevantTypes) {
+        String paginatedQuery = getPaginatedQueryForSitemap(searchAfter, relevantTypes);
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))

@@ -36,29 +36,29 @@ import java.util.List;
 public class TranslatorModel<v3Input extends SourceInstanceV3, Output extends TargetInstance> {
 
     public static final List<TranslatorModel<?, ?>> MODELS = Arrays.asList(
-            new TranslatorModel<>(Project.class, new ProjectV3Translator(), false, 1000),
-            new TranslatorModel<>(Dataset.class, new DatasetV3Translator(), false, 1000),
-            new TranslatorModel<>(DatasetVersion.class, new DatasetVersionV3Translator(), false, 1),
-            new TranslatorModel<>(Subject.class, new SubjectV3Translator(), false, 1000),
-            new TranslatorModel<>(Model.class, new ModelV3Translator(), false, 1000),
-            new TranslatorModel<>(ModelVersion.class, new ModelVersionV3Translator(), false, 1000),
-            new TranslatorModel<>(MetaDataModel.class, new MetaDataModelV3Translator(), false, 1000),
-            new TranslatorModel<>(MetaDataModelVersion.class, new MetaDataModelVersionV3Translator(), false, 1000),
-            new TranslatorModel<>(Software.class, new SoftwareV3Translator(), false, 1000),
-            new TranslatorModel<>(SoftwareVersion.class, new SoftwareVersionV3Translator(), false, 1000),
-            new TranslatorModel<>(WebService.class, new WebServiceV3Translator(), false, 1000),
-            new TranslatorModel<>(WebServiceVersion.class, new WebServiceVersionV3Translator(), false, 1000),
-            new TranslatorModel<>(Contributor.class, new ContributorV3Translator(), false, 1000),
-            new TranslatorModel<>(ControlledTerm.class, new ControlledTermV3Translator(), false, 1000),
-            new TranslatorModel<>(ContentType.class, new ContentTypeV3Translator(), false, 1000),
-            new TranslatorModel<>(File.class, new FileV3Translator(), true, 1000),
-            new TranslatorModel<>(FileBundle.class, new FileBundleV3Translator(), true, 1000),
-            new TranslatorModel<>(ParcellationEntity.class, new ParcellationEntityV3Translator(), false, 1000),
-            new TranslatorModel<>(BehavioralProtocol.class, new BehavioralProtocolV3Translator(), false, 1000),
-            new TranslatorModel<>(BrainAtlas.class, new BrainAtlasV3Translator(), false, 1000),
-            new TranslatorModel<>(CoordinateSpace.class, new CoordinateSpaceV3Translator(), false, 1000),
-            new TranslatorModel<>(WorkflowRecipeVersion.class, new WorkflowRecipeVersionV3Translator(), false, 1000),
-            new TranslatorModel<>(Protocol.class, new ProtocolV3Translator(), false, 1000)
+            new TranslatorModel<>(Project.class, new ProjectV3Translator(), false, 1000, true),
+            new TranslatorModel<>(Dataset.class, new DatasetV3Translator(), false, 1000, true),
+            new TranslatorModel<>(DatasetVersion.class, new DatasetVersionV3Translator(), false, 1, true),
+            new TranslatorModel<>(Subject.class, new SubjectV3Translator(), false, 1000, true),
+            new TranslatorModel<>(Model.class, new ModelV3Translator(), false, 1000, true),
+            new TranslatorModel<>(ModelVersion.class, new ModelVersionV3Translator(), false, 1000, true),
+            new TranslatorModel<>(MetaDataModel.class, new MetaDataModelV3Translator(), false, 1000, true),
+            new TranslatorModel<>(MetaDataModelVersion.class, new MetaDataModelVersionV3Translator(), false, 1000, true),
+            new TranslatorModel<>(Software.class, new SoftwareV3Translator(), false, 1000, true),
+            new TranslatorModel<>(SoftwareVersion.class, new SoftwareVersionV3Translator(), false, 1000, true),
+            new TranslatorModel<>(WebService.class, new WebServiceV3Translator(), false, 1000, true),
+            new TranslatorModel<>(WebServiceVersion.class, new WebServiceVersionV3Translator(), false, 1000, true),
+            new TranslatorModel<>(Contributor.class, new ContributorV3Translator(), false, 1000, true),
+            new TranslatorModel<>(ControlledTerm.class, new ControlledTermV3Translator(), false, 1000, true),
+            new TranslatorModel<>(ContentType.class, new ContentTypeV3Translator(), false, 1000, false),
+            new TranslatorModel<>(File.class, new FileV3Translator(), true, 1000, false),
+            new TranslatorModel<>(FileBundle.class, new FileBundleV3Translator(), true, 1000, false),
+            new TranslatorModel<>(ParcellationEntity.class, new ParcellationEntityV3Translator(), false, 1000, true),
+            new TranslatorModel<>(BehavioralProtocol.class, new BehavioralProtocolV3Translator(), false, 1000, true),
+            new TranslatorModel<>(BrainAtlas.class, new BrainAtlasV3Translator(), false, 1000, true),
+            new TranslatorModel<>(CoordinateSpace.class, new CoordinateSpaceV3Translator(), false, 1000, true),
+            new TranslatorModel<>(WorkflowRecipeVersion.class, new WorkflowRecipeVersionV3Translator(), false, 1000, true),
+            new TranslatorModel<>(Protocol.class, new ProtocolV3Translator(), false, 1000, true)
     );
 
     private final Class<Output> targetClass;
@@ -66,11 +66,18 @@ public class TranslatorModel<v3Input extends SourceInstanceV3, Output extends Ta
     private final boolean autoRelease;
     private final int bulkSize;
 
-    private TranslatorModel(Class<Output> targetClass, TranslatorV3<v3Input, Output, ? extends ResultsOfKGv3<v3Input>> v3Translator, boolean autoRelease, int bulkSize) {
+    private final boolean addToSitemap;
+
+    private TranslatorModel(Class<Output> targetClass, TranslatorV3<v3Input, Output, ? extends ResultsOfKGv3<v3Input>> v3Translator, boolean autoRelease, int bulkSize, boolean addToSitemap) {
         this.targetClass = targetClass;
         this.v3translator = v3Translator;
         this.autoRelease = autoRelease;
         this.bulkSize = bulkSize;
+        this.addToSitemap = addToSitemap;
+    }
+
+    public boolean isAddToSitemap() {
+        return addToSitemap;
     }
 
     public boolean isAutoRelease() {
