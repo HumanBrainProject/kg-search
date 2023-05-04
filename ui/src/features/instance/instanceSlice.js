@@ -129,7 +129,8 @@ const instanceSlice = createSlice({
       }
     },
     showImage(state, action) {
-      state.image = (typeof action.payload?.url === "string")?action.payload:null;
+      const image = action.payload;
+      state.image =  image && typeof image.url === "string"?{ url: image.url, label: image.label, link: image.link }:null;
     },
     setTab(state, action) {
       state.tab = action.payload;
