@@ -24,6 +24,7 @@
 package eu.ebrains.kg.search.controller.sitemap;
 
 import eu.ebrains.kg.common.model.DataStage;
+import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
@@ -39,9 +40,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class SitemapController {
@@ -72,8 +74,16 @@ public class SitemapController {
     private SitemapXML fetchSitemap() {
         List<SitemapXML.Url> urls = new ArrayList<>();
         String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
+        final Set<String> relevantTypes = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAddToSitemap).map(t -> {
+            try {
+                return t.getTargetClass().getConstructor().newInstance().getType().getValue();
+            } catch (InstantiationException | IllegalAccessException| InvocationTargetException | NoSuchMethodException e) {
+                logger.error("Was not able to find type for sitemap generation", e);
+                return null;
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toSet());
         try {
-            List<Document> documents = esServiceClient.getDocuments(index);
+            List<Document> documents = esServiceClient.getDocumentsForSitemap(index, relevantTypes);
             documents.forEach(doc -> {
                 SitemapXML.Url url = new SitemapXML.Url();
                 url.setLoc(String.format("%s/instances/%s", ebrainsUrl, doc.getId()));
