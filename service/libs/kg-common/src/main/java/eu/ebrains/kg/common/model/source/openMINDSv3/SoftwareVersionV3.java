@@ -69,6 +69,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 implements IsCiteable, H
     private String documentationDOI;
     private String documentationURL;
     private String documentationFile;
+    private String documentationWebResource;
 
     @JsonDeserialize(using=ListOrSingleStringAsListDeserializer.class)
     private List<String> supportChannel;
