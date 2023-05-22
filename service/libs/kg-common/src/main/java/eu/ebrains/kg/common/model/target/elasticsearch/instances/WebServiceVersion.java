@@ -36,7 +36,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@MetaInfo(name="WebService", searchable=false) //Currently disable the searchability of web services to keep them "hidden"
+@MetaInfo(name="Web service", searchable=true)
 @Getter
 @Setter
 public class WebServiceVersion implements TargetInstance, VersionedInstance, HasTrendingInformation, HasBadges {
