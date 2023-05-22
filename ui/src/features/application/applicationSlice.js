@@ -61,9 +61,6 @@ const applicationSlice = createSlice({
     },
     setInfo(state, action) {
       state.info = action.payload;
-    },
-    showImage(state, action) {
-      state.image =  typeof action.url === "string"?{ url: action.url, label: action.label, link: action.link }:null;
     }
   },
   extraReducers(builder) {
@@ -78,5 +75,5 @@ const applicationSlice = createSlice({
   }
 });
 
-export const { setApplicationReady, setTheme, agreeTermsShortNotice, setInfo, showImage } = applicationSlice.actions;
+export const { setApplicationReady, setTheme, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
 export default applicationSlice.reducer;

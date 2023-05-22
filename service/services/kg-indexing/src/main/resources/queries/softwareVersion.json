@@ -354,7 +354,7 @@
       "singleValue": "FIRST"
     },
     {
-      "propertyName": "query:documentationURL",
+      "propertyName": "query:documentationWebResource",
       "path": [
         {
           "@id": "https://openminds.ebrains.eu/vocab/fullDocumentation",
@@ -365,6 +365,21 @@
           ]
         },
         "https://openminds.ebrains.eu/vocab/IRI"
+      ],
+      "singleValue": "FIRST"
+    },
+    {
+      "propertyName": "query:documentationURL",
+      "path": [
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/fullDocumentation",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/URL"
+            }
+          ]
+        },
+        "https://openminds.ebrains.eu/vocab/URL"
       ],
       "singleValue": "FIRST"
     },

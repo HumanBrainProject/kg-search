@@ -23,7 +23,7 @@
 
 import { connect } from "react-redux";
 
-import { showImage } from "../application/applicationSlice";
+import { showImage } from "../instance/instanceSlice";
 
 import Component from "../../components/Thumbnail/Thumbnail";
 
@@ -36,7 +36,7 @@ export const Thumbnail = connect(
   (dispatch, props) => ({
     onClick: (props.showPreview && typeof props.previewUrl === "string")?
       () => {
-        dispatch(showImage(props.previewUrl, props.alt));
+        dispatch(showImage({url:props.previewUrl, label:props.alt, link: undefined}));
       }
       :null
   })

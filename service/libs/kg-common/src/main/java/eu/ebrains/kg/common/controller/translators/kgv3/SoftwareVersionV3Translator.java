@@ -33,7 +33,6 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Childre
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -96,28 +95,27 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         s.setAllIdentifiers(softwareVersion.getIdentifier());
         s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
 
-        List<Version> versions = software == null ? null:software.getVersions();
+        List<Version> versions = software == null ? null : software.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
-        if (!CollectionUtils.isEmpty(versions) && versions.size()>1) {
+        if (!CollectionUtils.isEmpty(versions) && versions.size() > 1) {
             s.setVersion(softwareVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions, translatorUtils.getErrors());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(software.getId()), "version overview"));
             s.setVersions(references);
-            s.setSearchable(sortedVersions.get(sortedVersions.size()-1).getId().equals(softwareVersion.getId()));
+            s.setSearchable(sortedVersions.get(sortedVersions.size() - 1).getId().equals(softwareVersion.getId()));
         } else {
             s.setSearchable(true);
         }
 
         // title
-        if(StringUtils.isNotBlank(softwareVersion.getFullName())){
+        if (StringUtils.isNotBlank(softwareVersion.getFullName())) {
             if (hasMultipleVersions || StringUtils.isBlank(softwareVersion.getVersion())) {
                 s.setTitle(value(softwareVersion.getFullName()));
             } else {
                 s.setTitle(value(String.format("%s (%s)", softwareVersion.getFullName(), softwareVersion.getVersion())));
             }
-        }
-        else if(software!=null && StringUtils.isNotBlank(software.getFullName())){
+        } else if (software != null && StringUtils.isNotBlank(software.getFullName())) {
             if (hasMultipleVersions || StringUtils.isBlank(softwareVersion.getVersion())) {
                 s.setTitle(value(software.getFullName()));
             } else {
@@ -141,29 +139,29 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         }
 
         handleCitation(softwareVersion, s);
-        if(s.getCitation() == null && s.getCustomCitation() == null && StringUtils.isNotBlank(softwareVersion.getSwhid())){
+        if (s.getCitation() == null && s.getCustomCitation() == null && StringUtils.isNotBlank(softwareVersion.getSwhid())) {
             //TODO resolve SWHID with citation formatter
             s.setCustomCitation(new Value<>(softwareVersion.getSwhid()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getLicense())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getLicense())) {
             s.setLicense(softwareVersion.getLicense().stream().map(l -> new TargetExternalReference(l.getUrl(), l.getLabel())).collect(Collectors.toList()));
             s.setLicenseForFilter(softwareVersion.getLicense().stream().map(l -> new Value<>(l.getShortName())).collect(Collectors.toList()));
         }
 
-        if(softwareVersion.getCopyright()!=null){
+        if (softwareVersion.getCopyright() != null) {
             final String copyrightHolders = softwareVersion.getCopyright().getHolder().stream().map(h -> Helpers.getFullName(h.getFullName(), h.getFamilyName(), h.getGivenName())).filter(Objects::nonNull).collect(Collectors.joining(", "));
             s.setCopyright(new Value<>(String.format("%s %s", softwareVersion.getCopyright().getYear(), copyrightHolders)));
         }
 
         List<TargetInternalReference> projects = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(softwareVersion.getProjects())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getProjects())) {
             projects.addAll(softwareVersion.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).collect(Collectors.toList()));
         }
-        if(software!=null && !CollectionUtils.isEmpty(software.getProjects())){
-            projects.addAll(software.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p-> !projects.contains(p)).collect(Collectors.toList()));
+        if (software != null && !CollectionUtils.isEmpty(software.getProjects())) {
+            projects.addAll(software.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p -> !projects.contains(p)).collect(Collectors.toList()));
         }
-        if(!CollectionUtils.isEmpty(projects)){
+        if (!CollectionUtils.isEmpty(projects)) {
             s.setProjects(projects);
         }
 
@@ -188,89 +186,90 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setDescription(value(software.getDescription()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getPublications())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getPublications())) {
             s.setPublications(softwareVersion.getPublications().stream().map(p -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getApplicationCategory())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getApplicationCategory())) {
             s.setAppCategory(softwareVersion.getApplicationCategory().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getOperatingSystem())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getOperatingSystem())) {
             s.setOperatingSystem(softwareVersion.getOperatingSystem().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getDevice())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getDevice())) {
             s.setDevices(softwareVersion.getDevice().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getProgrammingLanguage())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getProgrammingLanguage())) {
             s.setProgrammingLanguages(softwareVersion.getProgrammingLanguage().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getRequirement())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getRequirement())) {
             s.setRequirements(softwareVersion.getRequirement().stream().map(Value::new).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getFeature())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getFeature())) {
             s.setFeatures(softwareVersion.getFeature().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getLanguage())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getLanguage())) {
             s.setLanguages(softwareVersion.getLanguage().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
         }
 
-        if(softwareVersion.getHomepage()!=null){
+        if (softwareVersion.getHomepage() != null) {
             s.setHomepage(new TargetExternalReference(softwareVersion.getHomepage(), softwareVersion.getHomepage()));
-        }
-        else if(software!=null && software.getHomepage()!=null){
+        } else if (software != null && software.getHomepage() != null) {
             s.setHomepage(new TargetExternalReference(software.getHomepage(), software.getHomepage()));
         }
 
-        if(softwareVersion.getRepository()!=null){
+        if (softwareVersion.getRepository() != null) {
             s.setSourceCode(new TargetExternalReference(softwareVersion.getRepository(), softwareVersion.getRepository()));
         }
 
         List<TargetExternalReference> documentationElements = new ArrayList<>();
-        if(softwareVersion.getDocumentationDOI()!=null){
+        if (softwareVersion.getDocumentationDOI() != null) {
             documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationDOI(), softwareVersion.getDocumentationDOI()));
         }
-        if(softwareVersion.getDocumentationURL()!=null){
+        if (softwareVersion.getDocumentationURL() != null) {
             documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationURL(), softwareVersion.getDocumentationURL()));
         }
-        if(softwareVersion.getDocumentationFile()!=null){
+        if (softwareVersion.getDocumentationWebResource() != null) {
+            documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationWebResource(), softwareVersion.getDocumentationWebResource()));
+        }
+        if (softwareVersion.getDocumentationFile() != null) {
             //TODO make this a little bit prettier (maybe just show the relative file name or similar)
             documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationFile(), softwareVersion.getDocumentationFile()));
         }
-        if(!documentationElements.isEmpty()){
+        if (!documentationElements.isEmpty()) {
             s.setDocumentation(documentationElements);
         }
-        if(!CollectionUtils.isEmpty(softwareVersion.getSupportChannel())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getSupportChannel())) {
             final List<TargetExternalReference> links = softwareVersion.getSupportChannel().stream().filter(channel -> channel.startsWith("http")).
                     map(url -> new TargetExternalReference(url, url)).collect(Collectors.toList());
-            if(links.isEmpty()){
+            if (links.isEmpty()) {
                 //Decision from Oct 2th 2021: we only show e-mail addresses if there are no links available
                 final List<TargetExternalReference> emailAddresses = softwareVersion.getSupportChannel().stream().filter(channel -> channel.contains("@")).map(email -> new TargetExternalReference(String.format("mailto:%s", email), email)).collect(Collectors.toList());
-                if(!emailAddresses.isEmpty()){
+                if (!emailAddresses.isEmpty()) {
                     s.setSupport(emailAddresses);
                 }
-            }
-            else{
+            } else {
                 s.setSupport(links);
             }
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getInputFormat())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getInputFormat())) {
             s.setInputFormat(softwareVersion.getInputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
             s.setInputFormatsForFilter(softwareVersion.getInputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())) {
             s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
             s.setOutputFormatsForFilter(softwareVersion.getOutputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(softwareVersion.getComponents())){
+        if (!CollectionUtils.isEmpty(softwareVersion.getComponents())) {
             s.setComponents(softwareVersion.getComponents().stream().map(c -> {
                 String name = getName(c);
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
@@ -281,10 +280,10 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
     }
 
     private String getName(SoftwareVersionV3.Component c) {
-        if(StringUtils.isNotBlank(c.getFullName())) {
+        if (StringUtils.isNotBlank(c.getFullName())) {
             return c.getFullName();
         }
-        if(StringUtils.isNotBlank(c.getFallbackFullName())) {
+        if (StringUtils.isNotBlank(c.getFallbackFullName())) {
             return c.getFallbackFullName();
         }
         return null;
