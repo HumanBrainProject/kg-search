@@ -25,7 +25,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { trackEvent } from "../../../app/services/api";
+import Matomo from "../../../services/Matomo";
 import { setQueryString } from "../../../features/search/searchSlice";
 
 import "./HitsInfo.css";
@@ -47,7 +47,7 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
   };
 
   const handleOnClick = () => {
-    trackEvent("Search", "Refine search using suggestion", searchTerm);
+    Matomo.trackEvent("Search", "Refine search using suggestion", searchTerm);
     const to = getSuggestionToUrl();
     navigate(to);
     dispatch(setQueryString(searchTerm));

@@ -34,9 +34,9 @@ import {
   useListPreviewFormatsQuery,
   useListGroupingTypesQuery,
   useListPreviewGroupingTypesQuery,
-  trackEvent,
   getError
-} from "../../../app/services/api";
+} from "../../../services/api";
+import Matomo from "../../../services/Matomo";
 
 import { FileFilter } from "./FileFilter";
 import HierarchicalFiles from "./HierarchicalFiles";
@@ -144,12 +144,12 @@ export const AsyncHierarchicalFiles = ({
   }, [data]);
 
   const handleSetFileFormat = value => {
-    trackEvent("Files", "Filter", value);
+    Matomo.trackEvent("Files", "Filter", value);
     setFileFormat(value);
   };
 
   const handleSetGroupingType = value => {
-    trackEvent("Files", "Group by", value);
+    Matomo.trackEvent("Files", "Group by", value);
     setGroupingType(value);
   };
 

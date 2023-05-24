@@ -37,7 +37,7 @@ import { requestInstance, syncHistory, selectPreviousInstance } from "../../feat
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
-import useScript from "../../app/hooks/useScript";
+import useScript from "../../hooks/useScript";
 
 const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) => {
 

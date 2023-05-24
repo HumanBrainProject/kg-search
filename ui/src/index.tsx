@@ -20,35 +20,33 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
 
-import Matomo from "../services/Matomo";
-import InstanceContainer from "./Instance/InstanceContainer";
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-const Instance = () => {
+import store from "./services/store";
+import KeycloakAuthAdapter from "./services/KeycloakAuthAdapter";
+import authConnector from "./services/authConnector";
 
-  const initializedRef = useRef(false);
+import App from "./App";
 
-  const {type, id} = useParams();
+const authAdapter = new KeycloakAuthAdapter({
+  onLoad: "check-sso",
+  flow: "standard",
+  pkceMethod: "S256",
+  checkLoginIframe: true,
+  enableLogging: true
+}, `${window.location.protocol}//${window.location.host}`);
 
-  const instanceId = type?`${type}/${id}`:id;
+authConnector.setAuthAdapter(authAdapter);
 
-  useEffect(() => {
-    if (!initializedRef.current) {
-      initializedRef.current = true;
-      Matomo.setCustomUrl(window.location.href);
-      Matomo.trackPageView();
-    }
-  }, []);
-
-  return (
-    <InstanceContainer
-      instanceId={instanceId}
-      path="/instances/"
-      isPreview={false}
-    />
-  );
-};
-
-export default Instance;
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Failed to find the root element");
+}
+const root = createRoot(container);
+root.render(
+  <React.StrictMode>
+    <App store={store} authAdapter={authAdapter}/>
+  </React.StrictMode>
+);

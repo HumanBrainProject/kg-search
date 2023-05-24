@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 
 import { requestInstance, setTab, selectTypeMapping } from "../../features/instance/instanceSlice";
 import { selectIsDefaultGroup, selectGroupLabel } from "../../features/groups/groupsSlice";
-import { trackEvent } from "../../app/services/api";
+import Matomo from "../../services/Matomo";
 
 import Header from "./Header/Header";
 import ImagePopup from "../../features/image/ImagePopup";
@@ -181,7 +181,7 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
 
   const handleTabClick = tab => {
     if(tab !== selectedTab) {
-      trackEvent("Tab", "Clicked", tab);
+      Matomo.trackEvent("Tab", "Clicked", tab);
       dispatch(setTab(tab));
     }
   };

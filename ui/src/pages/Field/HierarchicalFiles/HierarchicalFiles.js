@@ -29,7 +29,7 @@ import { faFolder } from "@fortawesome/free-solid-svg-icons/faFolder";
 import { debounce } from "lodash";
 const Tree = React.lazy(() => import("rc-tree"));
 
-import { trackEvent } from "../../../app/services/api";
+import Matomo from "../../../services/Matomo";
 import Download from "./Download";
 import LinkedInstance from "../../Instance/LinkedInstance";
 import AsyncLinkedInstance from "../../Instance/AsyncLinkedInstance";
@@ -179,7 +179,7 @@ class HierarchicalFiles extends React.Component {
 
   onFilterMouseUp = debounce(({ target: { value } }) => {
     const filter = value.trim();
-    trackEvent("Files", "Search", filter);
+    Matomo.trackEvent("Files", "Search", filter);
     const tree = getFilteredTree(this.state.initialTree, filter);
     const expandedKeys = [tree.key];
     addExpandedKeys(tree, expandedKeys);
@@ -187,7 +187,7 @@ class HierarchicalFiles extends React.Component {
   }, 500);
 
   onSelect = (_selectedKeys, info) => {
-    trackEvent("Files", "Clicked", info.node.title);
+    Matomo.trackEvent("Files", "Clicked", info.node.title);
     this.setState({ node: info.node });
   };
 

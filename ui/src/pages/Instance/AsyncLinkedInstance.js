@@ -28,7 +28,7 @@ import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 
-import { useGetLinkedInstanceQuery, useGetLinkedPreviewQuery, getError } from "../../app/services/api";
+import { useGetLinkedInstanceQuery, useGetLinkedPreviewQuery, getError } from "../../services/api";
 
 import LinkedInstance from "./LinkedInstance";
 

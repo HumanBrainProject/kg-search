@@ -23,7 +23,7 @@
 
 import React from "react";
 
-import { trackLink } from "../../app/services/api";
+import Matomo from "../../services/Matomo";
 import Count from "../Field/Count";
 
 import "./Link.css";
@@ -42,9 +42,9 @@ export const Link = ({ url, label, isAFileLink, isExternalLink, icon, count }) =
 
   const handleClick = () => {
     if (isAFileLink) {
-      trackLink(url, "download");
+      Matomo.trackLink(url, "download");
     } else if (isExternalLink) {
-      trackLink(url, "link");
+      Matomo.trackLink(url, "link");
     }
   };
 

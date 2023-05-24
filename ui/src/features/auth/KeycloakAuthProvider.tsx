@@ -22,27 +22,25 @@
  */
 
 import React from "react";
-import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
 
-import store from "./app/store";
+import AuthContext from "../../contexts/AuthContext";
+import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
+import useKeycloak from "../../hooks/useKeycloak";
 
-import App from "./pages/App";
+interface KeycloakAuthProviderProps {
+  adapter: KeycloakAuthAdapter;
+  loginRequired?: boolean;
+  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+}
 
-import "normalize.css/normalize.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import "./index.css";
-
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
+const KeycloakAuthProvider = ({ adapter, loginRequired, children }:KeycloakAuthProviderProps) => {
+  const auth = useKeycloak(adapter, loginRequired);
+  return (
+    <AuthContext.Provider value={auth} >
+      <>
+        {children}
+      </>
+    </AuthContext.Provider>
+  );
+};
+export default KeycloakAuthProvider;

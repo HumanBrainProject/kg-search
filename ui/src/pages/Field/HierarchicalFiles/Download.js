@@ -27,7 +27,7 @@ import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 
 import { InfoPanel } from "../../../components/InfoPanel/InfoPanel";
 
-import { trackLink } from "../../../app/services/api";
+import Matomo from "../../../services/Matomo";
 import { termsOfUse } from "../../../data/termsOfUse.js";
 
 import "./Download.css";
@@ -38,7 +38,7 @@ const Download = ({name, type, url}) => {
 
   const trackDownload = e => {
     e.stopPropagation();
-    trackLink(url, "download");
+    Matomo.trackLink(url, "download");
   };
 
   const openTermsOfUse = e => {

@@ -27,10 +27,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   useGetSearchQuery,
-  setCustomUrl,
-  trackPageView,
   getError,
-} from "../app/services/api";
+} from "../services/api";
+import Matomo from "../services/Matomo";
 import {
   initializeSearch,
   syncSearchParameters,
@@ -280,8 +279,8 @@ const SearchBase = () => {
     if (isInitialized && isActive) {
       if (locationSearchRef.current !== window.location.href) {
         locationSearchRef.current = window.location.href;
-        setCustomUrl(window.location.href);
-        trackPageView();
+        Matomo.setCustomUrl(window.location.href);
+        Matomo.trackPageView();
       }
     }
   }, [isInitialized, isActive, location.search]);

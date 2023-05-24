@@ -25,10 +25,11 @@ import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { useGetInstanceQuery, useGetPreviewQuery, trackEvent, getError } from "../../app/services/api";
+import { useGetInstanceQuery, useGetPreviewQuery, getError } from "../../services/api";
+import Matomo from "../../services/Matomo";
 import { setInstance, reset } from "./instanceSlice";
 import { selectIsCurated } from "../groups/groupsSlice";
-import { logout } from "../auth/authSlice";
+import useAuth from "../../hooks/useAuth";
 
 import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
 import ErrorPanel from "../../components/ErrorPanel/ErrorPanel";
@@ -48,12 +49,14 @@ const Instance = ({ isPreview, isSearch, path }) => {
   const isCurated = useSelector(state => selectIsCurated(state));
   const isSearchInitialized = useSelector(state => state.search.isInitialized);
 
+  const { logout } = useAuth();
+
   useEffect(() => {
     if (id && (!isSearch || isSearchInitialized)) {
       const relativeUrl = `${path}${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
       if (cardOpenedUrlRef.current !== relativeUrl) {
         cardOpenedUrlRef.current = relativeUrl;
-        trackEvent("Card", "Opened", relativeUrl);
+        Matomo.trackEvent("Card", "Opened", relativeUrl);
       }
     } else {
       cardOpenedUrlRef.current = null;
@@ -65,7 +68,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
       navigate(-1);
     } else {
       if (!group) {
-        dispatch(logout());
+        logout();
       }
       dispatch(reset());
       navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});

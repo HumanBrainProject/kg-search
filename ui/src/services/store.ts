@@ -20,31 +20,32 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { logger } from "redux-logger";
 
-import { api } from "./services/api";
 import applicationReducer from "../features/application/applicationSlice";
-import authReducer, { sessionFailure } from "../features/auth/authSlice";
 import groupsReducer from "../features/groups/groupsSlice";
 import searchReducer from "../features/search/searchSlice";
 import instanceReducer from "../features/instance/instanceSlice";
+import { api } from "./api";
+import authConnector from "./authConnector";
 
-const rootReducer = {
+const rootReducer = combineReducers({
   application: applicationReducer,
-  auth: authReducer,
   groups: groupsReducer,
   search: searchReducer,
   instance: instanceReducer,
   [api.reducerPath]: api.reducer
-};
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
 
 const sessionFailureMiddleware = ({ dispatch }) => next => action => {
   switch (action?.payload?.originalStatus) {
   case 401: // Unauthorized
   case 403: // Forbidden
   case 511: // Network Authentication Required
-    dispatch(sessionFailure());
+    authConnector.authAdapter?.unauthorizedRequestResponseHandlerProvider?.unauthorizedRequestResponseHandler && authConnector.authAdapter.unauthorizedRequestResponseHandlerProvider.unauthorizedRequestResponseHandler();
     break;
   }
   return next(action);
@@ -52,7 +53,7 @@ const sessionFailureMiddleware = ({ dispatch }) => next => action => {
 
 const prodConfiguration = {
   reducer: rootReducer,
-  middleware: getDefaultMiddleware => getDefaultMiddleware()
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
     .concat(api.middleware)
     .concat(sessionFailureMiddleware)
 };

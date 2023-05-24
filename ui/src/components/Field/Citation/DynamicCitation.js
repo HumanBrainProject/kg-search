@@ -26,7 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
-import { useGetCitationQuery, useGetBibtexQuery } from "../../../app/services/api";
+import { useGetCitationQuery, useGetBibtexQuery } from "../../../services/api";
 
 import Citation from "./Citation";
 

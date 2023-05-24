@@ -22,18 +22,24 @@
  */
 
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { useListGroupsQuery, getError } from "../../app/services/api";
-import { logout } from "../../features/auth/authSlice";
+import { RootState } from "../../services/store";
+import { useListGroupsQuery, getError } from "../../services/api";
 
 import BgError from "../../components/BgError/BgError";
 import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import View from "../../pages/View";
+import useAuth from "../../hooks/useAuth";
 
-const Groups = () => {
+interface GroupsProps {
+  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+}
 
-  const useGroups = useSelector(state => state.groups.useGroups && state.auth.isAuthenticated);
+const Groups = ({ children }: GroupsProps) => {
+
+  const { logout, isAuthenticated } = useAuth();
+
+  const useGroups = useSelector((state:RootState) => state.groups.useGroups) && isAuthenticated;
 
   const {
     //data: groups,
@@ -46,15 +52,9 @@ const Groups = () => {
     refetch,
   } = useListGroupsQuery(null, { skip: !useGroups });
 
-  const dispatch = useDispatch();
-
-  const handleCancel = () => {
-    dispatch(logout());
-  };
-
   if (isError) {
     return (
-      <BgError message={getError(error)} cancelLabel="Back to search" onCancelClick={handleCancel} onRetryClick={refetch} retryVariant="primary" />
+      <BgError message={getError(error)} cancelLabel="Back to search" onCancelClick={logout} onRetryClick={refetch} retryVariant="primary" />
     );
   }
 
@@ -66,7 +66,9 @@ const Groups = () => {
 
   if (!useGroups || isSuccess) {
     return (
-      <View />
+      <>
+        {children}
+      </>
     );
   }
 

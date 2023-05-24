@@ -27,7 +27,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import _ from "lodash-uuid";
 
-import { trackEvent } from "../../../app/services/api";
+import Matomo from "../../../services/Matomo";
 
 import LinkedInstance from "../../Instance/LinkedInstance";
 
@@ -76,7 +76,7 @@ const HierarchicalTreeComponent = ({ tree, defaultExpandAll, defaultExpandedKeys
   const [node, setNode] = useState(initialSelectedNode);
 
   const onSelect = (_selectedKeys, info) => {
-    trackEvent("Specimen", "Clicked", info.node.title);
+    Matomo.trackEvent("Specimen", "Clicked", info.node.title);
     setNode(info.node);
   };
 

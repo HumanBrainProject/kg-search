@@ -31,39 +31,34 @@ import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-const BgError = ({ message, cancelLabel="Cancel", onCancelClick, cancelVariant, retryLabel="Retry", onRetryClick, retryVariant }) => {
-  const html = converter.makeHtml(message);
+interface BgErrorProps {
+  message?: string;
+  cancelLabel?: string;
+  cancelVariant?: string;
+  onCancelClick?: (() => void)|(() => Promise<void>);
+  retryLabel?: string;
+  retryVariant?: string;
+  onRetryClick?: (() => void)|(() => Promise<void>);
+}
+
+const BgError = ({ message, cancelLabel="Cancel", onCancelClick, cancelVariant, retryLabel="Retry", onRetryClick, retryVariant }: BgErrorProps) => {
+  const html = message?converter.makeHtml(message):"";
   return (
     <div className="kgs-bg-error">
       <FontAwesomeIcon icon={faBan} className="kgs-bg-error-icon" size="5x"/><br/>
       <span className="kgs-bg-error-message" dangerouslySetInnerHTML={{__html:html}} />
-      {(typeof onCancelClick === "function" || typeof onRetryClick === "function") && (
+      {(!!onCancelClick || !!onRetryClick) && (
         <div className="kgs-bg-error-navigation">
-          {typeof onCancelClick === "function" && (
+          {!!onCancelClick && (
             <button className={`${cancelVariant?cancelVariant:""}`} onClick={onCancelClick}>{cancelLabel}</button>
           )}
-          {typeof onRetryClick === "function" && (
+          {!!onRetryClick && (
             <button className={`${retryVariant?retryVariant:""}`} onClick={onRetryClick}>{retryLabel}</button>
           )}
         </div>
       )}
     </div>
   );
-};
-
-BgError.propTypes = {
-  show: PropTypes.bool,
-  cancelLabel: PropTypes.string,
-  onCancelClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.object
-  ]),
-  retryLabel: PropTypes.string,
-  onRetryClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.object
-  ]),
-  onAction: PropTypes.func
 };
 
 export default BgError;

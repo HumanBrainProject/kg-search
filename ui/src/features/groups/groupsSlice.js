@@ -22,7 +22,7 @@
  */
 import { createSlice } from "@reduxjs/toolkit";
 
-import { api } from "../../app/services/api";
+import { api } from "../../services/api";
 
 const DEFAULT_GROUP = "public";
 

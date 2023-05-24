@@ -20,35 +20,18 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
 
-import Matomo from "../services/Matomo";
-import InstanceContainer from "./Instance/InstanceContainer";
+import React from "react";
 
-const Instance = () => {
+import Auth from "../services/Auth";
+import AuthContext from "../contexts/AuthContext";
 
-  const initializedRef = useRef(false);
-
-  const {type, id} = useParams();
-
-  const instanceId = type?`${type}/${id}`:id;
-
-  useEffect(() => {
-    if (!initializedRef.current) {
-      initializedRef.current = true;
-      Matomo.setCustomUrl(window.location.href);
-      Matomo.trackPageView();
-    }
-  }, []);
-
-  return (
-    <InstanceContainer
-      instanceId={instanceId}
-      path="/instances/"
-      isPreview={false}
-    />
-  );
+const useAuth = ():Auth => {
+  const auth = React.useContext<Auth|undefined>(AuthContext);
+  if (!auth) {
+    throw new Error("useAuth must be used within a AuthContext.Provider.");
+  }
+  return auth;
 };
 
-export default Instance;
+export default useAuth;

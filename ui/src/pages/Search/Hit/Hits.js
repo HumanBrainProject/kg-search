@@ -24,7 +24,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { trackEvent } from "../../../app/services/api";
+import Matomo from "../../../services/Matomo";
 import { requestInstance } from "../../../features/instance/instanceSlice";
 
 import { Hit } from "./Hit";
@@ -49,7 +49,7 @@ const HitButton = ({ data }) => {
   const handleContextMenu = e => {
     e.preventDefault();
     const relativeUrl = `/instances/${data.id}${(group != defaultGroup)?("?group=" + group):""}`;
-    trackEvent("Card", "Open in new tab", relativeUrl);
+    Matomo.trackEvent("Card", "Open in new tab", relativeUrl);
     window.open(relativeUrl, "_blank");
   };
 

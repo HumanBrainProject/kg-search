@@ -21,19 +21,30 @@
  *
  */
 
-import React, { Suspense } from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import { useGetSettingsQuery, getError } from "../../app/services/api";
+import { useGetSettingsQuery, getError } from "../../services/api";
+import { setCommit } from "../application/applicationSlice";
+import Matomo from "../../services/Matomo";
+import Sentry from "../../services/Sentry";
+import AuthAdapter from "../../services/AuthAdapter";
+import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
 
 import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
 import BgError from "../../components/BgError/BgError";
 
-const Authentication = React.lazy(() => import("../auth/Authentication"));
+interface SettingsProps {
+  authAdapter?: AuthAdapter;
+  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+}
 
-const Settings = () => {
+const Settings = ({ authAdapter, children}: SettingsProps) => {
+
+  const dispatch = useDispatch();
 
   const {
-    //data: settings,
+    data: settings,
     error,
     isUninitialized,
     //isLoading,
@@ -41,8 +52,20 @@ const Settings = () => {
     isSuccess,
     isError,
     refetch,
-  } = useGetSettingsQuery();
+  } = useGetSettingsQuery(undefined);
 
+  useEffect(() => {
+    if (settings) {
+      Matomo.initialize(settings?.matomo);
+      Sentry.initialize(settings?.sentry);
+      dispatch(setCommit(settings?.commit));
+      if (authAdapter instanceof KeycloakAuthAdapter && settings.keycloak) {
+        authAdapter.setConfig(settings.keycloak);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings]);
+  
   if (isError) {
     return (
       <BgError message={getError(error)} onRetryClick={refetch} retryLabel="Retry" retryVariant="primary" />
@@ -57,9 +80,9 @@ const Settings = () => {
 
   if (isSuccess) {
     return (
-      <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-        <Authentication />
-      </Suspense>
+      <>
+        {children}
+      </>
     );
   }
 

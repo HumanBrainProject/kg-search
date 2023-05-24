@@ -21,26 +21,39 @@
  *
  */
 
-import React, { Suspense } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+export type KeycloakOnLoad = 'login-required'|'check-sso';
+export type KeycloakFlow = 'standard'|'implicit'|'hybrid';
 
-import FetchingPanel from "../components/FetchingPanel/FetchingPanel";
+export interface KeycloakConfig {
+  clientId: string;
+  realm: string;
+  url: string;
+}
 
-const Search = React.lazy(() => import("./Search"));
-const Instance = React.lazy(() => import("./Instance"));
-const Preview = React.lazy(() => import("./Preview"));
+export interface KeycloakLogoutOptions {
+  redirectUri: string;
+}
 
-const View = () => (
-  <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-    <Routes>
-      <Route path="/" element={<Search />} />
-      <Route path="/instances/:id" element={<Instance />} />
-      <Route path="/instances/:type/:id" element={<Instance />} />
-      <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-      <Route path="/live/:id" element={<Preview />} />
-      <Route path="*" element={<Navigate to="/" replace={true} />} />
-    </Routes>
-  </Suspense>
-);
+export interface KeycloakInitSettings {
+  onLoad: KeycloakOnLoad;
+  flow: KeycloakFlow,
+  pkceMethod: string;
+  checkLoginIframe: boolean;
+}
 
-export default View;
+export interface KeycloakError {
+  error: string;
+  error_description: string;
+}
+
+export interface KeycloakInstance {
+  token?: string;
+  login: () => void;
+  logout: (options: KeycloakLogoutOptions) => void;
+  onAuthSuccess: () => void;
+  onAuthError: (error: KeycloakError) => void;
+  onTokenExpired: () => void;
+  init: (settings: KeycloakInitSettings) => Promise<void>;
+  updateToken: (interval: number) => Promise<void>;
+  onReady: (callback: (authenticated: boolean) => void) => void;
+}

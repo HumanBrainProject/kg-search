@@ -1,16 +1,23 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { FetchBaseQueryError, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import sanitizeHtml from "sanitize-html";
 
-import Sentry from "./sentry";
-import Matomo from "./matomo";
-import { getAccessToken } from "../../features/auth/authSlice";
+import authConnector from "./authConnector";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const regLegacyInstanceId = /^.+\/(.+)$/; //NOSONAR
-const isMatchingLegacyInstanceId = (instanceId) => {
+const isMatchingLegacyInstanceId = (instanceId: string) => {
   return regLegacyInstanceId.test(instanceId);
 };
 
-const transformInstanceResponse = (data, _meta, arg) => {
+interface QueryResultData {
+  id?: string;
+}
+
+interface QueryArg {
+  [key: string]: string;
+}
+
+const transformInstanceResponse = (data: QueryResultData, _meta: unknown, arg: QueryArg): unknown => {
   const id = arg?.id;
   if (id && isMatchingLegacyInstanceId(id)) {
     data.id = id;
@@ -31,9 +38,8 @@ export const api = createApi({
     //prepareHeaders: (headers, { endpoint, getState }) => {
     prepareHeaders: (headers, { endpoint }) => {
       //const state = getState();
-      const token = getAccessToken();
-      if (token && !unauthenticatedEndpoints.includes(endpoint)) {
-        headers.set("authorization", `Bearer ${token}`);
+      if (authConnector?.authAdapter?.tokenProvider?.token && !unauthenticatedEndpoints.includes(endpoint)) {
+        headers.set("authorization", `Bearer ${authConnector.authAdapter.tokenProvider.token}`);
       }
       return headers;
     },
@@ -43,17 +49,6 @@ export const api = createApi({
     getSettings: builder.query({
       //query: () => "../static/data/settings.json",
       query: () => "/settings",
-      //async onQueryStarted(arg, {dispatch, getState, extra, requestId, queryFulfilled}) {
-      async onQueryStarted(_arg, { queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled; // { data, meta }
-          const isLocalDev = window.location.host.startsWith("localhost");
-          Sentry.initialize(isLocalDev?null:data?.sentry);
-          Matomo.initialize(isLocalDev?null:data?.matomo);
-        } catch (e) {
-          //console.log(e);
-        }
-      }
     }),
     listGroups: builder.query({
       query: () => "/groups",
@@ -92,7 +87,7 @@ export const api = createApi({
         url: `/citation?doi=${encodeURIComponent(doi)}&style=apa&contentType=text/x-bibliography`,
         responseHandler: "text"
       }),
-      transformResponse: citation => sanitizeHtml(citation, { allowedTags: [], allowedAttributes: {} }),
+      transformResponse: citation => citation?sanitizeHtml(citation as string, { allowedTags: [], allowedAttributes: {} }):"",
       keepUnusedDataFor: 1800, // 30 minutes cache
     }),
     getBibtex: builder.query({
@@ -100,7 +95,7 @@ export const api = createApi({
         url: `/citation?doi=${encodeURIComponent(doi)}&style=bibtex&contentType=application/x-bibtex`,
         responseHandler: "text"
       }),
-      transformResponse: bibtex => window.URL.createObjectURL(new Blob([bibtex])),
+      transformResponse: (bibtex: string) => window.URL.createObjectURL(new Blob([bibtex])),
       keepUnusedDataFor: 1800, // 30 minutes cache
     }),
     listFiles: builder.query({
@@ -186,19 +181,11 @@ export const {
   useGetLinkedPreviewQuery,
 } = api;
 
-export const captureException = e => Sentry.captureException(e);
+interface ErrorStatusText {
+  [key:number] : string
+}
 
-export const showReportDialog = customSettings => Sentry.showReportDialog(customSettings);
-
-export const setCustomUrl = url => Matomo.setCustomUrl(url);
-
-export const trackPageView = () => Matomo.trackPageView();
-
-export const trackEvent = (category, name, value) => Matomo.trackEvent(category, name, value);
-
-export const trackLink = (category, name) => Matomo.trackLink(category, name);
-
-const errorStatusText = {
+const errorStatusText: ErrorStatusText = {
   400: "Bad Request",
   401: "Unauthorized",
   403: "Forbidden",
@@ -244,24 +231,30 @@ const errorStatusText = {
   499: "Client Closed Request"
 };
 
-export const getError = error => {
+export const getError = (error?: FetchBaseQueryError|SerializedError|string) => {
+  if (!error) {
+    return "";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
   let technicalError = "";
-  if (error?.originalStatus) {
+  if ("originalStatus" in error) {
     const statusText = errorStatusText[error.originalStatus];
     if (statusText) {
       technicalError = `${error.originalStatus} ${statusText}`;
     } else {
-      technicalError = error.originalStatus;
+      technicalError = error.originalStatus as unknown as string;
     }
-  } else if (error.status) {
+  } else if ("status" in error) {
     const code = Number(error.status);
     if (!isNaN(code) && errorStatusText[code]) {
       technicalError = `${error.status} ${errorStatusText[code]}`;
     } else {
-      technicalError = error.status;
+      technicalError = error.status as string;
     }
   }
-  if (error.data && error.data != technicalError && typeof error.data === "string" && error.data.indexOf("<") === -1) {
+  if ("data" in error && error.data != technicalError && typeof error.data === "string" && error.data.indexOf("<") === -1) {
     if (technicalError) {
       technicalError += ": ";
     }

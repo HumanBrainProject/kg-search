@@ -22,13 +22,13 @@
  */
 import { createSlice } from "@reduxjs/toolkit";
 
-import { api } from "../../app/services/api";
 import { termsCurrentVersion } from "../../data/termsShortNotice";
 
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
   isReady: false,
+  loginRequired: false,
   info: null,
   showTermsShortNotice:
     typeof Storage === "undefined" ||
@@ -48,8 +48,14 @@ const applicationSlice = createSlice({
     setApplicationReady(state) {
       state.isReady = true;
     },
+    setLoginRequired(state, action) {
+      state.loginRequired = action.payload;
+    },
     setTheme(state, action) {
       state.theme = action.payload;
+    },
+    setCommit(state, action) {
+      state.commit = action.payload;
     },
     agreeTermsShortNotice(state) {
       if (typeof Storage !== "undefined") {
@@ -62,18 +68,8 @@ const applicationSlice = createSlice({
     setInfo(state, action) {
       state.info = action.payload;
     }
-  },
-  extraReducers(builder) {
-    builder
-      .addMatcher(
-        api.endpoints.getSettings.matchFulfilled,
-        (state, { payload }) => {
-          state.hasSettings = true;
-          state.commit = payload?.commit;
-        }
-      );
   }
 });
 
-export const { setApplicationReady, setTheme, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
+export const { setApplicationReady, setLoginRequired, setTheme, setCommit, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
 export default applicationSlice.reducer;
