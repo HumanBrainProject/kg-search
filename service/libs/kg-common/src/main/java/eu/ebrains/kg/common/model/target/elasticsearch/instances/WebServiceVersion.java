@@ -36,7 +36,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@MetaInfo(name="Web service", searchable=true)
+@MetaInfo(name="WebService", searchable=true)
 @Getter
 @Setter
 public class WebServiceVersion implements TargetInstance, VersionedInstance, HasTrendingInformation, HasBadges {

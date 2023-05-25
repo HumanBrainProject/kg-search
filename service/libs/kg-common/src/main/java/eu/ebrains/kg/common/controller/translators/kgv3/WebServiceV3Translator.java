@@ -75,7 +75,7 @@ public class WebServiceV3Translator extends TranslatorV3<WebServiceV3, WebServic
     public WebService translate(WebServiceV3 webservice, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         WebService w = new WebService();
 
-        w.setCategory(new Value<>("Webservice Overview"));
+        w.setCategory(new Value<>("Web service Overview"));
         w.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the web service, so we can forward this information to the custodian responsible."));
 
         List<Version> sortedVersions = Helpers.sort(webservice.getVersions(), translatorUtils.getErrors());
