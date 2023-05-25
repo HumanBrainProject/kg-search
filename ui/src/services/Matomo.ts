@@ -38,7 +38,7 @@ const style = "color: #f88900;";
 
 class Matomo {
   private reactPiwik?: ReactPiwik;
-  
+
   initialize(settings?: PiwikOptions): void {
     if (settings?.url && settings?.siteId && !this.reactPiwik && !window.location.host.startsWith("localhost")) {
       this.reactPiwik = new ReactPiwik({
@@ -56,11 +56,11 @@ class Matomo {
     }
   }
 
-  trackCustomUrl(url: string): void {
+  setCustomUrl(url: string): void {
     if (this.reactPiwik && url) {
       ReactPiwik.push(["setCustomUrl", url]);
     } else {
-      console.info(`%c[Matomo] trackCustomUrl: ${url}`, style);
+      console.info(`%c[Matomo] setCustomUrl: ${url}`, style);
     }
   }
 

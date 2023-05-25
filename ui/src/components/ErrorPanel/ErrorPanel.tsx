@@ -22,7 +22,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 
@@ -34,10 +33,10 @@ interface ErrorPanelProps {
   message: string;
   cancelLabel?: string;
   cancelVariant?: string;
-  onCancelClick?: (() => void)|(() => Promise<void>);
+  onCancelClick?: () => void;
   retryLabel?: string;
   retryVariant?: string;
-  onRetryClick?: (() => void)|(() => Promise<void>);
+  onRetryClick?: () => void;
 }
 
 const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel="Cancel", retryLabel="Retry" }: ErrorPanelProps) => {

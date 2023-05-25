@@ -1,60 +1,31 @@
 module.exports = {
-  "settings": {
-    "react": {
-      "pragma": "React",
-      "version": "17.0.2"
-    }
+  parser: "@typescript-eslint/parser",
+  env: {
+      "browser": true,
+      "es2021": true,
+      "node": true
   },
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true,
-    "jest/globals": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:jest/recommended",
-    "plugin:react-hooks/recommended",
-    "prettier"
+  extends: [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "prettier",
+      "plugin:@typescript-eslint/recommended"
   ],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": "latest",
-    "sourceType": "module"
+  parserOptions: {
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": "latest",
+      "sourceType": "module"
   },
-  "plugins": [
-    "react"
+  plugins: [
+      "react", "@typescript-eslint"
   ],
-  "rules": {
-    "indent": [
-      "warn",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "warn",
-      "double"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "curly": [
-      "error",
-      "all"
-    ],
-    "react/no-unknown-property": "warn",
-    "no-trailing-spaces": "error",
-    "no-throw-literal": "error",
-    "strict": 0,
+  rules: {
     "react/prop-types": [
-      0
-    ]
+        0
+      ],
+      "@typescript-eslint/no-namespace": "off"
   }
-};
+}

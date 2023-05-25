@@ -21,8 +21,17 @@
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
     "allowJs": true,
     "removeComments": true,
+    "paths": {
+      "*": [
+        "./src/customTypings/*"
+      ]
+    },
     "plugins": [
       { "name": "typescript-tslint-plugin" }
+    ],
+    "typeRoots": [
+      "src/customTypings",
+      "node_modules/@types"
     ]
   },
   "include": [

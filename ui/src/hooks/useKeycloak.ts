@@ -23,11 +23,11 @@
 
 import { useState } from "react";
 import Keycloak, { KeycloakError } from "keycloak-js";
-import Auth from "../services/Auth"; 
+import Auth from "../services/Auth";
 import KeycloakAuthAdapter from "../services/KeycloakAuthAdapter";
 
 const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Auth => {
-  
+
   const [isUninitialized, setUninitialized] = useState(true);
   const [isInitialized, setInitialized] = useState(false);
   const [isInitializing, setInitializing] = useState(false);
@@ -88,6 +88,7 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
         };
         const initOptions = adapter.initOptions?{
           ...adapter.initOptions,
+          onLoad: loginRequired?"login-required":adapter.initOptions.onLoad,
           checkLoginIframe: !!adapter.initOptions.checkLoginIframe && !window.location.host.startsWith("localhost") // avoid CORS error with UI running on localhost with Firefox
         }:{};
         keycloak
@@ -114,7 +115,7 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
       setAuthenticating(false);
     }
   };
-  
+
   const login = async (): Promise<void> => {
     if (!adapter.keycloak || isUninitialized || isInitializing || isAuthenticating || isError) {
       throw new Error("login cannot be called when keycloak is not initialized!");
@@ -146,13 +147,13 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
     isAuthenticated: isAuthenticated,
     isAuthenticating: isAuthenticating,
     isLogingOut: isLogingOut,
-    loginRequired: loginRequired !== undefined ? loginRequired : adapter.initOptions?.onLoad === "login-required",
+    loginRequired: loginRequired ?? adapter.initOptions?.onLoad === "login-required",
     userId: userId,
     authenticate: authenticate,
     login: login,
     logout: logout
   };
-  
+
 };
 
 export default useKeycloak;

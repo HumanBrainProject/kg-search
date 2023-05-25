@@ -22,7 +22,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import "./BgError.css";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
@@ -35,10 +34,10 @@ interface BgErrorProps {
   message?: string;
   cancelLabel?: string;
   cancelVariant?: string;
-  onCancelClick?: (() => void)|(() => Promise<void>);
+  onCancelClick?: () => void;
   retryLabel?: string;
   retryVariant?: string;
-  onRetryClick?: (() => void)|(() => Promise<void>);
+  onRetryClick?: () => void;
 }
 
 const BgError = ({ message, cancelLabel="Cancel", onCancelClick, cancelVariant, retryLabel="Retry", onRetryClick, retryVariant }: BgErrorProps) => {

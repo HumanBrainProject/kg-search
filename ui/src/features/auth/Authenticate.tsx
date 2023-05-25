@@ -78,18 +78,12 @@ const Authenticate = ({children}: AuthenticateProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTokenExpired]);
 
-  const requireLogin = (required: boolean) => {
-    if (!required) {
-      dispatch(resetGroups());
-    }
-    dispatch(setLoginRequired(required));
-  };
-
   const cancelLogin = () => {
     if (isLive) {
       navigate(location.pathname.replace("/live/", "/instances/"));
     }
-    requireLogin(false);
+    dispatch(resetGroups());
+    dispatch(setLoginRequired(false));
   };
 
   if (isTokenExpired) {

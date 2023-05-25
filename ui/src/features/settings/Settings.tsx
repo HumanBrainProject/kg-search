@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { useGetSettingsQuery, getError } from "../../services/api";
@@ -41,6 +41,8 @@ interface SettingsProps {
 
 const Settings = ({ authAdapter, children}: SettingsProps) => {
 
+  const [isReady, setReady] = useState(false);
+
   const dispatch = useDispatch();
 
   const {
@@ -49,23 +51,23 @@ const Settings = ({ authAdapter, children}: SettingsProps) => {
     isUninitialized,
     //isLoading,
     isFetching,
-    isSuccess,
     isError,
     refetch,
   } = useGetSettingsQuery(undefined);
 
   useEffect(() => {
-    if (settings) {
+    if (settings && !isReady) {
       Matomo.initialize(settings?.matomo);
       Sentry.initialize(settings?.sentry);
       dispatch(setCommit(settings?.commit));
       if (authAdapter instanceof KeycloakAuthAdapter && settings.keycloak) {
         authAdapter.setConfig(settings.keycloak);
       }
+      setReady(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings]);
-  
+  }, [settings, isReady]);
+
   if (isError) {
     return (
       <BgError message={getError(error)} onRetryClick={refetch} retryLabel="Retry" retryVariant="primary" />
@@ -78,7 +80,7 @@ const Settings = ({ authAdapter, children}: SettingsProps) => {
     );
   }
 
-  if (isSuccess) {
+  if (isReady) {
     return (
       <>
         {children}

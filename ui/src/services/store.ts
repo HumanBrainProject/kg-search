@@ -20,7 +20,7 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore, combineReducers, Middleware, Dispatch, ConfigureStoreOptions } from "@reduxjs/toolkit";
 import { logger } from "redux-logger";
 
 import applicationReducer from "../features/application/applicationSlice";
@@ -29,6 +29,7 @@ import searchReducer from "../features/search/searchSlice";
 import instanceReducer from "../features/instance/instanceSlice";
 import { api } from "./api";
 import authConnector from "./authConnector";
+import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
 
 const rootReducer = combineReducers({
   application: applicationReducer,
@@ -40,7 +41,7 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-const sessionFailureMiddleware = ({ dispatch }) => next => action => {
+const sessionFailureMiddleware: Middleware = () => (next: Dispatch) => action => {
   switch (action?.payload?.originalStatus) {
   case 401: // Unauthorized
   case 403: // Forbidden
@@ -51,16 +52,16 @@ const sessionFailureMiddleware = ({ dispatch }) => next => action => {
   return next(action);
 };
 
-const prodConfiguration = {
+const prodConfiguration: ConfigureStoreOptions = {
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware) => getDefaultMiddleware()
     .concat(api.middleware)
     .concat(sessionFailureMiddleware)
 };
 
-const developmentConfiguration = {
+const developmentConfiguration: ConfigureStoreOptions = {
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
+  middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
     .concat(api.middleware)
     .concat(sessionFailureMiddleware)
     .concat(logger)

@@ -92,6 +92,7 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
       if(hasGroup) {
         dispatch(setInitialGroup(group));
       }
+
       if (authMode) {
         if (useGroups) {
           dispatch(setUseGroups());
@@ -116,7 +117,7 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
       <main>
         <Notification className={undefined} text={notification} />
         <ErrorBoundary>
-          <Settings>
+          <Settings authAdapter={authAdapter} >
             <Authenticate>
               <Groups>
                 <Suspense fallback={<FetchingPanel message="Loading resource..." />}>

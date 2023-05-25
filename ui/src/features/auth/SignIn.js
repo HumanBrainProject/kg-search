@@ -30,7 +30,6 @@ import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 
 import useAuth from "../../hooks/useAuth";
 import Matomo from "../../services/Matomo";
-import { setLoginRequired } from "../application/applicationSlice";
 import { setGroup } from "../groups/groupsSlice";
 import { setPage } from "../search/searchSlice";
 import { reset } from "../instance/instanceSlice";
@@ -66,15 +65,8 @@ const Group = ({ group }) => {
 
 const SignIn = ({ className, Tag }) => {
 
-  const { logout } = useAuth();
+  const { isUninitialized, isAuthenticating, isAuthenticated, isLogingOut, login, logout } = useAuth();
 
-  const dispatch = useDispatch();
-
-  const authenticationInitialized = useSelector(state => state.auth.authenticationInitialized);
-  const isUnavailble = useSelector(state => state.auth.isUnavailble);
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const isAuthenticating = useSelector(state => state.auth.isLoading || state.auth.authenticationInitializing || state.auth.isAuthenticating);
-  const isLogingOut = useSelector(state => state.auth.isLogingOut);
   const groups = useSelector(state => state.groups.groups);
 
   const handleLogoutClick = () => {
@@ -84,10 +76,10 @@ const SignIn = ({ className, Tag }) => {
 
   const handleLoginClick = () => {
     Matomo.trackEvent("User", "Login");
-    dispatch(setLoginRequired(true));
+    login();
   };
 
-  if (!authenticationInitialized || isUnavailble) {
+  if (isUninitialized) {
     return null;
   }
   if(isAuthenticated) {
