@@ -88,6 +88,7 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
         w.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the web service, so we can forward this information to the custodian responsible."));
 
         WebServiceVersionV3.WebServiceVersions parent = source.getWebservice();
+        w.setIdentifier(IdUtils.getUUID(source.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         w.setId(IdUtils.getUUID(source.getId()));
         final Date releaseDate = source.getReleaseDate() != null && source.getReleaseDate().before(new Date()) ? source.getReleaseDate() : source.getFirstReleasedAt();
         translatorUtils.defineBadgesAndTrendingState(w, releaseDate, source.getLast30DaysViews());

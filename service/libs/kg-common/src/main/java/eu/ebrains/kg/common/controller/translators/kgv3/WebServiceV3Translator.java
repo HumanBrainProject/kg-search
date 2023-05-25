@@ -26,10 +26,8 @@ package eu.ebrains.kg.common.controller.translators.kgv3;
 import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
-import eu.ebrains.kg.common.model.source.openMINDSv3.SoftwareV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.WebServiceV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.WebService;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -88,7 +86,7 @@ public class WebServiceV3Translator extends TranslatorV3<WebServiceV3, WebServic
         w.setWebServiceVersions(webServiceVersions);
         w.setId(IdUtils.getUUID(webservice.getId()));
         w.setAllIdentifiers(webservice.getIdentifier());
-        w.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", webservice.getIdentifier()).stream().distinct().collect(Collectors.toList()));
+        w.setIdentifier(IdUtils.getUUID(webservice.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         w.setDescription(value(webservice.getDescription()));
         w.setTitle(value(webservice.getTitle()));
         if (!CollectionUtils.isEmpty(webservice.getDeveloper())) {

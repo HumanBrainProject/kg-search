@@ -36,7 +36,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@MetaInfo(name="WebService", searchable=true)
+@MetaInfo(name="Web service", searchable=true)
 @Getter
 @Setter
 public class WebServiceVersion implements TargetInstance, VersionedInstance, HasTrendingInformation, HasBadges {
@@ -44,7 +44,7 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     private List<String> allIdentifiers;
 
     @ElasticSearchInfo(type = "keyword")
-    private final Value<String> type = new Value<>("WebService");
+    private final Value<String> type = new Value<>("Web service");
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
