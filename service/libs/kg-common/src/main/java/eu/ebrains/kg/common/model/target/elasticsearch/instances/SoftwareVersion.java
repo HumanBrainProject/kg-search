@@ -159,6 +159,9 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true, useForSuggestion = true)
     private Value<String> description;
 
+    @FieldInfo(label = "Version specification", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true)
+    private Value<String> newInThisVersion;
+
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue firstRelease;

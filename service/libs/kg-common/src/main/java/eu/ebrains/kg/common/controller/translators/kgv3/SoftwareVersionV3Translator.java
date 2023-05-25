@@ -24,6 +24,7 @@
 package eu.ebrains.kg.common.controller.translators.kgv3;
 
 import eu.ebrains.kg.common.controller.translators.Helpers;
+import eu.ebrains.kg.common.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SoftwareVersionV3;
@@ -184,6 +185,10 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setDescription(value(softwareVersion.getDescription()));
         } else if (software != null) {
             s.setDescription(value(software.getDescription()));
+        }
+
+        if (StringUtils.isNotBlank(softwareVersion.getVersionInnovation()) && !Constants.VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(softwareVersion.getVersionInnovation()).toLowerCase())) {
+            s.setNewInThisVersion(new Value<>(softwareVersion.getVersionInnovation()));
         }
 
         if (!CollectionUtils.isEmpty(softwareVersion.getPublications())) {
