@@ -50,7 +50,7 @@ const data = [
 
 test("Carousel component renders initially", () => {
   const component = renderer.create(
-    <Carousel className="className" data={data} onBack={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+    <Carousel className="className" data={data} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
@@ -58,7 +58,7 @@ test("Carousel component renders initially", () => {
 
 test("Carousel test items", () => {
   const component = renderer.create(
-    <Carousel className="className" data={data} onBack={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+    <Carousel className="className" data={data} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
   );
   const instance = component.root;
 

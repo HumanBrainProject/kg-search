@@ -28,7 +28,7 @@ import Toggle from "./Toggle";
 
 test("Toggle component renders initially", () => {
   const component = renderer.create(
-    <Toggle className="className" show={true} value="a value" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onClick={() => {}} />
+    <Toggle className="className" show={true} value="a value" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
@@ -36,7 +36,7 @@ test("Toggle component renders initially", () => {
 
 test("Toggle test show false\"", () => {
   const component = renderer.create(
-    <Toggle className="className" show={false} value="a value" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onClick={() => {}} />
+    <Toggle className="className" show={false} value="a value" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} />
   );
   expect(component.toJSON()).toBe(null);
 });

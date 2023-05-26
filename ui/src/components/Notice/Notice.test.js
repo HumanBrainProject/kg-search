@@ -27,7 +27,7 @@ import Notice from "./Notice";
 
 test("Notice component renders initially", () => {
   const component = renderer.create(
-    <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
+    <Notice className="className" show={true} text="some text" agreeLabel="agree label" />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
@@ -35,7 +35,7 @@ test("Notice component renders initially", () => {
 
 test("Notice test show false\"", () => {
   const component = renderer.create(
-    <Notice className="className" show={false} text="some text" agreeLabel="agree label" onAgree={() => {}} />
+    <Notice className="className" show={false} text="some text" agreeLabel="agree label" />
   );
   expect(component.toJSON()).toBe(null);
 });

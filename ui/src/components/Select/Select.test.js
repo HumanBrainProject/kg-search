@@ -28,7 +28,7 @@ import Select from "./Select";
 
 test("Select component renders initially", () => {
   const component = renderer.create(
-    <Select className="className" label="a label" list={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onChange={() => {}} />
+    <Select className="className" label="a label" list={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} />
   );
 
   expect(component.toJSON()).toMatchSnapshot();

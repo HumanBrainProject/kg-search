@@ -28,7 +28,7 @@ import InfoPanel from "./InfoPanel";
 
 test("InfoPanel component renders initially", () => {
   const component = renderer.create(
-    <InfoPanel text="some text" onClose={() => {}} />
+    <InfoPanel text="some text" />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
