@@ -74,7 +74,7 @@ const Authenticate = ({children}: AuthenticateProps) => {
   }, [isTokenExpired]);
 
   const cancelLogin = () => {
-    window.location.replace(location.pathname.replace("/live/", "/instances/").replace(/[&]?group=[^&]+/gi, ""));
+    window.location.replace(location.pathname.replace("/live/", "/instances/").replace(/&?group=[^&]+/gi, ""));
   };
   
   if (isTokenExpired) {
