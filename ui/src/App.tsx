@@ -21,8 +21,8 @@
  *
  */
 
-import React, { useEffect, useRef, Suspense } from "react";
-import { Provider, useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState, useRef, Suspense } from "react";
+import { Provider, useDispatch } from "react-redux";
 import { Store } from "redux";
 import { BrowserRouter, Route, Routes, Navigate, useLocation, useNavigate, matchPath } from "react-router-dom";
 
@@ -32,10 +32,8 @@ import "bootstrap/dist/js/bootstrap.min.js";
 
 import notification from "./data/notification";
 
-import { RootState } from "./services/store";
 import AuthAdapter from "./services/AuthAdapter";
 import AuthProvider from "./features/auth/AuthProvider";
-import { setApplicationReady, setLoginRequired } from "./features/application/applicationSlice";
 import { setInitialGroup, setUseGroups } from "./features/groups/groupsSlice";
 
 import { searchToObj, getHashKey } from "./helpers/BrowserHelpers";
@@ -62,14 +60,13 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
 
   const initializedRef = useRef(false);
 
+  const [isReady, setReady] = useState(false);
+  const [loginRequired, setLoginRequired] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-
-  const isApplicationReady = useSelector((state:RootState) => state.application.isReady);
-
-  const loginRequired = useSelector((state:RootState) => state.application.loginRequired);
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -97,16 +94,16 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
         if (useGroups) {
           dispatch(setUseGroups());
         }
-        dispatch(setLoginRequired(true));
-        dispatch(setApplicationReady());
+        setLoginRequired(true);
+        setReady(true);
       } else {
-        dispatch(setApplicationReady());
+        setReady(true);
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!isApplicationReady) {
+  if (!isReady) {
     return null;
   }
 

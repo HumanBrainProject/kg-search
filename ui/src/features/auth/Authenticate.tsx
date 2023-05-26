@@ -23,12 +23,9 @@
 
 import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import {useLocation, useNavigate, matchPath} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 import { api, getError, tagsToInvalidateOnLogout } from "../../services/api";
-
-import { setLoginRequired } from "../application/applicationSlice";
-import { resetGroups } from "../groups/groupsSlice";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -57,9 +54,7 @@ const Authenticate = ({children}: AuthenticateProps) => {
     login
   } = useAuth();
 
-  const navigate = useNavigate();
   const location = useLocation();
-  const isLive = !!matchPath({path:"/live/*"}, location.pathname);
 
   const dispatch = useDispatch();
 
@@ -79,13 +74,9 @@ const Authenticate = ({children}: AuthenticateProps) => {
   }, [isTokenExpired]);
 
   const cancelLogin = () => {
-    if (isLive) {
-      navigate(location.pathname.replace("/live/", "/instances/"));
-    }
-    dispatch(resetGroups());
-    dispatch(setLoginRequired(false));
+    window.location.replace(location.pathname.replace("/live/", "/instances/").replace(/[&]?group=[^&]+/gi, ""));
   };
-
+  
   if (isTokenExpired) {
     return (
       <BgError message="Your session has expired" onCancelClick={cancelLogin} cancelLabel="Browse public webpage"  onRetryClick={login} retryLabel="Re-Login" retryVariant="primary" />
@@ -101,7 +92,7 @@ const Authenticate = ({children}: AuthenticateProps) => {
     }
 
     return (
-      <BgError message={error} onRetryClick={login} retryLabel="Retry" retryVariant="primary" />
+      <BgError message={error} onRetryClick={authenticate} retryLabel="Retry" retryVariant="primary" />
     );
   }
 

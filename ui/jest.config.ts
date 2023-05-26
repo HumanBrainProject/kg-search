@@ -21,11 +21,15 @@
  *
  */
 
-module.exports = {
-  "verbose": true,
-  "testMatch": ["<rootDir>/src/**/*.test.js"],
-  "transform": {
+import type {Config} from '@jest/types';
+// Sync object
+const config: Config.InitialOptions = {
+  verbose: true,
+  testMatch: ["<rootDir>/src/**/*.test.js"],
+  transform: {
+    "^.+\\.tsx?$": "ts-jest",
     "^.+\\.jsx?$": "babel-jest",
     "^.+\\.css$": "<rootDir>/CSSStub.js"
   }
 };
+export default config;

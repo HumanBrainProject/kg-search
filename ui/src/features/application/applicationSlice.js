@@ -27,8 +27,6 @@ import { termsCurrentVersion } from "../../data/termsShortNotice";
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
-  isReady: false,
-  loginRequired: false,
   info: null,
   showTermsShortNotice:
     typeof Storage === "undefined" ||
@@ -45,12 +43,6 @@ const applicationSlice = createSlice({
   name: "application",
   initialState,
   reducers: {
-    setApplicationReady(state) {
-      state.isReady = true;
-    },
-    setLoginRequired(state, action) {
-      state.loginRequired = action.payload;
-    },
     setTheme(state, action) {
       state.theme = action.payload;
     },
@@ -71,5 +63,5 @@ const applicationSlice = createSlice({
   }
 });
 
-export const { setApplicationReady, setLoginRequired, setTheme, setCommit, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
+export const { setTheme, setCommit, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
 export default applicationSlice.reducer;

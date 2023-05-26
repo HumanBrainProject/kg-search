@@ -52,11 +52,6 @@ const groupsSlice = createSlice({
         group = state.defaultGroup;
       }
       state.group = group;
-    },
-    resetGroups(state) {
-      state.useGroups = false;
-      state.groups = [];
-      state.group = DEFAULT_GROUP;
     }
   },
   extraReducers(builder) {
@@ -88,5 +83,5 @@ export const selectGroupLabel = (state, name) => {
 };
 
 
-export const { setInitialGroup, setUseGroups, setGroup, resetGroups } = groupsSlice.actions;
+export const { setInitialGroup, setUseGroups, setGroup } = groupsSlice.actions;
 export default groupsSlice.reducer;

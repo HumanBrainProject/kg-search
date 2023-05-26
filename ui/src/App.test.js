@@ -22,20 +22,19 @@
  */
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
 import store from "./services/store";
 import App from "./App";
 
-// eslint-disable-next-line jest/expect-expect
-it("renders without crashing", () => {
-  const container = document.createElement("div");
-  const root = createRoot(container);
-  root.render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  );
+// eslint-disable-next-line no-undef
+describe("Test launching the app", () => {
+  // eslint-disable-next-line no-undef
+  it("renders without crashing", () => {
+    const container = document.createElement("div");
+    const root = createRoot(container);
+    root.render(
+      <React.StrictMode>
+        <App store={store} />
+      </React.StrictMode>
+    );
+  });
 });
