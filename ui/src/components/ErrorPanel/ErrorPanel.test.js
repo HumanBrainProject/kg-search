@@ -27,7 +27,7 @@ import ErrorPanel from "./ErrorPanel";
 
 test("ErrorPanel component renders initially", () => {
   const component = renderer.create(
-    <ErrorPanel show={true} message="some message" retryLabel="retry label" onRetryClick={{}} cancelLabel="cancel label" onCancelClick={{}} onAction={() => {}} />
+    <ErrorPanel show={true} message="some message" retryLabel="retry label" onRetryClick={{}} cancelLabel="cancel label" onCancelClick={{}} />
   );
 
   expect(component.toJSON()).toMatchSnapshot();

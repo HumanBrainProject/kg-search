@@ -27,7 +27,8 @@ import Notice from "./Notice";
 
 test("Notice component renders initially", () => {
   const component = renderer.create(
-    <Notice className="className" show={true} text="some text" agreeLabel="agree label" />
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}}  />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
