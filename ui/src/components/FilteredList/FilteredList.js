@@ -37,17 +37,6 @@ export class FilteredList extends React.Component {
     this.state = { filter: "", hasFocus: false, selectedItems: [], options: [], focusedOption: null };
   }
 
-  //The only way to trigger an onChange event in React is to do the following
-  //Basically changing the field value, bypassing the react setter and dispatching an "input"
-  // event on a proper html input node
-  //See for example the discussion here : https://stackoverflow.com/a/46012210/9429503
-  triggerOnChange = () => {
-    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set
-      .call(this.hiddenInputRef, JSON.stringify(this.state.filter));
-    const event = new Event("input", { bubbles: true });
-    this.hiddenInputRef.dispatchEvent(event);
-  };
-
   handleInputKeyStrokes = e => {
     if (e.keyCode === 40) {
       e.preventDefault();
@@ -155,7 +144,7 @@ export class FilteredList extends React.Component {
           <FontAwesomeIcon icon={faChevronDown} className="kgs-filtered-facet_filter_dropdown_icon"/>
           <input style={{ display: "none" }} type="text" ref={ref => this.hiddenInputRef = ref} />
         </div>
-        {dropdownOpen && (options.length || filter) && (
+        {dropdownOpen && (!!options.length || filter) && (
           <div className={`kgs-filtered-list_dropdown ${dropdownOpen ? "is-open" : ""}`} style={dropdownStyle} onKeyDown={this.handleInputKeyStrokes} >
             <List items={options} currentItem={focusedOption} ItemComponent={ItemComponent} itemUniqKeyAttribute={itemUniqKeyAttribute} onItemClick={this.handleItemClick} />
           </div>

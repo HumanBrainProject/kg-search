@@ -21,7 +21,7 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, JSX } from "react";
 import { useDispatch } from "react-redux";
 import {useLocation} from "react-router-dom";
 

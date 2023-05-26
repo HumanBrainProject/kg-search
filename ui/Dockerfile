@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine3.15 as build-stage
+FROM node:16.13.2-alpine3.15 AS build-stage
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . /usr/src/app
