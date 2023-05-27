@@ -20,7 +20,7 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { JSONPath } from "./FileTreeByGroupingTypeHelper";
+import { JSONPath } from './FileTreeByGroupingTypeHelper';
 
 const buildTreeStructureForFile = (
   rootNode,
@@ -31,8 +31,8 @@ const buildTreeStructureForFile = (
   urlFieldPath
 ) => {
   const fileUrl = JSONPath(file, urlFieldPath);
-  if (fileUrl && typeof fileUrl === "string") {
-    const path = fileUrl.split("/").slice(nbOfPathToSkip);
+  if (fileUrl && typeof fileUrl === 'string') {
+    const path = fileUrl.split('/').slice(nbOfPathToSkip);
     let node = rootNode;
     path.forEach((name, index) => {
       if (index === path.length - 1) {
@@ -41,7 +41,7 @@ const buildTreeStructureForFile = (
           //name: name.replace(/\?.+$/, ""),
           title: JSONPath(file, nameFieldPath),
           url: fileUrl,
-          type: "file",
+          type: 'file',
           thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
           data: file,
           key: fileUrl
@@ -53,12 +53,12 @@ const buildTreeStructureForFile = (
           node.paths[name] = {
             title: name,
             url: `${node.url}${
-              node === rootNode ? rootUrlSeparator : "/"
+              node === rootNode ? rootUrlSeparator : '/'
             }${name}`,
-            type: "folder",
+            type: 'folder',
             paths: {},
             key: `${node.url}${
-              node === rootNode ? rootUrlSeparator : "/"
+              node === rootNode ? rootUrlSeparator : '/'
             }${name}`
           };
         }
@@ -69,12 +69,12 @@ const buildTreeStructureForFile = (
 };
 
 const setChildren = node => {
-  if (node.type === "folder") {
+  if (node.type === 'folder') {
     node.children = [];
     const paths = Object.values(node.paths);
     if (
-      !paths.every(el => el.type === "folder") &&
-      !paths.every(el => el.type === "file")
+      !paths.every(el => el.type === 'folder') &&
+      !paths.every(el => el.type === 'file')
     ) {
       paths.sort((a, b) =>
         b.type.toLowerCase().localeCompare(a.type.toLowerCase())
@@ -83,7 +83,7 @@ const setChildren = node => {
     delete node.paths;
     paths.forEach(child => {
       node.children.push(child);
-      if (child.type === "folder") {
+      if (child.type === 'folder') {
         setChildren(child);
       }
     });
@@ -94,7 +94,7 @@ const getPath = url => {
   if (!url) {
     return [];
   }
-  const segments = url.split("/");
+  const segments = url.split('/');
   return segments.slice(0, segments.length - 1);
 };
 
@@ -114,8 +114,8 @@ const getCommonPath = (files, urlFieldPath) => {
 };
 
 const getRootPathIndex = path => {
-  if (path.startsWith("https://data-proxy.ebrains.eu")) {
-    if (path.startsWith("https://data-proxy.ebrains.eu/api/v1/buckets")) {
+  if (path.startsWith('https://data-proxy.ebrains.eu')) {
+    if (path.startsWith('https://data-proxy.ebrains.eu/api/v1/buckets')) {
       return 7; // Container url does not contain "public" in the path
     }
     return 8; // Container url contains "public" in the path
@@ -124,18 +124,18 @@ const getRootPathIndex = path => {
 };
 
 const getUrl = commonPath => {
-  const joinedPath = commonPath.join("/");
+  const joinedPath = commonPath.join('/');
   const rootPathIndex = getRootPathIndex(joinedPath);
   return commonPath.length <= rootPathIndex
     ? joinedPath
-    : `${commonPath.slice(0, rootPathIndex).join("/")}?prefix=${commonPath
+    : `${commonPath.slice(0, rootPathIndex).join('/')}?prefix=${commonPath
       .slice(rootPathIndex)
-      .join("/")}`;
+      .join('/')}`;
 };
 
 const getRootUrlSeparator = (commonPath, nbOfPathToSkip) => {
-  const rootPathIndex = getRootPathIndex(commonPath.join("/"));
-  return nbOfPathToSkip > rootPathIndex ? "/" : "?prefix=";
+  const rootPathIndex = getRootPathIndex(commonPath.join('/'));
+  return nbOfPathToSkip > rootPathIndex ? '/' : '?prefix=';
 };
 
 const getSortedFiles = (files, urlFieldPath) => {
@@ -164,7 +164,7 @@ export const getTreeByFolder = (files, nameFieldPath, urlFieldPath) => {
     title: commonPath[commonPath.length - 1],
     url: `https://data.kg.ebrains.eu/zip?container=${url}`,
     isRootNode: true,
-    type: "folder",
+    type: 'folder',
     paths: {},
     toggled: true,
     active: true,

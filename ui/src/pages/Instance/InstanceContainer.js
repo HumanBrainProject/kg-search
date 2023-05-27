@@ -21,23 +21,23 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import Notification from "../../components/Notification/Notification";
-import PreviousInstanceLinkButton from "../../components/PreviousInstanceLinkButton/PreviousInstanceLinkButton";
-import Watermark from "../../components/Watermark/Watermark";
+import Notification from '../../components/Notification/Notification';
+import PreviousInstanceLinkButton from '../../components/PreviousInstanceLinkButton/PreviousInstanceLinkButton';
+import Watermark from '../../components/Watermark/Watermark';
 
-import { setGroup } from "../../features/groups/groupsSlice";
-import Instance from "../../features/instance/Instance";
-import { requestInstance, syncHistory, selectPreviousInstance } from "../../features/instance/instanceSlice";
+import { setGroup } from '../../features/groups/groupsSlice';
+import Instance from '../../features/instance/Instance';
+import { requestInstance, syncHistory, selectPreviousInstance } from '../../features/instance/instanceSlice';
 
-import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
+import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from '../../helpers/BrowserHelpers';
 
-import "./InstanceContainer.css";
-import useScript from "../../hooks/useScript";
-import InstanceView from "./InstanceView";
+import './InstanceContainer.css';
+import useScript from '../../hooks/useScript';
+import InstanceView from './InstanceView';
 
 const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) => {
 
@@ -55,7 +55,7 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
   const group = useSelector(state => state.groups.group);
   const defaultGroup = useSelector(state => state.groups.defaultGroup);
 
-  useScript("application/ld+json", meta);
+  useScript('application/ld+json', meta);
 
   useEffect(() => {
     if (!initializedRef.current !== instanceId) {
@@ -71,7 +71,7 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
   useEffect(() => {
     const popstateHandler = () => {
       const reg = new RegExp(`^${path}(.+)$`);
-      let previousGroup = searchToObj()["group"];
+      let previousGroup = searchToObj()['group'];
       if (!previousGroup) {
         previousGroup = defaultGroup;
       }
@@ -79,9 +79,9 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
       dispatch(setGroup(previousGroup));
       dispatch(syncHistory(previousId));
     };
-    window.addEventListener("popstate", popstateHandler, false);
+    window.addEventListener('popstate', popstateHandler, false);
     return () => {
-      window.removeEventListener("popstate", popstateHandler);
+      window.removeEventListener('popstate', popstateHandler);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -93,7 +93,7 @@ const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) 
   }, [instanceId, title]);
 
   useEffect(() => {
-    const query = getUpdatedQuery(searchToObj(), "group", group && group !== defaultGroup, group, false);
+    const query = getUpdatedQuery(searchToObj(), 'group', group && group !== defaultGroup, group, false);
     const newLocationSearch = getLocationSearchFromQuery(query);
     if (newLocationSearch !== location.search) {
       navigate(`${location.pathname}${newLocationSearch}`);

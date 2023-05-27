@@ -24,8 +24,8 @@
 
 export const LIST_SMALL_SIZE_STOP = 5;
 
-const VIEW_LESS_LABEL = "view less";
-const VIEW_ALL_LABEL = "view all";
+const VIEW_LESS_LABEL = 'view less';
+const VIEW_ALL_LABEL = 'view all';
 
 
 export const getNextSizeStop = (sizeStop, props) => {

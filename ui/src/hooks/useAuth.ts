@@ -21,15 +21,15 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import AuthContext from "../contexts/AuthContext";
-import type Auth from "../services/Auth";
+import AuthContext from '../contexts/AuthContext';
+import type Auth from '../services/Auth';
 
 const useAuth = ():Auth => {
   const auth = React.useContext<Auth|undefined>(AuthContext);
   if (!auth) {
-    throw new Error("useAuth must be used within a AuthContext.Provider.");
+    throw new Error('useAuth must be used within a AuthContext.Provider.');
   }
   return auth;
 };

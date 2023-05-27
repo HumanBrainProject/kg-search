@@ -20,11 +20,11 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { api } from "../../services/api";
+import { api } from '../../services/api';
 
-const DEFAULT_GROUP = "public";
+const DEFAULT_GROUP = 'public';
 
 const initialState = {
   useGroups: false,
@@ -36,7 +36,7 @@ const initialState = {
 };
 
 const groupsSlice = createSlice({
-  name: "groups",
+  name: 'groups',
   initialState,
   reducers: {
     setInitialGroup(state, action) {
@@ -66,7 +66,7 @@ const groupsSlice = createSlice({
   }
 });
 
-export const selectIsCurated = state => state.groups.group === "curated";
+export const selectIsCurated = state => state.groups.group === 'curated';
 
 export const selectIsDefaultGroup = state => state.groups.group === state.groups.defaultGroup;
 

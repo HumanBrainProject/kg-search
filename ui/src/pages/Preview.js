@@ -21,11 +21,11 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
-import Matomo from "../services/Matomo";
-import InstanceContainer from "./Instance/InstanceContainer";
+import Matomo from '../services/Matomo';
+import InstanceContainer from './Instance/InstanceContainer';
 
 const Preview = () => {
 

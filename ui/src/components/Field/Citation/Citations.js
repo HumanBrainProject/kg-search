@@ -21,17 +21,17 @@
  *
  */
 
-import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, Suspense, useMemo } from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
-import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
+import {faClipboard} from '@fortawesome/free-solid-svg-icons/faClipboard';
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState, Suspense, useMemo } from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
+import CopyToClipboardButton from '../../CopyToClipboard/CopyToClipboardButton';
 
-const CitationsList = React.lazy(() => import("./CitationsList"));
+const CitationsList = React.lazy(() => import('./CitationsList'));
 
-import "./Citations.css";
+import './Citations.css';
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
@@ -88,9 +88,9 @@ const Citations = ({ data }) => {
   const errors = Object.values(citations).filter(item => item.error).length;
   const number = allCitations.length;
   const total = list.length;
-  const text = allCitations.map(item => item.title?`<h6><strong>${item.title}</strong></h6>\n${item.citation}`:item.citation).join("\n\n");
+  const text = allCitations.map(item => item.title?`<h6><strong>${item.title}</strong></h6>\n${item.citation}`:item.citation).join('\n\n');
 
-  const copyToClipboardTitle = (number === total)?"Copy all citations":`Copy available citations (${number} out of ${total} )`;
+  const copyToClipboardTitle = (number === total)?'Copy all citations':`Copy available citations (${number} out of ${total} )`;
 
   return (
     <div className="kgs-citations">
@@ -98,7 +98,7 @@ const Citations = ({ data }) => {
         {(number + errors) === total?
           <>
             {number !== total && (
-              <span style={{ color: "var(--code-color)" }} title={`Only ${number} out of ${total} citations available)`}><FontAwesomeIcon icon={faExclamationTriangle} /></span>
+              <span style={{ color: 'var(--code-color)' }} title={`Only ${number} out of ${total} citations available)`}><FontAwesomeIcon icon={faExclamationTriangle} /></span>
             )}
             <CopyToClipboardButton icon={faClipboard} title={copyToClipboardTitle} confirmationText="Citations copied" content={text} />
           </>

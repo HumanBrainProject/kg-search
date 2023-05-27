@@ -28,22 +28,22 @@ export const searchToObj = () => {
   if (search.length <= 1) {
     return {};
   }
-  return search.replace(/^\??(.*)$/, "$1").split("&").reduce((result, param) => {
-    if (param === "" || !regParam.test(param)) {
+  return search.replace(/^\??(.*)$/, '$1').split('&').reduce((result, param) => {
+    if (param === '' || !regParam.test(param)) {
       return result;
     }
     const [ , key, value] = param.match(regParam);
-    const fixedOIDCKey = key.replace(/%5B/g, "[").replace(/%5D/g, "]");
+    const fixedOIDCKey = key.replace(/%5B/g, '[').replace(/%5D/g, ']');
     result[fixedOIDCKey] = value;
     return result;
   }, {});
 };
 
 export const getHashKey = (key, hash) => {
-  if (typeof key !== "string") {
+  if (typeof key !== 'string') {
     return null;
   }
-  if (typeof hash !== "string") {
+  if (typeof hash !== 'string') {
     hash = window.location.hash;
   }
   const patterns = [
@@ -93,22 +93,22 @@ export const getUpdatedQuery = (query, name, checked, value, many) => {
   });
 
   if (!found && checked) {
-    const appendix = many?`[${counts}]`:"";
+    const appendix = many?`[${counts}]`:'';
     result[`${name}${appendix}`] =  val;
   }
   return result;
 };
 
 export const getLocationSearchFromQuery = query => Object.entries(query).reduce((acc, [key, value]) => {
-  acc += `${(acc.length > 0)?"&":"?"}${key}=${value}`;
+  acc += `${(acc.length > 0)?'&':'?'}${key}=${value}`;
   return acc;
-}, "");
+}, '');
 
 export const windowHeight = () => {
   const w = window,
     d = document,
     e = d.documentElement,
-    g = d.getElementsByTagName("body")[0];
+    g = d.getElementsByTagName('body')[0];
   return w.innerHeight || e.clientHeight || g.clientHeight;
 };
 
@@ -116,7 +116,7 @@ export const windowWidth = () => {
   const w = window,
     d = document,
     e = d.documentElement,
-    g = d.getElementsByTagName("body")[0];
+    g = d.getElementsByTagName('body')[0];
   return w.innerWidth || e.clientWidth || g.clientWidth;
 };
 
@@ -127,16 +127,16 @@ export const isMobile = (navigator.userAgent.match(/Android/i)
                 || navigator.userAgent.match(/iPod/i));
 
 export const tabAblesSelectors = [
-  "input",
-  "select",
-  "a[href]",
-  "textarea",
-  "button",
-  "[tabindex]",
+  'input',
+  'select',
+  'a[href]',
+  'textarea',
+  'button',
+  '[tabindex]',
 ];
 
-export const isOpera = (navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf("OPR")) !== -1;
-export const isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
-export const isSafari = navigator.userAgent.indexOf("Safari") !== -1;
-export const isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
-export const isIE = navigator.userAgent.indexOf("MSIE") !== -1  || !!document.documentMode;
+export const isOpera = (navigator.userAgent.indexOf('Opera') || navigator.userAgent.indexOf('OPR')) !== -1;
+export const isChrome = navigator.userAgent.indexOf('Chrome') !== -1;
+export const isSafari = navigator.userAgent.indexOf('Safari') !== -1;
+export const isFirefox = navigator.userAgent.indexOf('Firefox') !== -1;
+export const isIE = navigator.userAgent.indexOf('MSIE') !== -1  || !!document.documentMode;

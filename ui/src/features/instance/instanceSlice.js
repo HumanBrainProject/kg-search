@@ -20,9 +20,9 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { api } from "../../services/api";
+import { api } from '../../services/api';
 
 
 const getTitle = data => {
@@ -55,7 +55,7 @@ const initialState = {
 };
 
 const instanceSlice = createSlice({
-  name: "instances",
+  name: 'instances',
   initialState,
   reducers: {
     requestInstance(state, action) {
@@ -130,7 +130,7 @@ const instanceSlice = createSlice({
     },
     showImage(state, action) {
       const image = action.payload;
-      state.image =  image && typeof image.url === "string"?{ url: image.url, label: image.label, link: image.link }:null;
+      state.image =  image && typeof image.url === 'string'?{ url: image.url, label: image.label, link: image.link }:null;
     },
     setTab(state, action) {
       state.tab = action.payload;

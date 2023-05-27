@@ -21,14 +21,14 @@
  *
  */
 
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PropTypes from "prop-types";
-import React, { useRef } from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import React, { useRef } from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
 
-import "./InfoPanel.css";
+import './InfoPanel.css';
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
@@ -37,11 +37,11 @@ export const InfoPanel = ({text, onClose}) => {
 
   const handleOnClose = e => {
     if (ref.current && !ref.current.contains(e.target)) {
-      typeof onClose === "function" && onClose();
+      typeof onClose === 'function' && onClose();
     }
   };
 
-  const handleOnCloseButton = () => typeof onClose === "function" && onClose();
+  const handleOnCloseButton = () => typeof onClose === 'function' && onClose();
 
   if (!text) {
     return null;

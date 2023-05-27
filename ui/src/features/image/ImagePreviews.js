@@ -21,16 +21,16 @@
  *
  */
 
-import { connect } from "react-redux";
-import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
-import { showImage } from "../instance/instanceSlice";
+import { connect } from 'react-redux';
+import { ImageCarousel } from '../../components/Carousel/ImageCarousel';
+import { showImage } from '../instance/instanceSlice';
 
 export const ImagePreviews = connect(
   (_state, props) => {
     const images = props.images && props.images.map(image => {
       const isVideoWithoutBackground  = image?.previewUrl?.isAnimated && !image.staticImageUrl;
       return {
-        src: isVideoWithoutBackground ? "/static/img/black-background.png" : image.staticImageUrl,
+        src: isVideoWithoutBackground ? '/static/img/black-background.png' : image.staticImageUrl,
         label: image.label,
         target: image?.previewUrl?.url,
         isTargetAnimated: image?.previewUrl?.isAnimated,

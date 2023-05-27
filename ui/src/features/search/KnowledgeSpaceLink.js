@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import "./KnowledgeSpaceLink.css";
+import './KnowledgeSpaceLink.css';
 
 const KnowledgeSpaceLink = () => {
 
@@ -32,7 +32,7 @@ const KnowledgeSpaceLink = () => {
   const queryString = useSelector(state => state.search.queryString);
   const totalPages = useSelector(state => state.search.totalPages);
 
-  const show = (!totalPages || page === totalPages) && typeof queryString === "string" && queryString.length > 0;
+  const show = (!totalPages || page === totalPages) && typeof queryString === 'string' && queryString.length > 0;
 
   if(!show) {
     return null;

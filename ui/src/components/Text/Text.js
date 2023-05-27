@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
-import "./Text.css";
+import React from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
+import './Text.css';
 
 const converter = new showdown.Converter({ extensions: [xssFilter] });
 
@@ -34,24 +34,24 @@ export const Text = ({ content, isMarkdown }) => {
   }
 
   if (!isMarkdown) {
-    const html_text = typeof content === "string" && content.replace(/<[^>]+!span>/g, ""); //NOSONAR
+    const html_text = typeof content === 'string' && content.replace(/<[^>]+!span>/g, ''); //NOSONAR
     return (
       <span dangerouslySetInnerHTML={{ __html: html_text }} />
     );
   }
 
   const html = converter.makeHtml(content)
-    .replace(/<p>\s+<\/p>/g, "")
-    .replace(/<\/p>\n<p>/g, "</p><p>")
-    .replace(/<\/li>\n<li>/g, "</li><li>")
-    .replace(/<\/ul>\n<p>/g, "</ul><p>")
-    .replace(/<\/p>\n<ul>/g, "</p><ul>")
-    .replace(/<ul>\n<li>/g, "<ul><li>")
-    .replace(/<\/li>\n<\/ul>/g, "</li></ul>")
-    .replace(/<\/ol>\n<p>/g, "</ol><p>")
-    .replace(/<\/p>\n<ol>/g, "</p><ol>")
-    .replace(/<ol>\n<li>/g, "<ol><li>")
-    .replace(/<\/li>\n<\/ol>/g, "</li></ol>");
+    .replace(/<p>\s+<\/p>/g, '')
+    .replace(/<\/p>\n<p>/g, '</p><p>')
+    .replace(/<\/li>\n<li>/g, '</li><li>')
+    .replace(/<\/ul>\n<p>/g, '</ul><p>')
+    .replace(/<\/p>\n<ul>/g, '</p><ul>')
+    .replace(/<ul>\n<li>/g, '<ul><li>')
+    .replace(/<\/li>\n<\/ul>/g, '</li></ul>')
+    .replace(/<\/ol>\n<p>/g, '</ol><p>')
+    .replace(/<\/p>\n<ol>/g, '</p><ol>')
+    .replace(/<ol>\n<li>/g, '<ol><li>')
+    .replace(/<\/li>\n<\/ol>/g, '</li></ol>');
 
   return (
     <span className="field-markdown" dangerouslySetInnerHTML={{ __html: html }} />

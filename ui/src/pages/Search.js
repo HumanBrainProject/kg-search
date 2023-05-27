@@ -21,48 +21,48 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import BgError from "../components/BgError/BgError";
-import TermsShortNotice from "../features/TermsShortNotice";
-import { setGroup } from "../features/groups/groupsSlice";
-import { syncHistory } from "../features/instance/instanceSlice";
-import KnowledgeSpaceLink from "../features/search/KnowledgeSpaceLink";
-import SearchBox from "../features/search/SearchBox";
+import BgError from '../components/BgError/BgError';
+import TermsShortNotice from '../features/TermsShortNotice';
+import { setGroup } from '../features/groups/groupsSlice';
+import { syncHistory } from '../features/instance/instanceSlice';
+import KnowledgeSpaceLink from '../features/search/KnowledgeSpaceLink';
+import SearchBox from '../features/search/SearchBox';
 import {
   initializeSearch,
   syncSearchParameters,
   setSearchResults,
   selectFacets
-} from "../features/search/searchSlice";
+} from '../features/search/searchSlice';
 import {
   getUpdatedQuery,
   getLocationSearchFromQuery,
   searchToObj
-} from "../helpers/BrowserHelpers";
-import { getAggregation } from "../helpers/Facets";
-import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
-import Matomo from "../services/Matomo";
+} from '../helpers/BrowserHelpers';
+import { getAggregation } from '../helpers/Facets';
+import { withTabKeyNavigation } from '../helpers/withTabKeyNavigation';
+import Matomo from '../services/Matomo';
 import {
   useGetSearchQuery,
   getError,
-} from "../services/api";
+} from '../services/api';
 
-import Detail from "./Search/Detail/Detail";
-import FiltersPanel from "./Search/Facet/FiltersPanel";
-import TypesFilterPanel from "./Search/Facet/TypesFilterPanel";
-import Footer from "./Search/Footer/Footer";
-import Hits from "./Search/Hit/Hits";
-import HitsInfo from "./Search/HitsInfo/HitsInfo";
-import SearchFetching from "./Search/SearchFetching";
+import Detail from './Search/Detail/Detail';
+import FiltersPanel from './Search/Facet/FiltersPanel';
+import TypesFilterPanel from './Search/Facet/TypesFilterPanel';
+import Footer from './Search/Footer/Footer';
+import Hits from './Search/Hit/Hits';
+import HitsInfo from './Search/HitsInfo/HitsInfo';
+import SearchFetching from './Search/SearchFetching';
 
-import "./Search.css";
+import './Search.css';
 
 const calculateFacetList = facets => facets.reduce((acc, facet) => {
   switch (facet.type) {
-  case "list":
+  case 'list':
     if (facet.isHierarchical) {
       facet.keywords.forEach(keyword => {
         keyword.children &&
@@ -91,7 +91,7 @@ const calculateFacetList = facets => facets.reduce((acc, facet) => {
       });
     }
     break;
-  case "exists":
+  case 'exists':
     acc.push({
       name: facet.name,
       value: !!facet.value,
@@ -195,7 +195,7 @@ const SearchBase = () => {
   } = useGetSearchQuery(searchParams, { skip: !isInitialized });
 
   useEffect(() => {
-    document.title = "EBRAINS - Knowledge Graph Search";
+    document.title = 'EBRAINS - Knowledge Graph Search';
     if (!initializedRef.current) {
       initializedRef.current = true;
       const params = getSearchParametersFromUrl();
@@ -213,20 +213,20 @@ const SearchBase = () => {
         dispatch(syncSearchParameters(params));
       }
     };
-    window.addEventListener("popstate", popstateHandler, false);
+    window.addEventListener('popstate', popstateHandler, false);
     return () => {
-      window.removeEventListener("popstate", popstateHandler);
+      window.removeEventListener('popstate', popstateHandler);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (isActive) {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
     } else {
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
     }
   }, [isActive]);
 
@@ -235,14 +235,14 @@ const SearchBase = () => {
       let query = searchToObj();
       query = getUpdatedQuery(
         query,
-        "q",
-        queryString !== "",
+        'q',
+        queryString !== '',
         queryString,
         false
       );
       query = getUpdatedQuery(
         query,
-        "category",
+        'category',
         !!selectedType,
         selectedType,
         false
@@ -253,10 +253,10 @@ const SearchBase = () => {
           getUpdatedQuery(acc, item.name, item.checked, item.value, item.many),
         query
       );
-      query = getUpdatedQuery(query, "p", page !== 1, page, false);
+      query = getUpdatedQuery(query, 'p', page !== 1, page, false);
       query = getUpdatedQuery(
         query,
-        "group",
+        'group',
         group && group !== defaultGroup,
         group,
         false
@@ -326,9 +326,9 @@ const SearchBase = () => {
 };
 
 export const Search = withTabKeyNavigation(
-  "isActive",
-  ".kgs-search",
-  ".kgs-instance"
+  'isActive',
+  '.kgs-search',
+  '.kgs-instance'
 )(SearchBase);
 
 export default Search;

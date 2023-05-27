@@ -21,11 +21,11 @@
  *
  */
 
-import Keycloak from "keycloak-js";
-import { useState } from "react";
-import type Auth from "../services/Auth";
-import type KeycloakAuthAdapter from "../services/KeycloakAuthAdapter";
-import type { KeycloakError } from "keycloak-js";
+import Keycloak from 'keycloak-js';
+import { useState } from 'react';
+import type Auth from '../services/Auth';
+import type KeycloakAuthAdapter from '../services/KeycloakAuthAdapter';
+import type { KeycloakError } from 'keycloak-js';
 
 const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Auth => {
 
@@ -67,7 +67,7 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
           keycloak.clearToken();
           setUserId(undefined);
           setTokenExpired(undefined);
-          const message = (e?.error_description)?e.error_description:"Failed to authenticate";
+          const message = (e?.error_description)?e.error_description:'Failed to authenticate';
           setError(message);
           setIsError(true);
           setInitializing(false);
@@ -89,13 +89,13 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
         };
         const initOptions = adapter.initOptions?{
           ...adapter.initOptions,
-          onLoad: loginRequired?"login-required":adapter.initOptions.onLoad,
-          checkLoginIframe: !!adapter.initOptions.checkLoginIframe && !window.location.host.startsWith("localhost") // avoid CORS error with UI running on localhost with Firefox
+          onLoad: loginRequired?'login-required':adapter.initOptions.onLoad,
+          checkLoginIframe: !!adapter.initOptions.checkLoginIframe && !window.location.host.startsWith('localhost') // avoid CORS error with UI running on localhost with Firefox
         }:{};
         keycloak
           .init(initOptions)
           .catch(() => {
-            setError("Failed to initialize authentication");
+            setError('Failed to initialize authentication');
             setIsError(true);
             setInitialized(false);
             setInitializing (false);
@@ -103,14 +103,14 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
             setLogingOut(false);
           });
       } catch (e) { // if keycloak script url return unexpected content
-        setError("Failed to initialize authentication");
+        setError('Failed to initialize authentication');
         setInitialized(false);
         setInitializing(false);
         setAuthenticating(false);
       }
     } else {
       //throw new Error("keycloak cannot be initialized due to missing/uncomplete config!");
-      setError("Failed to initialize authentication");
+      setError('Failed to initialize authentication');
       setInitialized(false);
       setInitializing(false);
       setAuthenticating(false);
@@ -119,14 +119,14 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
 
   const login = async (): Promise<void> => {
     if (!adapter.keycloak || isUninitialized || isInitializing || isAuthenticating || isError) {
-      throw new Error("login cannot be called when keycloak is not initialized!");
+      throw new Error('login cannot be called when keycloak is not initialized!');
     }
     await adapter.keycloak.login();
   };
 
   const logout = async (): Promise<void> => {
     if (!adapter.keycloak || isUninitialized || isInitializing || isAuthenticating || isError) {
-      throw new Error("logout cannot be called when keycloak is not initialized!");
+      throw new Error('logout cannot be called when keycloak is not initialized!');
     }
     setLogingOut(true);
     adapter.keycloak.clearToken();
@@ -148,7 +148,7 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
     isAuthenticated: isAuthenticated,
     isAuthenticating: isAuthenticating,
     isLogingOut: isLogingOut,
-    loginRequired: loginRequired ?? adapter.initOptions?.onLoad === "login-required",
+    loginRequired: loginRequired ?? adapter.initOptions?.onLoad === 'login-required',
     userId: userId,
     authenticate: authenticate,
     login: login,

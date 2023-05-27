@@ -21,9 +21,9 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import "./Watermark.css";
+import './Watermark.css';
 
 const Watermark = ({ text }) => {
   if (!text) {

@@ -21,13 +21,13 @@
  *
  */
 
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
-import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { Hint } from "../Hint/Hint";
-import "./TableField.css";
-import { getKey } from "./helpers";
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown';
+import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
+import { Hint } from '../Hint/Hint';
+import './TableField.css';
+import { getKey } from './helpers';
 
 const CustomTableCell = ({ field, isFirstCell, onCollapseToggle, fieldComponent: FieldComponent }) => {
 
@@ -45,7 +45,7 @@ const CustomTableCell = ({ field, isFirstCell, onCollapseToggle, fieldComponent:
         )}
         <FieldComponent name={field.name} data={field.data} mapping={field.mapping} />
         {isFirstCell && field.isCollectionASubset && (
-          <Hint className="kg-cell-hint" value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():"dataset"}`} />
+          <Hint className="kg-cell-hint" value={`The represented tissue samples are the subset used in this ${field.type?field.type.toLowerCase():'dataset'}`} />
         )}
       </th>
     );
@@ -58,7 +58,7 @@ const CustomTableCell = ({ field, isFirstCell, onCollapseToggle, fieldComponent:
 const CustomTableRow = ({ row, onCollapseToggle, fieldComponent }) => {
   const collapse = row[0].isCollectionCollapsed && row[0].level !== 1;
   return(
-    <tr className={collapse?"row-hidden":null}>
+    <tr className={collapse?'row-hidden':null}>
       {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} onCollapseToggle={onCollapseToggle} fieldComponent={fieldComponent} />)}
     </tr>
   );

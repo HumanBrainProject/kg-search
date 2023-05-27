@@ -21,34 +21,34 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import Carousel from "./Carousel";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import Carousel from './Carousel';
 
 const data = [
   {
-    label: "a label",
-    value: "a value"
+    label: 'a label',
+    value: 'a value'
   },
   {
-    label: "a second label",
-    value: "a second value"
+    label: 'a second label',
+    value: 'a second value'
   },
   {
-    label: "a third label",
-    value: "a third value"
+    label: 'a third label',
+    value: 'a third value'
   },
   {
-    label: "a forth label",
-    value: "a forth value"
+    label: 'a forth label',
+    value: 'a forth value'
   },
   {
-    label: "a fifth label",
-    value: "a fifth value"
+    label: 'a fifth label',
+    value: 'a fifth value'
   }
 ];
 
-test("Carousel component renders initially", () => {
+test('Carousel component renders initially', () => {
   const component = renderer.create(
     // eslint-disable-next-line react/self-closing-comp
     <Carousel className="className" data={data} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
@@ -57,7 +57,7 @@ test("Carousel component renders initially", () => {
   expect(component.toJSON()).toMatchSnapshot();
 });
 
-test("Carousel test items", () => {
+test('Carousel test items', () => {
   const component = renderer.create(
     // eslint-disable-next-line react/self-closing-comp
     <Carousel className="className" data={data} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />

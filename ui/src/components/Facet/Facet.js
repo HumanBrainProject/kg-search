@@ -21,19 +21,19 @@
  *
  */
 
-import React from "react";
-import { FilteredList } from "../FilteredList/FilteredList";
-import { Item } from "../List/List";
-import { PaginatedList } from "../PaginatedList/PaginatedList";
-import Tree from "../Tree/Tree";
-import FacetCheckbox from "./FacetCheckbox";
-import "./Facet.css";
+import React from 'react';
+import { FilteredList } from '../FilteredList/FilteredList';
+import { Item } from '../List/List';
+import { PaginatedList } from '../PaginatedList/PaginatedList';
+import Tree from '../Tree/Tree';
+import FacetCheckbox from './FacetCheckbox';
+import './Facet.css';
 
 const Facet = ({ facet, onChange, onViewChange }) => {
   let Component = null;
   let parameters = null;
   switch (facet.type) {
-  case "list":
+  case 'list':
   {
     if (facet.isHierarchical) {
       const list = facet.keywords.map(keyword => {
@@ -75,7 +75,7 @@ const Facet = ({ facet, onChange, onViewChange }) => {
       parameters = {
         tree: list,
         ItemComponent: FacetCheckbox,
-        itemUniqKeyAttribute: "value",
+        itemUniqKeyAttribute: 'value',
         onItemClick: item => onChange(facet.name, !item.checked, item.value)
       };
     } else {
@@ -92,7 +92,7 @@ const Facet = ({ facet, onChange, onViewChange }) => {
           label: facet.label,
           items: list,
           ItemComponent: FacetCheckbox,
-          itemUniqKeyAttribute: "value",
+          itemUniqKeyAttribute: 'value',
           onItemClick: item => onChange(facet.name, !item.checked, item.value),
         };
       } else {
@@ -100,7 +100,7 @@ const Facet = ({ facet, onChange, onViewChange }) => {
         parameters = {
           items: list,
           ItemComponent: FacetCheckbox,
-          itemUniqKeyAttribute: "value",
+          itemUniqKeyAttribute: 'value',
           onItemClick: item => onChange(facet.name, !item.checked, item.value),
           onViewChange: size => onViewChange(facet.name, size),
           size: facet.size,
@@ -111,7 +111,7 @@ const Facet = ({ facet, onChange, onViewChange }) => {
     }
     break;
   }
-  case "exists":
+  case 'exists':
     Component = Item;
     parameters = {
       item: {

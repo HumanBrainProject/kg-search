@@ -32,8 +32,8 @@
  *   limitations under the License.
  *
  */
-import type TokenProvider from "./TokenProvider";
-import type { KeycloakInstance } from "keycloak-js";
+import type TokenProvider from './TokenProvider';
+import type { KeycloakInstance } from 'keycloak-js';
 
 class KeycloakTokenProvider implements TokenProvider {
   private _keycloak: KeycloakInstance | undefined = undefined;

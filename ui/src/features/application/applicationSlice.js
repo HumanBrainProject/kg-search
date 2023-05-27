@@ -20,27 +20,27 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { termsCurrentVersion } from "../../data/termsShortNotice";
+import { termsCurrentVersion } from '../../data/termsShortNotice';
 
-const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
+const TermsShortNoticeLocalStorageKey = 'ebrains-search-terms-conditions-consent';
 
 const initialState = {
   info: null,
   showTermsShortNotice:
-    typeof Storage === "undefined" ||
+    typeof Storage === 'undefined' ||
     !localStorage.getItem(TermsShortNoticeLocalStorageKey),
   showTermsShortUpdateNotice:
-    typeof Storage !== "undefined" &&
+    typeof Storage !== 'undefined' &&
     localStorage.getItem(TermsShortNoticeLocalStorageKey) &&
     localStorage.getItem(TermsShortNoticeLocalStorageKey) !==
       termsCurrentVersion,
-  theme: localStorage.getItem("currentTheme")
+  theme: localStorage.getItem('currentTheme')
 };
 
 const applicationSlice = createSlice({
-  name: "application",
+  name: 'application',
   initialState,
   reducers: {
     setTheme(state, action) {
@@ -50,10 +50,10 @@ const applicationSlice = createSlice({
       state.commit = action.payload;
     },
     agreeTermsShortNotice(state) {
-      if (typeof Storage !== "undefined") {
+      if (typeof Storage !== 'undefined') {
         localStorage.setItem(TermsShortNoticeLocalStorageKey, termsCurrentVersion);
       }
-      setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 250);
       state.showTermsShortNotice = false;
       state.showTermsShortUpdateNotice = false;
     },

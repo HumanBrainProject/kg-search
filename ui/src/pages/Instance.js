@@ -20,11 +20,11 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
-import Matomo from "../services/Matomo";
-import InstanceContainer from "./Instance/InstanceContainer";
+import Matomo from '../services/Matomo';
+import InstanceContainer from './Instance/InstanceContainer';
 
 const Instance = () => {
 

@@ -21,14 +21,14 @@
  *
  */
 
-import React from "react";
-import ObjectField from "./ObjectField";
+import React from 'react';
+import ObjectField from './ObjectField';
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,
   getShowMoreLabel,
-  getKey} from "./helpers";
-import "./ListField.css";
+  getKey} from './helpers';
+import './ListField.css';
 
 const ListFieldBase = (renderUserInteractions = true) => {
 
@@ -61,7 +61,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     const isCustom = separator || showAsTag;
     const List = isCustom?CustomList:DefaultList;
     const ListItem = isCustom?CustomListItem:DefaultListItem;
-    const className =  `kgs-field__list ${showAsTag?"items-as-tags":""}`;
+    const className =  `kgs-field__list ${showAsTag?'items-as-tags':''}`;
     return (
       <span className={className}>
         <List>
@@ -97,7 +97,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
 
     setItemsState = () => {
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
-      const showMoreEnabled = this.props.mapping.enforceShowMore || this.props.mapping.layout === "summary" || !renderUserInteractions;
+      const showMoreEnabled = this.props.mapping.enforceShowMore || this.props.mapping.layout === 'summary' || !renderUserInteractions;
       const showMoreToggle = this.hasShowMoreToggle && showMoreEnabled;
       this.setState({
         sizeStop: sizeStop,
@@ -178,6 +178,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
 };
 
 export const ListField = ListFieldBase(true);
-ListField.displayName = "ListField";
+ListField.displayName = 'ListField';
 export const PrintViewListField = ListFieldBase(false);
-PrintViewListField.displayName = "PrintViewListField";
+PrintViewListField.displayName = 'PrintViewListField';

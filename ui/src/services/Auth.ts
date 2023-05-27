@@ -33,7 +33,7 @@
  *   limitations under the License.
  *
  */
-import type TokenProvider from "./TokenProvider";
+import type TokenProvider from './TokenProvider';
  interface Auth {
   tokenProvider?: TokenProvider;
   isTokenExpired?: boolean;

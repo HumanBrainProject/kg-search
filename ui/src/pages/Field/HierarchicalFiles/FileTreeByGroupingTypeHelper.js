@@ -26,8 +26,8 @@ export const JSONPath = (data, path) => {
   if (!path) {
     return data;
   }
-  if (typeof path == "string") {
-    return JSONPath(data, path.split("."));
+  if (typeof path == 'string') {
+    return JSONPath(data, path.split('.'));
   }
   if (Array.isArray(path) && path.length) {
     if (data instanceof Object) {
@@ -89,10 +89,10 @@ export const getTreeByGroupingType = (
   const tree = {
     title: groupingType,
     //url: `https://data.kg.ebrains.eu/zip?container=${groupingType}`,
-    type: "folder",
+    type: 'folder',
     toggled: true,
     active: true,
-    key: "fileBundle"
+    key: 'fileBundle'
   };
   tree.children = Object.values(filesByFileBundles)
     .sort((fileBundleA, fileBundleB) =>
@@ -105,7 +105,7 @@ export const getTreeByGroupingType = (
           return {
             title: JSONPath(file, nameFieldPath),
             url: url,
-            type: "file",
+            type: 'file',
             thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
             data: file,
             key: url
@@ -115,7 +115,7 @@ export const getTreeByGroupingType = (
       return {
         title: fileBundle.title,
         //url: `${groupingType}/${fileBundle}`,
-        type: "fileBundle",
+        type: 'fileBundle',
         reference: fileBundle.reference,
         children: children,
         key: `${fileBundle.reference}-${fileBundle.title}`

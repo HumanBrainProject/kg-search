@@ -20,19 +20,19 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
-import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
-import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { useSelector } from "react-redux";
-import { useLocation, matchPath } from "react-router-dom";
+import {faBan} from '@fortawesome/free-solid-svg-icons/faBan';
+import {faCircleNotch} from '@fortawesome/free-solid-svg-icons/faCircleNotch';
+import {faSyncAlt} from '@fortawesome/free-solid-svg-icons/faSyncAlt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, matchPath } from 'react-router-dom';
 
-import { useGetLinkedInstanceQuery, useGetLinkedPreviewQuery, getError } from "../../services/api";
+import { useGetLinkedInstanceQuery, useGetLinkedPreviewQuery, getError } from '../../services/api';
 
-import LinkedInstance from "./LinkedInstance";
+import LinkedInstance from './LinkedInstance';
 
-import "./AsyncLinkedInstance.css";
+import './AsyncLinkedInstance.css';
 
 const AsyncLinkedInstance = ({ id, name, type }) => {
 
@@ -40,7 +40,7 @@ const AsyncLinkedInstance = ({ id, name, type }) => {
 
   const group = useSelector(state => state.groups.group);
 
-  const isLive = !!matchPath({path:"/live/*"}, location.pathname);
+  const isLive = !!matchPath({path:'/live/*'}, location.pathname);
 
   const previewResult = useGetLinkedPreviewQuery(id, { skip: !id || !isLive});
   const instanceResult = useGetLinkedInstanceQuery({id: id, group: group}, { skip: !id || isLive});

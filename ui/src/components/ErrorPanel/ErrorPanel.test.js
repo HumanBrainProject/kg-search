@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import ErrorPanel from "./ErrorPanel";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import ErrorPanel from './ErrorPanel';
 
-test("ErrorPanel component renders initially", () => {
+test('ErrorPanel component renders initially', () => {
   const component = renderer.create(
     <ErrorPanel show={true} message="some message" retryLabel="retry label" onRetryClick={{}} cancelLabel="cancel label" onCancelClick={{}} />
   );

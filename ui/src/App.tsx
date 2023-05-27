@@ -21,34 +21,34 @@
  *
  */
 
-import React, { useEffect, useState, useRef, Suspense } from "react";
-import { Provider, useDispatch } from "react-redux";
-import { BrowserRouter, Route, Routes, Navigate, useLocation, useNavigate, matchPath } from "react-router-dom";
-import "normalize.css/normalize.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import FetchingPanel from "./components/FetchingPanel/FetchingPanel";
-import Notification from "./components/Notification/Notification";
-import notification from "./data/notification";
-import ErrorBoundary from "./features/ErrorBoundary";
-import { InfoPanel } from "./features/InfoPanel";
-import AuthProvider from "./features/auth/AuthProvider";
-import Authenticate from "./features/auth/Authenticate";
-import Groups from "./features/groups/Groups";
-import { setInitialGroup, setUseGroups } from "./features/groups/groupsSlice";
-import Settings from "./features/settings/Settings";
-import Theme from "./features/theme/Theme";
-import { searchToObj, getHashKey } from "./helpers/BrowserHelpers";
-import Footer from "./pages/Footer/Footer";
-import Header from "./pages/Header/Header";
-import type AuthAdapter from "./services/AuthAdapter";
-import type { Store } from "redux";
+import React, { useEffect, useState, useRef, Suspense } from 'react';
+import { Provider, useDispatch } from 'react-redux';
+import { BrowserRouter, Route, Routes, Navigate, useLocation, useNavigate, matchPath } from 'react-router-dom';
+import 'normalize.css/normalize.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import FetchingPanel from './components/FetchingPanel/FetchingPanel';
+import Notification from './components/Notification/Notification';
+import notification from './data/notification';
+import ErrorBoundary from './features/ErrorBoundary';
+import { InfoPanel } from './features/InfoPanel';
+import AuthProvider from './features/auth/AuthProvider';
+import Authenticate from './features/auth/Authenticate';
+import Groups from './features/groups/Groups';
+import { setInitialGroup, setUseGroups } from './features/groups/groupsSlice';
+import Settings from './features/settings/Settings';
+import Theme from './features/theme/Theme';
+import { searchToObj, getHashKey } from './helpers/BrowserHelpers';
+import Footer from './pages/Footer/Footer';
+import Header from './pages/Header/Header';
+import type AuthAdapter from './services/AuthAdapter';
+import type { Store } from 'redux';
 
-const Search = React.lazy(() => import("./pages/Search"));
-const Instance = React.lazy(() => import("./pages/Instance"));
-const Preview = React.lazy(() => import("./pages/Preview"));
+const Search = React.lazy(() => import('./pages/Search'));
+const Instance = React.lazy(() => import('./pages/Instance'));
+const Preview = React.lazy(() => import('./pages/Preview'));
 
-import "./App.css";
+import './App.css';
 
 const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
 
@@ -66,15 +66,15 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
     if (!initializedRef.current) {
       initializedRef.current = true;
 
-      const isLive = !!matchPath({path:"/live/*"}, location.pathname);
-      const group = (searchToObj() as {[key:string]: string})["group"];
-      const hasGroup = !isLive && (group === "public" || group === "curated");
-      const hasAuthSession = !!getHashKey("session_state");
+      const isLive = !!matchPath({path:'/live/*'}, location.pathname);
+      const group = (searchToObj() as {[key:string]: string})['group'];
+      const hasGroup = !isLive && (group === 'public' || group === 'curated');
+      const hasAuthSession = !!getHashKey('session_state');
 
       // search with instance + refresh
-      const instance = !hasAuthSession && location.pathname === "/" && !location.hash.startsWith("#error") && location.hash.substring(1);
+      const instance = !hasAuthSession && location.pathname === '/' && !location.hash.startsWith('#error') && location.hash.substring(1);
       if (instance) {
-        const url = `/instances/${instance}${hasGroup?("?group=" + group):""}`;
+        const url = `/instances/${instance}${hasGroup?('?group=' + group):''}`;
         navigate(url, {replace: true});
       }
 

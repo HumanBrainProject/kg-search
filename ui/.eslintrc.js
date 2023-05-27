@@ -1,11 +1,11 @@
 module.exports = {
   settings: {
     react: {
-      pragma: "React",
-      version: "18.2.0"
+      pragma: 'React',
+      version: '18.2.0'
     }
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
     es2021: true,
@@ -13,92 +13,92 @@ module.exports = {
     jest: true
   },
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:jest/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "prettier"
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jest/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier'
   ],
   parserOptions: {
     ecmaFeatures: {
       jsx: true
     },
-    ecmaVersion: "latest",
-    sourceType: "module"
+    ecmaVersion: 'latest',
+    sourceType: 'module'
   },
-  plugins: ["@typescript-eslint", "autofix", "import", "react", "react-hooks"],
+  plugins: ['@typescript-eslint', 'autofix', 'import', 'react', 'react-hooks'],
   rules: {
-    "@typescript-eslint/consistent-type-imports": [
-      "error",
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
       {
-        prefer: "type-imports"
+        prefer: 'type-imports'
       }
     ],
-    "@typescript-eslint/no-namespace": "off",
-    "arrow-body-style": ["error", "as-needed"],
-    "autofix/no-unused-vars": [
-      "error",
+    '@typescript-eslint/no-namespace': 'off',
+    'arrow-body-style': ['error', 'as-needed'],
+    'autofix/no-unused-vars': [
+      'error',
       {
-        argsIgnorePattern: "^_",
+        argsIgnorePattern: '^_',
         ignoreRestSiblings: true,
-        destructuredArrayIgnorePattern: "^_"
+        destructuredArrayIgnorePattern: '^_'
       }
     ],
-    "curly": [
-      "error",
-      "all"
+    'curly': [
+      'error',
+      'all'
     ],
-    "import/order": [
-      "error",
+    'import/order': [
+      'error',
       {
         groups: [
-          "builtin",
-          "external",
-          "parent",
-          "sibling",
-          "index",
-          "object",
-          "type"
+          'builtin',
+          'external',
+          'parent',
+          'sibling',
+          'index',
+          'object',
+          'type'
         ],
         pathGroups: [
           {
-            pattern: "@/**/**",
-            group: "parent",
-            position: "before"
+            pattern: '@/**/**',
+            group: 'parent',
+            position: 'before'
           }
         ],
-        alphabetize: { order: "asc" }
+        alphabetize: { order: 'asc' }
       }
     ],
-    "indent": [
-      "warn",
+    'indent': [
+      'warn',
       2
     ],
-    "linebreak-style": [
-      "error",
-      "unix"
+    'linebreak-style': [
+      'error',
+      'unix'
     ],
-    // "no-restricted-imports": [
-    //     "error",
+    // 'no-restricted-imports': [
+    //     'error',
     //     {
-    //         "patterns": ["../"]
+    //         'patterns': ['../']
     //     }
     // ],
-    "no-trailing-spaces": "error",
-    "no-throw-literal": "error",
-    "quotes": [
-      "warn",
-      "double"
+    'no-trailing-spaces': 'error',
+    'no-throw-literal': 'error',
+    'quotes': [
+      'warn',
+      'single'
     ],
-    "react-hooks/exhaustive-deps": "error",
-    "react/no-unknown-property": "warn",
-    "react/prop-types": [0],
-    "react/self-closing-comp": ["error", { component: true, html: true }],
-    "semi": [
-      "error",
-      "always"
+    'react-hooks/exhaustive-deps': 'error',
+    'react/no-unknown-property': 'warn',
+    'react/prop-types': [0],
+    'react/self-closing-comp': ['error', { component: true, html: true }],
+    'semi': [
+      'error',
+      'always'
     ],
-    "strict": 0
+    'strict': 0
   }
 };

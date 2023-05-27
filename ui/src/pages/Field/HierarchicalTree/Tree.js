@@ -21,16 +21,16 @@
  *
  */
 
-import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import TreeComponent from "rc-tree";
-import React from "react";
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TreeComponent from 'rc-tree';
+import React from 'react';
 
-import "rc-tree/assets/index.css";
-import "./Tree.css";
+import 'rc-tree/assets/index.css';
+import './Tree.css';
 
 const Icon = ({ color }) => (
-  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : "gray" }} />
+  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : 'gray' }} />
 );
 
 const Legend = ({ legend }) => {

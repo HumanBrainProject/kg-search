@@ -21,17 +21,17 @@
  *
  */
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import Component from "../../components/ImagePopup/ImagePopup";
-import { showImage } from "../instance/instanceSlice";
+import Component from '../../components/ImagePopup/ImagePopup';
+import { showImage } from '../instance/instanceSlice';
 
 
 const ImagePopup = connect(
   (state, props) => ({
     className: props.className,
     src: state.instance?.image?.url,
-    label: (state.instance.image && state.instance.image.label) ? state.instance.image.label : "",
+    label: state.instance.image?.label??'',
     link: state.instance?.image?.link
   }),
   dispatch => ({

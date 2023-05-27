@@ -21,16 +21,16 @@
  *
  */
 
-import PropTypes from "prop-types";
-import React from "react";
-import "./Toggle.css";
+import PropTypes from 'prop-types';
+import React from 'react';
+import './Toggle.css';
 
 const ToggleItem = ({label, value, isActive, onClick}) => {
   const handleClick = () => {
     onClick(value);
   };
   return (
-    <button type="button" className={(isActive?"is-active":"")}  disabled={isActive} onClick={handleClick} >
+    <button type="button" className={(isActive?'is-active':'')}  disabled={isActive} onClick={handleClick} >
       <label>{label}</label>
     </button>
   );
@@ -40,9 +40,8 @@ export const Toggle = ({className, show, value, items, onClick}) => {
   if (!show) {
     return null;
   }
-  const classNames = ["kgs-toggle", className].join(" ");
   return (
-    <div className={classNames}>
+    <div className={`kgs-toggle ${className??''}`}>
       <div>
         {items.map(item =>
           <ToggleItem key={item.value} label={item.label} value={item.value} isActive={item.value === value} onClick={onClick} />

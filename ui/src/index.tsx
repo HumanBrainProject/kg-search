@@ -21,28 +21,28 @@
  *
  */
 
-import React from "react";
-import { createRoot } from "react-dom/client";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
-import App from "./App";
-import KeycloakAuthAdapter from "./services/KeycloakAuthAdapter";
-import authConnector from "./services/authConnector";
-import store from "./services/store";
+import App from './App';
+import KeycloakAuthAdapter from './services/KeycloakAuthAdapter';
+import authConnector from './services/authConnector';
+import store from './services/store';
 
 
 const authAdapter = new KeycloakAuthAdapter({
-  onLoad: "check-sso",
-  flow: "standard",
-  pkceMethod: "S256",
+  onLoad: 'check-sso',
+  flow: 'standard',
+  pkceMethod: 'S256',
   checkLoginIframe: true,
   enableLogging: true
 }, `${window.location.protocol}//${window.location.host}`);
 
 authConnector.setAuthAdapter(authAdapter);
 
-const container = document.getElementById("root");
+const container = document.getElementById('root');
 if (!container) {
-  throw new Error("Failed to find the root element");
+  throw new Error('Failed to find the root element');
 }
 const root = createRoot(container);
 root.render(

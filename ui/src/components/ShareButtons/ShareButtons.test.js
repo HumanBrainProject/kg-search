@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import ShareButtons from "./ShareButtons";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import ShareButtons from './ShareButtons';
 
-test("ShareButtons component renders initially", () => {
+test('ShareButtons component renders initially', () => {
   const component = renderer.create(
     <ShareButtons url="https://search.kg.ebrains.eu" />
   );

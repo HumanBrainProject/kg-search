@@ -21,13 +21,13 @@
  *
  */
 
-import React from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
+import React from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-import "./ErrorPanel.css";
+import './ErrorPanel.css';
 
 interface ErrorPanelProps {
   message: string;
@@ -39,7 +39,7 @@ interface ErrorPanelProps {
   onRetryClick?: () => void;
 }
 
-const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel="Cancel", retryLabel="Retry" }: ErrorPanelProps) => {
+const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel='Cancel', retryLabel='Retry' }: ErrorPanelProps) => {
   const html = converter.makeHtml(message);
   return (
     <div className="kgs-error-container">
@@ -48,10 +48,10 @@ const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retry
         {(!!onCancelClick || !!onRetryClick) && (
           <div className="kgs-error-navigation">
             {!!onCancelClick && (
-              <button className={`${cancelVariant?cancelVariant:""}`} onClick={onCancelClick}>{cancelLabel}</button>
+              <button className={`${cancelVariant?cancelVariant:''}`} onClick={onCancelClick}>{cancelLabel}</button>
             )}
             {!!onRetryClick && (
-              <button className={`${retryVariant?retryVariant:""}`} onClick={onRetryClick}>{retryLabel}</button>
+              <button className={`${retryVariant?retryVariant:''}`} onClick={onRetryClick}>{retryLabel}</button>
             )}
           </div>
         )}

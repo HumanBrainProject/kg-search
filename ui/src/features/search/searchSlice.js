@@ -20,10 +20,10 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { resetFacet, constructFacet } from "../../helpers/Facets";
-import { api } from "../../services/api";
+import { resetFacet, constructFacet } from '../../helpers/Facets';
+import { api } from '../../services/api';
 
 
 const resolveType = (type, list) => {
@@ -57,10 +57,10 @@ const resolveFacets = (facets, params) => {
     const value = params[facet.name];
     if (value) {
       switch (facet.type) {
-      case "list":
+      case 'list':
         facet.value = Array.isArray(value)?value:[];
         break;
-      case "exists":
+      case 'exists':
         facet.value = true;
         break;
       default:
@@ -118,9 +118,9 @@ const updateExistFacet = (facet, payload) => {
 };
 
 const updateFacet = (facet, payload) => {
-  if (facet.type === "list") {
+  if (facet.type === 'list') {
     updateListFacet(facet, payload);
-  } else if (facet.type === "exists") {
+  } else if (facet.type === 'exists') {
     updateExistFacet(facet, payload);
   }
 };
@@ -130,7 +130,7 @@ const updateFacetsFromResults = (facets, isSelectedType, results) => {
   facets.forEach(facet => {
     if (isSelectedType) {
       const res = aggs[facet.name];
-      if (facet.type === "list") {
+      if (facet.type === 'list') {
         facet.keywords = (res?.keywords)?res.keywords:[];
         facet.others =  (res?.others)?res.others:0;
       }
@@ -160,7 +160,7 @@ const resetAllFacets = state => {
 const syncParameters = (state, payload) => {
   const {q, category, p} = (payload instanceof Object)?payload:{};
 
-  const queryString = q?q:"";
+  const queryString = q??'';
   const selectedType = resolveType(category, state.types);
   const page = resolvePage(p);
   const from = (page -1) * state.hitsPerPage;
@@ -179,7 +179,7 @@ const initialState = {
   totalPages: 0,
   isInitialized: false,
   isFetching: false,
-  queryString: "",
+  queryString: '',
   selectedType: null,
   hitsPerPage: 20,
   hits: [],
@@ -190,7 +190,7 @@ const initialState = {
 };
 
 const searchSlice = createSlice({
-  name: "search",
+  name: 'search',
   initialState,
   reducers: {
     initializeSearch(state, action) {
@@ -225,7 +225,7 @@ const searchSlice = createSlice({
     setFacetSize(state, action) {
       const facet = getFacet(state.types, state.selectedType, action.payload.name);
       if (facet) {
-        if (facet.type === "list") {
+        if (facet.type === 'list') {
           facet.size = action.payload.size;
           state.isUpToDate = false;
         }

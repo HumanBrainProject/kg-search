@@ -22,6 +22,6 @@
  *
  */
 
-const notification =  "";
+const notification =  '';
 
 export default notification;

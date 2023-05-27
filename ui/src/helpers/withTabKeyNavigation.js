@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
-import { isMobile, tabAblesSelectors } from "../helpers/BrowserHelpers";
+import React from 'react';
+import { isMobile, tabAblesSelectors } from '../helpers/BrowserHelpers';
 
 export const withTabKeyNavigation = (propKey, rootNodeQuerySelector, excludeNodeQuerySelector) => WrappedComponent => {
 
@@ -43,9 +43,9 @@ export const withTabKeyNavigation = (propKey, rootNodeQuerySelector, excludeNode
     handleActiveTabables = () => {
       this.tabAbles.forEach(e => {
         if (e.tabIndex >= 0) {
-          e.node.setAttribute("tabIndex", e.tabIndex);
+          e.node.setAttribute('tabIndex', e.tabIndex);
         } else {
-          e.node.removeAttribute("tabIndex");
+          e.node.removeAttribute('tabIndex');
         }
       });
     };
@@ -54,10 +54,10 @@ export const withTabKeyNavigation = (propKey, rootNodeQuerySelector, excludeNode
       const excludeNode = excludeNodeQuerySelector?document.body.querySelector(excludeNodeQuerySelector):null;
       const rootNode = rootNodeQuerySelector?document.body.querySelector(rootNodeQuerySelector):document.body;
       if (rootNode) {
-        this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
+        this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(',')))
           .filter(e => !excludeNode || !excludeNode.contains(e))
           .map(node => ({node: node, tabIndex: node.tabIndex}));
-        this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
+        this.tabAbles.forEach(e => e.node.setAttribute('tabIndex', -1));
       }
     };
 

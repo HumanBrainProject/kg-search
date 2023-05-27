@@ -21,12 +21,12 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import InfoPanel from "./InfoPanel";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import InfoPanel from './InfoPanel';
 
 
-test("InfoPanel component renders initially", () => {
+test('InfoPanel component renders initially', () => {
   const component = renderer.create(
     <InfoPanel text="some text" />
   );

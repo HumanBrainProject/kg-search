@@ -21,20 +21,20 @@
  *
  */
 
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
-import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown';
+import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
-import { List } from "../List/List";
+import { List } from '../List/List';
 
-import "./FilteredList.css";
+import './FilteredList.css';
 
 export class FilteredList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { filter: "", hasFocus: false, selectedItems: [], options: [], focusedOption: null };
+    this.state = { filter: '', hasFocus: false, selectedItems: [], options: [], focusedOption: null };
   }
 
   handleInputKeyStrokes = e => {
@@ -73,7 +73,7 @@ export class FilteredList extends React.Component {
   closeDropdown() {
     this.unlistenClickOutHandler();
     this.wrapperRef = null;
-    this.setState({ filter: "", hasFocus: false });
+    this.setState({ filter: '', hasFocus: false });
   }
 
   clickOutHandler = e => {
@@ -83,15 +83,15 @@ export class FilteredList extends React.Component {
   };
 
   listenClickOutHandler() {
-    window.addEventListener("mouseup", this.clickOutHandler, false);
-    window.addEventListener("touchend", this.clickOutHandler, false);
-    window.addEventListener("keyup", this.clickOutHandler, false);
+    window.addEventListener('mouseup', this.clickOutHandler, false);
+    window.addEventListener('touchend', this.clickOutHandler, false);
+    window.addEventListener('keyup', this.clickOutHandler, false);
   }
 
   unlistenClickOutHandler() {
-    window.removeEventListener("mouseup", this.clickOutHandler, false);
-    window.removeEventListener("touchend", this.clickOutHandler, false);
-    window.removeEventListener("keyup", this.clickOutHandler, false);
+    window.removeEventListener('mouseup', this.clickOutHandler, false);
+    window.removeEventListener('touchend', this.clickOutHandler, false);
+    window.removeEventListener('keyup', this.clickOutHandler, false);
   }
 
   componentWillUnmount() {
@@ -128,7 +128,7 @@ export class FilteredList extends React.Component {
 
     const dropdownOpen = this.wrapperRef && this.wrapperRef.contains(document.activeElement);
 
-    const dropdownStyle = this.inputRef ? { top: this.inputRef.offsetHeight + "px" } : {};
+    const dropdownStyle = this.inputRef ? { top: this.inputRef.offsetHeight + 'px' } : {};
 
     return (
       <div className="kgs-filtered-list" ref={ref => this.wrapperRef = ref}>
@@ -139,13 +139,13 @@ export class FilteredList extends React.Component {
             onChange={this.handleChangeUserInput}
             onFocus={this.handleFocus}
             value={filter}
-            placeholder={(!dropdownOpen) ? "add " + label.toLowerCase() + " filters" : ""} />
+            placeholder={(!dropdownOpen) ? 'add ' + label.toLowerCase() + ' filters' : ''} />
           <FontAwesomeIcon icon={faFilter} className="kgs-filtered-facet_filter_icon" />
           <FontAwesomeIcon icon={faChevronDown} className="kgs-filtered-facet_filter_dropdown_icon"/>
-          <input style={{ display: "none" }} type="text" ref={ref => this.hiddenInputRef = ref} />
+          <input style={{ display: 'none' }} type="text" ref={ref => this.hiddenInputRef = ref} />
         </div>
         {dropdownOpen && (!!options.length || filter) && (
-          <div className={`kgs-filtered-list_dropdown ${dropdownOpen ? "is-open" : ""}`} style={dropdownStyle} onKeyDown={this.handleInputKeyStrokes} >
+          <div className={`kgs-filtered-list_dropdown ${dropdownOpen ? 'is-open' : ''}`} style={dropdownStyle} onKeyDown={this.handleInputKeyStrokes} >
             <List items={options} currentItem={focusedOption} ItemComponent={ItemComponent} itemUniqKeyAttribute={itemUniqKeyAttribute} onItemClick={this.handleItemClick} />
           </div>
         )}

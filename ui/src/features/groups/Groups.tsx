@@ -21,16 +21,16 @@
  *
  */
 
-import React from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 
-import BgError from "../../components/BgError/BgError";
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import useAuth from "../../hooks/useAuth";
-import { useListGroupsQuery, getError } from "../../services/api";
-import type { RootState } from "../../services/store";
-import type { JSX } from "react";
+import BgError from '../../components/BgError/BgError';
+import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
+import useAuth from '../../hooks/useAuth';
+import { useListGroupsQuery, getError } from '../../services/api';
+import type { RootState } from '../../services/store';
+import type { JSX } from 'react';
 
 interface GroupsProps {
   children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];

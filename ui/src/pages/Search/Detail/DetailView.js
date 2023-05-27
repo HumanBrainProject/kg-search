@@ -20,19 +20,19 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { Suspense } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { Suspense } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import FetchingPanel from "../../../components/FetchingPanel/FetchingPanel";
-import ShareButtons from "../../../features/ShareButtons";
-import { reset } from "../../../features/instance/instanceSlice";
+import FetchingPanel from '../../../components/FetchingPanel/FetchingPanel';
+import ShareButtons from '../../../features/ShareButtons';
+import { reset } from '../../../features/instance/instanceSlice';
 
-import InstanceView from "../../Instance/InstanceView";
+import InstanceView from '../../Instance/InstanceView';
 
-const Carousel = React.lazy(() => import("../../../components/Carousel/Carousel"));
+const Carousel = React.lazy(() => import('../../../components/Carousel/Carousel'));
 
-import "./DetailView.css";
+import './DetailView.css';
 
 const itemComponent = ({ data, customNavigationComponent }) => <InstanceView data={data} path="/instances/" isSearch={true} customNavigationComponent={customNavigationComponent} />;
 

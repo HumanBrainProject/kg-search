@@ -21,30 +21,30 @@
  *
  */
 
-import uniqueId from "lodash/uniqueId";
-import React from "react";
-import { windowHeight } from "../helpers/BrowserHelpers";
+import uniqueId from 'lodash/uniqueId';
+import React from 'react';
+import { windowHeight } from '../helpers/BrowserHelpers';
 
-const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";
+const jQuerCollapsibleMenuQuerySelector = '.js-navbar-header';
 
 const getStatusForElement = (e, hasSizeChanged) => {
   let cookieChange = false;
   let localStorageChange = false;
   let doCalc = e.height === undefined || hasSizeChanged;
-  if (e.cookieKey && (e.cookieValue === undefined || e.cookieValue === "")) {
+  if (e.cookieKey && (e.cookieValue === undefined || e.cookieValue === '')) {
     let value = document.cookie;
-    if (typeof e.cookieKey === "string") {
-      value = "";
-      const cookie = "; " + document.cookie;
-      const parts = cookie.split("; " + e.cookieKey + "=");
+    if (typeof e.cookieKey === 'string') {
+      value = '';
+      const cookie = '; ' + document.cookie;
+      const parts = cookie.split('; ' + e.cookieKey + '=');
       if (parts.length === 2) {
-        value = parts.pop().split(";").shift();
+        value = parts.pop().split(';').shift();
       }
     }
     if (e.cookieValue !== value) {
       e.cookieValue = value;
       cookieChange = true;
-      if (value !== "") {
+      if (value !== '') {
         e.height = 0;
       } else {
         doCalc = true;
@@ -100,9 +100,9 @@ const getHeight = (relatedElements, hasSizeChanged, hasChanged) => {
 
 // Return null if floating state should not be updated
 const getIsFloating = (height, floatingPosition, scrollTop, newScrollTop) => {
-  if (floatingPosition === "top") {
+  if (floatingPosition === 'top') {
     return newScrollTop > height;
-  } else if (floatingPosition === "bottom") {
+  } else if (floatingPosition === 'bottom') {
     const scrollDown = (newScrollTop - scrollTop) > 0;
     const fixedLayout = document.documentElement.scrollHeight - scrollTop - windowHeight() < height;
     if (scrollDown && fixedLayout) {
@@ -117,7 +117,7 @@ const getIsFloating = (height, floatingPosition, scrollTop, newScrollTop) => {
 class WithEventsBase extends React.Component {
   constructor(props) {
     super(props);
-    this.eventId = uniqueId("kgs-");
+    this.eventId = uniqueId('kgs-');
     this.eventState = {
       didScroll: false,
       didResize: false,
@@ -137,17 +137,17 @@ class WithEventsBase extends React.Component {
     this.hasSizeChanged = this.hasSizeChanged.bind(this);
   }
   componentDidMount() {
-    window.addEventListener("scroll", this.handleScrollEvent, false);
-    window.addEventListener("resize", this.handleResizeEvent, false);
-    window.addEventListener("orientationchange", this.handleOrientationChangeEvent, false);
+    window.addEventListener('scroll', this.handleScrollEvent, false);
+    window.addEventListener('resize', this.handleResizeEvent, false);
+    window.addEventListener('orientationchange', this.handleOrientationChangeEvent, false);
     this.listenToDOMMutations();
     window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
     window.$ && window.$(jQuerCollapsibleMenuQuerySelector).on(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
   }
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleScrollEvent);
-    window.removeEventListener("resize", this.handleResizeEvent);
-    window.removeEventListener("orientationchange", this.handleOrientationChangeEvent);
+    window.removeEventListener('scroll', this.handleScrollEvent);
+    window.removeEventListener('resize', this.handleResizeEvent);
+    window.removeEventListener('orientationchange', this.handleOrientationChangeEvent);
     this.unlistenDOMMutations();
     window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`shown.bs.collapse.${this.eventId}`, this.handleResizeEvent);
     window.$ && window.$(jQuerCollapsibleMenuQuerySelector).off(`hidden.bs.collapse.${this.eventId}`, this.handleResizeEvent);
@@ -226,7 +226,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       const newScrollTop = window.scrollY || document.documentElement.scrollTop;
       const isFloating = getIsFloating(height, floatingPosition, this.scrollTop, newScrollTop);
       // new scrollTop should be set after isFloating calculation but before setting the state
-      if (floatingPosition === "bottom") {
+      if (floatingPosition === 'bottom') {
         this.scrollTop = newScrollTop;
       }
       if (isFloating !== null) {

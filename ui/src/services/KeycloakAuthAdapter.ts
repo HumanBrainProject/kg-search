@@ -32,15 +32,15 @@
  *   limitations under the License.
  *
  */
-import KeyCloakTokenProvider from "./KeycloakTokenProvider";
-import UnauthorizedRequestResponseHandlerProvider from "./UnauthorizedRequestResponseHandlerProvider";
-import type AuthAdapter from "./AuthAdapter";
+import KeyCloakTokenProvider from './KeycloakTokenProvider';
+import UnauthorizedRequestResponseHandlerProvider from './UnauthorizedRequestResponseHandlerProvider';
+import type AuthAdapter from './AuthAdapter';
 import type {
   KeycloakInstance,
   KeycloakConfig,
   KeycloakInitOptions,
   KeycloakOnLoad
-} from "keycloak-js";
+} from 'keycloak-js';
 
 class KeycloakAuthAdapter implements AuthAdapter {
   private _tokenProvider: KeyCloakTokenProvider;
@@ -74,7 +74,7 @@ class KeycloakAuthAdapter implements AuthAdapter {
       };
     } else {
       throw new Error(
-        "setOnLoad cannot be called when KeycloakAuthAdapter is not initialized with initOptions"
+        'setOnLoad cannot be called when KeycloakAuthAdapter is not initialized with initOptions'
       );
     }
   }

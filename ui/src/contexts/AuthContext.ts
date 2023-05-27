@@ -32,8 +32,8 @@
  *   limitations under the License.
  *
  */
-import React from "react";
-import type Auth from "../services/Auth";
+import React from 'react';
+import type Auth from '../services/Auth';
 
 const AuthContext = React.createContext<Auth|undefined>(undefined);
 

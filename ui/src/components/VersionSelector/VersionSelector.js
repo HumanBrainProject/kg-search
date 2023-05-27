@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import { Select } from "../Select/Select";
+import { Select } from '../Select/Select';
 
-import "./VersionSelector.css";
+import './VersionSelector.css';
 
 const getVersionValue = (versions, version) => {
   if (!Array.isArray(versions)) {
@@ -40,7 +40,7 @@ const getVersionValue = (versions, version) => {
 
 export const VersionSelector = ({ version, versions, onChange }) => {
   if (!Array.isArray(versions) || !versions.length) {
-    if(!version || typeof version !== "string" || version === "Current") {
+    if(!version || typeof version !== 'string' || version === 'Current') {
       return null;
     }
     return version;

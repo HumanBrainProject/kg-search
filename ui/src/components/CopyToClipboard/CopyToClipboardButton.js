@@ -21,10 +21,10 @@
  *
  */
 
-import "./CopyToClipboardButton.css";
-import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import './CopyToClipboardButton.css';
+import {faClipboard} from '@fortawesome/free-solid-svg-icons/faClipboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 const ButtonContent = ({icon, text}) => {
   if (text) {
@@ -45,27 +45,27 @@ const CopyToClipboardButton = ({
   className,
   icon,
   text,
-  title="Send to clipboard",
-  confirmationText="sent to clipoard",
+  title='Send to clipboard',
+  confirmationText='sent to clipoard',
   content
 }) => {
 
   const clickHandler = (event) => {
 
-    const div = document.createElement("div");
+    const div = document.createElement('div');
     div.innerHTML = content;
 
     navigator.clipboard.writeText(div.innerText);
 
     const button = event.currentTarget;
 
-    button.setAttribute("show", "true");
-    setTimeout(() => button.removeAttribute("show"), 1000);
+    button.setAttribute('show', 'true');
+    setTimeout(() => button.removeAttribute('show'), 1000);
 
   };
 
   return (
-    <span className={`kgs-copy-to-clipboard ${className?className:""}`}>
+    <span className={`kgs-copy-to-clipboard ${className??''}`}>
       <button role="link" onClick={clickHandler} title={title}>
         <ButtonContent icon={icon} text={text} />
       </button>

@@ -21,24 +21,23 @@
  *
  */
 
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons/faInfoCircle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import uniqueId from "lodash/uniqueId";
-import PropTypes from "prop-types";
-import React from "react";
-import { Tooltip } from "react-tooltip";
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import uniqueId from 'lodash/uniqueId';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Tooltip } from 'react-tooltip';
 
-import "./Hint.css";
+import './Hint.css';
 
-const hintId = encodeURI(uniqueId("kgs-hint_content-"));
+const hintId = encodeURI(uniqueId('kgs-hint_content-'));
 
 export const Hint = ({ className, value }) => {
   if (!value && value !== 0) {
     return null;
   }
-  const classNames = ["kgs-hint", className].join(" ");
   return (
-    <span className={classNames}>
+    <span className={`kgs-hint ${className??''}`}>
       <FontAwesomeIcon
         icon={faInfoCircle}
         data-tip

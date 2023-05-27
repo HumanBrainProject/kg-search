@@ -21,13 +21,13 @@
  *
  */
 
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
-import React from "react";
-import renderer from "react-test-renderer";
-import EmailToLink from "./EmailToLink";
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import React from 'react';
+import renderer from 'react-test-renderer';
+import EmailToLink from './EmailToLink';
 
 
-test("EmailToLink component renders initially", () => {
+test('EmailToLink component renders initially', () => {
   const component = renderer.create(
     <EmailToLink className="test" title="title" text="text" link="link" icon={faTimes} />
   );

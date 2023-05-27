@@ -32,8 +32,8 @@
  *   limitations under the License.
  *
  */
-import { init, captureException as SentryCaptureException, showReportDialog as SentryShowReportDialog } from "@sentry/browser";
-import type { BrowserOptions, ReportDialogOptions} from "@sentry/browser";
+import { init, captureException as SentryCaptureException, showReportDialog as SentryShowReportDialog } from '@sentry/browser';
+import type { BrowserOptions, ReportDialogOptions} from '@sentry/browser';
 
 class Sentry {
   private _isInitialized: boolean;
@@ -45,7 +45,7 @@ class Sentry {
   initialize(settings?: BrowserOptions): void {
     if (settings && !this._isInitialized) {
       this._isInitialized = true;
-      if (!window.location.host.startsWith("localhost")) {
+      if (!window.location.host.startsWith('localhost')) {
         init({
           ...settings,
           autoSessionTracking: false
@@ -57,11 +57,11 @@ class Sentry {
   showReportDialog(customSettings: ReportDialogOptions) {
     if (this._isInitialized) {
       const defaultSettings = {
-        title: "An unexpected error has occured.",
-        subtitle2: "We recommend you to save all your changes and reload the application in your browser. The KG team has been notified. If you'd like to help, tell us what happened below.",
-        labelEmail: "Email",
-        labelName: "Name",
-        labelComments: "Please fill in a description of your error use case"
+        title: 'An unexpected error has occured.',
+        subtitle2: 'We recommend you to save all your changes and reload the application in your browser. The KG team has been notified. If you\'d like to help, tell us what happened below.',
+        labelEmail: 'Email',
+        labelName: 'Name',
+        labelComments: 'Please fill in a description of your error use case'
       };
       const settings = {
         ...defaultSettings,

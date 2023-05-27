@@ -21,17 +21,17 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import {useLocation} from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import {useLocation} from 'react-router-dom';
 
-import BgError from "../../components/BgError/BgError";
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import useAuth from "../../hooks/useAuth";
-import { api, getError, tagsToInvalidateOnLogout } from "../../services/api";
+import BgError from '../../components/BgError/BgError';
+import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
+import useAuth from '../../hooks/useAuth';
+import { api, getError, tagsToInvalidateOnLogout } from '../../services/api';
 
 
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 interface AuthenticateProps {
   children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
@@ -75,7 +75,7 @@ const Authenticate = ({children}: AuthenticateProps) => {
   }, [isTokenExpired]);
 
   const cancelLogin = () => {
-    window.location.replace(location.pathname.replace("/live/", "/instances/").replace(/&?group=[^&]+/gi, ""));
+    window.location.replace(location.pathname.replace('/live/', '/instances/').replace(/&?group=[^&]+/gi, ''));
   };
 
   if (isTokenExpired) {
@@ -99,7 +99,7 @@ const Authenticate = ({children}: AuthenticateProps) => {
 
   if (isUninitialized || isInitializing) {
     return (
-      <FetchingPanel message={loginRequired?"Initializing authentication...":"Initializing application..."} />
+      <FetchingPanel message={loginRequired?'Initializing authentication...':'Initializing application...'} />
     );
   }
 

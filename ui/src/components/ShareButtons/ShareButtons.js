@@ -21,18 +21,18 @@
  *
  */
 
-import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
-import React from "react";
-import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboardButton";
-import EmailToLink from "../EmailToLink/EmailToLink";
+import {faClipboard} from '@fortawesome/free-solid-svg-icons/faClipboard';
+import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope';
+import React from 'react';
+import CopyToClipboardButton from '../CopyToClipboard/CopyToClipboardButton';
+import EmailToLink from '../EmailToLink/EmailToLink';
 
-import "./ShareButtons.css";
+import './ShareButtons.css';
 
 const getShareEmailToLink = url => {
-  const to = "";
-  const subject = "Knowledge Graph Search Request";
-  const body = "Please have a look to the following Knowledge Graph search request";
+  const to = '';
+  const subject = 'Knowledge Graph Search Request';
+  const body = 'Please have a look to the following Knowledge Graph search request';
   return `mailto:${to}?subject=${subject}&body=${body} ${encodeURIComponent(url)}.`;
 };
 

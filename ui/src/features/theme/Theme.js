@@ -21,20 +21,20 @@
  *
  */
 
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const Theme = () => {
 
   const theme = useSelector(state => state.application.theme);
 
   useEffect(() => {
-    if (theme && theme !== "default") {
-      document.body.setAttribute("theme", theme);
-      localStorage.setItem("currentTheme", theme);
+    if (theme && theme !== 'default') {
+      document.body.setAttribute('theme', theme);
+      localStorage.setItem('currentTheme', theme);
     } else {
-      document.body.removeAttribute("theme");
-      localStorage.removeItem("currentTheme", theme);
+      document.body.removeAttribute('theme');
+      localStorage.removeItem('currentTheme', theme);
     }
   }, [theme]);
 

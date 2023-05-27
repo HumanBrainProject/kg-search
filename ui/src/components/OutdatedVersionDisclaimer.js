@@ -21,9 +21,9 @@
  *
  */
 
-import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import {faInfoCircle} from '@fortawesome/free-solid-svg-icons/faInfoCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 const OutdatedVersionDisclaimer = ({ type, overviewVersion, latestVersion, isOutdated, onVersionChange }) => (
   <div className="kgs-outdated-version-disclaimer" >

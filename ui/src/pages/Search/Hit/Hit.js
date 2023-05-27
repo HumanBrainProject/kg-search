@@ -21,48 +21,48 @@
  *
  */
 
-import React from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import Badges from "../../../components/Badges/Badges";
-import { selectTypeMapping } from "../../../features/instance/instanceSlice";
+import Badges from '../../../components/Badges/Badges';
+import { selectTypeMapping } from '../../../features/instance/instanceSlice';
 
-import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
-import { PrintViewField, Title } from "../../Field/Field";
-import HighlightsField from "./HighlightsField";
+import { formatHitForHighlight } from '../../../helpers/HitFormattingHelpers';
+import { PrintViewField, Title } from '../../Field/Field';
+import HighlightsField from './HighlightsField';
 
 
-import "./Hit.css";
+import './Hit.css';
 
 const markdownEscapedChars = {
-  "&#92;": "\\",
-  "&#x2F;": "/",
-  "&#x60;": "`",
-  "&#x2a;": "*",
-  "&#x5f;": "_",
-  "&#x7b;": "{",
-  "&#x7d;": "}",
-  "&#x5b;": "[",
-  "&#x5d;": "]",
-  "&#x28;": "(",
-  "&#x29;": ")",
-  "&#x23;": "#",
-  "&#x2b;": "+",
-  "&#x2d;": "-",
-  "&#x2e;": ".",
-  "&#x21;": "!"
+  '&#92;': '\\',
+  '&#x2F;': '/',
+  '&#x60;': '`',
+  '&#x2a;': '*',
+  '&#x5f;': '_',
+  '&#x7b;': '{',
+  '&#x7d;': '}',
+  '&#x5b;': '[',
+  '&#x5d;': ']',
+  '&#x28;': '(',
+  '&#x29;': ')',
+  '&#x23;': '#',
+  '&#x2b;': '+',
+  '&#x2d;': '-',
+  '&#x2e;': '.',
+  '&#x21;': '!'
 };
 
 const replaceMarkdownEscapedChars = (str) => {
   Object.entries(markdownEscapedChars).forEach(([key, val]) => {
-    str = str.replace(new RegExp(key, "g"), val);
+    str = str.replace(new RegExp(key, 'g'), val);
   });
   return formatHitForHighlight(str);
 };
 
 const getTitle = (text, highlight) => {
-  if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
-    return formatHitForHighlight(highlight["title.value"][0]);
+  if (highlight && highlight['title.value'] && highlight['title.value'].length > 0) {
+    return formatHitForHighlight(highlight['title.value'][0]);
   }
   return text;
 };
@@ -74,11 +74,11 @@ const getDescriptionField = (data, highlight, mapping) => {
   const value = data && data.value;
   let modifiedValue = value;
 
-  if (highlight && highlight["description.value"] && highlight["description.value"].length > 0) {
-    modifiedValue = replaceMarkdownEscapedChars(highlight["description.value"][0]);
-    modifiedValue += "...";
+  if (highlight && highlight['description.value'] && highlight['description.value'].length > 0) {
+    modifiedValue = replaceMarkdownEscapedChars(highlight['description.value'][0]);
+    modifiedValue += '...';
   } else if (value && value.length > 220) {
-    modifiedValue = value.substring(0, 217) + "...";
+    modifiedValue = value.substring(0, 217) + '...';
   }
 
   if (modifiedValue !== value) {
@@ -89,14 +89,14 @@ const getDescriptionField = (data, highlight, mapping) => {
   }
 
   return {
-    name: "description",
+    name: 'description',
     data: fieldData,
     mapping: mapping
   };
 };
 
 const getField = (name, data, highlight, mapping) => {
-  if (name === "description") {
+  if (name === 'description') {
     return getDescriptionField(data, highlight, mapping);
   }
   return {
@@ -150,14 +150,14 @@ export const Hit = ({ data }) => {
   const previewImage = data?.previewImage;
   const badges = (data?.badges && data.badges.length)?data.badges:null;
   const highlightsField = {
-    fields: filterHighlightFields(data?.highlight, ["title.value", "description.value"]),
+    fields: filterHighlightFields(data?.highlight, ['title.value', 'description.value']),
     mapping: mapping
   };
 
   return (
     <div className="kgs-hit" data-type={type}>
-      <div className={`kgs-hit__body ${previewImage? "has-previewImage":""}`}>
-        <div className={`kgs-hit__content ${badges? "has-badges":""}`}>
+      <div className={`kgs-hit__body ${previewImage? 'has-previewImage':''}`}>
+        <div className={`kgs-hit__content ${badges? 'has-badges':''}`}>
           <Badges badges={badges} />
           <Title key="title" text={title} />
           <HighlightsField key="highlights" {...highlightsField} />

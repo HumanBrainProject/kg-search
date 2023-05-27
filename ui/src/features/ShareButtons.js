@@ -21,16 +21,16 @@
  *
  */
 
-import React from "react";
-import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
-import ShareButtonsComponent from "../components/ShareButtons/ShareButtons";
+import ShareButtonsComponent from '../components/ShareButtons/ShareButtons';
 
 const getUrlToShare = (location, instanceId, group, defaultGroup) => {
-  if (location.pathname === "/" && instanceId) {
+  if (location.pathname === '/' && instanceId) {
     const rootPath = window.location.pathname.substring(0, window.location.pathname.length - location.pathname.length);
-    return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${instanceId}${group !== defaultGroup ? ("?group=" + group) : ""}`;
+    return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${instanceId}${group !== defaultGroup ? ('?group=' + group) : ''}`;
   }
   return window.location.href;
 };

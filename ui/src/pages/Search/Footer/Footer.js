@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import ShareButtons from "../../../features/ShareButtons";
-import TermsShortNotice from "../../../features/TermsShortNotice";
-import Pagination from "../../../features/search/Pagination";
-import "./Footer.css";
+import React from 'react';
+import ShareButtons from '../../../features/ShareButtons';
+import TermsShortNotice from '../../../features/TermsShortNotice';
+import Pagination from '../../../features/search/Pagination';
+import './Footer.css';
 
 const Footer = () => (
   <div className="kgs-footer">

@@ -21,22 +21,22 @@
  *
  */
 
-import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import _ from "lodash-uuid";
-import React, { Suspense, useState } from "react";
-import { useSelector } from "react-redux";
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import _ from 'lodash-uuid';
+import React, { Suspense, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import Matomo from "../../../services/Matomo";
+import Matomo from '../../../services/Matomo';
 
-import LinkedInstance from "../../Instance/LinkedInstance";
+import LinkedInstance from '../../Instance/LinkedInstance';
 
-import "./HierarchicalTree.css";
+import './HierarchicalTree.css';
 
-const Tree = React.lazy(() => import("./Tree.js"));
+const Tree = React.lazy(() => import('./Tree.js'));
 
 const Icon = ({ color }) => (
-  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : "gray" }} />
+  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : 'gray' }} />
 );
 
 const Node = ({ node }) => (
@@ -72,7 +72,7 @@ const HierarchicalTreeComponent = ({ tree, defaultExpandAll, defaultExpandedKeys
   const [node, setNode] = useState(initialSelectedNode);
 
   const onSelect = (_selectedKeys, info) => {
-    Matomo.trackEvent("Specimen", "Clicked", info.node.title);
+    Matomo.trackEvent('Specimen', 'Clicked', info.node.title);
     setNode(info.node);
   };
 

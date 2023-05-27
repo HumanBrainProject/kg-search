@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import { List } from "../List/List";
+import { List } from '../List/List';
 
-import "./PaginatedList.css";
+import './PaginatedList.css';
 
 const viewMoreIncrement = 50;
 
@@ -54,12 +54,12 @@ export class PaginatedList extends React.PureComponent {
     let viewMoreText = null;
     if (others > 0) {
       if (viewMoreIncrement >= others) {
-        viewMoreText = "View all";
+        viewMoreText = 'View all';
       } else {
-        viewMoreText = "View more";
+        viewMoreText = 'View more';
       }
     } else if (currentSize > defaultSize) {
-      viewMoreText = "View less";
+      viewMoreText = 'View less';
     }
 
     return (

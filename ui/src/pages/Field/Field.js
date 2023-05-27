@@ -21,33 +21,33 @@
  *
  */
 
-import React, { useMemo } from "react";
-import Citations from "../../components/Field/Citation/Citations";
-import DynamicCitation from "../../components/Field/Citation/DynamicCitation";
-import MarkDownCitation from "../../components/Field/Citation/MarkDownCitation";
-import { FieldLabel } from "../../components/Field/FieldLabel";
+import React, { useMemo } from 'react';
+import Citations from '../../components/Field/Citation/Citations';
+import DynamicCitation from '../../components/Field/Citation/DynamicCitation';
+import MarkDownCitation from '../../components/Field/Citation/MarkDownCitation';
+import { FieldLabel } from '../../components/Field/FieldLabel';
 import {
   ListField,
   PrintViewListField
-} from "../../components/Field/ListField";
-import Mermaid from "../../components/Field/Mermaid";
-import ObjectField from "../../components/Field/ObjectField";
-import TableField from "../../components/Field/TableField";
-import FilePreview from "../../components/FilePreview/FilePreview";
-import { Hint } from "../../components/Hint/Hint";
-import Text from "../../components/Text/Text";
-import AsyncHierarchicalFiles from "./HierarchicalFiles/AsyncHierarchicalFiles";
-import HierarchicalFiles from "./HierarchicalFiles/HierarchicalFiles";
-import HierarchicalTree from "./HierarchicalTree/HierarchicalTree";
-import { ValueField, PrintViewValueField } from "./ValueField/ValueField";
+} from '../../components/Field/ListField';
+import Mermaid from '../../components/Field/Mermaid';
+import ObjectField from '../../components/Field/ObjectField';
+import TableField from '../../components/Field/TableField';
+import FilePreview from '../../components/FilePreview/FilePreview';
+import { Hint } from '../../components/Hint/Hint';
+import Text from '../../components/Text/Text';
+import AsyncHierarchicalFiles from './HierarchicalFiles/AsyncHierarchicalFiles';
+import HierarchicalFiles from './HierarchicalFiles/HierarchicalFiles';
+import HierarchicalTree from './HierarchicalTree/HierarchicalTree';
+import { ValueField, PrintViewValueField } from './ValueField/ValueField';
 
-import "./Field.css";
+import './Field.css';
 
 //TODO: remove getFileRepositoryIdFromUrl after next index (incremental) update
 const filesUrlRegex = /^\/api\/groups\/.+\/repositories\/(.+)\/files$/;
 const liveFilesUrlRegex = /^\/api\/repositories\/(.+)\/files\/live$/;
 const getFileRepositoryIdFromUrl = url => {
-  if (!url || typeof url !== "string") {
+  if (!url || typeof url !== 'string') {
     return null;
   }
 
@@ -78,8 +78,8 @@ const FieldBaseComponent = ({
     return null;
   }
 
-  const fieldClassName = name ? `kgs-field__${name}` : "";
-  const layoutClassName = layout ? `kgs-field__layout-${layout}` : "";
+  const fieldClassName = name ? `kgs-field__${name}` : '';
+  const layoutClassName = layout ? `kgs-field__layout-${layout}` : '';
 
   return (
     <span
@@ -112,7 +112,7 @@ const getFieldProps = (
     : PrintViewValueField;
   const FieldComponent = renderUserInteractions ? Field : PrintViewField;
 
-  let className = "";
+  let className = '';
   let labelCounter = null;
   let valueProps = null;
   let valueComponent = null;
@@ -169,7 +169,7 @@ const getFieldProps = (
 
     valueProps = {
       url: data.url,
-      title: "data descriptor"
+      title: 'data descriptor'
     };
     valueComponent = FilePreview;
   } else if (mapping.isCitation) {
@@ -181,7 +181,7 @@ const getFieldProps = (
       };
       valueComponent = Citations;
     } else {
-      if (name === "customCitation") {
+      if (name === 'customCitation') {
         // MarkDown Citation
 
         valueProps = {
@@ -200,7 +200,7 @@ const getFieldProps = (
   } else if (mapping.isHierarchical) {
     // Hierarchical
 
-    className = "kgs-field__hierarchical";
+    className = 'kgs-field__hierarchical';
 
     valueProps = {
       mapping: mapping,
@@ -211,7 +211,7 @@ const getFieldProps = (
   } else if (mapping.isHierarchicalFiles) {
     // Hierarchical Files
 
-    className = "kgs-field__hierarchical-files";
+    className = 'kgs-field__hierarchical-files';
 
     const repositoryId = mapping.isAsync ? data : null;
 
@@ -222,8 +222,8 @@ const getFieldProps = (
         mapping: mapping,
         type: type,
         repositoryId: getFileRepositoryIdFromUrl(repositoryId),
-        nameFieldPath: "title.value",
-        urlFieldPath: "iri.url"
+        nameFieldPath: 'title.value',
+        urlFieldPath: 'iri.url'
       };
       valueComponent = AsyncHierarchicalFiles;
     } else {
@@ -233,15 +233,15 @@ const getFieldProps = (
         data: data,
         mapping: mapping,
         type: type,
-        nameFieldPath: "value",
-        urlFieldPath: "url"
+        nameFieldPath: 'value',
+        urlFieldPath: 'url'
       };
       valueComponent = HierarchicalFiles;
     }
   } else if (mapping.isTable) {
     // Table
 
-    className = "kgs-field__table";
+    className = 'kgs-field__table';
 
     valueProps = {
       items: data,
@@ -265,7 +265,7 @@ const getFieldProps = (
     if (Array.isArray(data)) {
       // List
 
-      if (mapping.layout === "group") {
+      if (mapping.layout === 'group') {
         labelCounter = data.length;
       }
 
@@ -301,7 +301,7 @@ const getFieldProps = (
 
   return {
     name: name,
-    layout: ["header", "summary"].includes(mapping.layout)
+    layout: ['header', 'summary'].includes(mapping.layout)
       ? mapping.layout
       : null,
     style:
@@ -350,6 +350,6 @@ export const Title = ({ text }) => {
 };
 
 export const Field = FieldBase(true);
-Field.displayName = "Field";
+Field.displayName = 'Field';
 export const PrintViewField = FieldBase(false);
-PrintViewField.displayName = "PrintViewField";
+PrintViewField.displayName = 'PrintViewField';

@@ -20,14 +20,14 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
-import { faSyncAlt } from "@fortawesome/free-solid-svg-icons/faSyncAlt";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useLocation, matchPath } from "react-router-dom";
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, matchPath } from 'react-router-dom';
 
-import Matomo from "../../../services/Matomo";
+import Matomo from '../../../services/Matomo';
 import {
   useListFilesQuery,
   useListPreviewFilesQuery,
@@ -36,10 +36,10 @@ import {
   useListGroupingTypesQuery,
   useListPreviewGroupingTypesQuery,
   getError
-} from "../../../services/api";
+} from '../../../services/api';
 
-import { FileFilter } from "./FileFilter";
-import HierarchicalFiles from "./HierarchicalFiles";
+import { FileFilter } from './FileFilter';
+import HierarchicalFiles from './HierarchicalFiles';
 
 const FetchingFiles = () => (
   <span>
@@ -55,11 +55,11 @@ const FilesBrowser = ({ files, total, mapping, type, fileFormat, groupingType, n
   if (files.length === 0) {
     return (
       <span>
-        No files available{" "}
+        No files available{' '}
         <FontAwesomeIcon
           icon={faSyncAlt}
           onClick={onRefresh}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
         />
       </span>
     );
@@ -69,7 +69,7 @@ const FilesBrowser = ({ files, total, mapping, type, fileFormat, groupingType, n
     <>
       <div>
         <span>
-          <i>{total}</i> {total>1?"files":"file"}
+          <i>{total}</i> {total>1?'files':'file'}
         </span>
       </div>
       <HierarchicalFiles
@@ -93,7 +93,7 @@ export const AsyncHierarchicalFiles = ({
   urlFieldPath
 }) => {
   const location = useLocation();
-  const isLive = !!matchPath({ path: "/live/*" }, location.pathname);
+  const isLive = !!matchPath({ path: '/live/*' }, location.pathname);
 
   const [files, setFiles] = useState([]);
   const [total, setTotal] = useState(0);
@@ -121,7 +121,7 @@ export const AsyncHierarchicalFiles = ({
   );
 
   if (!repositoryId) {
-    throw new Error("AsyncHierarchicalFiles is missing prop repositoryId");
+    throw new Error('AsyncHierarchicalFiles is missing prop repositoryId');
   }
 
   const {
@@ -144,12 +144,12 @@ export const AsyncHierarchicalFiles = ({
   }, [data]);
 
   const handleSetFileFormat = value => {
-    Matomo.trackEvent("Files", "Filter", value);
+    Matomo.trackEvent('Files', 'Filter', value);
     setFileFormat(value);
   };
 
   const handleSetGroupingType = value => {
-    Matomo.trackEvent("Files", "Group by", value);
+    Matomo.trackEvent('Files', 'Group by', value);
     setGroupingType(value);
   };
 
@@ -162,14 +162,14 @@ export const AsyncHierarchicalFiles = ({
   if (isError) {
     return (
       <div>
-        <span style={{ color: "var(--code-color)" }}>
+        <span style={{ color: 'var(--code-color)' }}>
           <FontAwesomeIcon icon={faExclamationTriangle} />
-          {getError(error)}{" "}
+          {getError(error)}{' '}
         </span>
         <FontAwesomeIcon
           icon={faSyncAlt}
           onClick={isError}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
         />
       </div>
     );

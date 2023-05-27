@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
-import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
+import React from 'react';
+import { formatHitForHighlight } from '../../../helpers/HitFormattingHelpers';
 
 const HighlightsField = ({ fields, mapping }) => {
   if (!fields) {
@@ -31,8 +31,8 @@ const HighlightsField = ({ fields, mapping }) => {
   let valueTag = [];
 
   Object.keys(fields).forEach(field => {
-    let shortKey = field.replace(/^(.*?)\..*$/g, "$1"); //NOSONAR
-    const content = formatHitForHighlight(fields[field].join(", "));
+    let shortKey = field.replace(/^(.*?)\..*$/g, '$1'); //NOSONAR
+    const content = formatHitForHighlight(fields[field].join(', '));
     valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].label}: <span dangerouslySetInnerHTML={{ __html: content }} /></p>);
   });
 

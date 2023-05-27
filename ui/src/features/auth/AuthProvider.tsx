@@ -33,14 +33,14 @@
  *
  */
 
-import React, { useEffect } from "react";
-import AuthContext from "../../contexts/AuthContext";
-import useAuth from "../../hooks/useAuth";
-import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
-import KeycloakAuthProvider from "./KeycloakAuthProvider";
-import type Auth from "../../services/Auth";
-import type AuthAdapter from "../../services/AuthAdapter";
-import type { JSX } from "react";
+import React, { useEffect } from 'react';
+import AuthContext from '../../contexts/AuthContext';
+import useAuth from '../../hooks/useAuth';
+import KeycloakAuthAdapter from '../../services/KeycloakAuthAdapter';
+import KeycloakAuthProvider from './KeycloakAuthProvider';
+import type Auth from '../../services/Auth';
+import type AuthAdapter from '../../services/AuthAdapter';
+import type { JSX } from 'react';
 
 /* For debugging purpose only, when running the ui app locally but connecting to
  * backend prod (where keycloak is not allowing localhost),
@@ -113,10 +113,10 @@ const AuthProvider = ({ adapter, loginRequired, children }:AuthProviderProps) =>
   }, []);
 
   if (adapter instanceof KeycloakAuthAdapter) {
-    const isLoginRequired = loginRequired ?? adapter.initOptions?.onLoad === "login-required";
-    const canBypassKeyCloak = BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING && window.location.host.startsWith("localhost") && !isLoginRequired;
+    const isLoginRequired = loginRequired ?? adapter.initOptions?.onLoad === 'login-required';
+    const canBypassKeyCloak = BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING && window.location.host.startsWith('localhost') && !isLoginRequired;
     if (canBypassKeyCloak) {
-      console.info("%cAuth: Keycloak authentication is disabled for local development", "color: #f88900;");
+      console.info('%cAuth: Keycloak authentication is disabled for local development', 'color: #f88900;');
     } else {
       return (
         <KeycloakAuthProvider adapter={adapter} loginRequired={loginRequired} >

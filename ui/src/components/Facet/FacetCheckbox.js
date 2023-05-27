@@ -21,12 +21,12 @@
  *
  */
 
-import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
-import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
+import {faMinus} from '@fortawesome/free-solid-svg-icons/faMinus';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
-import "./FacetCheckbox.css";
+import './FacetCheckbox.css';
 
 const Icon = ({checked, hasAnyChildChecked}) => {
   if(checked) {
@@ -39,7 +39,7 @@ const Icon = ({checked, hasAnyChildChecked}) => {
 };
 
 const FacetCheckbox = ({ item: { label, count, checked, hasAnyChildChecked } }) => (
-  <div className={`kgs-facet-checkbox ${checked ? "is-active" : ""}  ${hasAnyChildChecked ? "has-any-child-active" : ""}`}>
+  <div className={`kgs-facet-checkbox ${checked ? 'is-active' : ''}  ${hasAnyChildChecked ? 'has-any-child-active' : ''}`}>
     <input type="checkbox" tabIndex="-1" name={label}/><Icon checked={checked} hasAnyChildChecked={hasAnyChildChecked} />
     <div className="kgs-facet-checkbox__text">{label}</div>
     <div className="kgs-facet-checkbox__count">{count}</div>

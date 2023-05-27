@@ -20,15 +20,15 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import * as d3 from "d3";
-import { uniqueId } from "lodash";
-import mermaid from "mermaid";
-import React, { useEffect, useRef, useState } from "react";
-import LinkedInstance from "../../pages/Instance/LinkedInstance";
+import * as d3 from 'd3';
+import { uniqueId } from 'lodash';
+import mermaid from 'mermaid';
+import React, { useEffect, useRef, useState } from 'react';
+import LinkedInstance from '../../pages/Instance/LinkedInstance';
 
-import "./Mermaid.css";
+import './Mermaid.css';
 
-mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
+mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
 
 const attachCallback = (data, children, callbackFunctionName) => {
   if (children && children instanceof Object) {
@@ -40,11 +40,11 @@ const attachCallback = (data, children, callbackFunctionName) => {
 };
 
 const zoomGraph = () => {
-  const svg_container = d3.select(".mermaid");
-  const svg = svg_container.select("svg");
-  const inner_svg = svg.select("g");
-  const zoom = d3.zoom().on("zoom", function (e) {
-    inner_svg.attr("transform", e.transform);
+  const svg_container = d3.select('.mermaid');
+  const svg = svg_container.select('svg');
+  const inner_svg = svg.select('g');
+  const zoom = d3.zoom().on('zoom', function (e) {
+    inner_svg.attr('transform', e.transform);
   });
   svg_container.call(zoom);
 };
@@ -56,12 +56,12 @@ const MermaidGraph = ({ data, details, callbackFunctionName }) => {
   useEffect(() => {
     const loadMermaid = async () => {
       await mermaid.run({
-        querySelector: ".mermaid"
+        querySelector: '.mermaid'
       });
       zoomGraph();
     };
     if (!ref.current?.firstChild.tagName) {
-      ref.current?.removeAttribute("data-processed");
+      ref.current?.removeAttribute('data-processed');
       loadMermaid();
     }
   }, [callbackFunctionName]);
@@ -101,7 +101,7 @@ const Detail = ({ details, callbackFunctionName }) => {
 };
 
 const Mermaid = ({ data, details }) => {
-  const callbackFunctionName = uniqueId("mermaidCallback");
+  const callbackFunctionName = uniqueId('mermaidCallback');
 
   return (
     <div className="kgs-mermaid">

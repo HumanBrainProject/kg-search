@@ -21,13 +21,13 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
 export const FieldLabel = ({value, counter=null, inline=true}) => {
   if (!value && value !== 0) {
     return null;
   }
   return (
-    <div className={`field-label ${inline?"":"as-block"}`}>{value}{(counter || counter === 0)?` (${counter})`:""}</div>
+    <div className={`field-label ${inline?'':'as-block'}`}>{value}{(counter || counter === 0)?` (${counter})`:''}</div>
   );
 };

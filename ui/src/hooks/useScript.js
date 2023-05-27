@@ -21,11 +21,11 @@
  *
  */
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 const useScript = (type, content) => {
   useEffect(() => {
-    const script = document.createElement("script");
+    const script = document.createElement('script');
     if (type) {
       script.type = type;
     }

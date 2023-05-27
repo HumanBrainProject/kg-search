@@ -21,25 +21,25 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import Hint from "./Hint";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import Hint from './Hint';
 
-test("Hint test empty value", () => {
+test('Hint test empty value', () => {
   const component = renderer.create(
     <Hint className="test" value="" />
   );
   expect(component.toJSON()).toBeNull();
 });
 
-test("Hint test no value", () => {
+test('Hint test no value', () => {
   const component = renderer.create(
     <Hint className="test" />
   );
   expect(component.toJSON()).toBeNull();
 });
 
-test("Hint test 0 value", () => {
+test('Hint test 0 value', () => {
   const component = renderer.create(
     <Hint className="test" value={0} />
   );

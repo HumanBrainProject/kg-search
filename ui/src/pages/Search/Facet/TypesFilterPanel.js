@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { setType } from "../../../features/search/searchSlice";
-import "./TypesFilterPanel.css";
+import { setType } from '../../../features/search/searchSlice';
+import './TypesFilterPanel.css';
 
 const TypeFilter = ({ type }) => {
 
@@ -36,7 +36,7 @@ const TypeFilter = ({ type }) => {
   };
 
   return (
-    <div className={`kgs-fieldsFilter-checkbox ${type.active?"is-active":""}`} onClick={handleOnClick} >
+    <div className={`kgs-fieldsFilter-checkbox ${type.active?'is-active':''}`} onClick={handleOnClick} >
       <div className="kgs-fieldsFilter-checkbox__text">{type.label}</div>
       <div className="kgs-fieldsFilter-checkbox__count">{type.count}</div>
     </div>

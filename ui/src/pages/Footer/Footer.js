@@ -20,18 +20,18 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React from "react";
-import { connect } from "react-redux";
-import ThemeToggle from "../../features/theme/ThemeToggle";
+import React from 'react';
+import { connect } from 'react-redux';
+import ThemeToggle from '../../features/theme/ThemeToggle';
 
-import "./Footer.css";
+import './Footer.css';
 
 const Footer = ({ commit, theme }) => (
   <footer className="site-footer">
     <div className="footer__header">
       <div className="footer__primary">
         <a href="https://ebrains.eu" aria-label="Ebrains homepage" title="Ebrains homepage" className="logo nuxt-link-exact-active nuxt-link-active">
-          <img src={`/static/img/${theme === "dark"?"ebrains_logo_dark.svg":"ebrains_logo.svg"}`} alt="ebrains" height="100" />
+          <img src={`/static/img/${theme === 'dark'?'ebrains_logo_dark.svg':'ebrains_logo.svg'}`} alt="ebrains" height="100" />
         </a>
       </div>
     </div>

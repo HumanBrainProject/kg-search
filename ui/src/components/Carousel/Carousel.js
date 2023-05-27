@@ -21,16 +21,16 @@
  *
  */
 
-import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import uniqueId from "lodash/uniqueId";
-import PropTypes from "prop-types";
-import React, { useEffect, useRef, useMemo } from "react";
+import {faChevronLeft} from '@fortawesome/free-solid-svg-icons/faChevronLeft';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import uniqueId from 'lodash/uniqueId';
+import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useMemo } from 'react';
 
-import { isMobile } from "../../helpers/BrowserHelpers";
+import { isMobile } from '../../helpers/BrowserHelpers';
 
-import "./Carousel.css";
+import './Carousel.css';
 
 const getNavigation = (item, showPrevious, onClose, onBack, navigationComponent) => {
   const NavigationComponent = navigationComponent;
@@ -53,7 +53,7 @@ const getNavigation = (item, showPrevious, onClose, onBack, navigationComponent)
       )}
     </div>
   );
-  Navigation.displayName = "Navigation";
+  Navigation.displayName = 'Navigation';
   return Navigation;
 };
 
@@ -84,14 +84,14 @@ const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationC
           onClose();
         }
       };
-      window.addEventListener("keyup", _keyupHandler, false);
-      return () => window.removeEventListener("keyup", _keyupHandler);
+      window.addEventListener('keyup', _keyupHandler, false);
+      return () => window.removeEventListener('keyup', _keyupHandler);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const items = useMemo(() => Array.from(Array(nbOfItems)).map((_, idx) => ({
-    id: uniqueId("kgs-carousel__item-"),
+    id: uniqueId('kgs-carousel__item-'),
     position: idx,
     isActive: false,
     data: null
@@ -115,10 +115,8 @@ const Carousel = ({ className, data, onBack, onClose, itemComponent, navigationC
 
   const showPrevious = data.length > 1;
 
-  const classNames = ["kgs-carousel", className].join(" ");
-
   return (
-    <div className={classNames} onClick={handleOnClose}>
+    <div className={`kgs-carousel ${className??''}`} onClick={handleOnClose}>
       <div className="kgs-carousel__panel" ref={wrapperRef}>
         {items.map(item => (
           <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onBack={onBack} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />

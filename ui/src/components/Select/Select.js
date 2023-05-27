@@ -21,9 +21,9 @@
  *
  */
 
-import PropTypes from "prop-types";
-import React from "react";
-import "./Select.css";
+import PropTypes from 'prop-types';
+import React from 'react';
+import './Select.css';
 
 export const Select = ({className, label, value, list, onChange}) => {
   if (!Array.isArray(list) || list.length <= 1) {
@@ -32,11 +32,11 @@ export const Select = ({className, label, value, list, onChange}) => {
 
   const handleOnChange = e => onChange(e.target.value || null);
   return (
-    <div className={`kgs-select ${className?className:""}`}>
+    <div className={`kgs-select ${className??''}`}>
       {label && (
         <div>{label}</div>
       )}
-      <select onChange={handleOnChange} value={value || ""}>
+      <select onChange={handleOnChange} value={value || ''}>
         {list.map(el => <option disabled={el.value === null || el.value===undefined} value={el.value} key={`${el.value?el.value:el.label}`}>{el.label}{}</option>)}
       </select>
     </div>

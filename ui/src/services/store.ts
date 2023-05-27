@@ -20,17 +20,17 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { logger } from "redux-logger";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { logger } from 'redux-logger';
 
-import applicationReducer from "../features/application/applicationSlice";
-import groupsReducer from "../features/groups/groupsSlice";
-import instanceReducer from "../features/instance/instanceSlice";
-import searchReducer from "../features/search/searchSlice";
-import { api } from "./api";
-import authConnector from "./authConnector";
-import type { Middleware, Dispatch, ConfigureStoreOptions } from "@reduxjs/toolkit";
-import type { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+import applicationReducer from '../features/application/applicationSlice';
+import groupsReducer from '../features/groups/groupsSlice';
+import instanceReducer from '../features/instance/instanceSlice';
+import searchReducer from '../features/search/searchSlice';
+import { api } from './api';
+import authConnector from './authConnector';
+import type { Middleware, Dispatch, ConfigureStoreOptions } from '@reduxjs/toolkit';
+import type { CurriedGetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 
 const rootReducer = combineReducers({
   application: applicationReducer,
@@ -68,4 +68,4 @@ const developmentConfiguration: ConfigureStoreOptions = {
     .concat(logger)
 };
 
-export default configureStore(process.env.NODE_ENV === "production"?prodConfiguration:developmentConfiguration);
+export default configureStore(process.env.NODE_ENV === 'production'?prodConfiguration:developmentConfiguration);

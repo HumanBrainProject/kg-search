@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
 const Count = ({count}) => {
   if (count === undefined || count === null) {

@@ -25,11 +25,11 @@ const FACET_ALL_SIZE = 1000000000;
 
 export const resetFacet = facet => {
   switch (facet.type) {
-  case "list":
+  case 'list':
     facet.value = null;
     facet.size = (facet.isHierarchical || facet.isFilterable)?FACET_ALL_SIZE:FACET_DEFAULT_SIZE;
     break;
-  case "exists":
+  case 'exists':
   default:
     facet.value = null;
   }
@@ -51,7 +51,7 @@ export const getAggregation = facets => {
   }
   return facets.reduce((acc, facet) => {
     switch (facet.type) {
-    case "list":
+    case 'list':
       //if (facet.isHierarchical) {
       if (Array.isArray(facet.value) && facet.value.length) {
         acc[facet.name] = {
@@ -64,7 +64,7 @@ export const getAggregation = facets => {
         };
       }
       break;
-    case "exists":
+    case 'exists':
       if (facet.value) {
         acc[facet.name] = {};
       }

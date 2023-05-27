@@ -21,14 +21,14 @@
  *
  */
 
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
-import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useMemo } from "react";
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import {faSyncAlt} from '@fortawesome/free-solid-svg-icons/faSyncAlt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useMemo } from 'react';
 
-import { Select } from "../../../components/Select/Select";
+import { Select } from '../../../components/Select/Select';
 
-import "./FileFilter.css";
+import './FileFilter.css';
 
 const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, onRetry }) => {
 
@@ -41,14 +41,14 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
     return list.reduce((acc, v) => {
       acc.push({label: v, value: v});
       return acc;
-    }, [{label: "none", value: ""}]);
+    }, [{label: 'none', value: ''}]);
   }, [list]);
 
   if (error) {
     return (
       <div className="kgs-fileFilter__info">
-        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
-        <FontAwesomeIcon icon={faSyncAlt} onClick={onRetry} style={{cursor: "pointer"}}/>
+        <span style={{color: 'var(--code-color)'}}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
+        <FontAwesomeIcon icon={faSyncAlt} onClick={onRetry} style={{cursor: 'pointer'}}/>
       </div>
     );
   }
@@ -75,7 +75,7 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
 export const FileFilter = ({ title, useQuery, queryParameter, value, onSelect }) => {
 
   if (!useQuery) {
-    throw new Error("FileFilter is missing prop useQuery");
+    throw new Error('FileFilter is missing prop useQuery');
   }
 
   const {

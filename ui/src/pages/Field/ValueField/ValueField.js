@@ -21,18 +21,18 @@
  *
  */
 
-import React from "react";
-import { Details } from "../../../components/Details/Details";
-import { Link } from "../../../components/Link/Link";
-import { Tag } from "../../../components/Tag/Tag";
-import { Text } from "../../../components/Text/Text";
-import { termsOfUse } from "../../../data/termsOfUse.js";
-import Thumbnail from "../../../features/image/Thumbnail";
-import InstanceLink from "../../../features/instance/InstanceLink";
-import "./ValueField.css";
+import React from 'react';
+import { Details } from '../../../components/Details/Details';
+import { Link } from '../../../components/Link/Link';
+import { Tag } from '../../../components/Tag/Tag';
+import { Text } from '../../../components/Text/Text';
+import { termsOfUse } from '../../../data/termsOfUse.js';
+import Thumbnail from '../../../features/image/Thumbnail';
+import InstanceLink from '../../../features/instance/InstanceLink';
+import './ValueField.css';
 
 const getUrlLocation = url => {
-  let path = url.split("/");
+  let path = url.split('/');
   let protocol = path[0];
   let host = path[2];
   return `${protocol}//${host}`;
@@ -47,19 +47,19 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const instanceIdLink = (!!renderUserInteractions && !!data.reference)?data.reference:null;
     const hasInstanceLink = !!instanceIdLink;
     const hasLink = !!renderUserInteractions && !!data.url;
-    const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" && data.url.substring(0, 7).toLowerCase() === "mailto:";
-    const isAFileLink = typeof data.url === "string" && data.url.startsWith("https://object.cscs.ch");
+    const hasMailToLink = !!renderUserInteractions && typeof data.url === 'string' && data.url.substring(0, 7).toLowerCase() === 'mailto:';
+    const isAFileLink = typeof data.url === 'string' && data.url.startsWith('https://object.cscs.ch');
     const hasExternalLink = data.url && !isAFileLink && getUrlLocation(data.url) !== window.location.origin;
     const hasAnyLink = hasInstanceLink || hasMailToLink || hasLink;
     const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
     const isTag = !hasAnyLink && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isTag && !!mapping.isMarkdown;
-    const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
+    const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === 'string' || typeof data.previewUrl.url === 'string');
     const count = data.count;
 
     let value = data.value;
 
-    if (data.value && mapping.type === "date") {
+    if (data.value && mapping.type === 'date') {
       const timestamp = Date.parse(data.value);
       if (timestamp && !isNaN(timestamp)) {
         value = new Date(timestamp).toLocaleDateString();
@@ -104,10 +104,10 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       <div className="field-value">
         {isAFileLink && (
           <Thumbnail showPreview={showPreview}
-            thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string" ? data.thumbnailUrl : data.thumbnailUrl.url)}
-            previewUrl={data.previewUrl && (typeof data.previewUrl === "string" ? data.previewUrl : data.previewUrl.url)}
+            thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === 'string' ? data.thumbnailUrl : data.thumbnailUrl.url)}
+            previewUrl={data.previewUrl && (typeof data.previewUrl === 'string' ? data.previewUrl : data.previewUrl.url)}
             isAnimated={data.previewUrl && data.previewUrl.isAnimated}
-            alt={typeof data.value === "string" ? data.value : ""} />
+            alt={typeof data.value === 'string' ? data.value : ''} />
         )}
         <ValueComponent {...valueProps} />
         {isAFileLink && data.fileSize ?
@@ -124,6 +124,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
 };
 
 export const ValueField = ValueFieldBase(true);
-ValueField.displayName = "ValueField";
+ValueField.displayName = 'ValueField';
 export const PrintViewValueField = ValueFieldBase(false);
-PrintViewValueField.displayName = "PrintViewValueField";
+PrintViewValueField.displayName = 'PrintViewValueField';
