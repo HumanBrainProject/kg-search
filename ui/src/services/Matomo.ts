@@ -32,7 +32,8 @@
  *   limitations under the License.
  *
  */
-import ReactPiwik, { PiwikOptions } from "react-piwik";
+import ReactPiwik from "react-piwik";
+import type { PiwikOptions } from "react-piwik";
 
 const style = "color: #f88900;";
 

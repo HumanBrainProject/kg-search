@@ -23,22 +23,20 @@
 
 import React from "react";
 import ShareButtons from "../../../features/ShareButtons";
-import Pagination from "../../../features/search/Pagination";
 import TermsShortNotice from "../../../features/TermsShortNotice";
+import Pagination from "../../../features/search/Pagination";
 import "./Footer.css";
 
-const Footer = () => {
-  return (
-    <div className="kgs-footer">
-      <TermsShortNotice className="kgs-footer__terms-short-notice" />
-      <div className="kgs-footer-nav">
-        <Pagination />
-        <ShareButtons/>
-        <div className="kgs-space" />
-        <div className="kgs-space2" />
-      </div>
+const Footer = () => (
+  <div className="kgs-footer">
+    <TermsShortNotice className="kgs-footer__terms-short-notice" />
+    <div className="kgs-footer-nav">
+      <Pagination />
+      <ShareButtons/>
+      <div className="kgs-space" />
+      <div className="kgs-space2" />
     </div>
-  );
-};
+  </div>
+);
 
 export default Footer;

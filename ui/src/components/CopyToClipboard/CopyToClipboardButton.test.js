@@ -21,10 +21,10 @@
  *
  */
 
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import React from "react";
 import renderer from "react-test-renderer";
 import CopyToClipboardButton from "./CopyToClipboardButton";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
 test("CopyToClipboardButton component renders initially", () => {
   const component = renderer.create(

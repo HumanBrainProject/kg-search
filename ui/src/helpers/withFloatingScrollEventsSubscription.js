@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
 import uniqueId from "lodash/uniqueId";
+import React from "react";
 import { windowHeight } from "../helpers/BrowserHelpers";
 
 const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";

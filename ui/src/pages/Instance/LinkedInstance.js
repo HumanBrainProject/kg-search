@@ -24,8 +24,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Field } from "../Field/Field";
 import FieldsPanel from "../../components/Field/FieldsPanel";
+import { Field } from "../Field/Field";
 
 import "./LinkedInstance.css";
 

@@ -32,10 +32,11 @@
  *   limitations under the License.
  *
  */
-import TokenProvider from "./TokenProvider";
-import UnauthorizedRequestResponseHandlerProvider from "./UnauthorizedRequestResponseHandlerProvider";
+import type TokenProvider from "./TokenProvider";
+import type UnauthorizedRequestResponseHandlerProvider from "./UnauthorizedRequestResponseHandlerProvider";
 
-export default interface AuthAdapter {
+interface AuthAdapter {
     get tokenProvider(): TokenProvider|undefined;
     get unauthorizedRequestResponseHandlerProvider(): UnauthorizedRequestResponseHandlerProvider|undefined;
 }
+export default AuthAdapter;

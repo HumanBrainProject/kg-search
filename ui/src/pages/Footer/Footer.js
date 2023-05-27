@@ -106,7 +106,7 @@ const Footer = ({ commit, theme }) => (
             <svg className="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-facebook" viewBox="0 0 40 40"
               fill="none">
               <path d="M26 10h-3a5 5 0 00-5 5v3h-3v4h3v8h4v-8h3l1-4h-4v-3a1 1 0 011-1h3v-4z" stroke="currentColor"
-                strokeLinecap="round" strokeLinejoin="round"></path>
+                strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </li>
@@ -115,7 +115,7 @@ const Footer = ({ commit, theme }) => (
             <svg className="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-twitter" viewBox="0 0 40 40" fill="none">
               <path
                 d="M31 11a10.897 10.897 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 0111 12s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5 0-.278-.028-.556-.08-.83A7.72 7.72 0 0031 11v0z"
-                stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+                stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </li>
@@ -130,8 +130,8 @@ const Footer = ({ commit, theme }) => (
         <li>
           <a href="https://www.instagram.com/ebrains_eu/" target="_blank" rel="noopener noreferrer" title="Instagram">
             <svg className="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-instagram" viewBox="0 0 40 40" fill="none">
-              <path d="M25 10H15a5 5 0 00-5 5v10a5 5 0 005 5h10a5 5 0 005-5V15a5 5 0 00-5-5z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-              <path d="M24 19.37a4 4 0 11-7.914 1.173A4 4 0 0124 19.37zM25.5 14.5h.01" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+              <path d="M25 10H15a5 5 0 00-5 5v10a5 5 0 005 5h10a5 5 0 005-5V15a5 5 0 00-5-5z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M24 19.37a4 4 0 11-7.914 1.173A4 4 0 0124 19.37zM25.5 14.5h.01" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </li>
@@ -145,7 +145,7 @@ const Footer = ({ commit, theme }) => (
         <li>
           <a href="https://www.linkedin.com/company/ebrains-eu" target="_blank" rel="noopener noreferrer" title="Linkedin">
             <svg className="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-linkedin" viewBox="0 0 40 40" fill="none">
-              <path d="M24 16a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6v0zM14 17h-4v12h4V17zM12 14a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+              <path d="M24 16a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6v0zM14 17h-4v12h4V17zM12 14a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </li>

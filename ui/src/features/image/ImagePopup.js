@@ -23,19 +23,17 @@
 
 import { connect } from "react-redux";
 
+import Component from "../../components/ImagePopup/ImagePopup";
 import { showImage } from "../instance/instanceSlice";
 
-import Component from "../../components/ImagePopup/ImagePopup";
 
 const ImagePopup = connect(
-  (state, props) => {
-    return {
-      className: props.className,
-      src: state.instance?.image?.url,
-      label: (state.instance.image && state.instance.image.label) ? state.instance.image.label : "",
-      link: state.instance?.image?.link
-    };
-  },
+  (state, props) => ({
+    className: props.className,
+    src: state.instance?.image?.url,
+    label: (state.instance.image && state.instance.image.label) ? state.instance.image.label : "",
+    link: state.instance?.image?.link
+  }),
   dispatch => ({
     onClick: () => {
       dispatch(showImage(undefined));

@@ -51,9 +51,7 @@ export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
 
   const nbToDisplay = Math.min(maxSizeStop, sizeStop);
   return items
-    .filter((_item, idx) => {
-      return idx < nbToDisplay;
-    })
+    .filter((_item, idx) => idx < nbToDisplay)
     .map((item, idx) => ({
       isObject: !!item.children,
       key: getKey(item, idx),

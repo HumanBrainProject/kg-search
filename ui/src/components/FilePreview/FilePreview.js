@@ -57,12 +57,12 @@ const FilePreview = ({ url, title }) => {
     <>
       {loading && (
         <>
-          <div className="spinner-border spinner-border-sm" role="status"></div>
+          <div className="spinner-border spinner-border-sm" role="status" />
           &nbsp;Retrieving {title?title:"file"}...
         </>
       )}
       {tryLoadSuccess && (
-        <iframe src={url} height="850" style={{width: "100%"}} onLoad={handleOnLoad} ></iframe>
+        <iframe src={url} height="850" style={{width: "100%"}} onLoad={handleOnLoad}  />
       )}
     </>
   );

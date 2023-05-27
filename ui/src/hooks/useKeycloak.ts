@@ -21,10 +21,11 @@
  *
  */
 
+import Keycloak from "keycloak-js";
 import { useState } from "react";
-import Keycloak, { KeycloakError } from "keycloak-js";
-import Auth from "../services/Auth";
-import KeycloakAuthAdapter from "../services/KeycloakAuthAdapter";
+import type Auth from "../services/Auth";
+import type KeycloakAuthAdapter from "../services/KeycloakAuthAdapter";
+import type { KeycloakError } from "keycloak-js";
 
 const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Auth => {
 

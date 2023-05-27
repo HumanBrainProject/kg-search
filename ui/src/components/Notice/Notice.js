@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import "./Notice.css";

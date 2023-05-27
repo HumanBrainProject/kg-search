@@ -22,8 +22,8 @@
  */
 
 import { connect } from "react-redux";
-import { showImage } from "../instance/instanceSlice";
 import { ImageCarousel } from "../../components/Carousel/ImageCarousel";
+import { showImage } from "../instance/instanceSlice";
 
 export const ImagePreviews = connect(
   (_state, props) => {

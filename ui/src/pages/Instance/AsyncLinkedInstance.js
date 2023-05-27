@@ -20,13 +20,13 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
+import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useLocation, matchPath } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
-import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
-import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 
 import { useGetLinkedInstanceQuery, useGetLinkedPreviewQuery, getError } from "../../services/api";
 

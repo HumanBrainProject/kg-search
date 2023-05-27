@@ -21,11 +21,12 @@
  *
  */
 
-import React, { JSX } from "react";
+import React from "react";
 
 import AuthContext from "../../contexts/AuthContext";
-import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
 import useKeycloak from "../../hooks/useKeycloak";
+import type KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
+import type { JSX } from "react";
 
 interface KeycloakAuthProviderProps {
   adapter: KeycloakAuthAdapter;

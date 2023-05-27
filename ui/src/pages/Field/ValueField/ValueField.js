@@ -22,11 +22,11 @@
  */
 
 import React from "react";
-import { termsOfUse } from "../../../data/termsOfUse.js";
 import { Details } from "../../../components/Details/Details";
-import { Text } from "../../../components/Text/Text";
 import { Link } from "../../../components/Link/Link";
 import { Tag } from "../../../components/Tag/Tag";
+import { Text } from "../../../components/Text/Text";
+import { termsOfUse } from "../../../data/termsOfUse.js";
 import Thumbnail from "../../../features/image/Thumbnail";
 import InstanceLink from "../../../features/instance/InstanceLink";
 import "./ValueField.css";

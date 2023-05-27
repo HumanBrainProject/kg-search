@@ -22,8 +22,8 @@
  */
 
 import React from "react";
-import DynamicCitation from "./DynamicCitation";
 import Citation from "./Citation";
+import DynamicCitation from "./DynamicCitation";
 
 const CitationComponent = ({ item, onCitationDownloaded }) => {
 

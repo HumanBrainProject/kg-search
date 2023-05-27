@@ -36,7 +36,7 @@ export const Text = ({ content, isMarkdown }) => {
   if (!isMarkdown) {
     const html_text = typeof content === "string" && content.replace(/<[^>]+!span>/g, ""); //NOSONAR
     return (
-      <span dangerouslySetInnerHTML={{ __html: html_text }}></span>
+      <span dangerouslySetInnerHTML={{ __html: html_text }} />
     );
   }
 
@@ -54,7 +54,7 @@ export const Text = ({ content, isMarkdown }) => {
     .replace(/<\/li>\n<\/ol>/g, "</li></ol>");
 
   return (
-    <span className="field-markdown" dangerouslySetInnerHTML={{ __html: html }}></span>
+    <span className="field-markdown" dangerouslySetInnerHTML={{ __html: html }} />
   );
 };
 

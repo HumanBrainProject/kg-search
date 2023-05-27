@@ -21,10 +21,10 @@
  *
  */
 
-import React, { useMemo } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useMemo } from "react";
 
 import { Select } from "../../../components/Select/Select";
 
@@ -56,7 +56,7 @@ const FileFilterComponent = ({ title, value, list, error, isLoading, onSelect, o
   if (isLoading) {
     return (
       <div className="kgs-fileFilter__info">
-        <div className="spinner-border spinner-border-sm" role="status"></div>
+        <div className="spinner-border spinner-border-sm" role="status" />
         &nbsp;Retrieving {title}...
       </div>
     );

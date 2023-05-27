@@ -33,8 +33,8 @@
  *   limitations under the License.
  *
  */
-import TokenProvider from "./TokenProvider";
-export default interface Auth {
+import type TokenProvider from "./TokenProvider";
+ interface Auth {
   tokenProvider?: TokenProvider;
   isTokenExpired?: boolean;
   error?: string;
@@ -51,3 +51,4 @@ export default interface Auth {
   login(): Promise<void>;
   logout(): Promise<void>;
 }
+export default Auth;

@@ -32,13 +32,11 @@ import "./ListField.css";
 
 const ListFieldBase = (renderUserInteractions = true) => {
 
-  const DefaultList = ({children}) => {
-    return (
-      <ul>
-        {children}
-      </ul>
-    );
-  };
+  const DefaultList = ({children}) => (
+    <ul>
+      {children}
+    </ul>
+  );
 
   const CustomList = ({className, children}) => (
     <span className={className}>

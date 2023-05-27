@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
 
 import "./Citation.css";

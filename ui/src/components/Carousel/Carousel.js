@@ -21,12 +21,12 @@
  *
  */
 
-import React, { useEffect, useRef, useMemo } from "react";
-import uniqueId from "lodash/uniqueId";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import uniqueId from "lodash/uniqueId";
 import PropTypes from "prop-types";
+import React, { useEffect, useRef, useMemo } from "react";
 
 import { isMobile } from "../../helpers/BrowserHelpers";
 

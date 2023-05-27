@@ -24,11 +24,11 @@ import React, { Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import FetchingPanel from "../../../components/FetchingPanel/FetchingPanel";
+import ShareButtons from "../../../features/ShareButtons";
 import { reset } from "../../../features/instance/instanceSlice";
 
-import ShareButtons from "../../../features/ShareButtons";
 import InstanceView from "../../Instance/InstanceView";
-import FetchingPanel from "../../../components/FetchingPanel/FetchingPanel";
 
 const Carousel = React.lazy(() => import("../../../components/Carousel/Carousel"));
 

@@ -21,12 +21,12 @@
  *
  */
 
+import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./BgError.css";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 

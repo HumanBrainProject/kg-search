@@ -21,18 +21,19 @@
  *
  */
 
-import React, { useEffect, useState, JSX } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { useGetSettingsQuery, getError } from "../../services/api";
-import { setCommit } from "../application/applicationSlice";
+import BgError from "../../components/BgError/BgError";
+import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
+import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
 import Matomo from "../../services/Matomo";
 import Sentry from "../../services/Sentry";
-import AuthAdapter from "../../services/AuthAdapter";
-import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
+import { useGetSettingsQuery, getError } from "../../services/api";
+import { setCommit } from "../application/applicationSlice";
+import type AuthAdapter from "../../services/AuthAdapter";
 
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import BgError from "../../components/BgError/BgError";
+import type { JSX } from "react";
 
 interface SettingsProps {
   authAdapter?: AuthAdapter;

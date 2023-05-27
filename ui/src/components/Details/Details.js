@@ -21,12 +21,12 @@
  *
  */
 
-import React, { useState } from "react";
-import { Text } from "../Text/Text";
 import "./Details.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import { Text } from "../Text/Text";
 
 export const Details = ({ toggleLabel, content, asPopup }) => {
   const [collapsed, setCollapsed] = useState(true);

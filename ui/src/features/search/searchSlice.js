@@ -22,9 +22,9 @@
  */
 import { createSlice } from "@reduxjs/toolkit";
 
+import { resetFacet, constructFacet } from "../../helpers/Facets";
 import { api } from "../../services/api";
 
-import { resetFacet, constructFacet } from "../../helpers/Facets";
 
 const resolveType = (type, list) => {
   const value = Array.isArray(type)?type[0]:type;

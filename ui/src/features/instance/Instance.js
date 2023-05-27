@@ -25,14 +25,14 @@ import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { useGetInstanceQuery, useGetPreviewQuery, getError } from "../../services/api";
-import Matomo from "../../services/Matomo";
-import { setInstance, reset } from "./instanceSlice";
-import { selectIsCurated } from "../groups/groupsSlice";
-import useAuth from "../../hooks/useAuth";
-
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
 import ErrorPanel from "../../components/ErrorPanel/ErrorPanel";
+import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
+import useAuth from "../../hooks/useAuth";
+import Matomo from "../../services/Matomo";
+import { useGetInstanceQuery, useGetPreviewQuery, getError } from "../../services/api";
+import { selectIsCurated } from "../groups/groupsSlice";
+import { setInstance, reset } from "./instanceSlice";
+
 
 const Instance = ({ isPreview, isSearch, path }) => {
 

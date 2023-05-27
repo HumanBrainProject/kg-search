@@ -21,12 +21,12 @@
  *
  */
 
-import React, { useState, Suspense, useMemo } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, Suspense, useMemo } from "react";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
 
 const CitationsList = React.lazy(() => import("./CitationsList"));
@@ -37,7 +37,7 @@ const converter = new showdown.Converter({extensions: [xssFilter]});
 
 const Loading = () => (
   <>
-    <div className="spinner-border spinner-border-sm" role="status"></div>
+    <div className="spinner-border spinner-border-sm" role="status" />
     &nbsp;Loading...
   </>
 );
@@ -104,7 +104,7 @@ const Citations = ({ data }) => {
           </>
           :
           <div className="kgs-citations-spinner">
-            <span className="spinner-border spinner-border-sm" role="status"></span>
+            <span className="spinner-border spinner-border-sm" role="status" />
             Retrieving citations ({number + errors}/{total})...
           </div>
         }

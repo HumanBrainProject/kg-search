@@ -21,10 +21,10 @@
  *
  */
 
-import React, { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect } from "react";
 
 import { useGetCitationQuery, useGetBibtexQuery } from "../../../services/api";
 
@@ -58,7 +58,7 @@ const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
   if(citation.isUninitialized || citation.isFetching) {
     return (
       <div className="kgs-citation kgs-citation-spinner">
-        <span className="spinner-border spinner-border-sm" role="status"></span>
+        <span className="spinner-border spinner-border-sm" role="status" />
         Retrieving citation{title?` for ${title}`:""}...
       </div>
     );

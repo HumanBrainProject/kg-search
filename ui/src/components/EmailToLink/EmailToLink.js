@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import "./EmailToLink.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PropTypes from "prop-types";
+import React from "react";
+import "./EmailToLink.css";
 
 const EmailToLink = ({className, title = "Send search link by email", text, icon=faEnvelope, link}) => {
   const classNames = ["kgs-email-link", className].join(" ");

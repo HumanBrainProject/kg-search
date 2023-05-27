@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import "./Toggle.css";
 
 const ToggleItem = ({label, value, isActive, onClick}) => {

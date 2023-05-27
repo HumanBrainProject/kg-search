@@ -25,16 +25,16 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { requestInstance, setTab, selectTypeMapping } from "../../features/instance/instanceSlice";
+import BgError from "../../components/BgError/BgError";
+import Disclaimer from "../../components/Disclaimer/Disclaimer";
+import OutdatedVersionDisclaimer from "../../components/OutdatedVersionDisclaimer";
+import TermsShortNotice from "../../features/TermsShortNotice";
 import { selectIsDefaultGroup, selectGroupLabel } from "../../features/groups/groupsSlice";
+import ImagePopup from "../../features/image/ImagePopup";
+import { requestInstance, setTab, selectTypeMapping } from "../../features/instance/instanceSlice";
 import Matomo from "../../services/Matomo";
 
 import Header from "./Header/Header";
-import ImagePopup from "../../features/image/ImagePopup";
-import TermsShortNotice from "../../features/TermsShortNotice";
-import Disclaimer from "../../components/Disclaimer/Disclaimer";
-import BgError from "../../components/BgError/BgError";
-import OutdatedVersionDisclaimer from "../../components/OutdatedVersionDisclaimer";
 import Tabs from "./Tabs/Tabs";
 
 import "./InstanceView.css";

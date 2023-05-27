@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import { connect } from "react-redux";
 
 import { windowWidth } from "../../helpers/BrowserHelpers";
 import { setPage } from "./searchSlice";

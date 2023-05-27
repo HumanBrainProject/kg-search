@@ -23,8 +23,8 @@
 
 import React from "react";
 
-import Auth from "../services/Auth";
 import AuthContext from "../contexts/AuthContext";
+import type Auth from "../services/Auth";
 
 const useAuth = ():Auth => {
   const auth = React.useContext<Auth|undefined>(AuthContext);

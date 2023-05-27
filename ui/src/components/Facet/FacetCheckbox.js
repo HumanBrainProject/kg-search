@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
 import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
 import "./FacetCheckbox.css";
 

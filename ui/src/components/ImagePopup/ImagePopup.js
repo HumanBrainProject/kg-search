@@ -21,12 +21,12 @@
  *
  */
 
+import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect, useRef } from "react";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
 import "./ImagePopup.css";
 
@@ -93,7 +93,7 @@ const ImagePopup = ({ className, src, label, link, onClick }) => {
                   <div className="kgs-image_popup-label-wrapper">
                     <p className="kgs-image_popup-label">{label}</p>
                   </div>)}
-                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></div>}
+                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }} />}
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>

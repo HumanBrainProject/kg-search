@@ -20,16 +20,17 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { configureStore, combineReducers, Middleware, Dispatch, ConfigureStoreOptions } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { logger } from "redux-logger";
 
 import applicationReducer from "../features/application/applicationSlice";
 import groupsReducer from "../features/groups/groupsSlice";
-import searchReducer from "../features/search/searchSlice";
 import instanceReducer from "../features/instance/instanceSlice";
+import searchReducer from "../features/search/searchSlice";
 import { api } from "./api";
 import authConnector from "./authConnector";
-import { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+import type { Middleware, Dispatch, ConfigureStoreOptions } from "@reduxjs/toolkit";
+import type { CurriedGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
 
 const rootReducer = combineReducers({
   application: applicationReducer,

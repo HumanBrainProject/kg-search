@@ -21,13 +21,13 @@
  *
  */
 import React, { useEffect } from "react";
-import { Field } from "../../Field/Field";
+import { useDispatch } from "react-redux";
 import FieldsPanel from "../../../components/Field/FieldsPanel";
 import { ImagePreviews } from "../../../features/image/ImagePreviews";
 import "./Tabs.css";
 import "./Overview.css";
-import { useDispatch } from "react-redux";
 import { setTab } from "../../../features/instance/instanceSlice";
+import { Field } from "../../Field/Field";
 
 const Tab = ({tab, active, onClick}) => {
 

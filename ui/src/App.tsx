@@ -23,32 +23,26 @@
 
 import React, { useEffect, useState, useRef, Suspense } from "react";
 import { Provider, useDispatch } from "react-redux";
-import { Store } from "redux";
 import { BrowserRouter, Route, Routes, Navigate, useLocation, useNavigate, matchPath } from "react-router-dom";
-
 import "normalize.css/normalize.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-
+import FetchingPanel from "./components/FetchingPanel/FetchingPanel";
+import Notification from "./components/Notification/Notification";
 import notification from "./data/notification";
-
-import AuthAdapter from "./services/AuthAdapter";
+import ErrorBoundary from "./features/ErrorBoundary";
+import { InfoPanel } from "./features/InfoPanel";
 import AuthProvider from "./features/auth/AuthProvider";
-import { setInitialGroup, setUseGroups } from "./features/groups/groupsSlice";
-
-import { searchToObj, getHashKey } from "./helpers/BrowserHelpers";
-
-import Settings from "./features/settings/Settings";
 import Authenticate from "./features/auth/Authenticate";
 import Groups from "./features/groups/Groups";
-
-import { InfoPanel } from "./features/InfoPanel";
-import ErrorBoundary from "./features/ErrorBoundary";
+import { setInitialGroup, setUseGroups } from "./features/groups/groupsSlice";
+import Settings from "./features/settings/Settings";
+import Theme from "./features/theme/Theme";
+import { searchToObj, getHashKey } from "./helpers/BrowserHelpers";
 import Footer from "./pages/Footer/Footer";
 import Header from "./pages/Header/Header";
-import Theme from "./features/theme/Theme";
-import Notification from "./components/Notification/Notification";
-import FetchingPanel from "./components/FetchingPanel/FetchingPanel";
+import type AuthAdapter from "./services/AuthAdapter";
+import type { Store } from "redux";
 
 const Search = React.lazy(() => import("./pages/Search"));
 const Instance = React.lazy(() => import("./pages/Instance"));

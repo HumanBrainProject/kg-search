@@ -23,11 +23,11 @@
 
 import { connect } from "react-redux";
 
-import { agreeTermsShortNotice } from "./application/applicationSlice";
 
 import { Notice } from "../components/Notice/Notice";
 
 import { termsShortNotice, termsShortNoticeUpdate } from "../data/termsShortNotice";
+import { agreeTermsShortNotice } from "./application/applicationSlice";
 
 const TermsShortNotice = connect(
   (state, props) => ({

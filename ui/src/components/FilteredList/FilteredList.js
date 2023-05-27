@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
+import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
 import { List } from "../List/List";
 

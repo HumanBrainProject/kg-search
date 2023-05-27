@@ -32,7 +32,7 @@
  *   limitations under the License.
  *
  */
-import AuthAdapter from "./AuthAdapter";
+import type AuthAdapter from "./AuthAdapter";
 
 class AuthConnector {
   private _authAdapter?: AuthAdapter;

@@ -32,15 +32,15 @@
  *   limitations under the License.
  *
  */
-import {
+import KeyCloakTokenProvider from "./KeycloakTokenProvider";
+import UnauthorizedRequestResponseHandlerProvider from "./UnauthorizedRequestResponseHandlerProvider";
+import type AuthAdapter from "./AuthAdapter";
+import type {
   KeycloakInstance,
   KeycloakConfig,
   KeycloakInitOptions,
   KeycloakOnLoad
 } from "keycloak-js";
-import KeyCloakTokenProvider from "./KeycloakTokenProvider";
-import UnauthorizedRequestResponseHandlerProvider from "./UnauthorizedRequestResponseHandlerProvider";
-import AuthAdapter from "./AuthAdapter";
 
 class KeycloakAuthAdapter implements AuthAdapter {
   private _tokenProvider: KeyCloakTokenProvider;

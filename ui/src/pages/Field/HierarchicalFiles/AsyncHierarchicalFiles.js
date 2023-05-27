@@ -20,13 +20,14 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, matchPath } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
-import { faSyncAlt } from "@fortawesome/free-solid-svg-icons/faSyncAlt";
 
+import Matomo from "../../../services/Matomo";
 import {
   useListFilesQuery,
   useListPreviewFilesQuery,
@@ -36,14 +37,13 @@ import {
   useListPreviewGroupingTypesQuery,
   getError
 } from "../../../services/api";
-import Matomo from "../../../services/Matomo";
 
 import { FileFilter } from "./FileFilter";
 import HierarchicalFiles from "./HierarchicalFiles";
 
 const FetchingFiles = () => (
   <span>
-    <div className="spinner-border spinner-border-sm" role="status"></div>
+    <div className="spinner-border spinner-border-sm" role="status" />
     &nbsp;Retrieving Files...
   </span>
 );

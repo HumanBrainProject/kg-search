@@ -21,10 +21,10 @@
  *
  */
 
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 
 import "./PreviousInstanceLinkButton.css";
 

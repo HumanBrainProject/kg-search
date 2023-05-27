@@ -25,13 +25,11 @@ import React from "react";
 
 import "./ObjectField.css";
 
-const DefaultList = ({ className, children }) => {
-  return (
-    <ul className={className}>
-      {children}
-    </ul>
-  );
-};
+const DefaultList = ({ className, children }) => (
+  <ul className={className}>
+    {children}
+  </ul>
+);
 
 const CustomList = ({ className, children }) => (
   <span className={className}>

@@ -25,19 +25,19 @@ import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import Instance from "../../features/instance/Instance";
-import InstanceView from "./InstanceView";
+import Notification from "../../components/Notification/Notification";
 import PreviousInstanceLinkButton from "../../components/PreviousInstanceLinkButton/PreviousInstanceLinkButton";
 import Watermark from "../../components/Watermark/Watermark";
-import Notification from "../../components/Notification/Notification";
 
 import { setGroup } from "../../features/groups/groupsSlice";
+import Instance from "../../features/instance/Instance";
 import { requestInstance, syncHistory, selectPreviousInstance } from "../../features/instance/instanceSlice";
 
 import { getUpdatedQuery, getLocationSearchFromQuery, searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
 import useScript from "../../hooks/useScript";
+import InstanceView from "./InstanceView";
 
 const InstanceContainer = ({ instanceId, path, isPreview, warning, watermark }) => {
 

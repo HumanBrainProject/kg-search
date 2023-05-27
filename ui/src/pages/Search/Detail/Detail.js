@@ -24,8 +24,8 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import DetailView  from "./DetailView";
 import Instance from "../../../features/instance/Instance";
+import DetailView  from "./DetailView";
 
 const Detail = () => {
 

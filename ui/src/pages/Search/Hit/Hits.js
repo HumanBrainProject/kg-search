@@ -24,8 +24,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import Matomo from "../../../services/Matomo";
 import { requestInstance } from "../../../features/instance/instanceSlice";
+import Matomo from "../../../services/Matomo";
 
 import { Hit } from "./Hit";
 

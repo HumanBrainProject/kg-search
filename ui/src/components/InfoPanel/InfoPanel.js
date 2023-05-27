@@ -21,12 +21,12 @@
  *
  */
 
-import React, { useRef } from "react";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
+import React, { useRef } from "react";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
 import "./InfoPanel.css";
 

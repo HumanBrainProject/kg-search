@@ -22,24 +22,24 @@
  */
 
 import React, { useMemo } from "react";
+import Citations from "../../components/Field/Citation/Citations";
+import DynamicCitation from "../../components/Field/Citation/DynamicCitation";
+import MarkDownCitation from "../../components/Field/Citation/MarkDownCitation";
 import { FieldLabel } from "../../components/Field/FieldLabel";
-import { Hint } from "../../components/Hint/Hint";
 import {
   ListField,
   PrintViewListField
 } from "../../components/Field/ListField";
-import ObjectField from "../../components/Field/ObjectField";
-import { ValueField, PrintViewValueField } from "./ValueField/ValueField";
 import Mermaid from "../../components/Field/Mermaid";
+import ObjectField from "../../components/Field/ObjectField";
 import TableField from "../../components/Field/TableField";
-import HierarchicalTree from "./HierarchicalTree/HierarchicalTree";
-import HierarchicalFiles from "./HierarchicalFiles/HierarchicalFiles";
-import AsyncHierarchicalFiles from "./HierarchicalFiles/AsyncHierarchicalFiles";
 import FilePreview from "../../components/FilePreview/FilePreview";
-import Citations from "../../components/Field/Citation/Citations";
-import MarkDownCitation from "../../components/Field/Citation/MarkDownCitation";
-import DynamicCitation from "../../components/Field/Citation/DynamicCitation";
+import { Hint } from "../../components/Hint/Hint";
 import Text from "../../components/Text/Text";
+import AsyncHierarchicalFiles from "./HierarchicalFiles/AsyncHierarchicalFiles";
+import HierarchicalFiles from "./HierarchicalFiles/HierarchicalFiles";
+import HierarchicalTree from "./HierarchicalTree/HierarchicalTree";
+import { ValueField, PrintViewValueField } from "./ValueField/ValueField";
 
 import "./Field.css";
 

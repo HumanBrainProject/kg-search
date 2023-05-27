@@ -21,18 +21,18 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
 import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
+import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import useAuth from "../../hooks/useAuth";
 import Matomo from "../../services/Matomo";
 import { setGroup } from "../groups/groupsSlice";
-import { setPage } from "../search/searchSlice";
 import { reset } from "../instance/instanceSlice";
+import { setPage } from "../search/searchSlice";
 
 import "./SignIn.css";
 
@@ -95,7 +95,7 @@ const SignIn = ({ className, Tag }) => {
           {!isLogingOut && (
             <>
               {!!groups.length && (
-                <div className="dropdown-divider"></div>
+                <div className="dropdown-divider" />
               )}
               <div className="dropdown-item">
                 <button onClick={handleLogoutClick}><FontAwesomeIcon icon={faSignOutAlt} style={{marginRight: "4px"}} />Logout</button>

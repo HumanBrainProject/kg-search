@@ -21,14 +21,14 @@
  *
  */
 
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
 
 import { InfoPanel } from "../../../components/InfoPanel/InfoPanel";
 
-import Matomo from "../../../services/Matomo";
 import { termsOfUse } from "../../../data/termsOfUse.js";
+import Matomo from "../../../services/Matomo";
 
 import "./Download.css";
 

@@ -20,10 +20,10 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useRef, useState } from "react";
-import mermaid from "mermaid";
-import { uniqueId } from "lodash";
 import * as d3 from "d3";
+import { uniqueId } from "lodash";
+import mermaid from "mermaid";
+import React, { useEffect, useRef, useState } from "react";
 import LinkedInstance from "../../pages/Instance/LinkedInstance";
 
 import "./Mermaid.css";

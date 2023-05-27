@@ -21,18 +21,18 @@
  *
  */
 
-import React, { Suspense } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
 import { faFolder } from "@fortawesome/free-solid-svg-icons/faFolder";
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { debounce } from "lodash";
+import React, { Suspense } from "react";
 const Tree = React.lazy(() => import("rc-tree"));
 
 import Matomo from "../../../services/Matomo";
-import Download from "./Download";
-import LinkedInstance from "../../Instance/LinkedInstance";
 import AsyncLinkedInstance from "../../Instance/AsyncLinkedInstance";
+import LinkedInstance from "../../Instance/LinkedInstance";
+import Download from "./Download";
 import { getTreeByFolder } from "./FileTreeByFolderHelper";
 import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper";
 import * as filters from "./helpers";
@@ -40,14 +40,12 @@ import * as filters from "./helpers";
 import "./HierarchicalFiles.css";
 import "rc-tree/assets/index.css";
 
-const Loading = () => {
-  return (
-    <>
-      <div className="spinner-border spinner-border-sm" role="status"></div>
+const Loading = () => (
+  <>
+    <div className="spinner-border spinner-border-sm" role="status" />
       &nbsp;Loading files...
-    </>
-  );
-};
+  </>
+);
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {

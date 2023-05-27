@@ -25,8 +25,8 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import Matomo from "../../../services/Matomo";
 import { setQueryString } from "../../../features/search/searchSlice";
+import Matomo from "../../../services/Matomo";
 
 import "./HitsInfo.css";
 

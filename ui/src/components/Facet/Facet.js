@@ -22,13 +22,11 @@
  */
 
 import React from "react";
-
-import { PaginatedList } from "../PaginatedList/PaginatedList";
 import { FilteredList } from "../FilteredList/FilteredList";
-import Tree from "../Tree/Tree";
 import { Item } from "../List/List";
+import { PaginatedList } from "../PaginatedList/PaginatedList";
+import Tree from "../Tree/Tree";
 import FacetCheckbox from "./FacetCheckbox";
-
 import "./Facet.css";
 
 const Facet = ({ facet, onChange, onViewChange }) => {

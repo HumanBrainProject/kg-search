@@ -32,7 +32,8 @@
  *   limitations under the License.
  *
  */
-import { init, BrowserOptions, ReportDialogOptions, captureException as SentryCaptureException, showReportDialog as SentryShowReportDialog } from "@sentry/browser";
+import { init, captureException as SentryCaptureException, showReportDialog as SentryShowReportDialog } from "@sentry/browser";
+import type { BrowserOptions, ReportDialogOptions} from "@sentry/browser";
 
 class Sentry {
   private _isInitialized: boolean;

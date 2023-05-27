@@ -33,13 +33,14 @@
  *
  */
 
-import React, { useEffect, JSX } from "react";
-import Auth from "../../services/Auth";
+import React, { useEffect } from "react";
 import AuthContext from "../../contexts/AuthContext";
-import AuthAdapter from "../../services/AuthAdapter";
-import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
 import useAuth from "../../hooks/useAuth";
+import KeycloakAuthAdapter from "../../services/KeycloakAuthAdapter";
 import KeycloakAuthProvider from "./KeycloakAuthProvider";
+import type Auth from "../../services/Auth";
+import type AuthAdapter from "../../services/AuthAdapter";
+import type { JSX } from "react";
 
 /* For debugging purpose only, when running the ui app locally but connecting to
  * backend prod (where keycloak is not allowing localhost),

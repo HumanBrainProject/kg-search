@@ -1,13 +1,12 @@
-import { FetchBaseQueryError, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import sanitizeHtml from "sanitize-html";
 
 import authConnector from "./authConnector";
-import { SerializedError } from "@reduxjs/toolkit";
+import type { SerializedError } from "@reduxjs/toolkit";
+import type { FetchBaseQueryError} from "@reduxjs/toolkit/query/react";
 
 const regLegacyInstanceId = /^.+\/(.+)$/; //NOSONAR
-const isMatchingLegacyInstanceId = (instanceId: string) => {
-  return regLegacyInstanceId.test(instanceId);
-};
+const isMatchingLegacyInstanceId = (instanceId: string) => regLegacyInstanceId.test(instanceId);
 
 interface QueryResultData {
   id?: string;
@@ -182,7 +181,7 @@ export const {
 } = api;
 
 interface ErrorStatusText {
-  [key:number] : string
+  [key:number] : string;
 }
 
 const errorStatusText: ErrorStatusText = {

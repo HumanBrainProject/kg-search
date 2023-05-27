@@ -21,11 +21,11 @@
  *
  */
 
+import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
+import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import React from "react";
 import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboardButton";
 import EmailToLink from "../EmailToLink/EmailToLink";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
-import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 
 import "./ShareButtons.css";
 

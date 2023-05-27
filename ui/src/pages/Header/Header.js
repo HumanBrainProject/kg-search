@@ -1,12 +1,12 @@
+import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
-
-import { reset } from "../../features/instance/instanceSlice";
 
 import SignIn from "../../features/auth/SignIn";
+import { reset } from "../../features/instance/instanceSlice";
+
 
 import "./Header.css";
 

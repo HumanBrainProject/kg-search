@@ -21,14 +21,14 @@
  *
  */
 
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-
-import { setFacet, setFacetSize, resetFacets, selectFacets } from "../../../features/search/searchSlice";
 
 import Facet from "../../../components/Facet/Facet";
+import { setFacet, setFacetSize, resetFacets, selectFacets } from "../../../features/search/searchSlice";
+
 
 import "./FiltersPanel.css";
 

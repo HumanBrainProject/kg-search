@@ -22,12 +22,12 @@
  */
 import React from "react";
 import { createRoot } from "react-dom/client";
-import store from "./services/store";
 import App from "./App";
+import store from "./services/store";
 
 // eslint-disable-next-line no-undef
 describe("Test launching the app", () => {
-  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line no-undef, jest/expect-expect
   it("renders without crashing", () => {
     const container = document.createElement("div");
     const root = createRoot(container);

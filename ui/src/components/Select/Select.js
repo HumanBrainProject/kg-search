@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import "./Select.css";
 
 export const Select = ({className, label, value, list, onChange}) => {

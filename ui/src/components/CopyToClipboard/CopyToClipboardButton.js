@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
 import "./CopyToClipboardButton.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
 const ButtonContent = ({icon, text}) => {
   if (text) {

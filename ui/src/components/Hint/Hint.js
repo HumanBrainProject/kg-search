@@ -21,12 +21,12 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import uniqueId from "lodash/uniqueId";
-import { Tooltip } from "react-tooltip";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons/faInfoCircle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import uniqueId from "lodash/uniqueId";
+import PropTypes from "prop-types";
+import React from "react";
+import { Tooltip } from "react-tooltip";
 
 import "./Hint.css";
 

@@ -21,11 +21,11 @@
  *
  */
 
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 
 import "./Notification.css";
 

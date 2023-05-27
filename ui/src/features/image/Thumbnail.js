@@ -23,9 +23,9 @@
 
 import { connect } from "react-redux";
 
+import Component from "../../components/Thumbnail/Thumbnail";
 import { showImage } from "../instance/instanceSlice";
 
-import Component from "../../components/Thumbnail/Thumbnail";
 
 export const Thumbnail = connect(
   (_state, props) => ({

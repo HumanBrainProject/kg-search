@@ -21,16 +21,17 @@
  *
  */
 
-import React, { useEffect, useRef, JSX } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import {useLocation} from "react-router-dom";
 
+import BgError from "../../components/BgError/BgError";
+import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
+import useAuth from "../../hooks/useAuth";
 import { api, getError, tagsToInvalidateOnLogout } from "../../services/api";
 
-import useAuth from "../../hooks/useAuth";
 
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import BgError from "../../components/BgError/BgError";
+import type { JSX } from "react";
 
 interface AuthenticateProps {
   children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
@@ -76,7 +77,7 @@ const Authenticate = ({children}: AuthenticateProps) => {
   const cancelLogin = () => {
     window.location.replace(location.pathname.replace("/live/", "/instances/").replace(/&?group=[^&]+/gi, ""));
   };
-  
+
   if (isTokenExpired) {
     return (
       <BgError message="Your session has expired" onCancelClick={cancelLogin} cancelLabel="Browse public webpage"  onRetryClick={login} retryLabel="Re-Login" retryVariant="primary" />

@@ -23,11 +23,11 @@
 
 import React from "react";
 
-import Tags from "../../../components/Tags/Tags";
-import { Field, Title } from "../../Field/Field";
 import FieldsPanel from "../../../components/Field/FieldsPanel";
+import Tags from "../../../components/Tags/Tags";
 import { VersionSelector } from "../../../components/VersionSelector/VersionSelector";
 import ShareButtons from "../../../features/ShareButtons";
+import { Field, Title } from "../../Field/Field";
 
 import "./Header.css";
 

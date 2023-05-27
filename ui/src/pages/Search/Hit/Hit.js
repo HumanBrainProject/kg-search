@@ -24,13 +24,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
+import Badges from "../../../components/Badges/Badges";
 import { selectTypeMapping } from "../../../features/instance/instanceSlice";
 
-import Badges from "../../../components/Badges/Badges";
+import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
 import { PrintViewField, Title } from "../../Field/Field";
 import HighlightsField from "./HighlightsField";
 
-import { formatHitForHighlight } from "../../../helpers/HitFormattingHelpers";
 
 import "./Hit.css";
 
@@ -127,9 +127,7 @@ const filterHighlightFields = (data, excludeFieldNames) => {
   }
   let hasFields = false;
   const fields = Object.entries(data)
-    .filter(([name,]) => {
-      return !(excludeFieldNames.includes(name));
-    })
+    .filter(([name,]) => !(excludeFieldNames.includes(name)))
     .reduce((result, [name, field]) => {
       hasFields = true;
       result[name] = field;
@@ -162,7 +160,7 @@ export const Hit = ({ data }) => {
         <div className={`kgs-hit__content ${badges? "has-badges":""}`}>
           <Badges badges={badges} />
           <Title key="title" text={title} />
-          <HighlightsField key="highlights" {...highlightsField}></HighlightsField>
+          <HighlightsField key="highlights" {...highlightsField} />
           {fields.map(({ name, data, mapping }) =>
             <PrintViewField key={name} name={name} data={data} mapping={mapping} />
           )}

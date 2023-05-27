@@ -25,9 +25,9 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import Count from "../../components/Field/Count";
 import { requestInstance } from "./instanceSlice";
 
-import Count from "../../components/Field/Count";
 
 const InstanceLink = ({instanceId, text, count, context}) => {
 

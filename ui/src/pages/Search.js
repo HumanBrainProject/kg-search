@@ -22,51 +22,50 @@
  */
 
 import React, { useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import {
-  useGetSearchQuery,
-  getError,
-} from "../services/api";
-import Matomo from "../services/Matomo";
+import BgError from "../components/BgError/BgError";
+import TermsShortNotice from "../features/TermsShortNotice";
+import { setGroup } from "../features/groups/groupsSlice";
+import { syncHistory } from "../features/instance/instanceSlice";
+import KnowledgeSpaceLink from "../features/search/KnowledgeSpaceLink";
+import SearchBox from "../features/search/SearchBox";
 import {
   initializeSearch,
   syncSearchParameters,
   setSearchResults,
   selectFacets
 } from "../features/search/searchSlice";
-import { syncHistory } from "../features/instance/instanceSlice";
-import { setGroup } from "../features/groups/groupsSlice";
-
-import { getAggregation } from "../helpers/Facets";
-import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
-import SearchBox from "../features/search/SearchBox";
-import TypesFilterPanel from "./Search/Facet/TypesFilterPanel";
-import FiltersPanel from "./Search/Facet/FiltersPanel";
-import HitsInfo from "./Search/HitsInfo/HitsInfo";
-import Hits from "./Search/Hit/Hits";
-import KnowledgeSpaceLink from "../features/search/KnowledgeSpaceLink";
-import Footer from "./Search/Footer/Footer";
-import TermsShortNotice from "../features/TermsShortNotice";
-import Detail from "./Search/Detail/Detail";
-import SearchFetching from "./Search/SearchFetching";
-import BgError from "../components/BgError/BgError";
 import {
   getUpdatedQuery,
   getLocationSearchFromQuery,
   searchToObj
 } from "../helpers/BrowserHelpers";
+import { getAggregation } from "../helpers/Facets";
+import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
+import Matomo from "../services/Matomo";
+import {
+  useGetSearchQuery,
+  getError,
+} from "../services/api";
+
+import Detail from "./Search/Detail/Detail";
+import FiltersPanel from "./Search/Facet/FiltersPanel";
+import TypesFilterPanel from "./Search/Facet/TypesFilterPanel";
+import Footer from "./Search/Footer/Footer";
+import Hits from "./Search/Hit/Hits";
+import HitsInfo from "./Search/HitsInfo/HitsInfo";
+import SearchFetching from "./Search/SearchFetching";
 
 import "./Search.css";
 
-const calculateFacetList = facets => {
-  return facets.reduce((acc, facet) => {
-    switch (facet.type) {
-    case "list":
-      if (facet.isHierarchical) {
-        facet.keywords.forEach(keyword => {
-          keyword.children &&
+const calculateFacetList = facets => facets.reduce((acc, facet) => {
+  switch (facet.type) {
+  case "list":
+    if (facet.isHierarchical) {
+      facet.keywords.forEach(keyword => {
+        keyword.children &&
               Array.isArray(keyword.children.keywords) &&
               keyword.children.keywords.forEach(child => {
                 acc.push({
@@ -78,34 +77,33 @@ const calculateFacetList = facets => {
                   many: true
                 });
               });
-        });
-      } else {
-        facet.keywords.forEach(keyword => {
-          acc.push({
-            name: facet.name,
-            value: keyword.value,
-            checked: Array.isArray(facet.value)
-              ? facet.value.includes(keyword.value)
-              : false,
-            many: true
-          });
-        });
-      }
-      break;
-    case "exists":
-      acc.push({
-        name: facet.name,
-        value: !!facet.value,
-        checked: !!facet.value,
-        many: false
       });
-      break;
-    default:
-      break;
+    } else {
+      facet.keywords.forEach(keyword => {
+        acc.push({
+          name: facet.name,
+          value: keyword.value,
+          checked: Array.isArray(facet.value)
+            ? facet.value.includes(keyword.value)
+            : false,
+          many: true
+        });
+      });
     }
-    return acc;
-  }, []);
-};
+    break;
+  case "exists":
+    acc.push({
+      name: facet.name,
+      value: !!facet.value,
+      checked: !!facet.value,
+      many: false
+    });
+    break;
+  default:
+    break;
+  }
+  return acc;
+}, []);
 
 const getUrlParmeters = () => {
   const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]

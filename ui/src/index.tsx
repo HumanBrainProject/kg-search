@@ -24,11 +24,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 
-import store from "./services/store";
+import App from "./App";
 import KeycloakAuthAdapter from "./services/KeycloakAuthAdapter";
 import authConnector from "./services/authConnector";
+import store from "./services/store";
 
-import App from "./App";
 
 const authAdapter = new KeycloakAuthAdapter({
   onLoad: "check-sso",

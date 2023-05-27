@@ -22,8 +22,8 @@
  */
 
 import { connect } from "react-redux";
-import { setInfo } from "./application/applicationSlice";
 import { InfoPanel as  Component } from "../components/InfoPanel/InfoPanel";
+import { setInfo } from "./application/applicationSlice";
 
 export const InfoPanel = connect(
   state => ({

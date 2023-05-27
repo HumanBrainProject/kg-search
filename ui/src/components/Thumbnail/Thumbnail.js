@@ -21,29 +21,27 @@
  *
  */
 
-import React from "react";
 import "./Thumbnail.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
+import { faFileImage } from "@fortawesome/free-solid-svg-icons/faFileImage";
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
-import { faFileImage } from "@fortawesome/free-solid-svg-icons/faFileImage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
-const getImage = url => {
-  return new Promise((resolve, reject) => {
-    if (typeof url !== "string") {
-      reject(url);
-    }
-    const img = new Image();
-    img.onload = () => {
-      resolve(url);
-    };
-    img.onerror = () => {
-      reject(url);
-    };
-    img.src = url;
-  });
-};
+const getImage = url => new Promise((resolve, reject) => {
+  if (typeof url !== "string") {
+    reject(url);
+  }
+  const img = new Image();
+  img.onload = () => {
+    resolve(url);
+  };
+  img.onerror = () => {
+    reject(url);
+  };
+  img.src = url;
+});
 
 const ThumbnailIcon = ({isAnimated}) => {
   if(isAnimated) {

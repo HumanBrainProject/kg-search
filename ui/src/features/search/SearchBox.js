@@ -20,18 +20,18 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
-import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
+import { help } from "../../data/help.js";
+import { searchToObj } from "../../helpers/BrowserHelpers";
+import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
 import { setInfo } from "../application/applicationSlice";
 import { setQueryString } from "./searchSlice";
-import { help } from "../../data/help.js";
-import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
-import { searchToObj } from "../../helpers/BrowserHelpers";
 
 import "./SearchBox.css";
 
@@ -128,13 +128,11 @@ const SeachBoxComponent = ({ queryString, isFloating, relatedElements, onHelp, o
 );
 
 const SearchBoxContainer = connect(
-  (state, props) => {
-    return {
-      isFloating: props.isFloating,
-      relatedElements: props.relatedElements,
-      queryString: state.search.queryString
-    };
-  },
+  (state, props) => ({
+    isFloating: props.isFloating,
+    relatedElements: props.relatedElements,
+    queryString: state.search.queryString
+  }),
   dispatch => ({
     onHelp: () => {
       dispatch(setInfo(help));
