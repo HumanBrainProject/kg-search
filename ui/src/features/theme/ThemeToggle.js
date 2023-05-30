@@ -21,23 +21,23 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faMoon} from "@fortawesome/free-solid-svg-icons/faMoon";
-import {faSun} from "@fortawesome/free-solid-svg-icons/faSun";
+import {faMoon} from '@fortawesome/free-solid-svg-icons/faMoon';
+import {faSun} from '@fortawesome/free-solid-svg-icons/faSun';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { setTheme } from "../application/applicationSlice";
+import { setTheme } from '../application/applicationSlice';
 
-import "./ThemeToggle.css";
+import './ThemeToggle.css';
 
 const themes = [
   {
-    name: "dark",
+    name: 'dark',
     icon: faMoon
   },
   {
-    name: "default",
+    name: 'default',
     icon: faSun
   }
 ];
@@ -53,7 +53,7 @@ const ThemeButton = ({ theme }) => {
   };
 
   return (
-    <button className={`kgs-theme_toggle__button ${(theme.name === current || (!current && theme.name === "default"))?"selected":""}`} onClick={handleClick}>
+    <button className={`kgs-theme_toggle__button ${(theme.name === current || (!current && theme.name === 'default'))?'selected':''}`} onClick={handleClick}>
       <FontAwesomeIcon icon={theme.icon} />
     </button>
   );

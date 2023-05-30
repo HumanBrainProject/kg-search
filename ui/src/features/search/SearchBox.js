@@ -20,31 +20,31 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useRef, useState, useMemo } from "react";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
-import {faInfoCircle} from "@fortawesome/free-solid-svg-icons/faInfoCircle";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import {faInfoCircle} from '@fortawesome/free-solid-svg-icons/faInfoCircle';
+import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { connect } from 'react-redux';
 
-import { setInfo } from "../application/applicationSlice";
-import { setQueryString } from "./searchSlice";
-import { help } from "../../data/help.js";
-import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
-import { searchToObj } from "../../helpers/BrowserHelpers";
+import { help } from '../../data/help.js';
+import { searchToObj } from '../../helpers/BrowserHelpers';
+import { withFloatingScrollEventsSubscription } from '../../helpers/withFloatingScrollEventsSubscription';
+import { setInfo } from '../application/applicationSlice';
+import { setQueryString } from './searchSlice';
 
-import "./SearchBox.css";
+import './SearchBox.css';
 
 const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, onHelp }) => {
   const textInput = useRef();
   const [value, setValue] = useState(queryString);
 
   const getQueryFromUrl = () => {
-    const q = searchToObj()["q"];
+    const q = searchToObj()['q'];
     if (q && q.length) {
       return decodeURIComponent(q);
     }
-    return "";
+    return '';
   };
 
   useEffect(() => {
@@ -57,8 +57,8 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
     };
 
     const blur = () => textInput && textInput.current && textInput.current.blur();
-    window.addEventListener("popstate", popstateHandler, false);
-    window.addEventListener("scroll", blur);
+    window.addEventListener('popstate', popstateHandler, false);
+    window.addEventListener('scroll', blur);
 
     const initialQuery = getQueryFromUrl();
     if (initialQuery) {
@@ -66,8 +66,8 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
     }
     textInput && textInput.current.focus();
     return () => {
-      window.removeEventListener("popstate", popstateHandler);
-      window.removeEventListener("scroll", blur);
+      window.removeEventListener('popstate', popstateHandler);
+      window.removeEventListener('scroll', blur);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -84,18 +84,18 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
   const handleSearch = useMemo(() => () => onQueryStringChange(value), [value, onQueryStringChange]);
 
   const handleReset = () => {
-    setValue("");
-    onQueryStringChange("");
+    setValue('');
+    onQueryStringChange('');
   };
 
   const handleKeyDown = useMemo(() => e => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       onQueryStringChange(value);
     }
   }, [value, onQueryStringChange]);
 
   return (
-    <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>
+    <div className={`kgs-search-panel ${isFloating ? ' is-fixed-position' : ''}`}>
       <div>
         <div>
           <FontAwesomeIcon icon={faSearch} size="2x" className="kg-search-bar__icon" />
@@ -128,13 +128,11 @@ const SeachBoxComponent = ({ queryString, isFloating, relatedElements, onHelp, o
 );
 
 const SearchBoxContainer = connect(
-  (state, props) => {
-    return {
-      isFloating: props.isFloating,
-      relatedElements: props.relatedElements,
-      queryString: state.search.queryString
-    };
-  },
+  (state, props) => ({
+    isFloating: props.isFloating,
+    relatedElements: props.relatedElements,
+    queryString: state.search.queryString
+  }),
   dispatch => ({
     onHelp: () => {
       dispatch(setInfo(help));
@@ -146,10 +144,10 @@ const SearchBoxContainer = connect(
 )(SeachBoxComponent);
 
 const SearchBox = withFloatingScrollEventsSubscription(
-  "top",
+  'top',
   [
-    { querySelector: "nav.kgs-navbar" },
-    { querySelector: ".kgs-notification" }
+    { querySelector: 'nav.kgs-navbar' },
+    { querySelector: '.kgs-notification' }
   ]
 )(SearchBoxContainer);
 

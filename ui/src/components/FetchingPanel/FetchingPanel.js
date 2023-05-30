@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
-import "./FetchingPanel.css";
+import {faCircleNotch} from '@fortawesome/free-solid-svg-icons/faCircleNotch';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import React from 'react';
+import './FetchingPanel.css';
 
 const FetchingPanel = ({ message }) => (
   <div className="kgs-fetching-container" >

@@ -21,19 +21,29 @@
  *
  */
 
-import React, { Suspense } from "react";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import { useGetSettingsQuery, getError } from "../../app/services/api";
 
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import BgError from "../../components/BgError/BgError";
+import BgError from '../../components/BgError/BgError';
+import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
+import useAuth from '../../hooks/useAuth';
+import { useListGroupsQuery, getError } from '../../services/api';
+import type { RootState } from '../../services/store';
+import type { JSX } from 'react';
 
-const Authentication = React.lazy(() => import("../auth/Authentication"));
+interface GroupsProps {
+  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+}
 
-const Settings = () => {
+const Groups = ({ children }: GroupsProps) => {
+
+  const { logout, isAuthenticated } = useAuth();
+
+  const useGroups = useSelector((state:RootState) => state.groups.useGroups) && isAuthenticated;
 
   const {
-    //data: settings,
+    //data: groups,
     error,
     isUninitialized,
     //isLoading,
@@ -41,29 +51,29 @@ const Settings = () => {
     isSuccess,
     isError,
     refetch,
-  } = useGetSettingsQuery();
+  } = useListGroupsQuery(null, { skip: !useGroups });
 
   if (isError) {
     return (
-      <BgError message={getError(error)} onRetryClick={refetch} retryLabel="Retry" retryVariant="primary" />
+      <BgError message={getError(error)} cancelLabel="Back to search" onCancelClick={logout} onRetryClick={refetch} retryVariant="primary" />
     );
   }
 
-  if(isUninitialized || isFetching) {
+  if (useGroups && (isUninitialized || isFetching)) {
     return (
-      <FetchingPanel message="Retrieving application configuration..." />
+      <FetchingPanel message="Retrieving your profile..." />
     );
   }
 
-  if (isSuccess) {
+  if (!useGroups || isSuccess) {
     return (
-      <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-        <Authentication />
-      </Suspense>
+      <>
+        {children}
+      </>
     );
   }
 
   return null;
 };
 
-export default Settings;
+export default Groups;

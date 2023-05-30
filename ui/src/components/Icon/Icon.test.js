@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import Icon from "./Icon";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import Icon from './Icon';
 
-test("Icon component renders initially", () => {
+test('Icon component renders initially', () => {
   const component = renderer.create(
     <Icon />
   );

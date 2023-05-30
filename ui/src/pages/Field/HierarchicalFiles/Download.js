@@ -21,16 +21,16 @@
  *
  */
 
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
+import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
 
-import { InfoPanel } from "../../../components/InfoPanel/InfoPanel";
+import { InfoPanel } from '../../../components/InfoPanel/InfoPanel';
 
-import { trackLink } from "../../../app/services/api";
-import { termsOfUse } from "../../../data/termsOfUse.js";
+import { termsOfUse } from '../../../data/termsOfUse.js';
+import Matomo from '../../../services/Matomo';
 
-import "./Download.css";
+import './Download.css';
 
 const Download = ({name, type, url}) => {
 
@@ -38,7 +38,7 @@ const Download = ({name, type, url}) => {
 
   const trackDownload = e => {
     e.stopPropagation();
-    trackLink(url, "download");
+    Matomo.trackLink(url, 'download');
   };
 
   const openTermsOfUse = e => {

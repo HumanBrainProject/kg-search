@@ -21,16 +21,16 @@
  *
  */
 
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
+import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { setFacet, setFacetSize, resetFacets, selectFacets } from "../../../features/search/searchSlice";
+import Facet from '../../../components/Facet/Facet';
+import { setFacet, setFacetSize, resetFacets, selectFacets } from '../../../features/search/searchSlice';
 
-import Facet from "../../../components/Facet/Facet";
 
-import "./FiltersPanel.css";
+import './FiltersPanel.css';
 
 const FiltersPanel = () => {
 
@@ -69,14 +69,14 @@ const FiltersPanel = () => {
     <div className="kgs-filters collapsible">
       <div className="kgs-filters__header" >
         <div className="kgs-filters__title" >
-          <button type="button" className={`kgs-filters__toggle ${collapsed?"":"in"}`} onClick={handleToggleFilters}>
+          <button type="button" className={`kgs-filters__toggle ${collapsed?'':'in'}`} onClick={handleToggleFilters}>
             <FontAwesomeIcon icon={faChevronRight} />
           </button> Filters </div>
         <div className= "kgs-filters__reset" >
           <button type="button" className="kgs-filters__reset-button" onClick={handleOnReset}>Reset</button>
         </div>
       </div>
-      <div className={`kgs-filters__body collapse ${collapsed?"":"in"}`}>
+      <div className={`kgs-filters__body collapse ${collapsed?'':'in'}`}>
         {
           facets.map(facet => (
             <Facet

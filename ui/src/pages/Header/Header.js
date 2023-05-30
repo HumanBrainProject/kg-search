@@ -1,14 +1,14 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
+import {faBars} from '@fortawesome/free-solid-svg-icons/faBars';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { reset } from "../../features/instance/instanceSlice";
+import SignIn from '../../features/auth/SignIn';
+import { reset } from '../../features/instance/instanceSlice';
 
-import SignIn from "../../features/auth/SignIn";
 
-import "./Header.css";
+import './Header.css';
 
 const Header = () => {
 
@@ -23,16 +23,16 @@ const Header = () => {
 
   const handleSearchClick = () => {
     dispatch(reset());
-    navigate(`/${group !== defaultGroup?("?group=" + group):""}`);
+    navigate(`/${group !== defaultGroup?('?group=' + group):''}`);
   };
 
-  const showSearchLink  = location.pathname.startsWith("/instances");
+  const showSearchLink  = location.pathname.startsWith('/instances');
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light kgs-navbar">
       <div className="container-fluid">
         <a href="https://ebrains.eu" aria-label="EBRAINS homepage" className="logo nuxt-link-active navbar-brand">
-          <img src={`/static/img/${theme === "dark"?"ebrains_logo_dark.svg":"ebrains_logo.svg"}`} alt="ebrains" height="100" />
+          <img src={`/static/img/${theme === 'dark'?'ebrains_logo_dark.svg':'ebrains_logo.svg'}`} alt="ebrains" height="100" />
         </a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <FontAwesomeIcon icon={faBars} />

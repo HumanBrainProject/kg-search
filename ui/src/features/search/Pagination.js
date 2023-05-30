@@ -21,23 +21,23 @@
  *
  */
 
-import React from "react";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
-import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
+import {faChevronLeft} from '@fortawesome/free-solid-svg-icons/faChevronLeft';
+import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { connect } from 'react-redux';
 
-import { windowWidth } from "../../helpers/BrowserHelpers";
-import { setPage } from "./searchSlice";
+import { windowWidth } from '../../helpers/BrowserHelpers';
+import { setPage } from './searchSlice';
 
-import "./Pagination.css";
+import './Pagination.css';
 
 const getAriaLabel = (isPrevious, isNext, title) => {
   if (isPrevious) {
-    return "previous";
+    return 'previous';
   }
   if (isNext) {
-    return "next";
+    return 'next';
   }
   return title;
 };
@@ -51,12 +51,12 @@ class PageLinkButton extends React.PureComponent {
 
   render() {
     const { page: { name, title, active, readOnly}} = this.props;
-    const isPrevious = name === "previous";
-    const isNext = name === "next";
-    const ellipsis = name === "ellipsis";
+    const isPrevious = name === 'previous';
+    const isNext = name === 'next';
+    const ellipsis = name === 'ellipsis';
     const ariaLabel = getAriaLabel(isPrevious, isNext, title);
     return (
-      <button className={`kgs-page-link ${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly} title={ariaLabel}>
+      <button className={`kgs-page-link ${ellipsis?' is-ellipsis':''}${active?' is-active':''}`} onClick={this.onClick} disabled={readOnly} title={ariaLabel}>
         {isPrevious && <FontAwesomeIcon icon={faChevronLeft} className="is-previous" />}
         {!isPrevious && !isNext && title}
         {isNext && <FontAwesomeIcon icon={faChevronRight} className="is-next" />}
@@ -76,11 +76,11 @@ class PaginationComponent extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.handleResizeEvent, false);
+    window.addEventListener('resize', this.handleResizeEvent, false);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.handleResizeEvent);
+    window.removeEventListener('resize', this.handleResizeEvent);
   }
 
   handleResizeEvent() {
@@ -133,7 +133,7 @@ class PaginationComponent extends React.Component {
     const hasLastEllipsis = hasNext && (page + pageScope < totalPages);
 
     pages.push({
-      name: "previous",
+      name: 'previous',
       title: null,
       value:  page -1,
       active: false,
@@ -142,7 +142,7 @@ class PaginationComponent extends React.Component {
 
     if (hasFirst) {
       pages.push({
-        name: "page",
+        name: 'page',
         title: 1,
         value:  1,
         active: false,
@@ -152,8 +152,8 @@ class PaginationComponent extends React.Component {
 
     if (hasFirstEllipsis) {
       pages.push({
-        name: "ellipsis",
-        title: "...",
+        name: 'ellipsis',
+        title: '...',
         value:  null,
         active: false,
         readOnly: true
@@ -163,7 +163,7 @@ class PaginationComponent extends React.Component {
     for (let p = page - pageScope; p <= page + pageScope; p++) {
       if (p > 0 && p < totalPages) {
         pages.push({
-          name: "page",
+          name: 'page',
           title: p,
           value:  p,
           active: p === page,
@@ -174,8 +174,8 @@ class PaginationComponent extends React.Component {
 
     if (hasLastEllipsis) {
       pages.push({
-        name: "ellipsis",
-        title: "...",
+        name: 'ellipsis',
+        title: '...',
         value:  null,
         active: false,
         readOnly: true
@@ -183,7 +183,7 @@ class PaginationComponent extends React.Component {
     }
 
     pages.push({
-      name: "page",
+      name: 'page',
       title: totalPages,
       value:  totalPages,
       active: page === totalPages,
@@ -191,7 +191,7 @@ class PaginationComponent extends React.Component {
     });
 
     pages.push({
-      name: "next",
+      name: 'next',
       title: null,
       value:  page + 1,
       active: false,

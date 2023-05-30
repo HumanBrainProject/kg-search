@@ -21,17 +21,18 @@
  *
  */
 
-import React, { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { useGetInstanceQuery, useGetPreviewQuery, trackEvent, getError } from "../../app/services/api";
-import { setInstance, reset } from "./instanceSlice";
-import { selectIsCurated } from "../groups/groupsSlice";
-import { logout } from "../auth/authSlice";
+import ErrorPanel from '../../components/ErrorPanel/ErrorPanel';
+import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
+import useAuth from '../../hooks/useAuth';
+import Matomo from '../../services/Matomo';
+import { useGetInstanceQuery, useGetPreviewQuery, getError } from '../../services/api';
+import { selectIsCurated } from '../groups/groupsSlice';
+import { setInstance, reset } from './instanceSlice';
 
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
-import ErrorPanel from "../../components/ErrorPanel/ErrorPanel";
 
 const Instance = ({ isPreview, isSearch, path }) => {
 
@@ -48,12 +49,14 @@ const Instance = ({ isPreview, isSearch, path }) => {
   const isCurated = useSelector(state => selectIsCurated(state));
   const isSearchInitialized = useSelector(state => state.search.isInitialized);
 
+  const { logout } = useAuth();
+
   useEffect(() => {
     if (id && (!isSearch || isSearchInitialized)) {
-      const relativeUrl = `${path}${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
+      const relativeUrl = `${path}${id}${(group && group !== defaultGroup)?('?group=' + group):''}`;
       if (cardOpenedUrlRef.current !== relativeUrl) {
         cardOpenedUrlRef.current = relativeUrl;
-        trackEvent("Card", "Opened", relativeUrl);
+        Matomo.trackEvent('Card', 'Opened', relativeUrl);
       }
     } else {
       cardOpenedUrlRef.current = null;
@@ -65,10 +68,10 @@ const Instance = ({ isPreview, isSearch, path }) => {
       navigate(-1);
     } else {
       if (!group) {
-        dispatch(logout());
+        logout();
       }
       dispatch(reset());
-      navigate(`/${(group && group !== defaultGroup)?("?group=" + group):""}`, {replace:true});
+      navigate(`/${(group && group !== defaultGroup)?('?group=' + group):''}`, {replace:true});
     }
   };
 
@@ -100,7 +103,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
     let message = getError(error);
     if (error.status == 404) {
       if (isSearch || isPreview || isCurated) {
-        message = "The page you requested was not found.";
+        message = 'The page you requested was not found.';
       } else {
         const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
         const link = `<a href=${url}>${url}</a>`;
@@ -108,7 +111,7 @@ const Instance = ({ isPreview, isSearch, path }) => {
       }
     }
 
-    let cancelLabel = (isSearch || (instanceData?.id && instanceData.id !== id))?"Cancel":"Back to search";
+    let cancelLabel = (isSearch || (instanceData?.id && instanceData.id !== id))?'Cancel':'Back to search';
 
     return (
       <ErrorPanel message={message} cancelLabel={cancelLabel} onCancelClick={handleOnCancelClick}  onRetryClick={refetch} retryVariant="primary" />

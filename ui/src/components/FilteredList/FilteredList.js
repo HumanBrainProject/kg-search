@@ -21,32 +21,21 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown';
+import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
-import { List } from "../List/List";
+import { List } from '../List/List';
 
-import "./FilteredList.css";
+import './FilteredList.css';
 
 export class FilteredList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { filter: "", hasFocus: false, selectedItems: [], options: [], focusedOption: null };
+    this.state = { filter: '', hasFocus: false, selectedItems: [], options: [], focusedOption: null };
   }
-
-  //The only way to trigger an onChange event in React is to do the following
-  //Basically changing the field value, bypassing the react setter and dispatching an "input"
-  // event on a proper html input node
-  //See for example the discussion here : https://stackoverflow.com/a/46012210/9429503
-  triggerOnChange = () => {
-    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set
-      .call(this.hiddenInputRef, JSON.stringify(this.state.filter));
-    const event = new Event("input", { bubbles: true });
-    this.hiddenInputRef.dispatchEvent(event);
-  };
 
   handleInputKeyStrokes = e => {
     if (e.keyCode === 40) {
@@ -84,7 +73,7 @@ export class FilteredList extends React.Component {
   closeDropdown() {
     this.unlistenClickOutHandler();
     this.wrapperRef = null;
-    this.setState({ filter: "", hasFocus: false });
+    this.setState({ filter: '', hasFocus: false });
   }
 
   clickOutHandler = e => {
@@ -94,15 +83,15 @@ export class FilteredList extends React.Component {
   };
 
   listenClickOutHandler() {
-    window.addEventListener("mouseup", this.clickOutHandler, false);
-    window.addEventListener("touchend", this.clickOutHandler, false);
-    window.addEventListener("keyup", this.clickOutHandler, false);
+    window.addEventListener('mouseup', this.clickOutHandler, false);
+    window.addEventListener('touchend', this.clickOutHandler, false);
+    window.addEventListener('keyup', this.clickOutHandler, false);
   }
 
   unlistenClickOutHandler() {
-    window.removeEventListener("mouseup", this.clickOutHandler, false);
-    window.removeEventListener("touchend", this.clickOutHandler, false);
-    window.removeEventListener("keyup", this.clickOutHandler, false);
+    window.removeEventListener('mouseup', this.clickOutHandler, false);
+    window.removeEventListener('touchend', this.clickOutHandler, false);
+    window.removeEventListener('keyup', this.clickOutHandler, false);
   }
 
   componentWillUnmount() {
@@ -139,7 +128,7 @@ export class FilteredList extends React.Component {
 
     const dropdownOpen = this.wrapperRef && this.wrapperRef.contains(document.activeElement);
 
-    const dropdownStyle = this.inputRef ? { top: this.inputRef.offsetHeight + "px" } : {};
+    const dropdownStyle = this.inputRef ? { top: this.inputRef.offsetHeight + 'px' } : {};
 
     return (
       <div className="kgs-filtered-list" ref={ref => this.wrapperRef = ref}>
@@ -150,13 +139,13 @@ export class FilteredList extends React.Component {
             onChange={this.handleChangeUserInput}
             onFocus={this.handleFocus}
             value={filter}
-            placeholder={(!dropdownOpen) ? "add " + label.toLowerCase() + " filters" : ""} />
+            placeholder={(!dropdownOpen) ? 'add ' + label.toLowerCase() + ' filters' : ''} />
           <FontAwesomeIcon icon={faFilter} className="kgs-filtered-facet_filter_icon" />
           <FontAwesomeIcon icon={faChevronDown} className="kgs-filtered-facet_filter_dropdown_icon"/>
-          <input style={{ display: "none" }} type="text" ref={ref => this.hiddenInputRef = ref} />
+          <input style={{ display: 'none' }} type="text" ref={ref => this.hiddenInputRef = ref} />
         </div>
-        {dropdownOpen && (options.length || filter) && (
-          <div className={`kgs-filtered-list_dropdown ${dropdownOpen ? "is-open" : ""}`} style={dropdownStyle} onKeyDown={this.handleInputKeyStrokes} >
+        {dropdownOpen && (!!options.length || filter) && (
+          <div className={`kgs-filtered-list_dropdown ${dropdownOpen ? 'is-open' : ''}`} style={dropdownStyle} onKeyDown={this.handleInputKeyStrokes} >
             <List items={options} currentItem={focusedOption} ItemComponent={ItemComponent} itemUniqKeyAttribute={itemUniqKeyAttribute} onItemClick={this.handleItemClick} />
           </div>
         )}

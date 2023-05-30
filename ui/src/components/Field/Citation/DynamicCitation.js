@@ -21,16 +21,16 @@
  *
  */
 
-import React, { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
-import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import {faSyncAlt} from '@fortawesome/free-solid-svg-icons/faSyncAlt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect } from 'react';
 
-import { useGetCitationQuery, useGetBibtexQuery } from "../../../app/services/api";
+import { useGetCitationQuery, useGetBibtexQuery } from '../../../services/api';
 
-import Citation from "./Citation";
+import Citation from './Citation';
 
-import "./DynamicCitation.css";
+import './DynamicCitation.css';
 
 const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
 
@@ -39,7 +39,7 @@ const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
   //const { data, currentData, error, isUninitialized, isLoading, isFetching, isSuccess, isError, refetch } = citation;
 
   useEffect(() => {
-    if (citation.data && typeof onCitationDownloaded === "function") {
+    if (citation.data && typeof onCitationDownloaded === 'function') {
       onCitationDownloaded(doi, citation.data);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,8 +49,8 @@ const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
     const error = title?`The citation for ${title} was not found.`:`The citation for doi ${doi} was not found.`;
     return (
       <div className="kgs-citation kgs-citation-error">
-        <span style={{ color: "var(--code-color)" }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
-        <FontAwesomeIcon icon={faSyncAlt} onClick={citation.refetch} style={{ cursor: "pointer" }} />
+        <span style={{ color: 'var(--code-color)' }}><FontAwesomeIcon icon={faExclamationTriangle} />{error} </span>
+        <FontAwesomeIcon icon={faSyncAlt} onClick={citation.refetch} style={{ cursor: 'pointer' }} />
       </div>
     );
   }
@@ -58,8 +58,8 @@ const DynamicCitation = ({ title, doi, onCitationDownloaded }) => {
   if(citation.isUninitialized || citation.isFetching) {
     return (
       <div className="kgs-citation kgs-citation-spinner">
-        <span className="spinner-border spinner-border-sm" role="status"></span>
-        Retrieving citation{title?` for ${title}`:""}...
+        <span className="spinner-border spinner-border-sm" role="status" />
+        Retrieving citation{title?` for ${title}`:''}...
       </div>
     );
   }

@@ -21,11 +21,11 @@
  *
  */
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { showImage } from "../instance/instanceSlice";
+import Component from '../../components/Thumbnail/Thumbnail';
+import { showImage } from '../instance/instanceSlice';
 
-import Component from "../../components/Thumbnail/Thumbnail";
 
 export const Thumbnail = connect(
   (_state, props) => ({
@@ -34,7 +34,7 @@ export const Thumbnail = connect(
     isAnimated: !!props.isAnimated
   }),
   (dispatch, props) => ({
-    onClick: (props.showPreview && typeof props.previewUrl === "string")?
+    onClick: (props.showPreview && typeof props.previewUrl === 'string')?
       () => {
         dispatch(showImage({url:props.previewUrl, label:props.alt, link: undefined}));
       }

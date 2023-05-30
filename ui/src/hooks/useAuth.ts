@@ -20,22 +20,18 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import store from "../app/store";
-import App from "./App";
 
-// eslint-disable-next-line jest/expect-expect
-it("renders without crashing", () => {
-  const container = document.createElement("div");
-  const root = createRoot(container);
-  root.render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  );
-});
+import React from 'react';
+
+import AuthContext from '../contexts/AuthContext';
+import type Auth from '../services/Auth';
+
+const useAuth = ():Auth => {
+  const auth = React.useContext<Auth|undefined>(AuthContext);
+  if (!auth) {
+    throw new Error('useAuth must be used within a AuthContext.Provider.');
+  }
+  return auth;
+};
+
+export default useAuth;

@@ -21,21 +21,22 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import Notice from "./Notice";
+import React from 'react';
+import renderer from 'react-test-renderer';
+import Notice from './Notice';
 
-test("Notice component renders initially", () => {
+test('Notice component renders initially', () => {
   const component = renderer.create(
-    <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}}  />
   );
 
   expect(component.toJSON()).toMatchSnapshot();
 });
 
-test("Notice test show false\"", () => {
+test('Notice test show false"', () => {
   const component = renderer.create(
-    <Notice className="className" show={false} text="some text" agreeLabel="agree label" onAgree={() => {}} />
+    <Notice className="className" show={false} text="some text" agreeLabel="agree label" />
   );
   expect(component.toJSON()).toBe(null);
 });

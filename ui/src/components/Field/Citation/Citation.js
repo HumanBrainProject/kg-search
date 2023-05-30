@@ -21,13 +21,13 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
-import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
-import CopyToClipboardButton from "../../CopyToClipboard/CopyToClipboardButton";
+import {faClipboard} from '@fortawesome/free-solid-svg-icons/faClipboard';
+import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import CopyToClipboardButton from '../../CopyToClipboard/CopyToClipboardButton';
 
-import "./Citation.css";
+import './Citation.css';
 
 const Citation = ({title, citation, doi, bibtex}) => {
   const html = title?`<h6><strong>${title}</strong></h6>\n${citation}`:citation;

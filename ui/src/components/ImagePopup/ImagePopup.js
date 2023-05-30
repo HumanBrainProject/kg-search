@@ -21,20 +21,20 @@
  *
  */
 
-import React, { useState, useEffect, useRef } from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faBan} from "@fortawesome/free-solid-svg-icons/faBan";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import {faBan} from '@fortawesome/free-solid-svg-icons/faBan';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState, useEffect, useRef } from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
 
-import "./ImagePopup.css";
+import './ImagePopup.css';
 
 const converter = new showdown.Converter({ extensions: [xssFilter] });
 
 const Media = ({label, srcState}) => {
-  const isVideo = typeof srcState === "string" && srcState.endsWith(".mp4");
-  const alt = label ? label:"";
+  const isVideo = typeof srcState === 'string' && srcState.endsWith('.mp4');
+  const alt = label ? label:'';
   if(isVideo) {
     return(
       <video alt={alt} width="750" height="250" autoPlay loop>
@@ -59,12 +59,12 @@ const ImagePopup = ({ className, src, label, link, onClick }) => {
     if ((!closeBtnRef.current || (closeBtnRef.current && closeBtnRef.current !== e.target)) && wrapperRef.current && wrapperRef.current.contains(e.target)) {
       e && e.preventDefault();
     } else {
-      typeof onClick === "function" && onClick();
+      typeof onClick === 'function' && onClick();
     }
   };
 
   const loadImage = () => {
-    if (typeof src === "string") {
+    if (typeof src === 'string') {
       if (srcState !== src || error) {
         setSrc(src);
         setError(false);
@@ -75,9 +75,9 @@ const ImagePopup = ({ className, src, label, link, onClick }) => {
     }
   };
 
-  const show = typeof src === "string";
+  const show = typeof src === 'string';
   return (
-    <div className={`kgs-image_popup ${show ? "show" : ""} ${className ? className : ""}`} onClick={handleOnClick}>
+    <div className={`kgs-image_popup ${show ? 'show' : ''} ${className ? className : ''}`} onClick={handleOnClick}>
       {show && (
         <div className="fa-stack fa-1x kgs-image_popup-content" ref={wrapperRef} >
           {
@@ -93,7 +93,7 @@ const ImagePopup = ({ className, src, label, link, onClick }) => {
                   <div className="kgs-image_popup-label-wrapper">
                     <p className="kgs-image_popup-label">{label}</p>
                   </div>)}
-                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }}></div>}
+                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }} />}
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>

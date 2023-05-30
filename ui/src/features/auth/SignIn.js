@@ -21,20 +21,20 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faUser} from "@fortawesome/free-solid-svg-icons/faUser";
-import {faCheck} from "@fortawesome/free-solid-svg-icons/faCheck";
-import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
+import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+import {faUser} from '@fortawesome/free-solid-svg-icons/faUser';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { trackEvent } from "../../app/services/api";
-import { logout, setLoginRequired } from "./authSlice";
-import { setGroup } from "../groups/groupsSlice";
-import { setPage } from "../search/searchSlice";
-import { reset } from "../instance/instanceSlice";
+import useAuth from '../../hooks/useAuth';
+import Matomo from '../../services/Matomo';
+import { setGroup } from '../groups/groupsSlice';
+import { reset } from '../instance/instanceSlice';
+import { setPage } from '../search/searchSlice';
 
-import "./SignIn.css";
+import './SignIn.css';
 
 const Group = ({ group }) => {
 
@@ -43,7 +43,7 @@ const Group = ({ group }) => {
   const current = useSelector(state => state.groups.group);
 
   const handleGroupClick = () => {
-    trackEvent("Group", "Select", group.value);
+    Matomo.trackEvent('Group', 'Select', group.value);
     dispatch(setGroup(group.value));
     dispatch(reset());
     dispatch(setPage(1));
@@ -53,7 +53,7 @@ const Group = ({ group }) => {
     <div className="dropdown-item">
       <button  onClick={handleGroupClick}>
         {group.value === current?
-          <FontAwesomeIcon icon={faCheck} style={{marginRight: "4px"}} />
+          <FontAwesomeIcon icon={faCheck} style={{marginRight: '4px'}} />
           :
           <span className="kgs-sign__in__space"/>
         }
@@ -65,26 +65,21 @@ const Group = ({ group }) => {
 
 const SignIn = ({ className, Tag }) => {
 
-  const dispatch = useDispatch();
+  const { isUninitialized, isAuthenticating, isAuthenticated, isLogingOut, login, logout } = useAuth();
 
-  const authenticationInitialized = useSelector(state => state.auth.authenticationInitialized);
-  const isUnavailble = useSelector(state => state.auth.isUnavailble);
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const isAuthenticating = useSelector(state => state.auth.isLoading || state.auth.authenticationInitializing || state.auth.isAuthenticating);
-  const isLogingOut = useSelector(state => state.auth.isLogingOut);
   const groups = useSelector(state => state.groups.groups);
 
   const handleLogoutClick = () => {
-    trackEvent("User", "Logout");
-    dispatch(logout());
+    Matomo.trackEvent('User', 'Logout');
+    logout();
   };
 
   const handleLoginClick = () => {
-    trackEvent("User", "Login");
-    dispatch(setLoginRequired(true));
+    Matomo.trackEvent('User', 'Login');
+    login();
   };
 
-  if (!authenticationInitialized || isUnavailble) {
+  if (isUninitialized) {
     return null;
   }
   if(isAuthenticated) {
@@ -100,10 +95,10 @@ const SignIn = ({ className, Tag }) => {
           {!isLogingOut && (
             <>
               {!!groups.length && (
-                <div className="dropdown-divider"></div>
+                <div className="dropdown-divider" />
               )}
               <div className="dropdown-item">
-                <button onClick={handleLogoutClick}><FontAwesomeIcon icon={faSignOutAlt} style={{marginRight: "4px"}} />Logout</button>
+                <button onClick={handleLogoutClick}><FontAwesomeIcon icon={faSignOutAlt} style={{marginRight: '4px'}} />Logout</button>
               </div>
             </>
           )}

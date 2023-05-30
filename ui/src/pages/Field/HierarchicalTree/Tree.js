@@ -21,16 +21,16 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
-import TreeComponent from "rc-tree";
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TreeComponent from 'rc-tree';
+import React from 'react';
 
-import "rc-tree/assets/index.css";
-import "./Tree.css";
+import 'rc-tree/assets/index.css';
+import './Tree.css';
 
 const Icon = ({ color }) => (
-  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : "gray" }} />
+  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : 'gray' }} />
 );
 
 const Legend = ({ legend }) => {
@@ -48,20 +48,18 @@ const Legend = ({ legend }) => {
   );
 };
 
-const Tree = ({ data, onSelect, defaultExpandAll, defaultExpandedKeys, defaultSelectedKey }) => {
-  return (
-    <div className="kgs-tree">
-      <TreeComponent
-        treeData={[data]}
-        defaultExpandAll={defaultExpandAll}
-        defaultExpandedKeys={defaultExpandedKeys}
-        defaultSelectedKeys={[defaultSelectedKey]}
-        onSelect={onSelect}
-        icon={Icon}
-      />
-      <Legend legend={data.legend} />
-    </div>
-  );
-};
+const Tree = ({ data, onSelect, defaultExpandAll, defaultExpandedKeys, defaultSelectedKey }) => (
+  <div className="kgs-tree">
+    <TreeComponent
+      treeData={[data]}
+      defaultExpandAll={defaultExpandAll}
+      defaultExpandedKeys={defaultExpandedKeys}
+      defaultSelectedKeys={[defaultSelectedKey]}
+      onSelect={onSelect}
+      icon={Icon}
+    />
+    <Legend legend={data.legend} />
+  </div>
+);
 
 export default Tree;

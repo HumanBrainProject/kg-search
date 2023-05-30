@@ -21,13 +21,13 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { requestInstance } from "./instanceSlice";
+import Count from '../../components/Field/Count';
+import { requestInstance } from './instanceSlice';
 
-import Count from "../../components/Field/Count";
 
 const InstanceLink = ({instanceId, text, count, context}) => {
 
@@ -45,15 +45,15 @@ const InstanceLink = ({instanceId, text, count, context}) => {
   }
 
   let path = null;
-  if (location.pathname.startsWith("/instances/")) {
-    path = "/instances/";
-  } else if (location.pathname.startsWith("/live/")) {
-    path = "/live/";
+  if (location.pathname.startsWith('/instances/')) {
+    path = '/instances/';
+  } else if (location.pathname.startsWith('/live/')) {
+    path = '/live/';
   }
 
   const handleClick = () => {
     if (path) {
-      const url = `${path}${instanceId}${group && group !== defaultGroup?("?group=" + group ):""}`;
+      const url = `${path}${instanceId}${group && group !== defaultGroup?('?group=' + group ):''}`;
       const options = {
         title: title, // TODO: check if not deprecated
         state: context

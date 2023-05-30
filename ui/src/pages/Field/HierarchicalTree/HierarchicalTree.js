@@ -21,62 +21,58 @@
  *
  */
 
-import React, { Suspense, useState } from "react";
-import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
-import _ from "lodash-uuid";
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import _ from 'lodash-uuid';
+import React, { Suspense, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { trackEvent } from "../../../app/services/api";
+import Matomo from '../../../services/Matomo';
 
-import LinkedInstance from "../../Instance/LinkedInstance";
+import LinkedInstance from '../../Instance/LinkedInstance';
 
-import "./HierarchicalTree.css";
+import './HierarchicalTree.css';
 
-const Tree = React.lazy(() => import("./Tree.js"));
+const Tree = React.lazy(() => import('./Tree.js'));
 
 const Icon = ({ color }) => (
-  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : "gray" }} />
+  <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : 'gray' }} />
 );
 
-const Node = ({ node }) => {
-  return (
-    <div className="kgs-hierarchical-tree__details">
-      <div className="kgs-hierarchical-tree__info">
-        {node && (
-          <div>
-            <div className="kgs-hierarchical-tree__info-title">
-              <Icon color={node.color} />
+const Node = ({ node }) => (
+  <div className="kgs-hierarchical-tree__details">
+    <div className="kgs-hierarchical-tree__info">
+      {node && (
+        <div>
+          <div className="kgs-hierarchical-tree__info-title">
+            <Icon color={node.color} />
               &nbsp;{node.title}
-            </div>
-            {node.data && (
-              <LinkedInstance
-                data={node.data}
-                type={node.data.type?.value}
-              />
-            )}
           </div>
-        )}
-      </div>
+          {node.data && (
+            <LinkedInstance
+              data={node.data}
+              type={node.data.type?.value}
+            />
+          )}
+        </div>
+      )}
     </div>
-  );
-};
+  </div>
+);
 
-const Loading = () => {
-  return (
-    <>
-      <div className="spinner-border spinner-border-sm" role="status"></div>
+const Loading = () => (
+  <>
+    <div className="spinner-border spinner-border-sm" role="status" />
       &nbsp;Loading hierarchy...
-    </>
-  );
-};
+  </>
+);
 
 const HierarchicalTreeComponent = ({ tree, defaultExpandAll, defaultExpandedKeys, initialSelectedNode }) => {
 
   const [node, setNode] = useState(initialSelectedNode);
 
   const onSelect = (_selectedKeys, info) => {
-    trackEvent("Specimen", "Clicked", info.node.title);
+    Matomo.trackEvent('Specimen', 'Clicked', info.node.title);
     setNode(info.node);
   };
 

@@ -21,14 +21,14 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { trackEvent } from "../../../app/services/api";
-import { setQueryString } from "../../../features/search/searchSlice";
+import { setQueryString } from '../../../features/search/searchSlice';
+import Matomo from '../../../services/Matomo';
 
-import "./HitsInfo.css";
+import './HitsInfo.css';
 
 const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
 
@@ -38,16 +38,16 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
   const dispatch = useDispatch();
 
   const getSuggestionToUrl = () => {
-    const find = location.search.split("&").find(p => p.match(/\??q=.*/));
+    const find = location.search.split('&').find(p => p.match(/\??q=.*/));
     if (find) {
-      return location.search.replace(find, `${find.startsWith("?")?"?":""}q=${encodeURIComponent(searchTerm)}`);
+      return location.search.replace(find, `${find.startsWith('?')?'?':''}q=${encodeURIComponent(searchTerm)}`);
     }
 
-    return location.search + location.search.endsWith("?")?"q=":"&q=" + encodeURIComponent(searchTerm);
+    return location.search + location.search.endsWith('?')?'q=':'&q=' + encodeURIComponent(searchTerm);
   };
 
   const handleOnClick = () => {
-    trackEvent("Search", "Refine search using suggestion", searchTerm);
+    Matomo.trackEvent('Search', 'Refine search using suggestion', searchTerm);
     const to = getSuggestionToUrl();
     navigate(to);
     dispatch(setQueryString(searchTerm));
@@ -55,12 +55,12 @@ const Suggestion =  ({word, searchTerm, isSecondLast, isLast=true }) => {
 
   const getSeparator = () => {
     if (isSecondLast) {
-      return " or ";
+      return ' or ';
     }
     if (isLast) {
-      return "";
+      return '';
     }
-    return ", ";
+    return ', ';
   };
 
   const separator = getSeparator();
@@ -110,7 +110,7 @@ const HitsInfo = () => {
     return (
       <span className="kgs-hitsInfos">
         {hitCount === 0?
-          "No results were found. "
+          'No results were found. '
           :
           <Viewing hitCount={hitCount} from={from} to={to} />
         }<br/>Did you mean <Suggestions words={suggestions} />?</span>

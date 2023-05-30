@@ -21,29 +21,29 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { requestInstance, setTab, selectTypeMapping } from "../../features/instance/instanceSlice";
-import { selectIsDefaultGroup, selectGroupLabel } from "../../features/groups/groupsSlice";
-import { trackEvent } from "../../app/services/api";
+import BgError from '../../components/BgError/BgError';
+import Disclaimer from '../../components/Disclaimer/Disclaimer';
+import OutdatedVersionDisclaimer from '../../components/OutdatedVersionDisclaimer';
+import TermsShortNotice from '../../features/TermsShortNotice';
+import { selectIsDefaultGroup, selectGroupLabel } from '../../features/groups/groupsSlice';
+import ImagePopup from '../../features/image/ImagePopup';
+import { requestInstance, setTab, selectTypeMapping } from '../../features/instance/instanceSlice';
+import Matomo from '../../services/Matomo';
 
-import Header from "./Header/Header";
-import ImagePopup from "../../features/image/ImagePopup";
-import TermsShortNotice from "../../features/TermsShortNotice";
-import Disclaimer from "../../components/Disclaimer/Disclaimer";
-import BgError from "../../components/BgError/BgError";
-import OutdatedVersionDisclaimer from "../../components/OutdatedVersionDisclaimer";
-import Tabs from "./Tabs/Tabs";
+import Header from './Header/Header';
+import Tabs from './Tabs/Tabs';
 
-import "./InstanceView.css";
-import "./Fields.css";
+import './InstanceView.css';
+import './Fields.css';
 
 const getField = (type, name, data, mapping) => {
-  if (name === "type") {
+  if (name === 'type') {
     return {
-      name: "type",
+      name: 'type',
       data: { value: type },
       mapping: { },
       type: type
@@ -67,8 +67,8 @@ const getHeaderFields = (type, data, mapping) => {
       ([name, fieldsMapping]) =>
         fieldsMapping &&
         data?.[name] &&
-        fieldsMapping.layout === "header" &&
-        name !== "title"
+        fieldsMapping.layout === 'header' &&
+        name !== 'title'
     )
     .map(([name, fieldsMapping]) =>
       getField(type, name, data[name], fieldsMapping)
@@ -86,12 +86,12 @@ const getFieldsByTabs = (type, data, typeMapping, previews) => {
       ([name, mapping]) =>
         mapping &&
         data?.[name] &&
-        mapping.layout !== "header" &&
-        name !== "title" // title is displayed in the header
+        mapping.layout !== 'header' &&
+        name !== 'title' // title is displayed in the header
     )
     .reduce((acc, [name, mapping]) => {
       const groupName =
-        !mapping.layout || mapping.layout === "summary" ? null : mapping.layout;
+        !mapping.layout || mapping.layout === 'summary' ? null : mapping.layout;
       const field = getField(type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);
@@ -110,7 +110,7 @@ const getFieldsByTabs = (type, data, typeMapping, previews) => {
   if (overviewFields.length) {
     return [
       {
-        name: "Overview",
+        name: 'Overview',
         fields: overviewFields,
         previews: previews
       },
@@ -122,7 +122,7 @@ const getFieldsByTabs = (type, data, typeMapping, previews) => {
 
 const getVersions = versions => (Array.isArray(versions)?versions:[])
   .map(v => ({
-    label: v.value ? v.value : "Current",
+    label: v.value??'Current',
     value: v.reference
   }));
 
@@ -160,7 +160,7 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
   const selectedTab = useSelector(state => state.instance.tab);
   const tabs = getFieldsByTabs(type, data?.fields, mapping, data?.previews);
 
-  const version = (data?.version)?data.version:"Current";
+  const version = data?.version??'Current';
   const versions = getVersions(data?.versions);
 
   const tags = getTags(groupLabel, isDefaultGroup, data?.category);
@@ -175,13 +175,13 @@ const InstanceView = ({ data, path, isSearch, customNavigationComponent }) => {
         context: context
       }));
     } else {
-      navigate(`${path}${version}${(group && group !== defaultGroup)?("?group=" + group ):""}`, { state: context});
+      navigate(`${path}${version}${(group && group !== defaultGroup)?('?group=' + group ):''}`, { state: context});
     }
   };
 
   const handleTabClick = tab => {
     if(tab !== selectedTab) {
-      trackEvent("Tab", "Clicked", tab);
+      Matomo.trackEvent('Tab', 'Clicked', tab);
       dispatch(setTab(tab));
     }
   };

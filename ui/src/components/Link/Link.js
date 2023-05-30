@@ -21,12 +21,12 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import { trackLink } from "../../app/services/api";
-import Count from "../Field/Count";
+import Matomo from '../../services/Matomo';
+import Count from '../Field/Count';
 
-import "./Link.css";
+import './Link.css';
 
 export const Link = ({ url, label, isAFileLink, isExternalLink, icon, count }) => {
   if (!url) {
@@ -36,15 +36,15 @@ export const Link = ({ url, label, isAFileLink, isExternalLink, icon, count }) =
   const text = label ? label : url;
 
   const props = isExternalLink ? {
-    rel: "noopener noreferrer",
-    target: "_blank"
+    rel: 'noopener noreferrer',
+    target: '_blank'
   } : null;
 
   const handleClick = () => {
     if (isAFileLink) {
-      trackLink(url, "download");
+      Matomo.trackLink(url, 'download');
     } else if (isExternalLink) {
-      trackLink(url, "link");
+      Matomo.trackLink(url, 'link');
     }
   };
 

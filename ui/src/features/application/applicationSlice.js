@@ -20,60 +20,48 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { api } from "../../app/services/api";
-import { termsCurrentVersion } from "../../data/termsShortNotice";
+import { termsCurrentVersion } from '../../data/termsShortNotice';
 
-const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
+const TermsShortNoticeLocalStorageKey = 'ebrains-search-terms-conditions-consent';
 
 const initialState = {
-  isReady: false,
   info: null,
   showTermsShortNotice:
-    typeof Storage === "undefined" ||
+    typeof Storage === 'undefined' ||
     !localStorage.getItem(TermsShortNoticeLocalStorageKey),
   showTermsShortUpdateNotice:
-    typeof Storage !== "undefined" &&
+    typeof Storage !== 'undefined' &&
     localStorage.getItem(TermsShortNoticeLocalStorageKey) &&
     localStorage.getItem(TermsShortNoticeLocalStorageKey) !==
       termsCurrentVersion,
-  theme: localStorage.getItem("currentTheme")
+  theme: localStorage.getItem('currentTheme')
 };
 
 const applicationSlice = createSlice({
-  name: "application",
+  name: 'application',
   initialState,
   reducers: {
-    setApplicationReady(state) {
-      state.isReady = true;
-    },
     setTheme(state, action) {
       state.theme = action.payload;
     },
+    setCommit(state, action) {
+      state.commit = action.payload;
+    },
     agreeTermsShortNotice(state) {
-      if (typeof Storage !== "undefined") {
+      if (typeof Storage !== 'undefined') {
         localStorage.setItem(TermsShortNoticeLocalStorageKey, termsCurrentVersion);
       }
-      setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 250);
       state.showTermsShortNotice = false;
       state.showTermsShortUpdateNotice = false;
     },
     setInfo(state, action) {
       state.info = action.payload;
     }
-  },
-  extraReducers(builder) {
-    builder
-      .addMatcher(
-        api.endpoints.getSettings.matchFulfilled,
-        (state, { payload }) => {
-          state.hasSettings = true;
-          state.commit = payload?.commit;
-        }
-      );
   }
 });
 
-export const { setApplicationReady, setTheme, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
+export const { setTheme, setCommit, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
 export default applicationSlice.reducer;

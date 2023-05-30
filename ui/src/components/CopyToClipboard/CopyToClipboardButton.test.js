@@ -21,12 +21,12 @@
  *
  */
 
-import React from "react";
-import renderer from "react-test-renderer";
-import CopyToClipboardButton from "./CopyToClipboardButton";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import React from 'react';
+import renderer from 'react-test-renderer';
+import CopyToClipboardButton from './CopyToClipboardButton';
 
-test("CopyToClipboardButton component renders initially", () => {
+test('CopyToClipboardButton component renders initially', () => {
   const component = renderer.create(
     <CopyToClipboardButton className="className" text="text" icon={faTimes} title="title" confirmationText="confirmation text" content="content" />
   );

@@ -21,15 +21,15 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import Tags from "../../../components/Tags/Tags";
-import { Field, Title } from "../../Field/Field";
-import FieldsPanel from "../../../components/Field/FieldsPanel";
-import { VersionSelector } from "../../../components/VersionSelector/VersionSelector";
-import ShareButtons from "../../../features/ShareButtons";
+import FieldsPanel from '../../../components/Field/FieldsPanel';
+import Tags from '../../../components/Tags/Tags';
+import { VersionSelector } from '../../../components/VersionSelector/VersionSelector';
+import ShareButtons from '../../../features/ShareButtons';
+import { Field, Title } from '../../Field/Field';
 
-import "./Header.css";
+import './Header.css';
 
 const DefaultNavigation = ({ tags }) => (
   <div className="kgs-instance__header_navigation">
@@ -44,7 +44,7 @@ const getDefaultNavigation = tags => {
   const Navigation = () => (
     <DefaultNavigation tags={tags} />
   );
-  Navigation.displayName = "Navigation";
+  Navigation.displayName = 'Navigation';
   return Navigation;
 };
 

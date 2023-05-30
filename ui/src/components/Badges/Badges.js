@@ -21,16 +21,16 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import "./Badges.css";
+import './Badges.css';
 
 const Badge = ({ title, active, className }) => {
   if (!active) {
     return null;
   }
   return (
-    <span className={`badge rounded-pill kgs-badge ${className?className:""}`}>{title}</span>
+    <span className={`badge rounded-pill kgs-badge ${className??''}`}>{title}</span>
   );
 };
 
@@ -41,8 +41,8 @@ const Badges = ({ badges }) => {
   }
   return (
     <div className="kgs-badges">
-      <Badge title="New"      className="kgs-badge-new"      active={badges.includes("isNew")} />
-      <Badge title="Top trending" className="kgs-badge-trending" active={badges.includes("isTrending")} />
+      <Badge title="New"      className="kgs-badge-new"      active={badges.includes('isNew')} />
+      <Badge title="Top trending" className="kgs-badge-trending" active={badges.includes('isTrending')} />
     </div>
   );
 };

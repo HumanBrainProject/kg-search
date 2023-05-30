@@ -24,12 +24,10 @@
 
 export const matcher = (filterText, node) =>  node.title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 
-export const findNode = (node, filter) => {
-  return matcher(filter, node) ||
+export const findNode = (node, filter) => matcher(filter, node) ||
         (node.children &&
             node.children.length &&
             !!node.children.find(child => findNode(child, filter)));
-};
 
 export const filterTree = (node, filter) => {
   if (matcher(filter, node) || !node.children) {

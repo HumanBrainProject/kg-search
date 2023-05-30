@@ -21,23 +21,22 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
-import "./Notice.css";
+import PropTypes from 'prop-types';
+import React from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
+import './Notice.css';
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-export const Notice = ({className, show, text, agreeLabel="I agree", onAgree}) => {
+export const Notice = ({className, show, text, agreeLabel='I agree', onAgree}) => {
   if (!show || !text) {
     return null;
   }
 
   const html = converter.makeHtml(text);
-  const classNames = ["kgs-notice", className].join(" ");
   return (
-    <div className={classNames}>
+    <div className={`kgs-notice ${className??''}`}>
       <div className="kgs-notice-panel">
         <span className="kgs-notice-content" dangerouslySetInnerHTML={{__html:html}} />
       </div>

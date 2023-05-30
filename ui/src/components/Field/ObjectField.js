@@ -21,17 +21,15 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import "./ObjectField.css";
+import './ObjectField.css';
 
-const DefaultList = ({ className, children }) => {
-  return (
-    <ul className={className}>
-      {children}
-    </ul>
-  );
-};
+const DefaultList = ({ className, children }) => (
+  <ul className={className}>
+    {children}
+  </ul>
+);
 
 const CustomList = ({ className, children }) => (
   <span className={className}>
@@ -72,7 +70,7 @@ const ObjectField = ({data, mapping, type, fieldComponent: FieldComponent }) => 
     }));
 
   return (
-    <List className={`kgs-field__object ${mapping.enforceList ? "kgs-field__object_enforce_list" : ""}`}>
+    <List className={`kgs-field__object ${mapping.enforceList ? 'kgs-field__object_enforce_list' : ''}`}>
       {
         fields.map((field, idx) => (
           <ListItem key={field.name} separator={field.mapping.separator} isFirst={!idx}>

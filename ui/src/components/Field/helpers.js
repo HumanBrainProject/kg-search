@@ -24,8 +24,8 @@
 
 export const LIST_SMALL_SIZE_STOP = 5;
 
-const VIEW_LESS_LABEL = "view less";
-const VIEW_ALL_LABEL = "view all";
+const VIEW_LESS_LABEL = 'view less';
+const VIEW_ALL_LABEL = 'view all';
 
 
 export const getNextSizeStop = (sizeStop, props) => {
@@ -51,9 +51,7 @@ export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
 
   const nbToDisplay = Math.min(maxSizeStop, sizeStop);
   return items
-    .filter((_item, idx) => {
-      return idx < nbToDisplay;
-    })
+    .filter((_item, idx) => idx < nbToDisplay)
     .map((item, idx) => ({
       isObject: !!item.children,
       key: getKey(item, idx),

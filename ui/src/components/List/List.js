@@ -21,13 +21,13 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
 export class Item extends React.PureComponent {
 
   handleClick = e => {
     const { item, onClick } = this.props;
-    if (typeof onClick === "function") {
+    if (typeof onClick === 'function') {
       e.stopPropagation();
       onClick(item);
     }
@@ -35,7 +35,7 @@ export class Item extends React.PureComponent {
 
   handleKeyDown = e => {
     const { item, onClick } = this.props;
-    if (e.keyCode === 13 && typeof onClick === "function") {
+    if (e.keyCode === 13 && typeof onClick === 'function') {
       e.stopPropagation();
       onClick(item);
     }

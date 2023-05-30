@@ -21,26 +21,26 @@
  *
  */
 
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 
-import { Field } from "../Field/Field";
-import FieldsPanel from "../../components/Field/FieldsPanel";
+import FieldsPanel from '../../components/Field/FieldsPanel';
+import { Field } from '../Field/Field';
 
-import "./LinkedInstance.css";
+import './LinkedInstance.css';
 
 const LinkedInstanceComponent = ({data, mapping, type}) => {
   if (!(data instanceof Object)) {
     return null;
   }
   // BEGIN v1 file
-  if (type === "File" && (!mapping || typeof mapping !== "object")) {
+  if (type === 'File' && (!mapping || typeof mapping !== 'object')) {
     if (!data || !data.fileSize) {
       return null;
     }
     mapping = {
       size: {
-        label: "Size",
+        label: 'Size',
         order: 13
       }
     };
@@ -67,10 +67,10 @@ export const LinkedInstance = connect(
   (state, props) => {
     const mapping = Object.entries((props.type && state.instance.typeMappings[props.type] && state.instance.typeMappings[props.type].fields)?state.instance.typeMappings[props.type].fields:{}).reduce((acc, [name, fieldsMapping]) => {
       if (
-        name !== "title" && // filter title as we only want to show the details of the linked instance
-        name !== "label" && // filter label as we only want to show the details of the linked instance
+        name !== 'title' && // filter title as we only want to show the details of the linked instance
+        name !== 'label' && // filter label as we only want to show the details of the linked instance
         !fieldsMapping.isAsync && // filter async data in linked instance
-        !(props.type === "File" && name === "iri") // filter iri in file linked instance
+        !(props.type === 'File' && name === 'iri') // filter iri in file linked instance
       ) {
         acc[name] = fieldsMapping;
       }

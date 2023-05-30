@@ -21,20 +21,17 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import "./EmailToLink.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
+import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import React from 'react';
+import './EmailToLink.css';
 
-const EmailToLink = ({className, title = "Send search link by email", text, icon=faEnvelope, link}) => {
-  const classNames = ["kgs-email-link", className].join(" ");
-  return (
-    <a className={classNames} href={link} title={title}>
-      <FontAwesomeIcon icon={icon} /><span>{text}</span>
-    </a>
-  );
-};
+const EmailToLink = ({className, title = 'Send search link by email', text, icon=faEnvelope, link}) => (
+  <a className={`kgs-email-link ${className??''}`} href={link} title={title}>
+    <FontAwesomeIcon icon={icon} /><span>{text}</span>
+  </a>
+);
 
 EmailToLink.propTypes = {
   className: PropTypes.string,

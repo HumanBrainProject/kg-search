@@ -21,7 +21,7 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
 const FieldsPanel = ({className, fields, fieldComponent}) =>{
   if (!fields || !fields.length) {
@@ -29,7 +29,7 @@ const FieldsPanel = ({className, fields, fieldComponent}) =>{
   }
   const FieldComponent = fieldComponent;
   return (
-    <div className={`kgs-fields-panel ${className?className:""}`}>
+    <div className={`kgs-fields-panel ${className??''}`}>
       {fields && fields.map(({name, data, mapping, type}) => (
         <FieldComponent key={name} name={name} data={data} mapping={mapping} type={type} />
       ))}

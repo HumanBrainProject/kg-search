@@ -20,10 +20,10 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import FetchingPanel from "../../components/FetchingPanel/FetchingPanel";
+import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
 
 const SearchFetching = () => {
 

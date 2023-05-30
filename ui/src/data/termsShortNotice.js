@@ -21,7 +21,7 @@
  *
  */
 
-export const termsCurrentVersion = "2.2";
+export const termsCurrentVersion = '2.2';
 
 export const termsShortNotice = `
 Access to the data and metadata provided through EBRAINS Knowledge Graph Data Platform (&quot;KG&quot;) requires that you cite and acknowledge said data and metadata according to the Terms and Conditions of the Platform.

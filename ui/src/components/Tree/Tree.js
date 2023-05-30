@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
-import "./Tree.css";
+import './Tree.css';
 
 const Node = props => {
   const { item } = props;
@@ -51,7 +51,7 @@ class NodeItem extends React.PureComponent {
 
   handleClick = e => {
     const { item, onClick, readOnly } = this.props;
-    if (!readOnly && typeof onClick === "function") {
+    if (!readOnly && typeof onClick === 'function') {
       e.stopPropagation();
       onClick(item);
     }
@@ -59,7 +59,7 @@ class NodeItem extends React.PureComponent {
 
   handleKeyDown = e => {
     const { item, onClick, readOnly } = this.props;
-    if (!readOnly && e.keyCode === 13 && typeof onClick === "function") {
+    if (!readOnly && e.keyCode === 13 && typeof onClick === 'function') {
       e.stopPropagation();
       onClick(item);
     }
@@ -70,7 +70,7 @@ class NodeItem extends React.PureComponent {
 
     const props = {};
     if (!readOnly) {
-      props.tabIndex = "0";
+      props.tabIndex = '0';
       props.onKeyDown = this.handleKeyDown;
       props.onClick = this.handleClick;
     }
@@ -96,12 +96,12 @@ class CollapisbleNode extends React.Component {
   render() {
     const { item, ItemComponent, itemUniqKeyAttribute, onClick, readOnly } = this.props;
 
-    const maxHeight = (!this.state.isCollapsed && this.childrenRef && this.childrenRef.current) ? this.childrenRef.current.scrollHeight + "px" : null;
+    const maxHeight = (!this.state.isCollapsed && this.childrenRef && this.childrenRef.current) ? this.childrenRef.current.scrollHeight + 'px' : null;
 
     return (
-      <div className={`kgs-tree-collapsible-node ${this.state.isCollapsed ? "is-collapsed" : ""}`}>
+      <div className={`kgs-tree-collapsible-node ${this.state.isCollapsed ? 'is-collapsed' : ''}`}>
         <div className="kgs-tree-collapsible-node__header">
-          <button className="kgs-tree-collapsible-node__button" title={`${this.state.isCollapsed ? "expand" : "collapse"}`} tabIndex={readOnly ? -1 : 0} onClick={readOnly ? undefined : this.handleCollapseToggle} style={readOnly ? { pointerEvents: "none" } : {}}><FontAwesomeIcon icon={faChevronDown} /></button>
+          <button className="kgs-tree-collapsible-node__button" title={`${this.state.isCollapsed ? 'expand' : 'collapse'}`} tabIndex={readOnly ? -1 : 0} onClick={readOnly ? undefined : this.handleCollapseToggle} style={readOnly ? { pointerEvents: 'none' } : {}}><FontAwesomeIcon icon={faChevronDown} /></button>
           <NodeItem ItemComponent={ItemComponent} item={item} onClick={onClick} readOnly={readOnly} />
         </div>
         <div className="kgs-tree-collapsible-node__children" ref={this.childrenRef} style={{ maxHeight: maxHeight }}>

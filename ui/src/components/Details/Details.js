@@ -21,12 +21,12 @@
  *
  */
 
-import React, { useState } from "react";
-import { Text } from "../Text/Text";
-import "./Details.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import './Details.css';
+import {faExclamationCircle} from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
+import { Text } from '../Text/Text';
 
 export const Details = ({ toggleLabel, content, asPopup }) => {
   const [collapsed, setCollapsed] = useState(true);
@@ -39,8 +39,8 @@ export const Details = ({ toggleLabel, content, asPopup }) => {
     return null;
   }
 
-  const className = `toggle ${collapsed ? "" : "in"}`;
-  const classNameAsPopup = `popup ${collapsed ? "" : "show"}`;
+  const className = `toggle ${collapsed ? '' : 'in'}`;
+  const classNameAsPopup = `popup ${collapsed ? '' : 'show'}`;
   return (
     <span className="field-details">
       <button className={className} onClick={handleToggle}>

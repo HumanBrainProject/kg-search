@@ -21,33 +21,31 @@
  *
  */
 
-import React, { Suspense } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
-import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faFolder } from "@fortawesome/free-solid-svg-icons/faFolder";
-import { debounce } from "lodash";
-const Tree = React.lazy(() => import("rc-tree"));
+import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { debounce } from 'lodash';
+import React, { Suspense } from 'react';
+const Tree = React.lazy(() => import('rc-tree'));
 
-import { trackEvent } from "../../../app/services/api";
-import Download from "./Download";
-import LinkedInstance from "../../Instance/LinkedInstance";
-import AsyncLinkedInstance from "../../Instance/AsyncLinkedInstance";
-import { getTreeByFolder } from "./FileTreeByFolderHelper";
-import { getTreeByGroupingType, JSONPath } from "./FileTreeByGroupingTypeHelper";
-import * as filters from "./helpers";
+import Matomo from '../../../services/Matomo';
+import AsyncLinkedInstance from '../../Instance/AsyncLinkedInstance';
+import LinkedInstance from '../../Instance/LinkedInstance';
+import Download from './Download';
+import { getTreeByFolder } from './FileTreeByFolderHelper';
+import { getTreeByGroupingType, JSONPath } from './FileTreeByGroupingTypeHelper';
+import * as filters from './helpers';
 
-import "./HierarchicalFiles.css";
-import "rc-tree/assets/index.css";
+import './HierarchicalFiles.css';
+import 'rc-tree/assets/index.css';
 
-const Loading = () => {
-  return (
-    <>
-      <div className="spinner-border spinner-border-sm" role="status"></div>
+const Loading = () => (
+  <>
+    <div className="spinner-border spinner-border-sm" role="status" />
       &nbsp;Loading files...
-    </>
-  );
-};
+  </>
+);
 
 const getFilteredTree = (tree, filter) => {
   if (!filter) {
@@ -59,13 +57,13 @@ const getFilteredTree = (tree, filter) => {
 };
 
 const Node = ({ node, isRootNode, type, hasFilter }) => {
-  const isFile = node.type === "file";
+  const isFile = node.type === 'file';
   const icon = isFile ? faFile : faFolder;
 
   const getDownloadName = () => {
     if (isRootNode) {
       return `Download ${
-        typeof type === "string" ? type.toLowerCase() : "Dataset"
+        typeof type === 'string' ? type.toLowerCase() : 'Dataset'
       }`;
     }
     return `Download ${node.type}`;
@@ -88,13 +86,13 @@ const Node = ({ node, isRootNode, type, hasFilter }) => {
           {node.url && (isFile || !hasFilter) && (
             <Download name={getDownloadName()} type={type} url={node.url} />
           )}
-          {node.type === "file" && (
+          {node.type === 'file' && (
             <LinkedInstance
               data={node.data}
-              type={node.data?.type?.value || "File"}
+              type={node.data?.type?.value || 'File'}
             />
           )}
-          {node.type === "fileBundle" && node.reference && (
+          {node.type === 'fileBundle' && node.reference && (
             <AsyncLinkedInstance
               id={node.reference}
               name={node.name}
@@ -117,7 +115,7 @@ const addExpandedKeys = (tree, keys) => {
 };
 
 const Icon = ({ type }) => {
-  const isFile = type === "file";
+  const isFile = type === 'file';
   const icon = isFile ? faFile : faFolder;
   return <FontAwesomeIcon icon={icon} />;
 };
@@ -131,7 +129,7 @@ class HierarchicalFiles extends React.Component {
       initialTree: {
         children: []
       },
-      filter: "",
+      filter: '',
       expandedKeys: []
     };
   }
@@ -143,20 +141,20 @@ class HierarchicalFiles extends React.Component {
         data: data[0],
         name: JSONPath(data[0], nameFieldPath),
         url: JSONPath(data[0], urlFieldPath),
-        type: "file"
+        type: 'file'
       };
-      this.setState({ tree: {}, node: node, initialTree: {}, filter: "" });
+      this.setState({ tree: {}, node: node, initialTree: {}, filter: '' });
     } else {
       const initialTree = groupingType
         ? getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType)
         : getTreeByFolder(data, nameFieldPath, urlFieldPath);
-      const tree = getFilteredTree(initialTree, "");
+      const tree = getFilteredTree(initialTree, '');
       this.setState({
         tree: tree,
         node: tree,
         initialTree: initialTree,
         expandedKeys: [tree.key],
-        filter: ""
+        filter: ''
       });
     }
   }
@@ -179,7 +177,7 @@ class HierarchicalFiles extends React.Component {
 
   onFilterMouseUp = debounce(({ target: { value } }) => {
     const filter = value.trim();
-    trackEvent("Files", "Search", filter);
+    Matomo.trackEvent('Files', 'Search', filter);
     const tree = getFilteredTree(this.state.initialTree, filter);
     const expandedKeys = [tree.key];
     addExpandedKeys(tree, expandedKeys);
@@ -187,7 +185,7 @@ class HierarchicalFiles extends React.Component {
   }, 500);
 
   onSelect = (_selectedKeys, info) => {
-    trackEvent("Files", "Clicked", info.node.title);
+    Matomo.trackEvent('Files', 'Clicked', info.node.title);
     this.setState({ node: info.node });
   };
 
@@ -195,7 +193,7 @@ class HierarchicalFiles extends React.Component {
 
   render() {
     const filesLength = this.props.data && this.props.data.length;
-    const hasFilter = this.props.hasDataFilter || this.state.filter !== "";
+    const hasFilter = this.props.hasDataFilter || this.state.filter !== '';
 
     if (!this.state.tree) {
       return null;

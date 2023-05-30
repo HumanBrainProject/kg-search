@@ -20,11 +20,11 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { setCustomUrl, trackPageView } from "../app/services/api";
-import InstanceContainer from "./Instance/InstanceContainer";
+import Matomo from '../services/Matomo';
+import InstanceContainer from './Instance/InstanceContainer';
 
 const Instance = () => {
 
@@ -37,8 +37,8 @@ const Instance = () => {
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true;
-      setCustomUrl(window.location.href);
-      trackPageView();
+      Matomo.setCustomUrl(window.location.href);
+      Matomo.trackPageView();
     }
   }, []);
 

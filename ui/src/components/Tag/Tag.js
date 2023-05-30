@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
-import "./Tag.css";
+import React from 'react';
+import './Tag.css';
 
 export const Tag = ({icon, value}) => {
   if (!icon && !value) {

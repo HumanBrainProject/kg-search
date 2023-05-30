@@ -21,8 +21,8 @@
  *
  */
 
-import React from "react";
-import "./Tags.css";
+import React from 'react';
+import './Tags.css';
 
 const Tags = ({tags}) => (
   <div className="kgs-tags">

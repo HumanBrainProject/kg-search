@@ -15,6 +15,22 @@ exports[`ErrorPanel component renders initially 1`] = `
         }
       }
     />
+    <div
+      className="kgs-error-navigation"
+    >
+      <button
+        className=""
+        onClick={Object {}}
+      >
+        cancel label
+      </button>
+      <button
+        className=""
+        onClick={Object {}}
+      >
+        retry label
+      </button>
+    </div>
   </div>
 </div>
 `;

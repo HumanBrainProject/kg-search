@@ -21,11 +21,11 @@
  *
  */
 
-import React from "react";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
+import React from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
 
-import "./Disclaimer.css";
+import './Disclaimer.css';
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 

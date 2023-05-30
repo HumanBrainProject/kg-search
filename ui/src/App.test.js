@@ -20,29 +20,21 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import store from './services/store';
 
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-
-import store from "./app/store";
-
-import App from "./pages/App";
-
-import "normalize.css/normalize.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import "./index.css";
-
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
+// eslint-disable-next-line no-undef
+describe('Test launching the app', () => {
+  // eslint-disable-next-line no-undef, jest/expect-expect
+  it('renders without crashing', () => {
+    const container = document.createElement('div');
+    const root = createRoot(container);
+    root.render(
+      <React.StrictMode>
+        <App store={store} />
+      </React.StrictMode>
+    );
+  });
+});

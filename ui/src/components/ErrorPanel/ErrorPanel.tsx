@@ -21,49 +21,43 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import showdown from "showdown";
-import xssFilter from "showdown-xss-filter";
+import React from 'react';
+import showdown from 'showdown';
+import xssFilter from 'showdown-xss-filter';
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-import "./ErrorPanel.css";
+import './ErrorPanel.css';
 
-const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel="Cancel", retryLabel="Retry" }) => {
+interface ErrorPanelProps {
+  message: string;
+  cancelLabel?: string;
+  cancelVariant?: string;
+  onCancelClick?: () => void;
+  retryLabel?: string;
+  retryVariant?: string;
+  onRetryClick?: () => void;
+}
+
+const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel='Cancel', retryLabel='Retry' }: ErrorPanelProps) => {
   const html = converter.makeHtml(message);
   return (
     <div className="kgs-error-container">
       <div className="kgs-error-panel">
         <span className="kgs-error-message" dangerouslySetInnerHTML={{__html:html}} />
-        {(typeof onCancelClick === "function" || typeof onRetryClick === "function") && (
+        {(!!onCancelClick || !!onRetryClick) && (
           <div className="kgs-error-navigation">
-            {typeof onCancelClick === "function" && (
-              <button className={`${cancelVariant?cancelVariant:""}`} onClick={onCancelClick}>{cancelLabel}</button>
+            {!!onCancelClick && (
+              <button className={`${cancelVariant?cancelVariant:''}`} onClick={onCancelClick}>{cancelLabel}</button>
             )}
-            {typeof onRetryClick === "function" && (
-              <button className={`${retryVariant?retryVariant:""}`} onClick={onRetryClick}>{retryLabel}</button>
+            {!!onRetryClick && (
+              <button className={`${retryVariant?retryVariant:''}`} onClick={onRetryClick}>{retryLabel}</button>
             )}
           </div>
         )}
       </div>
     </div>
   );
-};
-
-ErrorPanel.propTypes = {
-  show: PropTypes.bool,
-  cancelLabel: PropTypes.string,
-  onCancelClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.object
-  ]),
-  retryLabel: PropTypes.string,
-  onRetryClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.object
-  ]),
-  onAction: PropTypes.func
 };
 
 export default ErrorPanel;

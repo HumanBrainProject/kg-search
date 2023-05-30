@@ -21,26 +21,32 @@
  *
  */
 
-import React, { Suspense } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
-import FetchingPanel from "../components/FetchingPanel/FetchingPanel";
+import App from './App';
+import KeycloakAuthAdapter from './services/KeycloakAuthAdapter';
+import authConnector from './services/authConnector';
+import store from './services/store';
 
-const Search = React.lazy(() => import("./Search"));
-const Instance = React.lazy(() => import("./Instance"));
-const Preview = React.lazy(() => import("./Preview"));
 
-const View = () => (
-  <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-    <Routes>
-      <Route path="/" element={<Search />} />
-      <Route path="/instances/:id" element={<Instance />} />
-      <Route path="/instances/:type/:id" element={<Instance />} />
-      <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-      <Route path="/live/:id" element={<Preview />} />
-      <Route path="*" element={<Navigate to="/" replace={true} />} />
-    </Routes>
-  </Suspense>
+const authAdapter = new KeycloakAuthAdapter({
+  onLoad: 'check-sso',
+  flow: 'standard',
+  pkceMethod: 'S256',
+  checkLoginIframe: true,
+  enableLogging: true
+}, `${window.location.protocol}//${window.location.host}`);
+
+authConnector.setAuthAdapter(authAdapter);
+
+const container = document.getElementById('root');
+if (!container) {
+  throw new Error('Failed to find the root element');
+}
+const root = createRoot(container);
+root.render(
+  <React.StrictMode>
+    <App store={store} authAdapter={authAdapter}/>
+  </React.StrictMode>
 );
-
-export default View;

@@ -21,15 +21,15 @@
  *
  */
 
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { trackEvent } from "../../../app/services/api";
-import { requestInstance } from "../../../features/instance/instanceSlice";
+import { requestInstance } from '../../../features/instance/instanceSlice';
+import Matomo from '../../../services/Matomo';
 
-import { Hit } from "./Hit";
+import { Hit } from './Hit';
 
-import "./Hits.css";
+import './Hits.css';
 
 const HitButton = ({ data }) => {
 
@@ -48,9 +48,9 @@ const HitButton = ({ data }) => {
 
   const handleContextMenu = e => {
     e.preventDefault();
-    const relativeUrl = `/instances/${data.id}${(group != defaultGroup)?("?group=" + group):""}`;
-    trackEvent("Card", "Open in new tab", relativeUrl);
-    window.open(relativeUrl, "_blank");
+    const relativeUrl = `/instances/${data.id}${(group != defaultGroup)?('?group=' + group):''}`;
+    Matomo.trackEvent('Card', 'Open in new tab', relativeUrl);
+    window.open(relativeUrl, '_blank');
   };
 
   return (

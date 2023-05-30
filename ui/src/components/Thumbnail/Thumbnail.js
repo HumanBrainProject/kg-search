@@ -21,29 +21,27 @@
  *
  */
 
-import React from "react";
-import "./Thumbnail.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile } from "@fortawesome/free-solid-svg-icons/faFile";
-import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
-import { faFileImage } from "@fortawesome/free-solid-svg-icons/faFileImage";
+import './Thumbnail.css';
+import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+import { faFileImage } from '@fortawesome/free-solid-svg-icons/faFileImage';
+import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
-const getImage = url => {
-  return new Promise((resolve, reject) => {
-    if (typeof url !== "string") {
-      reject(url);
-    }
-    const img = new Image();
-    img.onload = () => {
-      resolve(url);
-    };
-    img.onerror = () => {
-      reject(url);
-    };
-    img.src = url;
-  });
-};
+const getImage = url => new Promise((resolve, reject) => {
+  if (typeof url !== 'string') {
+    reject(url);
+  }
+  const img = new Image();
+  img.onload = () => {
+    resolve(url);
+  };
+  img.onerror = () => {
+    reject(url);
+  };
+  img.src = url;
+});
 
 const ThumbnailIcon = ({isAnimated}) => {
   if(isAnimated) {
@@ -68,7 +66,7 @@ class Thumbnail extends React.Component {
   }
 
   async loadImage() {
-    if (typeof this.props.previewUrl === "string") {
+    if (typeof this.props.previewUrl === 'string') {
       if (this.props.previewUrl !== this.state.src || this.state.error) {
         this.setState({
           src: this.props.previewUrl,
@@ -108,15 +106,15 @@ class Thumbnail extends React.Component {
 
   listenClickOutHandler() {
     this.clickOutHandlerRef = this.clickOutHandler.bind(this);
-    window.addEventListener("mouseup", this.clickOutHandlerRef, false);
-    window.addEventListener("touchend", this.clickOutHandlerRef, false);
-    window.addEventListener("keyup", this.clickOutHandlerRef, false);
+    window.addEventListener('mouseup', this.clickOutHandlerRef, false);
+    window.addEventListener('touchend', this.clickOutHandlerRef, false);
+    window.addEventListener('keyup', this.clickOutHandlerRef, false);
   }
 
   unlistenClickOutHandler() {
-    window.removeEventListener("mouseup", this.clickOutHandlerRef, false);
-    window.removeEventListener("touchend", this.clickOutHandlerRef, false);
-    window.removeEventListener("keyup", this.clickOutHandlerRef, false);
+    window.removeEventListener('mouseup', this.clickOutHandlerRef, false);
+    window.removeEventListener('touchend', this.clickOutHandlerRef, false);
+    window.removeEventListener('keyup', this.clickOutHandlerRef, false);
   }
 
   componentWillUnmount() {
@@ -126,8 +124,8 @@ class Thumbnail extends React.Component {
   render() {
     const { url, alt, isAnimated, onClick } = this.props;
 
-    if (typeof onClick !== "function") {
-      if (typeof url === "string") {
+    if (typeof onClick !== 'function') {
+      if (typeof url === 'string') {
         return (
           <span className="kgs-thumbnail--panel">
             <div>
@@ -146,7 +144,7 @@ class Thumbnail extends React.Component {
     return (
       <div className="fa-stack fa-1x kgs-thumbnail--container">
         <button className="kgs-thumbnail--button" onClick={onClick}>
-          {typeof url === "string" ? (
+          {typeof url === 'string' ? (
             <span className="kgs-thumbnail--panel">
               <div className="kgs-thumbnail--image">
                 <img src={url} alt={alt} />

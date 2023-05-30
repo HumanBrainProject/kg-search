@@ -21,10 +21,10 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faTag} from "@fortawesome/free-solid-svg-icons/faTag";
+import {faTag} from '@fortawesome/free-solid-svg-icons/faTag';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const Icon = ({className, title, url, inline}) => {
   if (url) {

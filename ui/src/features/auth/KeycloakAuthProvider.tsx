@@ -21,25 +21,27 @@
  *
  */
 
-import { useEffect } from "react";
+import React from 'react';
 
-const useScript = (type, content) => {
-  useEffect(() => {
-    const script = document.createElement("script");
-    if (type) {
-      script.type = type;
-    }
-    if (content) {
-      script.textContent = JSON.stringify(content);
-      document.head.appendChild(script);
-    }
+import AuthContext from '../../contexts/AuthContext';
+import useKeycloak from '../../hooks/useKeycloak';
+import type KeycloakAuthAdapter from '../../services/KeycloakAuthAdapter';
+import type { JSX } from 'react';
 
-    return () => {
-      if(content) {
-        document.head.removeChild(script);
-      }
-    };
-  }, [type, content]);
+interface KeycloakAuthProviderProps {
+  adapter: KeycloakAuthAdapter;
+  loginRequired?: boolean;
+  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+}
+
+const KeycloakAuthProvider = ({ adapter, loginRequired, children }:KeycloakAuthProviderProps) => {
+  const auth = useKeycloak(adapter, loginRequired);
+  return (
+    <AuthContext.Provider value={auth} >
+      <>
+        {children}
+      </>
+    </AuthContext.Provider>
+  );
 };
-
-export default useScript;
+export default KeycloakAuthProvider;

@@ -21,7 +21,7 @@
  *
  */
 
-import {termsCurrentVersion} from "./termsShortNotice";
+import {termsCurrentVersion} from './termsShortNotice';
 
 export const termsOfUse = `###EBRAINS Knowledge Graph Data Platform Citation Requirements
 

@@ -21,9 +21,9 @@
  *
  */
 
-import React from "react";
+import React from 'react';
 
-import BgError from "../components/BgError/BgError";
+import BgError from '../components/BgError/BgError';
 
 class ErrorBoundary extends React.Component {
 
