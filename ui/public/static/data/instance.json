@@ -2,6 +2,14 @@
   "previews": [
     {
       "previewUrl": {
+        "url": "https://data-proxy.ebrains.eu/api/v1/buckets/d-1570d4e5-8cc5-44b2-bfaa-f91274fe0bf3/F-TRACT_logo.png",
+        "isAnimated": false
+      },
+      "staticImageUrl": "https://data-proxy.ebrains.eu/api/v1/buckets/d-1570d4e5-8cc5-44b2-bfaa-f91274fe0bf3/F-TRACT_logo.png",
+      "label": "F-TRACT Logo: © 2023 Functional Brain Tractography Project"
+    },
+    {
+      "previewUrl": {
         "isAnimated": true,
         "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00007_Atlas-M2-receptor-rat_pub/b842b365-528d-5e6f-8df4-6820d521a486.mp4"
       },

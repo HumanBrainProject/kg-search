@@ -66,7 +66,7 @@ export const api = createApi({
     getInstance: builder.query({
       // query: () => "../static/data/instance.json",
       // transformResponse: (data, _meta, arg) => {
-      //   data.id = arg.id;
+      //   (data as {id: string}).id = arg.id;
       //   return data;
       // },
       query: ({ id, group }) => `/groups/${group}/documents/${id}`,

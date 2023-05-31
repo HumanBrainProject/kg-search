@@ -68,39 +68,10 @@
   text-align: center;
 }
 
-.kgs-image_popup-content .kgs-image_popup-label-wrapper {
-  transition: all .35s ease-in-out;
+.kgs-image_popup-hint {
   position: absolute;
-  left: 50%;
-  width: auto;
-  max-width: 90%;
-  min-width: 10%;
-  border-radius: 10px;
-  background: #000;
-  color: #fff;
-  padding: 5px;
-  font-size: var(--font-size-smaller);
-  text-align: center;
-  opacity: .25;
-  transform: translate(-50%, -100%);
-}
-
-.kgs-image_popup-content .kgs-image_popup-label {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  line-height: normal;
-  overflow-wrap: break-word;
-  word-break: normal;
-  white-space: pre-wrap;
-  margin-top: 10px;
-}
-
-.kgs-image_popup-content:hover .kgs-image_popup-label-wrapper {
-  background-color: rgba(51, 51, 51, 0.85);
-  opacity: 1;
+  top: 0;
+  left: 3px;
 }
 
 .kgs-image_popup-error {

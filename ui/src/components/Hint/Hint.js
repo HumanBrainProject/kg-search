@@ -30,23 +30,21 @@ import { Tooltip } from 'react-tooltip';
 
 import './Hint.css';
 
-const hintId = encodeURI(uniqueId('kgs-hint_content-'));
-
 export const Hint = ({ className, value }) => {
   if (!value && value !== 0) {
     return null;
   }
+  const hintId = encodeURI(uniqueId('kgs-hint_content-'));
   return (
     <span className={`kgs-hint ${className??''}`}>
       <FontAwesomeIcon
+        id={hintId}
         icon={faInfoCircle}
         data-tip
         data-for={hintId}
         aria-hidden="true"
       />
-      <Tooltip id={hintId} place="right" type="dark" effect="solid">
-        <span>{value}</span>
-      </Tooltip>
+      <Tooltip className="kgs-hint-tooltip" anchorSelect={`#${hintId}`} place="right" variant="dark" content={value} />
     </span>
   );
 };

@@ -27,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect, useRef } from 'react';
 import showdown from 'showdown';
 import xssFilter from 'showdown-xss-filter';
+import Hint from '../Hint/Hint';
 
 import './ImagePopup.css';
 
@@ -89,10 +90,9 @@ const ImagePopup = ({ className, src, label, link, onClick }) => {
               :
               <React.Fragment>
                 <Media label={label} srcState={srcState}/>
-                {label && (
-                  <div className="kgs-image_popup-label-wrapper">
-                    <p className="kgs-image_popup-label">{label}</p>
-                  </div>)}
+                {!!label && (
+                  <Hint className="kgs-image_popup-hint" value={label} />
+                )}
                 {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }} />}
               </React.Fragment>
           }

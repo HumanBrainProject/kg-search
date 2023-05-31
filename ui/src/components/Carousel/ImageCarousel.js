@@ -23,17 +23,22 @@
 
 import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useRef, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
+import { Hint } from '../Hint/Hint';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './ImageCarousel.css';
 
 
 export const ImageCarousel = ({ className, width, images, onClick }) => {
-  const labelRef = useRef();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onClickItem = useMemo(() => index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]), [images]);
+  const [hint, setHint] = useState(images.length === 0?'':images[0].label);
+
+  const onClickItem = index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
+
+  const handleOnChange = index => {
+    setHint(images[index].label);
+  };
 
   if (!images || !images.length) {
     return null;
@@ -41,20 +46,19 @@ export const ImageCarousel = ({ className, width, images, onClick }) => {
 
   return (
     <div className={`kgs-image_carousel ${className ? className : ''}`}>
-      <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={onClickItem} >
+      <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={onClickItem} onChange={handleOnChange} >
         {images.map(({ src, label, isTargetAnimated }) => (
           <div key={src}>
             <img src={src} alt={label ? label : ''} />
             {isTargetAnimated && <div className="kgs-image_carousel-icon is-animated">
               <FontAwesomeIcon icon={faPlay} size="3x" />
             </div>}
-            {label && (
-              <div className="kgs-image_carousel-label-wrapper">
-                <p className="kgs-image_carousel-label" ref={labelRef}>{label}</p>
-              </div>)}
           </div>
         ))}
       </Carousel>
+      {!!hint && (
+        <Hint className="kgs-image_carousel-hint" value={hint} />
+      )}
     </div>
   );
 };
