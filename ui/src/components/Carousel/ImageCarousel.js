@@ -31,9 +31,7 @@ import './ImageCarousel.css';
 
 
 export const ImageCarousel = ({ className, width, images, onClick }) => {
-
-  const [hint, setHint] = useState(images.length === 0?'':images[0].label);
-
+  const [hint, setHint] = useState(!images || images.length === 0?'':images[0].label);
   const onClickItem = index => !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
 
   const handleOnChange = index => {
