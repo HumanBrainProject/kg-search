@@ -33,6 +33,8 @@ import java.util.List;
 
 @EqualsAndHashCode
 public class TargetInternalReference implements Comparable<TargetInternalReference> {
+    private TargetInternalReference() {
+    }
 
     public TargetInternalReference(String reference, String value) {
         this.reference = reference;

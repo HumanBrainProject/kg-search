@@ -1,0 +1,1444 @@
+{
+  "key": "root",
+  "parentRelationType": null,
+  "title": "Specimen",
+  "color": "#e3dcdc",
+  "data": {
+    "type": {
+      "value": "Dataset.SpecimenOverview"
+    },
+    "title": null,
+    "numberOfSubjectGroups": {
+      "value": "3"
+    },
+    "numberOfSubjects": {
+      "value": "24"
+    },
+    "numberOfTissueSampleCollections": null,
+    "numberOfTissueSamples": {
+      "value": "1"
+    },
+    "species": [
+      {
+        "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+        "value": "Mustela putorius",
+        "count": [
+          "24 subjects",
+          "3 subject groups",
+          "1 tissue sample"
+        ]
+      }
+    ],
+    "sex": [
+      {
+        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+        "value": "male",
+        "count": [
+          "24 subjects",
+          "3 subject groups",
+          "1 tissue sample"
+        ]
+      }
+    ],
+    "strains": null,
+    "geneticStrainTypes": null,
+    "pathology": null
+  },
+  "legend": {
+    "#ffbe00": "Subject",
+    "#8a1f0d": "Subject group",
+    "#3176e1": "Tissue sample",
+    "#393ac6": "Tissue sample state"
+  },
+  "children": [
+    {
+      "key": "d33888ab-f576-488c-bce0-e29d4c469374",
+      "parentRelationType": null,
+      "title": "Subject group CGP",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "f30c27f7-0c69-41dc-a897-a795f8a94f76",
+        "title": {
+          "value": "CGP"
+        },
+        "numberOfSubjects": {
+          "value": "6"
+        },
+        "species": [
+          {
+            "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+            "value": "Mustela putorius"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "age": {
+          "value": "4 - 6 month"
+        },
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "1511baa4-9d99-4a83-80cd-13249b5603e1",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-11",
+          "color": "#ffbe00",
+          "data": {
+            "id": "d61ebb0a-9a73-4211-ba41-09a044c856c3",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-11"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "74cc71e1-7c43-404b-90db-89bc00e18750",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-12",
+          "color": "#ffbe00",
+          "data": {
+            "id": "5487abe3-2bfb-4b81-9955-565fa74c5e5d",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-12"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "7d1e010b-373b-4d39-91c9-7866c64a952f",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-13",
+          "color": "#ffbe00",
+          "data": {
+            "id": "66b66e1d-cc46-4299-a45a-274a4057bf03",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-13"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "844cc902-bb7e-4093-a4ec-c0e5728c1c9c",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-14",
+          "color": "#ffbe00",
+          "data": {
+            "id": "306c73b3-5e30-4b0e-9e22-d30a8e3116b2",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-14"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "979ed708-cd0a-4251-9e44-6f63815aad88",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-15",
+          "color": "#ffbe00",
+          "data": {
+            "id": "e6525312-bcae-4f80-b240-a6797ccfe9f8",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-15"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "0b291368-7a45-434d-9425-86e28c74fc78",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-16",
+          "color": "#ffbe00",
+          "data": {
+            "id": "dd804faf-b22d-4514-a52f-4a5fbf93c106",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-16"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        }
+      ]
+    },
+    {
+      "key": "2d4db196-2718-467e-8164-f83dc3b20b7c",
+      "parentRelationType": null,
+      "title": "Subject group GABAZ",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "e8240050-5a2b-4db2-8b82-bd00ba093e8d",
+        "title": {
+          "value": "GABAZ"
+        },
+        "numberOfSubjects": {
+          "value": "10"
+        },
+        "species": [
+          {
+            "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+            "value": "Mustela putorius"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "age": {
+          "value": "4 - 6 month"
+        },
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "41c1058c-6b89-408b-a03e-9367c2fb6084",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-01",
+          "color": "#ffbe00",
+          "data": {
+            "id": "9fb76ac9-f522-4660-be63-d920e2fa12cc",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-01"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "70341645-8c55-40f6-81c2-0949c1f65064",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-02",
+          "color": "#ffbe00",
+          "data": {
+            "id": "f8fd574d-db0e-4549-ad1d-0d6bc721e4d2",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-02"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "0a6fb65f-6a3f-4fcc-9078-56dd7d2f1ae7",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-03",
+          "color": "#ffbe00",
+          "data": {
+            "id": "a8938735-2060-4619-ad19-6e6b3fa01493",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-03"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "a249b001-2161-42a7-9f25-43b705f9127e",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-04",
+          "color": "#ffbe00",
+          "data": {
+            "id": "26295018-60d0-47a9-9e53-6c09f13fc8e7",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-04"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "9f3bdadc-0e50-418d-b667-464206be7408",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-05",
+          "color": "#ffbe00",
+          "data": {
+            "id": "edcf214f-6635-4929-a76d-96a11e94d1a4",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-05"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "79f68d52-79ec-409a-8733-ae2db0ba1599",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-06",
+          "color": "#ffbe00",
+          "data": {
+            "id": "855fd4a8-9252-4b63-b61c-b03d975e950b",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-06"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "0ea572ff-7d7c-40da-902c-e5103097b5a5",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-07",
+          "color": "#ffbe00",
+          "data": {
+            "id": "94005a79-c0fb-4fc9-98d5-9a4283756b96",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-07"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "211f4fd3-022c-4288-ae31-8a95e01ea00b",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-08",
+          "color": "#ffbe00",
+          "data": {
+            "id": "87414e56-3490-4e65-baa2-86a2c2693c0a",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-08"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "fa46e519-307b-49ee-bddb-fedda8a377cc",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-09",
+          "color": "#ffbe00",
+          "data": {
+            "id": "2f2d3cb6-0239-47e8-af4c-cd9c94bff4f9",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-09"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "05be5a2b-6418-4abd-86e4-e688663fed1e",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-10",
+          "color": "#ffbe00",
+          "data": {
+            "id": "ba422860-0fad-4ef8-b5cd-4a642c8672f7",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-10"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        }
+      ]
+    },
+    {
+      "key": "0ca098d3-b61b-4109-9ba0-e2839e4d1d7b",
+      "parentRelationType": null,
+      "title": "Subject group KCl",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "013de827-a61f-42d2-b81f-415fd456983a",
+        "title": {
+          "value": "KCl"
+        },
+        "numberOfSubjects": {
+          "value": "8"
+        },
+        "species": [
+          {
+            "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+            "value": "Mustela putorius"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "age": {
+          "value": "4 - 6 month"
+        },
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "dc9b9327-d902-4576-ae17-a8987fc2f067",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-17",
+          "color": "#ffbe00",
+          "data": {
+            "id": "3812c827-072b-4c9e-b2b2-9e9356a2f497",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-17"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "e6478d9c-38e5-42a7-a243-3ac2dd969dab",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-18",
+          "color": "#ffbe00",
+          "data": {
+            "id": "fc331536-838a-4108-99b2-a52171f1daa7",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-18"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "f69d2d22-9a85-4ac1-9903-57cd88fb8fab",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-19",
+          "color": "#ffbe00",
+          "data": {
+            "id": "65e001ef-67ab-43ca-ba00-a73f8584a5c5",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-19"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "4fc22da1-1f55-4751-ab01-fd15e08b503b",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-20",
+          "color": "#ffbe00",
+          "data": {
+            "id": "1ee273c9-a7e9-46b4-98f0-99c58e463d1a",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-20"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "a52a4bf6-a514-405c-a696-1bb75cfbe7f8",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample 01854_sub-20_KCl_slice",
+              "color": "#3176e1",
+              "data": {
+                "id": "4d8d8caa-8d7d-46e5-b5a3-95059841605d",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": null,
+                "sex": [
+                  {
+                    "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                    "value": "male"
+                  }
+                ],
+                "anatomicalLocation": [
+                  {
+                    "reference": "9abc85b4-454b-405d-9512-79e003caaf58",
+                    "value": "primary visual cortex"
+                  }
+                ],
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                    "value": "Mustela putorius"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+                  "value": "tissue slice"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              },
+              "children": [
+                {
+                  "key": "6d776a4f-5a46-4268-8ef9-c396e0798ecd",
+                  "parentRelationType": "descendentFrom",
+                  "title": "State A",
+                  "color": "#393ac6",
+                  "data": {
+                    "id": null,
+                    "type": {
+                      "value": "Dataset.TissueSampleState"
+                    },
+                    "title": {
+                      "value": "State State A of tissue sample 01854_sub-20_KCl_slice"
+                    },
+                    "sex": [
+                      {
+                        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                        "value": "male"
+                      }
+                    ],
+                    "anatomicalLocation": [
+                      {
+                        "reference": "9abc85b4-454b-405d-9512-79e003caaf58",
+                        "value": "primary visual cortex"
+                      }
+                    ],
+                    "origin": {
+                      "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                      "value": "brain"
+                    },
+                    "species": [
+                      {
+                        "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                        "value": "Mustela putorius"
+                      }
+                    ],
+                    "strain": null,
+                    "geneticStrainType": null,
+                    "laterality": null,
+                    "attributes": null,
+                    "tissueSampleType": {
+                      "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+                      "value": "tissue slice"
+                    },
+                    "age": null,
+                    "ageCategory": null,
+                    "pathology": null,
+                    "weight": null,
+                    "additionalRemarks": {
+                      "value": "local field potential (LFP) recordings without drug treatment (control)"
+                    },
+                    "serviceLinks": null
+                  }
+                },
+                {
+                  "key": "4b0466a0-e73d-49f8-9639-b57c9a43f1f7",
+                  "parentRelationType": "descendentFrom",
+                  "title": "State B",
+                  "color": "#393ac6",
+                  "data": {
+                    "id": null,
+                    "type": {
+                      "value": "Dataset.TissueSampleState"
+                    },
+                    "title": {
+                      "value": "State State B of tissue sample 01854_sub-20_KCl_slice"
+                    },
+                    "sex": [
+                      {
+                        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                        "value": "male"
+                      }
+                    ],
+                    "anatomicalLocation": [
+                      {
+                        "reference": "9abc85b4-454b-405d-9512-79e003caaf58",
+                        "value": "primary visual cortex"
+                      }
+                    ],
+                    "origin": {
+                      "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                      "value": "brain"
+                    },
+                    "species": [
+                      {
+                        "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                        "value": "Mustela putorius"
+                      }
+                    ],
+                    "strain": null,
+                    "geneticStrainType": null,
+                    "laterality": null,
+                    "attributes": null,
+                    "tissueSampleType": {
+                      "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+                      "value": "tissue slice"
+                    },
+                    "age": null,
+                    "ageCategory": null,
+                    "pathology": null,
+                    "weight": null,
+                    "additionalRemarks": {
+                      "value": "local field potential (LFP) recordings after application of a bath solution with higher potassium (K+) concentration"
+                    },
+                    "serviceLinks": null
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "3dab909f-ac51-4786-86d0-88a8f2612514",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-21",
+          "color": "#ffbe00",
+          "data": {
+            "id": "2405d10c-f57c-4f73-ab8a-c2f747d6de90",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-21"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "f80077e5-db18-41e1-880a-e05d58794e72",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-22",
+          "color": "#ffbe00",
+          "data": {
+            "id": "dd0f5d78-c5f5-49d0-b4b0-56c98199096d",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-22"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "43ae612f-a035-43b9-9ff7-67d0ee38f847",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-23",
+          "color": "#ffbe00",
+          "data": {
+            "id": "7b292083-bffb-4fda-b9a2-f4aa329df94e",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-23"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        },
+        {
+          "key": "04da1428-a42b-471b-b3aa-2ed816fda3d9",
+          "parentRelationType": "partOf",
+          "title": "Subject subject-24",
+          "color": "#ffbe00",
+          "data": {
+            "id": "30d4ce7e-20fe-4d1b-82b8-bea8b81b326f",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "subject-24"
+            },
+            "species": [
+              {
+                "reference": "e2d7b670-7de8-49fc-81ac-b6ce42f31282",
+                "value": "Mustela putorius"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": null,
+            "geneticStrainType": null,
+            "ageCategory": [
+              {
+                "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+                "value": "adult"
+              }
+            ],
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": {
+              "value": "4 - 6 month"
+            },
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          }
+        }
+      ]
+    }
+  ]
+}

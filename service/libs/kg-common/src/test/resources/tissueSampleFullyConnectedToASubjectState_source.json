@@ -1,0 +1,2008 @@
+[
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Mustela putorius",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-20_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-20_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/36f75e3d-8afb-49a2-9ee3-9ac9ac994ce1",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-20",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/1ee273c9-a7e9-46b4-98f0-99c58e463d1a",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-18_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-18_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/bd9fbdac-9bda-408e-a54c-56941ae80223",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-18",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/fc331536-838a-4108-99b2-a52171f1daa7",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-17_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-17_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/ee53c373-0f36-4a87-8519-c6416c833af4",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-17",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/3812c827-072b-4c9e-b2b2-9e9356a2f497",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-19_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-19_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/693b19ff-674e-49ad-9448-eaa4ef08a8aa",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-19",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/65e001ef-67ab-43ca-ba00-a73f8584a5c5",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-21_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-21_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/7d052443-3392-4cad-87b4-bfaf474da603",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-21",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/2405d10c-f57c-4f73-ab8a-c2f747d6de90",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-24_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-24_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/32e7e85a-396d-40a2-879b-0bd35501f880",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-24",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/30d4ce7e-20fe-4d1b-82b8-bea8b81b326f",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-23_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-23_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/48f38df5-5201-4574-8789-b1aafb4c8296",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-23",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/7b292083-bffb-4fda-b9a2-f4aa329df94e",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-22_KCl",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-22_KCl_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/35ea765a-08c1-47c5-b60f-a1ead0da8496",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-22",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/dd0f5d78-c5f5-49d0-b4b0-56c98199096d",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "01854_KCl-subjects",
+    "numberOfSubjects": 8,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": 6,
+          "minValue": 4,
+          "uncertainty": null,
+          "maxValueUnit": {
+            "fullName": "month",
+            "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+          },
+          "value": null,
+          "unit": null,
+          "minValueUnit": {
+            "fullName": "month",
+            "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+          },
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "01854_KCl-state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/dc11cf86-fd46-4028-a9db-ec460e1d7a48",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "KCl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/XK1B-V89",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/7f6e14f0-ab5c-4328-9e0e-01b260edd357"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/013de827-a61f-42d2-b81f-415fd456983a",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Mustela putorius",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-15_CGP",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-15_CGP_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/417d9f91-f829-4d8f-8447-a3b924f32c3e",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-15",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/e6525312-bcae-4f80-b240-a6797ccfe9f8",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-16_CGP",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-16_CGP_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/74aa06c7-f2db-4e7c-99d7-c7cc82950c8c",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-16",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/dd804faf-b22d-4514-a52f-4a5fbf93c106",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-13_CGP",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-13_CGP_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/0824cfaf-33d3-4fb5-9803-37035ac2a0c7",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-13",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/66b66e1d-cc46-4299-a45a-274a4057bf03",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-14_CGP",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-14_CGP_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/6dfbd08d-2513-401b-811c-a5c2d8cc0977",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-14",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/306c73b3-5e30-4b0e-9e22-d30a8e3116b2",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-12_CGP",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-12_CGP_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/5a286281-410c-43e2-b7e5-35ff74ec7aa1",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-12",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/5487abe3-2bfb-4b81-9955-565fa74c5e5d",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-11_CGP",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-11_CGP_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/2cb53e71-6ff0-4a99-bb7e-dff585e6098f",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-11",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/d61ebb0a-9a73-4211-ba41-09a044c856c3",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "01854_CGP-subjects",
+    "numberOfSubjects": 6,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": 6,
+          "minValue": 4,
+          "uncertainty": null,
+          "maxValueUnit": {
+            "fullName": "month",
+            "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+          },
+          "value": null,
+          "unit": null,
+          "minValueUnit": {
+            "fullName": "month",
+            "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+          },
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "01854_CGP-state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/b6c942bf-3917-42de-8aea-c5e32b95151a",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "CGP",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/XK1B-V89",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/7f6e14f0-ab5c-4328-9e0e-01b260edd357"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/f30c27f7-0c69-41dc-a897-a795f8a94f76",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Mustela putorius",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-10_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-10_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/3800aed4-cbe1-49f8-b694-1ec6190180a7",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-10",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/ba422860-0fad-4ef8-b5cd-4a642c8672f7",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-09_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-09_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/f681ffe4-eb83-4e06-9b81-0713d30aafd9",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-09",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/2f2d3cb6-0239-47e8-af4c-cd9c94bff4f9",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-08_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-08_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/57a72110-35aa-4254-8f82-d2fc6a8eaa87",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-08",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/87414e56-3490-4e65-baa2-86a2c2693c0a",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-07_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-07_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/bbacd06c-d39a-4305-8063-ffc81acb5221",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-07",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/94005a79-c0fb-4fc9-98d5-9a4283756b96",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-06_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-06_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/ed7bfec3-dc5e-40b8-b393-a80860d4bd0b",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-06",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/855fd4a8-9252-4b63-b61c-b03d975e950b",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-05_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-05_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/f5d8dfd3-9adb-43d8-b456-2a58e8a6f2be",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-05",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/edcf214f-6635-4929-a76d-96a11e94d1a4",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-04_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-04_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/5dfdfaf7-3b4e-4478-96c0-bae0931800e9",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-04",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/26295018-60d0-47a9-9e53-6c09f13fc8e7",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-03_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-03_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/489c93e5-4084-4e3d-8898-fa37e153d13a",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-03",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/a8938735-2060-4619-ad19-6e6b3fa01493",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-02_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-02_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/5972c1bf-8622-4c25-bff8-d006ffea11a4",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-02",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/f8fd574d-db0e-4549-ad1d-0d6bc721e4d2",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": null,
+            "fullName": "Mustela putorius",
+            "geneticStrainType": null,
+            "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "01854_sub-01_GABAZ",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": {
+              "maxValue": 6,
+              "minValue": 4,
+              "uncertainty": null,
+              "maxValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "value": null,
+              "unit": null,
+              "minValueUnit": {
+                "fullName": "month",
+                "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+              },
+              "typeOfUncertainty": null
+            },
+            "lookupLabel": "01854_sub-01_GABAZ_state",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [
+              {
+                "fullName": "adult",
+                "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+              }
+            ],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/9c60f990-c14b-4df3-8357-1d375d5c9aca",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "subject-01",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/9fb76ac9-f522-4660-be63-d920e2fa12cc",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "01854_GABAZ-subjects",
+    "numberOfSubjects": 10,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": 6,
+          "minValue": 4,
+          "uncertainty": null,
+          "maxValueUnit": {
+            "fullName": "month",
+            "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+          },
+          "value": null,
+          "unit": null,
+          "minValueUnit": {
+            "fullName": "month",
+            "id": "https://kg.ebrains.eu/api/instances/ddc5aeeb-d841-4d9f-86a8-b39a804ca1a3"
+          },
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "01854_GABAZ-state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/940d139c-18e8-4bce-8628-514343274117",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "GABAZ",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/XK1B-V89",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/7f6e14f0-ab5c-4328-9e0e-01b260edd357"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/e8240050-5a2b-4db2-8b82-bd00ba093e8d",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "primary visual cortex",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/9abc85b4-454b-405d-9512-79e003caaf58"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Mustela putorius",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/e2d7b670-7de8-49fc-81ac-b6ce42f31282"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "01854_sub-20_KCl_slice",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "01854_sub-20_KCl_slice_control",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/36f75e3d-8afb-49a2-9ee3-9ac9ac994ce1"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/bcf8dc23-47b0-4183-b5e5-aa7e1411d1b0",
+        "additionalRemarks": "local field potential (LFP) recordings without drug treatment (control)"
+      },
+      {
+        "age": null,
+        "lookupLabel": "01854_sub-20_KCl_slice_KCltreated",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/36f75e3d-8afb-49a2-9ee3-9ac9ac994ce1"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/2dd78760-ac84-4333-b55c-ce6ef313f041",
+        "additionalRemarks": "local field potential (LFP) recordings after application of a bath solution with higher potassium (K+) concentration"
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": null,
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/XK1B-V89",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/7f6e14f0-ab5c-4328-9e0e-01b260edd357"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/4d8d8caa-8d7d-46e5-b5a3-95059841605d",
+    "additionalRemarks": null
+  }
+]

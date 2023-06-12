@@ -1,0 +1,202 @@
+{
+  "key": "root",
+  "parentRelationType": null,
+  "title": "Specimen",
+  "color": "#e3dcdc",
+  "data": {
+    "type": {
+      "value": "Dataset.SpecimenOverview"
+    },
+    "title": null,
+    "numberOfSubjectGroups": null,
+    "numberOfSubjects": null,
+    "numberOfTissueSampleCollections": {
+      "value": "1"
+    },
+    "numberOfTissueSamples": {
+      "value": "1"
+    },
+    "species": [
+      {
+        "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+        "value": "Mus musculus",
+        "count": [
+          "1 tissue sample",
+          "1 tissue sample collection"
+        ]
+      }
+    ],
+    "sex": [
+      {
+        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+        "value": "male",
+        "count": [
+          "1 tissue sample",
+          "1 tissue sample collection"
+        ]
+      }
+    ],
+    "strains": [
+      {
+        "reference": "df8c82e5-3434-42fe-a11a-004afb67b6f4",
+        "value": "C57BL/6J",
+        "count": [
+          "1 tissue sample",
+          "1 tissue sample collection"
+        ]
+      }
+    ],
+    "geneticStrainTypes": [
+      {
+        "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+        "value": "wildtype",
+        "count": [
+          "1 tissue sample",
+          "1 tissue sample collection"
+        ]
+      }
+    ],
+    "pathology": null
+  },
+  "legend": {
+    "#3176e1": "Tissue sample",
+    "#78b5b5": "Tissue sample collection"
+  },
+  "children": [
+    {
+      "key": "84770517-a8af-4da1-ba07-7f94eebe0559",
+      "parentRelationType": null,
+      "title": "Tissue sample collection PV_sub02_TissueSlices",
+      "color": "#78b5b5",
+      "data": {
+        "id": "82c11bfc-0f68-4a85-b9ac-7bfaab81d95c",
+        "type": {
+          "value": "Dataset.TissueSampleCollection"
+        },
+        "title": null,
+        "tissueSamples": null,
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "primary visual area (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "df8c82e5-3434-42fe-a11a-004afb67b6f4",
+            "value": "C57BL/6J"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "1. primary antibody: anti-calbindin-D28K \n2. secondary antibody: biotinylated\n3. ABC kit\n4. DAB staining\n5. primary antibody: anti-GABA\n6. 15 nm colloidal gold particles"
+        },
+        "serviceLinks": null
+      },
+      "children": [
+        {
+          "key": "2b963333-8c34-423e-beba-2f714d3e91c6",
+          "parentRelationType": "partOf",
+          "title": "Tissue sample den1",
+          "color": "#3176e1",
+          "data": {
+            "id": "98863e94-f75a-4750-bf36-7b4cc1be146a",
+            "type": {
+              "value": "Dataset.TissueSample"
+            },
+            "title": {
+              "value": "den1"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "primary visual area (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "f6229d55-a95c-4048-b5da-835c7e8eff27",
+              "value": "cortical interneuron"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "df8c82e5-3434-42fe-a11a-004afb67b6f4",
+                "value": "C57BL/6J"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "28ce5f93-78da-486c-993e-474ff280744f",
+              "value": "single cell"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null
+          }
+        }
+      ]
+    }
+  ]
+}

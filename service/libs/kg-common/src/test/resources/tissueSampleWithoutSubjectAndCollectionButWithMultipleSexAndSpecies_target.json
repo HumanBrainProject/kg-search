@@ -1,0 +1,1301 @@
+{
+  "key": "root",
+  "parentRelationType": null,
+  "title": "Specimen",
+  "color": "#e3dcdc",
+  "data": {
+    "type": {
+      "value": "Dataset.SpecimenOverview"
+    },
+    "title": null,
+    "numberOfSubjectGroups": null,
+    "numberOfSubjects": null,
+    "numberOfTissueSampleCollections": null,
+    "numberOfTissueSamples": {
+      "value": "20"
+    },
+    "species": [
+      {
+        "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "value": "Homo sapiens",
+        "count": [
+          "7 tissue samples"
+        ]
+      },
+      {
+        "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+        "value": "Mus musculus",
+        "count": [
+          "13 tissue samples"
+        ]
+      }
+    ],
+    "sex": [
+      {
+        "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+        "value": "female",
+        "count": [
+          "4 tissue samples"
+        ]
+      },
+      {
+        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+        "value": "male",
+        "count": [
+          "16 tissue samples"
+        ]
+      }
+    ],
+    "strains": [
+      {
+        "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+        "value": "C57BL/6",
+        "count": [
+          "13 tissue samples"
+        ]
+      }
+    ],
+    "geneticStrainTypes": [
+      {
+        "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+        "value": "wildtype",
+        "count": [
+          "13 tissue samples"
+        ]
+      }
+    ],
+    "pathology": null
+  },
+  "legend": {
+    "#3176e1": "Tissue sample"
+  },
+  "children": [
+    {
+      "key": "c3d8a484-7523-41a6-ac2b-63ef78edbbde",
+      "parentRelationType": null,
+      "title": "Tissue sample porta1",
+      "color": "#3176e1",
+      "data": {
+        "id": "c7cce743-050b-4dd4-b1bc-1582211189fe",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta1"
+        },
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          },
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "513ed717-ae7f-4f65-9825-8b658ac09967",
+      "parentRelationType": null,
+      "title": "Tissue sample porta4",
+      "color": "#3176e1",
+      "data": {
+        "id": "efd65aa3-011e-44d5-a08b-1c5fbb835a7c",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta4"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          },
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB1."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "c6d3d685-3750-4054-88e3-b6192133406a",
+      "parentRelationType": null,
+      "title": "Tissue sample porta4",
+      "color": "#3176e1",
+      "data": {
+        "id": "93ee9622-5614-43e8-b9b1-b64e3bb47755",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta4"
+        },
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          },
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "e352ed40-f257-4b3b-90f0-6db390dc4fff",
+      "parentRelationType": null,
+      "title": "Tissue sample porta5",
+      "color": "#3176e1",
+      "data": {
+        "id": "47d4cd48-564c-4951-8df6-5e7b6a05167c",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta5"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          },
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB1."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "c8c17d72-81d3-4996-98b1-c6b45358fdee",
+      "parentRelationType": null,
+      "title": "Tissue sample porta5",
+      "color": "#3176e1",
+      "data": {
+        "id": "65b717f0-f3a7-4c2a-b5ac-06ef5e531624",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta5"
+        },
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          },
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "738ff3da-b9ee-4c17-a5a4-c73d9362508e",
+      "parentRelationType": null,
+      "title": "Tissue sample porta6",
+      "color": "#3176e1",
+      "data": {
+        "id": "0e64aae7-a5f0-4a9b-ac08-02f62c6b19ab",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta6"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          },
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB1."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "7e326520-a37c-4fbb-a694-628230bbabf9",
+      "parentRelationType": null,
+      "title": "Tissue sample porta6",
+      "color": "#3176e1",
+      "data": {
+        "id": "3c6cf9d7-e88d-4355-8c9d-d152f8f27265",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "porta6"
+        },
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": "d77eb055-3ee9-484f-9c53-b2e621afcb45",
+            "value": "CA1 field of hippocampus"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+            "value": "Homo sapiens"
+          }
+        ],
+        "strain": null,
+        "geneticStrainType": null,
+        "laterality": null,
+        "attributes": [
+          {
+            "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+            "value": "stained"
+          },
+          {
+            "reference": "90c49a8c-ab62-44de-838d-e990afc97748",
+            "value": "labeled"
+          }
+        ],
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": {
+          "value": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+        },
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "45a15a7e-e9b6-473e-9da7-664ef9a19034",
+      "parentRelationType": null,
+      "title": "Tissue sample sec21",
+      "color": "#3176e1",
+      "data": {
+        "id": "bca88fa0-8ade-4384-8a06-1c8c4d5a69a6",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec21"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "5a189941-e795-417e-9719-cd2b0e5bd84a",
+      "parentRelationType": null,
+      "title": "Tissue sample sec22",
+      "color": "#3176e1",
+      "data": {
+        "id": "ecf114b1-395f-4a32-91e2-d73f9342d1ca",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec22"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "78ab3f44-7f9b-4ffc-b448-4b6fd43e6696",
+      "parentRelationType": null,
+      "title": "Tissue sample sec23",
+      "color": "#3176e1",
+      "data": {
+        "id": "39b3f4b9-4ed2-414f-aa2e-2ab7b99efa06",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec23"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "f443bb2c-7834-4828-8e14-73d4df3061ee",
+      "parentRelationType": null,
+      "title": "Tissue sample sec23",
+      "color": "#3176e1",
+      "data": {
+        "id": "ad3c6649-f8ba-4595-9a24-841ff3a1866b",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec23"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "643de66e-d78c-426a-8397-97b8d1720a2f",
+      "parentRelationType": null,
+      "title": "Tissue sample sec24",
+      "color": "#3176e1",
+      "data": {
+        "id": "b0cd44ff-dc33-48fc-84c8-c666d2db4366",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec24"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "f9dd03df-d782-4361-9aae-644ce975e58a",
+      "parentRelationType": null,
+      "title": "Tissue sample sec26",
+      "color": "#3176e1",
+      "data": {
+        "id": "3e52b5f7-a866-4179-a03c-0945f03ec39e",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec26"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "40965c54-40f8-47a5-876e-72587985c70d",
+      "parentRelationType": null,
+      "title": "Tissue sample sec28",
+      "color": "#3176e1",
+      "data": {
+        "id": "1c76640e-0183-4bbd-a9c1-3aea24740a2a",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec28"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "7744344b-6cda-4394-b41a-13cc3306b655",
+      "parentRelationType": null,
+      "title": "Tissue sample sec29",
+      "color": "#3176e1",
+      "data": {
+        "id": "126b9622-16d6-4d2f-82ef-d4d843e6eb61",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec29"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "4d30a6a1-493b-4e07-9096-5843eb084919",
+      "parentRelationType": null,
+      "title": "Tissue sample sec29",
+      "color": "#3176e1",
+      "data": {
+        "id": "df92dcab-3d7c-4b40-a7c2-29d7811c16c8",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec29"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "e88ea5e3-9f5c-4b49-85de-6468bc30d891",
+      "parentRelationType": null,
+      "title": "Tissue sample sec32",
+      "color": "#3176e1",
+      "data": {
+        "id": "e18b6248-c2f0-43cf-b2ea-dae552085e5c",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec32"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "181d1eea-e2bf-4db3-a841-a805260e460d",
+      "parentRelationType": null,
+      "title": "Tissue sample sec45",
+      "color": "#3176e1",
+      "data": {
+        "id": "d82c275e-668e-4bd8-82ef-eebae5363e13",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec45"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "d0f27de0-24e0-4f63-83fa-c17021d4379a",
+      "parentRelationType": null,
+      "title": "Tissue sample sec50",
+      "color": "#3176e1",
+      "data": {
+        "id": "df32f54a-68da-43dd-a0fd-51b971398be5",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec50"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    },
+    {
+      "key": "3c661f79-2cd8-4f8f-adc2-c69fafe90d43",
+      "parentRelationType": null,
+      "title": "Tissue sample sec53",
+      "color": "#3176e1",
+      "data": {
+        "id": "e12829c6-5295-4735-b1dd-cfe0df660030",
+        "type": {
+          "value": "Dataset.TissueSample"
+        },
+        "title": {
+          "value": "sec53"
+        },
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "anatomicalLocation": [
+          {
+            "reference": null,
+            "value": "field CA1 (Allen Mouse Brain Atlas)"
+          }
+        ],
+        "origin": {
+          "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+          "value": "brain"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "bb67689f-dbfa-463b-88dd-f126ae8158fa",
+            "value": "C57BL/6"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "laterality": null,
+        "attributes": null,
+        "tissueSampleType": {
+          "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+          "value": "tissue slice"
+        },
+        "age": null,
+        "ageCategory": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null
+      }
+    }
+  ]
+}

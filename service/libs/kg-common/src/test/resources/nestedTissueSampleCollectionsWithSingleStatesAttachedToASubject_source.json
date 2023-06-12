@@ -1,0 +1,1654 @@
+[
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "H108",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H108_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 155,
+          "unit": {
+            "fullName": "gram",
+            "id": "https://kg.ebrains.eu/api/instances/9cf99c79-fb70-4a4d-9806-c5fe1b5687a4"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "id": "https://kg.ebrains.eu/api/instances/33f9900c-c645-11ec-858a-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H108",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/35dfb351-c645-11ec-a5ba-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "H200",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H200_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 150,
+          "unit": {
+            "fullName": "gram",
+            "id": "https://kg.ebrains.eu/api/instances/9cf99c79-fb70-4a4d-9806-c5fe1b5687a4"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "id": "https://kg.ebrains.eu/api/instances/3734894d-c645-11ec-a9ed-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H200",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/38247edc-c645-11ec-9483-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "H201",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H201_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 330,
+          "unit": {
+            "fullName": "gram",
+            "id": "https://kg.ebrains.eu/api/instances/9cf99c79-fb70-4a4d-9806-c5fe1b5687a4"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "id": "https://kg.ebrains.eu/api/instances/387a8fc5-c645-11ec-a262-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H201",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/3b12d8de-c645-11ec-8aa3-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "H441",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H441_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/3b6bccf6-c645-11ec-be3d-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H441",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/3ee81dad-c645-11ec-b5b3-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H108",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H108_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H108",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-3f70aec6-c645-11ec-be50-00090faa0001/updated_H108_TimmThionin_coronal.json&pyramids=buckets/img-3f70aec6-c645-11ec-be50-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/33f9900c-c645-11ec-858a-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/3f690d98-c645-11ec-b192-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H108",
+    "numberOfTissueSamples": 429,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/3f70aec6-c645-11ec-be50-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H108a_Timm_light",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H108a_Timm_light_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H108a_Timm_light",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-3fd2a65a-c645-11ec-b800-00090faa0001/H108a_Timm_light_coronal.json&pyramids=buckets/img-3fd2a65a-c645-11ec-b800-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/33f9900c-c645-11ec-858a-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/3fcade3c-c645-11ec-96c8-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H108a_Timm_light",
+    "numberOfTissueSamples": 144,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/3fd2a65a-c645-11ec-b800-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H108b_Timm_dark",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H108b_Timm_dark_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H108b_Timm_dark",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-40416c56-c645-11ec-aecc-00090faa0001/H108b_Timm_dark_coronal.json&pyramids=buckets/img-40416c56-c645-11ec-aecc-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/33f9900c-c645-11ec-858a-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4039a594-c645-11ec-822f-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H108b_Timm_dark",
+    "numberOfTissueSamples": 139,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/40416c56-c645-11ec-aecc-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H108c_Nissl",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H108c_Nissl_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H108c_Nissl",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-40ac3c53-c645-11ec-abfd-00090faa0001/H108c_Nissl_coronal.json&pyramids=buckets/img-40ac3c53-c645-11ec-abfd-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/33f9900c-c645-11ec-858a-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/40a36221-c645-11ec-9333-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H108c_Nissl",
+    "numberOfTissueSamples": 146,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/40ac3c53-c645-11ec-abfd-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H200",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H200_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H200",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-439ccbe7-c645-11ec-b100-00090faa0001/updated_H200_TimmThionin_horizontal.json&pyramids=buckets/img-439ccbe7-c645-11ec-b100-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/3734894d-c645-11ec-a9ed-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/439469a7-c645-11ec-b8e3-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H200",
+    "numberOfTissueSamples": 100,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/439ccbe7-c645-11ec-b100-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H200a_Nissl",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H200a_Nissl_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H200a_Nissl",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-440f8b67-c645-11ec-9a60-00090faa0001/H200a_Nissl_horizontal.json&pyramids=buckets/img-440f8b67-c645-11ec-9a60-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/3734894d-c645-11ec-a9ed-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4407c361-c645-11ec-956d-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H200a_Nissl",
+    "numberOfTissueSamples": 48,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/440f8b67-c645-11ec-9a60-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H200b_Timm_dark",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H200b_Timm_dark_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H200b_Timm_dark",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-44857e30-c645-11ec-bcff-00090faa0001/H200b_Timm_dark_horizontal.json&pyramids=buckets/img-44857e30-c645-11ec-bcff-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/3734894d-c645-11ec-a9ed-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/447d8f91-c645-11ec-bbed-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H200b_Timm_dark",
+    "numberOfTissueSamples": 52,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/44857e30-c645-11ec-bcff-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H201",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H201_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H201",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-44f336a2-c645-11ec-aac0-00090faa0001/updated_H201_TimmThionin_sagittal.json&pyramids=buckets/img-44f336a2-c645-11ec-aac0-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/387a8fc5-c645-11ec-a262-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/44eaf737-c645-11ec-96fc-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H201",
+    "numberOfTissueSamples": 142,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/44f336a2-c645-11ec-aac0-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H201a_Timm_dark",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H201a_Timm_dark_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H201a_Timm_dark",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-45581161-c645-11ec-94cc-00090faa0001/H201a_Timm_dark_sagittal.json&pyramids=buckets/img-45581161-c645-11ec-94cc-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/387a8fc5-c645-11ec-a262-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/454e4e9f-c645-11ec-877d-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H201a_Timm_dark",
+    "numberOfTissueSamples": 47,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/45581161-c645-11ec-94cc-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H201b_Nissl",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H201b_Nissl_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H201b_Nissl",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-45bf296e-c645-11ec-96a6-00090faa0001/H201b_Nissl_sagittal_updated.json&pyramids=buckets/img-45bf296e-c645-11ec-96a6-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/387a8fc5-c645-11ec-a262-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/45b78825-c645-11ec-b65a-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H201b_Nissl",
+    "numberOfTissueSamples": 47,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/45bf296e-c645-11ec-96a6-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H201c_Timm_light",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H201c_Timm_light_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H201c_Timm_light",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-46251714-c645-11ec-b841-00090faa0001/H201c_Timm_light_sagittal_updated.json&pyramids=buckets/img-46251714-c645-11ec-b841-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/387a8fc5-c645-11ec-a262-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/461b54bd-c645-11ec-8996-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H201c_Timm_light",
+    "numberOfTissueSamples": 48,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/46251714-c645-11ec-b841-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H441",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H441_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H441",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-46869853-c645-11ec-aed5-00090faa0001/updated_H441_TimmThionin_horizontal.json&pyramids=buckets/img-46869853-c645-11ec-aed5-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/3b6bccf6-c645-11ec-be3d-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/467e8201-c645-11ec-8961-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H441",
+    "numberOfTissueSamples": 76,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/46869853-c645-11ec-aed5-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H441a_Timm_dark",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H441a_Timm_dark_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H441a_Timm_dark",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-46e866da-c645-11ec-aa7f-00090faa0001/H441a_Timm_dark_horizontal.json&pyramids=buckets/img-46e866da-c645-11ec-aa7f-00090faa0001&tools&nl"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/3b6bccf6-c645-11ec-be3d-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/46e09f14-c645-11ec-9196-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H441a_Timm_dark",
+    "numberOfTissueSamples": 38,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/46e866da-c645-11ec-aa7f-00090faa0001",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "brain",
+        "fallbackName": null,
+        "brainAtlas": "Waxholm Space Rat Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/0a43d691-7a5c-4faf-84b5-d1c309920ce2"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "Wistar",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/a0b07cb4-3f13-4c82-b0ac-d1b73b47a057"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "H441b_Nissl",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "H441b_Nissl_stained",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "subject H441b_Nissl",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-4749738b-c645-11ec-b548-00090faa0001/H441b_Nissl_horizontal.json&pyramids=buckets/img-4749738b-c645-11ec-b548-00090faa0001"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/3b6bccf6-c645-11ec-be3d-00090faa0001"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4741f8f3-c645-11ec-9281-00090faa0001",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "H441b_Nissl",
+    "numberOfTissueSamples": 38,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/T686-7BX",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/0bf058d2-6bf7-4e0f-8067-345e07109bf8"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/4749738b-c645-11ec-b548-00090faa0001",
+    "additionalRemarks": null
+  }
+]

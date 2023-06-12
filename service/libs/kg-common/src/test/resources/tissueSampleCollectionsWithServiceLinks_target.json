@@ -1,0 +1,1099 @@
+{
+  "key": "root",
+  "parentRelationType": null,
+  "title": "Specimen",
+  "color": "#e3dcdc",
+  "data": {
+    "type": {
+      "value": "Dataset.SpecimenOverview"
+    },
+    "title": null,
+    "numberOfSubjectGroups": null,
+    "numberOfSubjects": {
+      "value": "8"
+    },
+    "numberOfTissueSampleCollections": {
+      "value": "8"
+    },
+    "numberOfTissueSamples": null,
+    "species": [
+      {
+        "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+        "value": "Mus musculus",
+        "count": [
+          "8 subjects",
+          "8 tissue sample collections"
+        ]
+      }
+    ],
+    "sex": [
+      {
+        "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+        "value": "female",
+        "count": [
+          "8 subjects",
+          "8 tissue sample collections"
+        ]
+      }
+    ],
+    "strains": [
+      {
+        "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+        "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "count": [
+          "8 subjects",
+          "8 tissue sample collections"
+        ]
+      }
+    ],
+    "geneticStrainTypes": [
+      {
+        "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+        "value": "transgenic",
+        "count": [
+          "8 subjects",
+          "8 tissue sample collections"
+        ]
+      }
+    ],
+    "pathology": null
+  },
+  "legend": {
+    "#ffbe00": "Subject",
+    "#78b5b5": "Tissue sample collection"
+  },
+  "children": [
+    {
+      "key": "4dd15af2-d327-4b59-9f68-2b9ebe311dcf",
+      "parentRelationType": null,
+      "title": "Subject C117",
+      "color": "#ffbe00",
+      "data": {
+        "id": "f0555e08-bd10-4d55-9fe0-9f52c91304fc",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "C117"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "24 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "3a20c33b-3f30-4b81-9694-16c505572494",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection C117",
+          "color": "#78b5b5",
+          "data": {
+            "id": "ae749ee7-590c-11ec-a8c5-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "C117"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C117/C117_final_lz.json&pyramids=imgsvc-22369ae4-1fbf-4f74-9792-b56108ee27c6",
+                "value": "Open tissue sample collection (subject C117) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "6fad78cc-d327-4639-813e-6b3a9b7e0921",
+      "parentRelationType": null,
+      "title": "Subject C132",
+      "color": "#ffbe00",
+      "data": {
+        "id": "6bbc68d8-b6be-47f6-8eba-093460601d26",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "C132"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "24 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "bf8f2939-b630-4a5f-ba6e-47ae94ec6b92",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection C132",
+          "color": "#78b5b5",
+          "data": {
+            "id": "ae951f99-590c-11ec-bb50-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "C132"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C132/C132_final_lz.json&pyramids=imgsvc-a4c35bbb-4a20-4d7e-b3a6-346aa4078f8a",
+                "value": "Open tissue sample collection (subject C132) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "4d70bc59-8f46-48fd-9181-e88e394d9c25",
+      "parentRelationType": null,
+      "title": "Subject C136",
+      "color": "#ffbe00",
+      "data": {
+        "id": "24d9ac55-0628-4b2e-8757-2ea69e359988",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "C136"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "24 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "ffed185b-b6d5-42cd-aca7-d1e39630d866",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection C136",
+          "color": "#78b5b5",
+          "data": {
+            "id": "ae147e0b-590c-11ec-8e04-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "C136"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C136/C136_final_lz.json&pyramids=imgsvc-597f6630-2a0d-4772-883e-1323de60ad35",
+                "value": "Open tissue sample collection (subject C136) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "9045159f-280d-4678-a175-c9a51ed9a996",
+      "parentRelationType": null,
+      "title": "Subject C183",
+      "color": "#ffbe00",
+      "data": {
+        "id": "efa51073-b8ec-4114-81f2-b16cae6bba29",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "C183"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "26 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "1e718a1d-458d-4357-b98f-643c51477c6b",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection C183",
+          "color": "#78b5b5",
+          "data": {
+            "id": "adb0b307-590c-11ec-91ae-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "C183"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C183/C183_final_lz.json&pyramids=imgsvc-9425c655-ee1c-46b3-8088-7bbc35583847",
+                "value": "Open tissue sample collection (subject C183) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "1291a3a8-231f-4850-bcd4-94fda050dcab",
+      "parentRelationType": null,
+      "title": "Subject C184",
+      "color": "#ffbe00",
+      "data": {
+        "id": "fcdcad3b-40ff-49c9-a061-c685d5e68b73",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "C184"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "26 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "6d13cef8-c90f-44dd-a725-52944c048d1a",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection C184",
+          "color": "#78b5b5",
+          "data": {
+            "id": "add04783-590c-11ec-9cf4-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "C184"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C184/C184_final_lz.json&pyramids=imgsvc-d4bc7695-2ef3-4775-89cd-a83a496c2edc",
+                "value": "Open tissue sample collection (subject C184) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "471dc6b7-33aa-420e-b037-0a13c6f92d01",
+      "parentRelationType": null,
+      "title": "Subject C228",
+      "color": "#ffbe00",
+      "data": {
+        "id": "39ebf7d6-e3b5-4552-9404-6c8766d60a3a",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "C228"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "25 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "937699cb-435f-4e9f-89b0-7ac3ecc9abd2",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection C228",
+          "color": "#78b5b5",
+          "data": {
+            "id": "ae555796-590c-11ec-973b-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "C228"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C228/C228_final_lz.json&pyramids=imgsvc-09f13601-2d71-4b1f-b5d7-2c85a45f728d",
+                "value": "Open tissue sample collection (subject C228) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "6fd0dffe-24e4-4b92-95af-73d38dc9073f",
+      "parentRelationType": null,
+      "title": "Subject E59",
+      "color": "#ffbe00",
+      "data": {
+        "id": "1153b9fb-4ec6-4edc-8fac-97ce65c44138",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "E59"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "26 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "23567855-3058-4e82-94c9-8198cd233029",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection E59",
+          "color": "#78b5b5",
+          "data": {
+            "id": "adf1ffe9-590c-11ec-bbbd-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "E59"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/E59/E59_final_lz.json&pyramids=imgsvc-fd7ce419-1b5c-4672-ae3d-4ddf554a4570",
+                "value": "Open tissue sample collection (subject E59) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "8b7534a5-f4b7-47e6-8c6d-cc43fa6350da",
+      "parentRelationType": null,
+      "title": "Subject E62",
+      "color": "#ffbe00",
+      "data": {
+        "id": "9851c58e-fd38-4c17-9c6c-e00a7d831300",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "E62"
+        },
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+            "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+            "value": "transgenic"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b",
+            "value": "juvenile"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": {
+          "value": "24 day"
+        },
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "5fcad389-bb70-4dcf-ae74-059b87e27c52",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection E62",
+          "color": "#78b5b5",
+          "data": {
+            "id": "ae34fe6a-590c-11ec-9a82-50eb718d929d",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "E62"
+            },
+            "tissueSamples": null,
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "basic cell groups and regions (Allen Mouse Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "f08de335-bef0-4474-a5de-116ec92d30fe",
+                "value": "Tg-Drd1a-EGFP (Arc:Arc(S) background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "7cd9c53f-6f4b-4fd7-9e83-94cef80ab095",
+                "value": "transgenic"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/E62/E62_final_lz.json&pyramids=imgsvc-3b6e6372-4c45-4d3f-83ed-85de25e9c4f3",
+                "value": "Open tissue sample collection (subject E62) in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

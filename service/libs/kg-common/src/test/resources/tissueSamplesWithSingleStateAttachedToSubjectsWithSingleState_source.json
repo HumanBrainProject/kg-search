@@ -1,0 +1,4882 @@
+[
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF28",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF28_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/e48cb43c-fa3a-4c92-9095-748990822814",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF28",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/9d031f9e-5f91-4845-84ff-fd117e45e510",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF23",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF23_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/24993903-d8ae-483f-8387-85a86799e967",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF23",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/c7837e0b-d5e3-47f7-9f4c-af4767217116",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF21",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF21_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/01154a28-926a-4e49-aaf0-a4c292d8bdc7",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF21",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/a1e7afb2-e1f3-4e97-9ef2-6401ef2f113b",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF20",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF20_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/b5e93b34-ae00-44ec-beb3-8e8e23194613",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF20",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/a9437d87-6bf5-4bce-be86-32b08908e319",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF18",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF18_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/30c3320d-be8b-4050-8806-8bf3f3ea3b2e",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF18",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/b40bc03c-70fe-4b88-ab77-a844dd4d606e",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF17",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF17_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/9276d990-547f-4b46-b400-d958292495c2",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF17",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/ccd1b17e-86fb-47a1-aab0-6ee7cf53a817",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "HAZ_male",
+    "numberOfSubjects": 6,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "HAZ_male_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/2806936a-9676-4f67-bec7-1d25f31bb367",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "HAZ_m",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF19",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF19_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/6dde7675-c374-4099-8ead-2cbdcd16bf45",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF19",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/60bcf1f9-5e46-4c34-a954-5e5c6976db8a",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF13",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF13_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/215b3352-a8e7-4f5e-8651-00deb17719f8",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF13",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/bf0d82fd-1ac4-40ef-9411-9c28c51dc136",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF12",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF12_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/89ad705c-b5fc-478b-8aa1-ecf82c53d81e",
+            "additionalRemarks": null
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF12",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/4bb4b406-1014-4363-9c40-e68f7fdd08a0",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF5",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF5_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/b40cd90e-b1be-4745-9fe1-6fe6bdc43670",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF5",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/02cc73b6-b821-4a6e-bca5-a1c6ef36251f",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF9",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF9_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/28445fe8-2456-4ebf-96fc-9e86e2706ff1",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF9",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/c2d69b09-a3fb-4763-b8f9-2c4e48f31f9a",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "HAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF8",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF8_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/edc0a966-2f93-4fdb-b79b-a11eb2889060",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF8",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/6baff9c8-a7ec-4b11-82db-d54fead58a80",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "HAZ_female",
+    "numberOfSubjects": 6,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "HAZ_female_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/76c8fc3a-e976-42bf-9a98-e294240784f5",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "HAZ_f",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF33",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF33_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/c685e0cc-a02d-4f74-ab3a-2f96084d2adb",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF33",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/d51a16ce-162e-4d4f-b008-85d83b154d55",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF36",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF36_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/4243ff3a-429a-4975-9031-b7e47229c594",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF36",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/a7118124-80cb-40f6-bb72-3427ec476b73",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF39",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF39_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/7f3e3c5d-cc37-4b52-82cd-61f491ed3355",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF39",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/44153d89-b9b7-4486-a27c-b242ab2d4378",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF58",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF58_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/1a8cb54b-4227-4cf6-9096-f709732298dd",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF58",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/f9f5d7ef-565c-4c9c-8f00-01a9e8e78d50",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF50",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF50_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/d675a88a-7f50-4cce-9601-62c614517717",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF50",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/5890ee5f-af6e-4044-9d5a-f46281c35195",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF48",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF48_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/c82aa376-6bb4-4562-96dc-3f6265d96b01",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "ZF48",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/c3c01c25-6d6f-4206-9b6c-c238c507cda3",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "LAZ_male",
+    "numberOfSubjects": 6,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "LAZ_male_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/0fc1142b-658a-400d-a301-745e9efa817d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "LAZ_m",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF40",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF40_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/ab7dfeb6-19d6-4043-80d0-704be0615ca4",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF40",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/218c400d-1dc3-4bf9-a61b-62224975cedb",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF44",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF44_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/205227d8-be49-452e-9f27-6739141503d5",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF44",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/f3b3b26b-8b53-4f2b-944a-77d420077513",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF61",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF61_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/9d50002b-a42a-4ebe-aaa7-872bf7b38dfe",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF61",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/30e36e34-f3b9-481b-ad2b-847dfe054d16",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF41",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF41_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/596b9c0d-a280-4172-9225-7966214568bb",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF41",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/1cafb546-cf17-4711-9bfc-f5ace70fc8f4",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF45",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF45_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/78ce3c67-283c-4ea0-8cfd-c817942d0dd9",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF45",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/a40fd710-1b26-4783-b146-836fe122f91e",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [],
+        "species": [
+          {
+            "species": {
+              "fullName": "Danio rerio",
+              "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+            },
+            "fullName": "LAZ (AB background)",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": null,
+        "lookupLabel": "ZF46",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/Subject"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "ZF46_state-01",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/SubjectState"
+            ],
+            "ageCategory": [],
+            "attribute": [],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/eacaee03-01eb-4a05-9149-b124b6ee2bc2",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "female",
+            "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+          }
+        ],
+        "internalIdentifier": "ZF46",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "origin": null,
+        "id": "https://kg.ebrains.eu/api/instances/c133ed69-ef92-40e2-8130-9f5163be7bf4",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": null,
+    "lookupLabel": "LAZ_female",
+    "numberOfSubjects": 6,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/SubjectGroup"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "LAZ_female_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectGroupState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "adult",
+            "id": "https://kg.ebrains.eu/api/instances/584611b0-3c4b-418f-8617-127adafb0cea"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/595dbb03-27f0-40c4-a7c8-f552f6076223",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "LAZ_f",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF12",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF12_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/89ad705c-b5fc-478b-8aa1-ecf82c53d81e",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF12",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/4bb4b406-1014-4363-9c40-e68f7fdd08a0",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF13",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF13_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/215b3352-a8e7-4f5e-8651-00deb17719f8",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF13",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/bf0d82fd-1ac4-40ef-9411-9c28c51dc136",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF17",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF17_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9276d990-547f-4b46-b400-d958292495c2",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF17",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/ccd1b17e-86fb-47a1-aab0-6ee7cf53a817",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF18",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF18_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/30c3320d-be8b-4050-8806-8bf3f3ea3b2e",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF18",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/b40bc03c-70fe-4b88-ab77-a844dd4d606e",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF19",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF19_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/6dde7675-c374-4099-8ead-2cbdcd16bf45",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF19",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/60bcf1f9-5e46-4c34-a954-5e5c6976db8a",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF20",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF20_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/b5e93b34-ae00-44ec-beb3-8e8e23194613",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF20",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/a9437d87-6bf5-4bce-be86-32b08908e319",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF21",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF21_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/01154a28-926a-4e49-aaf0-a4c292d8bdc7",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF21",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/a1e7afb2-e1f3-4e97-9ef2-6401ef2f113b",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF23",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF23_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/24993903-d8ae-483f-8387-85a86799e967",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF23",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/c7837e0b-d5e3-47f7-9f4c-af4767217116",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF28",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF28_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/e48cb43c-fa3a-4c92-9095-748990822814",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF28",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/9d031f9e-5f91-4845-84ff-fd117e45e510",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF33",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF33_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/c685e0cc-a02d-4f74-ab3a-2f96084d2adb",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF33",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/d51a16ce-162e-4d4f-b008-85d83b154d55",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF36",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF36_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4243ff3a-429a-4975-9031-b7e47229c594",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF36",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/a7118124-80cb-40f6-bb72-3427ec476b73",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF39",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF39_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/7f3e3c5d-cc37-4b52-82cd-61f491ed3355",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF39",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/44153d89-b9b7-4486-a27c-b242ab2d4378",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF40",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF40_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ab7dfeb6-19d6-4043-80d0-704be0615ca4",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF40",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/218c400d-1dc3-4bf9-a61b-62224975cedb",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF41",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF41_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/596b9c0d-a280-4172-9225-7966214568bb",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF41",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/1cafb546-cf17-4711-9bfc-f5ace70fc8f4",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF44",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF44_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/205227d8-be49-452e-9f27-6739141503d5",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF44",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/f3b3b26b-8b53-4f2b-944a-77d420077513",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF46",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF46_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/eacaee03-01eb-4a05-9149-b124b6ee2bc2",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF46",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/c133ed69-ef92-40e2-8130-9f5163be7bf4",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF45",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF45_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/78ce3c67-283c-4ea0-8cfd-c817942d0dd9",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF45",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/a40fd710-1b26-4783-b146-836fe122f91e",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF48",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF48_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/c82aa376-6bb4-4562-96dc-3f6265d96b01",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF48",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/c3c01c25-6d6f-4206-9b6c-c238c507cda3",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF5",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF5_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/b40cd90e-b1be-4745-9fe1-6fe6bdc43670",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF5",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/02cc73b6-b821-4a6e-bca5-a1c6ef36251f",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF50",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF50_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/d675a88a-7f50-4cce-9601-62c614517717",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF50",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/5890ee5f-af6e-4044-9d5a-f46281c35195",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF58",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF58_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/1a8cb54b-4227-4cf6-9096-f709732298dd",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "ZF58",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/f9f5d7ef-565c-4c9c-8f00-01a9e8e78d50",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "LAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/945bb00a-73c3-426e-b254-8a0dfd50e06f"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF61",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF61_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9d50002b-a42a-4ebe-aaa7-872bf7b38dfe",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF61",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/30e36e34-f3b9-481b-ad2b-847dfe054d16",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF8",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF8_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/edc0a966-2f93-4fdb-b79b-a11eb2889060",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF8",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/6baff9c8-a7ec-4b11-82db-d54fead58a80",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Danio rerio",
+          "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+        },
+        "fullName": "HAZ (AB background)",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/45cd8891-e2b7-449d-9abb-f00212643098"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "ZF9",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF9_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/28445fe8-2456-4ebf-96fc-9e86e2706ff1",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "ZF9",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7"
+    ],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/c2d69b09-a3fb-4763-b8f9-2c4e48f31f9a",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF12_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF12_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/89ad705c-b5fc-478b-8aa1-ecf82c53d81e"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98ba8649-72c2-11ec-a19d-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF12",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98bc5b30-72c2-11ec-8638-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF13_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF13_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/215b3352-a8e7-4f5e-8651-00deb17719f8"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98c079d5-72c2-11ec-bd1f-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF13",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98c22883-72c2-11ec-8e82-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF17_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF17_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/9276d990-547f-4b46-b400-d958292495c2"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98c55bf2-72c2-11ec-80b9-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF17",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98c70977-72c2-11ec-b34b-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF18_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF18_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/30c3320d-be8b-4050-8806-8bf3f3ea3b2e"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98ca8bf5-72c2-11ec-807d-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF18",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98cc399f-72c2-11ec-b073-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF19_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF19_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/6dde7675-c374-4099-8ead-2cbdcd16bf45"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98d00a3a-72c2-11ec-99e5-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF19",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98d1b7da-72c2-11ec-bacc-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF20_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF20_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/b5e93b34-ae00-44ec-beb3-8e8e23194613"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98d624ae-72c2-11ec-8faa-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF20",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98d7f966-72c2-11ec-81bd-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF21_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF21_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/01154a28-926a-4e49-aaf0-a4c292d8bdc7"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98dd2917-72c2-11ec-a57a-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF21",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98ded6b3-72c2-11ec-8b6b-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF23_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF23_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/24993903-d8ae-483f-8387-85a86799e967"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98e42e2a-72c2-11ec-9ef2-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF23",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98e60310-72c2-11ec-9284-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF28_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF28_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/e48cb43c-fa3a-4c92-9095-748990822814"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98ebcf87-72c2-11ec-bd1c-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF28",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98ed7d3b-72c2-11ec-ae17-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF33_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF33_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/c685e0cc-a02d-4f74-ab3a-2f96084d2adb"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98f397bf-72c2-11ec-8bf9-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF33",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98f54566-72c2-11ec-88de-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF36_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF36_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/4243ff3a-429a-4975-9031-b7e47229c594"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/98fbd52d-72c2-11ec-bdb0-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF36",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/98fda9d9-72c2-11ec-bc76-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF39_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF39_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/7f3e3c5d-cc37-4b52-82cd-61f491ed3355"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/99046093-72c2-11ec-9067-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF39",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/99060e51-72c2-11ec-8e5c-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF40_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF40_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/ab7dfeb6-19d6-4043-80d0-704be0615ca4"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/990ee7e6-72c2-11ec-a941-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF40",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/9910bc41-72c2-11ec-9239-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF41_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF41_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/596b9c0d-a280-4172-9225-7966214568bb"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9918aba2-72c2-11ec-90e0-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF41",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/991aa78b-72c2-11ec-865a-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF44_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF44_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/205227d8-be49-452e-9f27-6739141503d5"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9923333d-72c2-11ec-bffa-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF44",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/9924e0ed-72c2-11ec-9f38-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF45_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF45_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/78ce3c67-283c-4ea0-8cfd-c817942d0dd9"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/993a168e-72c2-11ec-afdf-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF45",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/993bc5cc-72c2-11ec-b00d-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF46_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF46_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/eacaee03-01eb-4a05-9149-b124b6ee2bc2"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/992ef2f7-72c2-11ec-9e6e-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF46",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/9930c7cf-72c2-11ec-bb8d-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF48_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF48_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/c82aa376-6bb4-4562-96dc-3f6265d96b01"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/994560b0-72c2-11ec-98ae-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF48",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/99473570-72c2-11ec-ab93-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF5_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF5_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/b40cd90e-b1be-4745-9fe1-6fe6bdc43670"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9950d2a3-72c2-11ec-aa86-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF5",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/9952805e-72c2-11ec-9e5d-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF50_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF50_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/d675a88a-7f50-4cce-9601-62c614517717"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/995d5607-72c2-11ec-a14f-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF50",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/995f03b4-72c2-11ec-8b41-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF58_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF58_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/1a8cb54b-4227-4cf6-9096-f709732298dd"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/996b864d-72c2-11ec-914b-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF58",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/996d5b09-72c2-11ec-b6ec-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF61_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF61_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/9d50002b-a42a-4ebe-aaa7-872bf7b38dfe"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9978cd44-72c2-11ec-ad80-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF61",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/997a7af1-72c2-11ec-b487-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF8_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF8_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/edc0a966-2f93-4fdb-b79b-a11eb2889060"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9985ec99-72c2-11ec-81a2-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF8",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/9987c180-72c2-11ec-8240-50eb718d9299",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Danio rerio",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/a122404c-246f-47c8-ac34-a349219aa899"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "heterogeneous cell population",
+      "id": "https://kg.ebrains.eu/api/instances/e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce"
+    },
+    "lookupLabel": "ZF9_ts",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "ZF9_ts_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/28445fe8-2456-4ebf-96fc-9e86e2706ff1"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/99946b13-72c2-11ec-abf8-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "ZF9",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/VTP5-8J9",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/7b045be8-0664-4586-a59e-cc8882d7fbe7",
+          "https://kg.ebrains.eu/api/instances/1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+          "https://kg.ebrains.eu/api/instances/930317d2-52f6-43e6-82f7-fe2e671d0104",
+          "https://kg.ebrains.eu/api/instances/2e8b6701-6669-4c09-ab74-29a951761b64"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/fe3da318-c8aa-4c83-ba64-1f0c74b00700"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/999618dc-72c2-11ec-8f67-50eb718d9299",
+    "additionalRemarks": null
+  }
+]

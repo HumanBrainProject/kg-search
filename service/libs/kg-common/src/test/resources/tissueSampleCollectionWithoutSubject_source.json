@@ -1,0 +1,1635 @@
+[
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt272_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt272_D1_tsc_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/4d56e4d6-513f-4b67-b9dc-2f1c6335ea21"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/a0a751f3-5d9b-11ec-9126-50eb718d9299",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt272_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/7bda9986-5952-44d5-8e1e-e5aec501d7da",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt273_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt273_D1-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/cb965ad6-b32e-4bf1-8cfb-e89fc0af3493"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/e2028639-7fe3-4695-a5a7-c28a7b08b5bd",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt273_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/a3138d62-18c4-49e9-84b7-347b63ea6fa4",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt274_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt274_D1-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/e96532ea-04d0-4e34-b0d1-780de8a520be"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/685bf53c-eaad-4fb4-aadb-d09850ea570f",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt274_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/80f1a50b-925b-4502-bc6a-1bfea24519ed",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt272_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt272_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/4d56e4d6-513f-4b67-b9dc-2f1c6335ea21"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/519ebd93-d71c-43b1-a0fe-e9a1e19c034f",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt272_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/b8d1c1ba-34e9-437f-95f5-d0acbd2eaae8",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt276_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt276_D1-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/41b17bf4-a578-4d36-881a-d1f63cca55b8"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/1b1ea60e-ca25-479a-a269-e9b36c10ff11",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt276_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/596f8c73-c9b6-4d2b-a7fd-135ac9f7043b",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt277_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt277_D1-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/2af881ae-fc93-48f3-9b21-0c7fb05e0889"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/773b11f6-2cbc-4416-90c1-00df62a70e25",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt277_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/b254e4de-77e7-4ee5-89b6-fd8d7a1decb9",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt278_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt278_D1-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/ef6da395-a227-4732-8f03-e59a5903d9cc"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/8fe3dd45-1b52-410f-89e7-0088a0364bb8",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt278_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/69420b30-0d75-4ea0-afef-5c66ceb8a741",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt279_D1-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt279_D1-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/da3f50d1-0e50-47e8-8cc6-63e6954c9616"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/26598f59-c7a3-455a-a19a-71450c3b6804",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt279_sch2",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/d826e3cc-59de-4de1-aa68-d34a85e356e6",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt272_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt272_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/4d56e4d6-513f-4b67-b9dc-2f1c6335ea21"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/3d2cbd4f-ecce-416b-8bfa-b1e499e09b07",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt272_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/a33a94cc-49e3-45e4-8ec5-4e760e3117e2",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt273_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt273_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/cb965ad6-b32e-4bf1-8cfb-e89fc0af3493"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/41730e61-148d-4031-8a11-6dcadfc1a896",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt273_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/9dea5176-cdcf-49a0-ab01-2309a40a3029",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt274_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt274_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/e96532ea-04d0-4e34-b0d1-780de8a520be"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/eb24dcc9-7600-40b5-8bec-c0f52150a11a",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt274_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/19c26398-498b-422e-9613-f50a8a5a5960",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt275_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt275_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/7453af10-5e27-42dd-9bf3-d5a3d56f35d2"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4905baa5-70d1-4230-b4f7-73d54a798236",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt275_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/47942720-1b9d-4808-b62f-34316dfe9e4e",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt276_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt276_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/41b17bf4-a578-4d36-881a-d1f63cca55b8"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/d3bd5e0d-5816-416c-bd76-3bc2ae254060",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt276_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/f19255d6-266b-436a-be80-e0bf83cfbe0c",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt277_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt277_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/2af881ae-fc93-48f3-9b21-0c7fb05e0889"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/57b32260-77b1-4f8d-83ab-72d12aaa0c2f",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt277_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/eab2dd73-d4e8-4523-8e09-8c228a31ffce",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt278_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt278_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/ef6da395-a227-4732-8f03-e59a5903d9cc"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/42f76314-620d-4759-95ae-db3700811033",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt278_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/74641ca0-89fd-475d-bdde-4a200514dc45",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt279_D2-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt279_D2-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/da3f50d1-0e50-47e8-8cc6-63e6954c9616"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/c784c78b-bc11-4efc-9688-b0068de65d19",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt279_racl",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/20a4ae68-6b9c-405d-96c8-fd2dfa7f9c7d",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt273_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt273_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/cb965ad6-b32e-4bf1-8cfb-e89fc0af3493"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ebfcc0a6-77a3-47d0-8e35-05f3dd2e124a",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt273_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/2f2ceb6d-03ba-426e-bafd-69387e82574f",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt274_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt274_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/e96532ea-04d0-4e34-b0d1-780de8a520be"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/6104ed19-d05c-4d8a-8757-afc018ac9e2d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt274_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/6795fa1e-b451-4146-ace3-bbb941a55861",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt275_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt275_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/7453af10-5e27-42dd-9bf3-d5a3d56f35d2"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/fe31c306-091d-42a8-af56-606940d8d059",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt275_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/e9a0e2de-58bf-4e0b-ad83-7ad00681afb4",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt276_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt276_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/41b17bf4-a578-4d36-881a-d1f63cca55b8"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/c612e549-c6c6-4df3-bab6-1fcdbef4bbb1",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt276_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/78cfe874-cbf7-4703-b878-f1841e99ef45",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt277_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt277_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/2af881ae-fc93-48f3-9b21-0c7fb05e0889"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/8d32dca4-462c-474c-8904-719aba2e4927",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt277_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ef8c7e7e-50a1-4412-8c64-981f3fe680c2",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt278_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt278_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/ef6da395-a227-4732-8f03-e59a5903d9cc"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/0f4cebee-99e5-4fb4-960a-ddc435b6009f",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt278_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/c3c00cb1-0bd5-4227-91e2-d71635372c33",
+    "additionalRemarks": ""
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Rattus norvegicus",
+          "id": "https://kg.ebrains.eu/api/instances/ab532423-1fd7-4255-8c6f-f99dc6df814f"
+        },
+        "fullName": "LEW/Ztm",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "wt279_DU-tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "wt279_DU-tsc-state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/da3f50d1-0e50-47e8-8cc6-63e6954c9616"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/2a7a9a07-deaa-4fd5-a4a6-d00e584cdf15",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [],
+    "internalIdentifier": "wt279_mazi",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/91QD-8NC",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/34d03e73-5e8f-4f73-a06f-7715ca2797f8",
+    "additionalRemarks": ""
+  }
+]

@@ -1,0 +1,240 @@
+[
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "primary visual area",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/372421bb-288e-4acc-b703-34a1ef9e393f"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6J",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/df8c82e5-3434-42fe-a11a-004afb67b6f4"
+      }
+    ],
+    "laterality": [],
+    "subElements": [
+      {
+        "anatomicalLocation": [
+          {
+            "versionIdentifier": "CCFv3, 2017",
+            "brainAtlasVersion": null,
+            "fullName": "primary visual area",
+            "fallbackName": null,
+            "brainAtlas": "Allen Mouse Brain Atlas",
+            "id": "https://kg.ebrains.eu/api/instances/372421bb-288e-4acc-b703-34a1ef9e393f"
+          }
+        ],
+        "species": [
+          {
+            "species": {
+              "fullName": "Mus musculus",
+              "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+            },
+            "fullName": "C57BL/6J",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/df8c82e5-3434-42fe-a11a-004afb67b6f4"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": {
+          "fullName": "single cell",
+          "id": "https://kg.ebrains.eu/api/instances/28ce5f93-78da-486c-993e-474ff280744f"
+        },
+        "lookupLabel": "CR_sub03_CR+2_den1",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSample"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "CR_sub03_CR+2_den1",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/TissueSampleState"
+            ],
+            "ageCategory": [],
+            "attribute": [
+              {
+                "fullName": "stained",
+                "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+              }
+            ],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/46b65ed1-3f12-4173-9cd6-4633e57e6974",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "CR+2_den1",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/de5a5dd1-f0e4-4657-85a3-2f01b647c391"
+        ],
+        "origin": {
+          "fullName": "cortical interneuron",
+          "id": "https://kg.ebrains.eu/api/instances/f6229d55-a95c-4048-b5da-835c7e8eff27"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/115b1c74-3370-4e88-b2a7-88417139a5a4",
+        "additionalRemarks": null
+      },
+      {
+        "anatomicalLocation": [
+          {
+            "versionIdentifier": "CCFv3, 2017",
+            "brainAtlasVersion": null,
+            "fullName": "primary visual area",
+            "fallbackName": null,
+            "brainAtlas": "Allen Mouse Brain Atlas",
+            "id": "https://kg.ebrains.eu/api/instances/372421bb-288e-4acc-b703-34a1ef9e393f"
+          }
+        ],
+        "species": [
+          {
+            "species": {
+              "fullName": "Mus musculus",
+              "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+            },
+            "fullName": "C57BL/6J",
+            "geneticStrainType": {
+              "fullName": "wildtype",
+              "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+            },
+            "id": "https://kg.ebrains.eu/api/instances/df8c82e5-3434-42fe-a11a-004afb67b6f4"
+          }
+        ],
+        "laterality": [],
+        "tissueSampleType": {
+          "fullName": "single cell",
+          "id": "https://kg.ebrains.eu/api/instances/28ce5f93-78da-486c-993e-474ff280744f"
+        },
+        "lookupLabel": "CR_sub03_CR+6_den1",
+        "serviceLinks": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSample"
+        ],
+        "studiedState": [
+          {
+            "age": null,
+            "lookupLabel": "CR_sub03_CR+6_den1",
+            "serviceLinks": [],
+            "pathology": [],
+            "type": [
+              "https://openminds.ebrains.eu/core/TissueSampleState"
+            ],
+            "ageCategory": [],
+            "attribute": [
+              {
+                "fullName": "stained",
+                "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+              }
+            ],
+            "descendedFrom": [],
+            "handedness": null,
+            "weight": null,
+            "id": "https://kg.ebrains.eu/api/instances/688e890e-c313-49e7-8462-b81e62dcc0de",
+            "additionalRemarks": ""
+          }
+        ],
+        "biologicalSex": [
+          {
+            "fullName": "male",
+            "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+          }
+        ],
+        "internalIdentifier": "CR+6_den1",
+        "quantity": null,
+        "isPartOf": [
+          "https://kg.ebrains.eu/api/instances/de5a5dd1-f0e4-4657-85a3-2f01b647c391"
+        ],
+        "origin": {
+          "fullName": "cortical interneuron",
+          "id": "https://kg.ebrains.eu/api/instances/f6229d55-a95c-4048-b5da-835c7e8eff27"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/4d3cabac-e616-4001-bd4f-5d4858bcfe0a",
+        "additionalRemarks": null
+      }
+    ],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "CR_sub03_TissueSlices",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "CR_sub03_TissueSlices-state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/604534ba-0371-482b-b77e-4d3e8ac49ef5"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/7e4fd586-e0cc-4fc3-ba7d-7770e13ff85b",
+        "additionalRemarks": "1. primary antibody: anti-calretinin\n2. secondary antibody: biotinylated\n3. ABC kit\n4. DAB staining\n5. primary antibody: anti-GABA\n6. 15 nm colloidal gold particles"
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/N490-VMF",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/103068ab-8993-4f0c-94a8-b55a6b99f109"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/de5a5dd1-f0e4-4657-85a3-2f01b647c391",
+    "additionalRemarks": ""
+  }
+]

@@ -1,0 +1,1739 @@
+[
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID6_TS_sec53",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID6_TS_sec53_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/0205ea4b-c4ac-4a54-a12d-fb796d247aaa"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/a5be1ac2-0b82-4c69-89f7-2fba97810568",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec53",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/e12829c6-5295-4735-b1dd-cfe0df660030",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID7_TS_sec45",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID7_TS_sec45_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/4cc1ac8d-9d72-4600-b360-8c78fe104e43"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/8339c580-78ee-4e8c-a1ba-71ebcd050792",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec45",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/d82c275e-668e-4bd8-82ef-eebae5363e13",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID7_TS_sec50",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID7_TS_sec50_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/4cc1ac8d-9d72-4600-b360-8c78fe104e43"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/524c054d-2bdd-4830-98e8-5c6d1c510f7d",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec50",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/df32f54a-68da-43dd-a0fd-51b971398be5",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID8_TS_sec29",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID8_TS_sec29_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/47038b94-2131-488d-9c89-ca33cb655c9f"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4a0c4fca-c4cc-4a7f-89c5-69fabccbfdce",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec29",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/126b9622-16d6-4d2f-82ef-d4d843e6eb61",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID10_TS_sec32",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID10_TS_sec32_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/ed1fec31-1bc2-4c07-a371-71dc11cccc1c"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/d76e166c-f6ba-43ab-b058-86dc475c1a65",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec32",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/e18b6248-c2f0-43cf-b2ea-dae552085e5c",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID14_TS_sec28",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID14_TS_sec28_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/2c8ae7f0-f123-4515-b3d3-7e14250e2e23"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/d83cc35f-efdc-43ad-97f1-3c1de1b1ad9d",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec28",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/1c76640e-0183-4bbd-a9c1-3aea24740a2a",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID14_TS_sec29",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID14_TS_sec29_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/2c8ae7f0-f123-4515-b3d3-7e14250e2e23"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/fd750f9c-073a-49bf-aab1-060a8f38616c",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec29",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/df92dcab-3d7c-4b40-a7c2-29d7811c16c8",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID15_TS_sec21",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID15_TS_sec21_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/d7ac8a85-7cd9-4c96-9724-570d472eef3c"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/43ce572e-92ef-4ccc-a49c-1d1ec4b1742e",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec21",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/bca88fa0-8ade-4384-8a06-1c8c4d5a69a6",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID20_TS_sec23",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID20_TS_sec23_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/d2d26cb3-e042-4dd0-8e27-bd0abd95e1b7"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/21519bf4-8b9f-4025-b050-0474a291b1ba",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec23",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/39b3f4b9-4ed2-414f-aa2e-2ab7b99efa06",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID20_TS_sec24",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID20_TS_sec24_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/d2d26cb3-e042-4dd0-8e27-bd0abd95e1b7"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/63e914e0-3d88-44aa-8b67-860adf624582",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec24",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/b0cd44ff-dc33-48fc-84c8-c666d2db4366",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID21_TS_sec22",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID21_TS_sec22_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/1def28b2-82e3-4d83-b030-fc63b50fee21"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/1df394a8-d2a2-49fb-a888-229feafcc03a",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec22",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ecf114b1-395f-4a32-91e2-d73f9342d1ca",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID21_TS_sec23",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID21_TS_sec23_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/1def28b2-82e3-4d83-b030-fc63b50fee21"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/a95a3182-0986-4ef7-bb7d-c1bb58332bea",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec23",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ad3c6649-f8ba-4595-9a24-841ff3a1866b",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "field CA1",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/e6322364-a0d3-42d5-abcf-3b95113ed462"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "C57BL/6",
+        "geneticStrainType": {
+          "fullName": "wildtype",
+          "id": "https://kg.ebrains.eu/api/instances/3557015e-ba94-48ff-b97d-c270e1ca5a17"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/bb67689f-dbfa-463b-88dd-f126ae8158fa"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C57_ID68_TS_sec26",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C57_ID68_TS_sec26_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/bec03d5c-7466-4a4f-85ca-c88a2870a127"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/4ce1309b-6ce0-430b-8ab3-6708de506574",
+        "additionalRemarks": ""
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "sec26",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/3e52b5f7-a866-4179-a03c-0945f03ec39e",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB1_CA1_slide4",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB1_slide4_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          },
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/be1464e6-47ff-473a-a875-19a85714c1c5",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB1."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "porta4",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/efd65aa3-011e-44d5-a08b-1c5fbb835a7c",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB1_CA1_slide5",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB1_slide5_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          },
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/cb9563ad-0b10-4179-b1a6-99bd1abf889b",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB1."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "porta5",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/47d4cd48-564c-4951-8df6-5e7b6a05167c",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB1_CA1_slide6",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB1_slide6_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          },
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/5174961c-7b22-4ec2-bca2-e0a718cbcd09",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB1."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "male",
+        "id": "https://kg.ebrains.eu/api/instances/744c9204-4aea-4eff-a4f4-d79f008b355f"
+      }
+    ],
+    "internalIdentifier": "porta6",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/0e64aae7-a5f0-4a9b-ac08-02f62c6b19ab",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB2_CA1_slide1",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB2_slide1_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          },
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/0b664102-f0a2-4c1b-99c1-ee66e1a8839a",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "porta1",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/c7cce743-050b-4dd4-b1bc-1582211189fe",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB2_slide4",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB2_slide4_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          },
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/7974abb8-0653-4a7f-bac0-0b2d6598b2d5",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "porta4",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/93ee9622-5614-43e8-b9b1-b64e3bb47755",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB2_CA1_slide5",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB2_slide5_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          },
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/2ff031a3-0cfe-4853-b7a9-3216718e8ddf",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "porta5",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/65b717f0-f3a7-4c2a-b5ac-06ef5e531624",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": null,
+        "brainAtlasVersion": null,
+        "fullName": "CA1 field of hippocampus",
+        "fallbackName": null,
+        "brainAtlas": null,
+        "id": "https://kg.ebrains.eu/api/instances/d77eb055-3ee9-484f-9c53-b2e621afcb45"
+      }
+    ],
+    "species": [
+      {
+        "species": null,
+        "fullName": "Homo sapiens",
+        "geneticStrainType": null,
+        "id": "https://kg.ebrains.eu/api/instances/97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "cellMorph_AB2_CA1_slide6",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSample"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "cellMorph_AB2_slide6_state",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          },
+          {
+            "fullName": "labeled",
+            "id": "https://kg.ebrains.eu/api/instances/90c49a8c-ab62-44de-838d-e990afc97748"
+          }
+        ],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/3cb262f4-8216-4a9b-83f3-7c7b8207e430",
+        "additionalRemarks": "This is a stained and labeled 300µm thick tissues slice, sectioning the CA1 field of hippocampus.\nIt originates from a smaller tissue block that was cut out of one of the 1.5cm thick whole-brain coronal slices of the extracted brain from subject AB2."
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "porta6",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/4XWX-28U",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/b8100148-b5d2-4d3d-98cd-8d6a6b19d653"
+      },
+      {
+        "doi": "https://doi.org/10.25493/H24F-2ET",
+        "groupsWithIndividualSubElementSpecifications": [
+          "https://kg.ebrains.eu/api/instances/c3a24c7c-7fa5-4da0-8797-7aac3c414337",
+          "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+        ],
+        "id": "https://kg.ebrains.eu/api/instances/2d3757b5-afc8-470d-988e-f382884cf382"
+      }
+    ],
+    "isPartOf": [
+      "https://kg.ebrains.eu/api/instances/bc0a8ee6-5eed-4496-a100-1036f9455743"
+    ],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/3c6cf9d7-e88d-4355-8c9d-d152f8f27265",
+    "additionalRemarks": null
+  }
+]

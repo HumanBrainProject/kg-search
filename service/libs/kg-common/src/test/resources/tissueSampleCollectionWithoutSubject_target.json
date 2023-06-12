@@ -1,0 +1,1363 @@
+{
+    "key": "root",
+    "parentRelationType": null,
+    "title": "Specimen",
+    "color": "#e3dcdc",
+    "data": {
+      "type": {
+        "value": "Dataset.SpecimenOverview"
+      },
+      "title": null,
+      "numberOfSubjectGroups": null,
+      "numberOfSubjects": null,
+      "numberOfTissueSampleCollections": {
+        "value": "23"
+      },
+      "numberOfTissueSamples": null,
+      "species": [
+        {
+          "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+          "value": "Rattus norvegicus",
+          "count": [
+            "23 tissue sample collections"
+          ]
+        }
+      ],
+      "sex": null,
+      "strains": [
+        {
+          "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+          "value": "LEW/Ztm",
+          "count": [
+            "23 tissue sample collections"
+          ]
+        }
+      ],
+      "geneticStrainTypes": [
+        {
+          "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+          "value": "wildtype",
+          "count": [
+            "23 tissue sample collections"
+          ]
+        }
+      ],
+      "pathology": null
+    },
+    "legend": {
+      "#78b5b5": "Tissue sample collection"
+    },
+    "children": [
+      {
+        "key": "bef1f22d-7fe2-47ad-aabd-b59906f94b15",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt272_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "b8d1c1ba-34e9-437f-95f5-d0acbd2eaae8",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt272_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "31ddfa93-3c9e-4347-b84c-8d5a80e4a08b",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt272_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "a33a94cc-49e3-45e4-8ec5-4e760e3117e2",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt272_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "8acb5195-c284-48cd-9aff-ffc7023fda00",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt272_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "7bda9986-5952-44d5-8e1e-e5aec501d7da",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt272_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "69336880-bd0e-471a-96d7-72767f45da31",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt273_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "2f2ceb6d-03ba-426e-bafd-69387e82574f",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt273_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "a906eaf9-0115-4c69-8748-9af9d46a5424",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt273_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "9dea5176-cdcf-49a0-ab01-2309a40a3029",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt273_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "49e2af7b-a141-40fa-af76-b03aad78300a",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt273_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "a3138d62-18c4-49e9-84b7-347b63ea6fa4",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt273_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "682f51fd-4069-475c-8203-70b76ff5bfd8",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt274_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "6795fa1e-b451-4146-ace3-bbb941a55861",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt274_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "c6059ea3-8af2-4548-9a0d-65fc355d8144",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt274_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "19c26398-498b-422e-9613-f50a8a5a5960",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt274_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "1bcbdc88-a805-47ad-b41f-6d398c4fea6a",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt274_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "80f1a50b-925b-4502-bc6a-1bfea24519ed",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt274_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "bb2ac6d2-d1d0-4f82-9747-26e708b3f2b4",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt275_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "e9a0e2de-58bf-4e0b-ad83-7ad00681afb4",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt275_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "989e8091-b96d-42b4-a9a3-cf4cc205d44d",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt275_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "47942720-1b9d-4808-b62f-34316dfe9e4e",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt275_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "e4fc2ee5-483e-466e-baa4-ffd8a159850e",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt276_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "78cfe874-cbf7-4703-b878-f1841e99ef45",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt276_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "42ca3f96-18ff-4758-b768-4541b86d4ac9",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt276_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "f19255d6-266b-436a-be80-e0bf83cfbe0c",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt276_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "aab6f625-b5af-4de9-a47c-a2359f2877f2",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt276_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "596f8c73-c9b6-4d2b-a7fd-135ac9f7043b",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt276_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "513ff9a5-b9bf-4d00-8e68-33bec2606877",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt277_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "ef8c7e7e-50a1-4412-8c64-981f3fe680c2",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt277_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "7018f108-53e3-45c1-a888-891a06f70e50",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt277_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "eab2dd73-d4e8-4523-8e09-8c228a31ffce",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt277_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "d478fc2a-86d4-482b-a9c0-659086580743",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt277_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "b254e4de-77e7-4ee5-89b6-fd8d7a1decb9",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt277_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "28699f90-2036-4760-ab4d-04fa5af93fd2",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt278_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "c3c00cb1-0bd5-4227-91e2-d71635372c33",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt278_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "65ebfbdd-5f10-4c4f-8890-00bd4cd3e6be",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt278_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "74641ca0-89fd-475d-bdde-4a200514dc45",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt278_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "ec8c90ed-a99e-4217-b834-6626fd3ae8f4",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt278_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "69420b30-0d75-4ea0-afef-5c66ceb8a741",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt278_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "0f9dfdbc-f1e1-4281-875f-fd2a00ca5910",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt279_mazi",
+        "color": "#78b5b5",
+        "data": {
+          "id": "34d03e73-5e8f-4f73-a06f-7715ca2797f8",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt279_mazi"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "8cea7662-8f87-4722-89de-00c75de6dfbc",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt279_racl",
+        "color": "#78b5b5",
+        "data": {
+          "id": "20a4ae68-6b9c-405d-96c8-fd2dfa7f9c7d",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt279_racl"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      },
+      {
+        "key": "a0776b94-ce5b-44a2-8ce8-eabf3d69b618",
+        "parentRelationType": null,
+        "title": "Tissue sample collection wt279_sch2",
+        "color": "#78b5b5",
+        "data": {
+          "id": "d826e3cc-59de-4de1-aa68-d34a85e356e6",
+          "type": {
+            "value": "Dataset.TissueSampleCollection"
+          },
+          "title": {
+            "value": "wt279_sch2"
+          },
+          "tissueSamples": null,
+          "sex": null,
+          "anatomicalLocation": null,
+          "origin": {
+            "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+            "value": "brain"
+          },
+          "species": [
+            {
+              "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+              "value": "Rattus norvegicus"
+            }
+          ],
+          "strain": [
+            {
+              "reference": "df38d8df-dc77-48ad-ae4f-f2e9f19bc0d2",
+              "value": "LEW/Ztm"
+            }
+          ],
+          "geneticStrainType": [
+            {
+              "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+              "value": "wildtype"
+            }
+          ],
+          "laterality": null,
+          "attributes": [
+            {
+              "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+              "value": "stained"
+            }
+          ],
+          "tissueSampleType": {
+            "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+            "value": "tissue slice"
+          },
+          "age": null,
+          "ageCategory": null,
+          "pathology": null,
+          "weight": null,
+          "additionalRemarks": null,
+          "serviceLinks": null
+        }
+      }
+    ]
+}

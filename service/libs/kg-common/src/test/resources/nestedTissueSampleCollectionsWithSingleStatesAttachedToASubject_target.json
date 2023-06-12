@@ -1,0 +1,1329 @@
+{
+  "key": "root",
+  "parentRelationType": null,
+  "title": "Specimen",
+  "color": "#e3dcdc",
+  "data": {
+    "type": {
+      "value": "Dataset.SpecimenOverview"
+    },
+    "title": null,
+    "numberOfSubjectGroups": null,
+    "numberOfSubjects": {
+      "value": "4"
+    },
+    "numberOfTissueSampleCollections": {
+      "value": "14"
+    },
+    "numberOfTissueSamples": null,
+    "species": [
+      {
+        "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+        "value": "Rattus norvegicus",
+        "count": [
+          "4 subjects",
+          "14 tissue sample collections"
+        ]
+      }
+    ],
+    "sex": [
+      {
+        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+        "value": "male",
+        "count": [
+          "4 subjects",
+          "14 tissue sample collections"
+        ]
+      }
+    ],
+    "strains": [
+      {
+        "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+        "value": "Wistar",
+        "count": [
+          "4 subjects",
+          "14 tissue sample collections"
+        ]
+      }
+    ],
+    "geneticStrainTypes": [
+      {
+        "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+        "value": "wildtype",
+        "count": [
+          "4 subjects",
+          "14 tissue sample collections"
+        ]
+      }
+    ],
+    "pathology": null
+  },
+  "legend": {
+    "#ffbe00": "Subject",
+    "#78b5b5": "Tissue sample collection"
+  },
+  "children": [
+    {
+      "key": "6ee24bc6-ac19-4fe6-8433-f66d5be47da4",
+      "parentRelationType": null,
+      "title": "Subject H108",
+      "color": "#ffbe00",
+      "data": {
+        "id": "35dfb351-c645-11ec-a5ba-00090faa0001",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "H108"
+        },
+        "species": [
+          {
+            "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+            "value": "Rattus norvegicus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+            "value": "Wistar"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": null,
+        "weight": {
+          "value": "155 gram"
+        },
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "2584bce3-6ffd-49f5-a874-cda9df23881e",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H108",
+          "color": "#78b5b5",
+          "data": {
+            "id": "3f70aec6-c645-11ec-be50-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H108"
+            },
+            "tissueSamples": {
+              "value": "429"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-3f70aec6-c645-11ec-be50-00090faa0001/updated_H108_TimmThionin_coronal.json&pyramids=buckets/img-3f70aec6-c645-11ec-be50-00090faa0001",
+                "value": "Open subject H108 in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "db4ef168-8c62-48d0-90fa-583f2ad1d02a",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H108a_Timm_light",
+          "color": "#78b5b5",
+          "data": {
+            "id": "3fd2a65a-c645-11ec-b800-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H108a_Timm_light"
+            },
+            "tissueSamples": {
+              "value": "144"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-3fd2a65a-c645-11ec-b800-00090faa0001/H108a_Timm_light_coronal.json&pyramids=buckets/img-3fd2a65a-c645-11ec-b800-00090faa0001",
+                "value": "Open subject H108a_Timm_light in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "f33ccf93-743a-489e-91a9-51f6913420b2",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H108b_Timm_dark",
+          "color": "#78b5b5",
+          "data": {
+            "id": "40416c56-c645-11ec-aecc-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H108b_Timm_dark"
+            },
+            "tissueSamples": {
+              "value": "139"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-40416c56-c645-11ec-aecc-00090faa0001/H108b_Timm_dark_coronal.json&pyramids=buckets/img-40416c56-c645-11ec-aecc-00090faa0001",
+                "value": "Open subject H108b_Timm_dark in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "d66b3aac-f339-42a1-a104-301e86506733",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H108c_Nissl",
+          "color": "#78b5b5",
+          "data": {
+            "id": "40ac3c53-c645-11ec-abfd-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H108c_Nissl"
+            },
+            "tissueSamples": {
+              "value": "146"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-40ac3c53-c645-11ec-abfd-00090faa0001/H108c_Nissl_coronal.json&pyramids=buckets/img-40ac3c53-c645-11ec-abfd-00090faa0001",
+                "value": "Open subject H108c_Nissl in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "596fc333-5177-4221-849b-e9c055f1e1c2",
+      "parentRelationType": null,
+      "title": "Subject H200",
+      "color": "#ffbe00",
+      "data": {
+        "id": "38247edc-c645-11ec-9483-00090faa0001",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "H200"
+        },
+        "species": [
+          {
+            "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+            "value": "Rattus norvegicus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+            "value": "Wistar"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": null,
+        "weight": {
+          "value": "150 gram"
+        },
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "447b1cb9-b17e-4164-ad78-93eba9a3a7d6",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H200",
+          "color": "#78b5b5",
+          "data": {
+            "id": "439ccbe7-c645-11ec-b100-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H200"
+            },
+            "tissueSamples": {
+              "value": "100"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-439ccbe7-c645-11ec-b100-00090faa0001/updated_H200_TimmThionin_horizontal.json&pyramids=buckets/img-439ccbe7-c645-11ec-b100-00090faa0001",
+                "value": "Open subject H200 in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "4fded0a0-289c-4ff0-b860-17f20d4b731c",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H200a_Nissl",
+          "color": "#78b5b5",
+          "data": {
+            "id": "440f8b67-c645-11ec-9a60-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H200a_Nissl"
+            },
+            "tissueSamples": {
+              "value": "48"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-440f8b67-c645-11ec-9a60-00090faa0001/H200a_Nissl_horizontal.json&pyramids=buckets/img-440f8b67-c645-11ec-9a60-00090faa0001",
+                "value": "Open subject H200a_Nissl in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "7c588eee-483f-4eb1-ab1a-82744fe58237",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H200b_Timm_dark",
+          "color": "#78b5b5",
+          "data": {
+            "id": "44857e30-c645-11ec-bcff-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H200b_Timm_dark"
+            },
+            "tissueSamples": {
+              "value": "52"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-44857e30-c645-11ec-bcff-00090faa0001/H200b_Timm_dark_horizontal.json&pyramids=buckets/img-44857e30-c645-11ec-bcff-00090faa0001",
+                "value": "Open subject H200b_Timm_dark in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "35ab4e00-f8e6-4d75-a185-293f19160eb5",
+      "parentRelationType": null,
+      "title": "Subject H201",
+      "color": "#ffbe00",
+      "data": {
+        "id": "3b12d8de-c645-11ec-8aa3-00090faa0001",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "H201"
+        },
+        "species": [
+          {
+            "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+            "value": "Rattus norvegicus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+            "value": "Wistar"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": null,
+        "weight": {
+          "value": "330 gram"
+        },
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "8a78355f-922e-4e47-b930-e735c6338152",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H201",
+          "color": "#78b5b5",
+          "data": {
+            "id": "44f336a2-c645-11ec-aac0-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H201"
+            },
+            "tissueSamples": {
+              "value": "142"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-44f336a2-c645-11ec-aac0-00090faa0001/updated_H201_TimmThionin_sagittal.json&pyramids=buckets/img-44f336a2-c645-11ec-aac0-00090faa0001",
+                "value": "Open subject H201 in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "0139cfaa-7351-4d90-b4fd-a7218f70ca81",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H201a_Timm_dark",
+          "color": "#78b5b5",
+          "data": {
+            "id": "45581161-c645-11ec-94cc-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H201a_Timm_dark"
+            },
+            "tissueSamples": {
+              "value": "47"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-45581161-c645-11ec-94cc-00090faa0001/H201a_Timm_dark_sagittal.json&pyramids=buckets/img-45581161-c645-11ec-94cc-00090faa0001",
+                "value": "Open subject H201a_Timm_dark in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "72e2199e-38e8-4699-84a5-ea5236f29ba5",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H201b_Nissl",
+          "color": "#78b5b5",
+          "data": {
+            "id": "45bf296e-c645-11ec-96a6-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H201b_Nissl"
+            },
+            "tissueSamples": {
+              "value": "47"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-45bf296e-c645-11ec-96a6-00090faa0001/H201b_Nissl_sagittal_updated.json&pyramids=buckets/img-45bf296e-c645-11ec-96a6-00090faa0001",
+                "value": "Open subject H201b_Nissl in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "49f3437f-3302-4b1e-8a97-f62e057f6a24",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H201c_Timm_light",
+          "color": "#78b5b5",
+          "data": {
+            "id": "46251714-c645-11ec-b841-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H201c_Timm_light"
+            },
+            "tissueSamples": {
+              "value": "48"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-46251714-c645-11ec-b841-00090faa0001/H201c_Timm_light_sagittal_updated.json&pyramids=buckets/img-46251714-c645-11ec-b841-00090faa0001",
+                "value": "Open subject H201c_Timm_light in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "key": "4208f1cd-41ec-4608-a4e8-8f2e6c798050",
+      "parentRelationType": null,
+      "title": "Subject H441",
+      "color": "#ffbe00",
+      "data": {
+        "id": "3ee81dad-c645-11ec-b5b3-00090faa0001",
+        "type": {
+          "value": "Dataset.Subject"
+        },
+        "title": {
+          "value": "H441"
+        },
+        "species": [
+          {
+            "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+            "value": "Rattus norvegicus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+            "value": "Wistar"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "age": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "6c8fbc3a-8c20-4d26-89c1-ac449b0dc50e",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H441",
+          "color": "#78b5b5",
+          "data": {
+            "id": "46869853-c645-11ec-aed5-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H441"
+            },
+            "tissueSamples": {
+              "value": "76"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-46869853-c645-11ec-aed5-00090faa0001/updated_H441_TimmThionin_horizontal.json&pyramids=buckets/img-46869853-c645-11ec-aed5-00090faa0001",
+                "value": "Open subject H441 in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "a74b0463-bbaf-4305-812a-1810117e531f",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H441a_Timm_dark",
+          "color": "#78b5b5",
+          "data": {
+            "id": "46e866da-c645-11ec-aa7f-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H441a_Timm_dark"
+            },
+            "tissueSamples": {
+              "value": "38"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-46e866da-c645-11ec-aa7f-00090faa0001/H441a_Timm_dark_horizontal.json&pyramids=buckets/img-46e866da-c645-11ec-aa7f-00090faa0001&tools&nl",
+                "value": "Open subject H441a_Timm_dark in LocaliZoom"
+              }
+            ]
+          }
+        },
+        {
+          "key": "a5deb2a2-b3f1-4b17-af06-4acc3d45732f",
+          "parentRelationType": "descendentFrom",
+          "title": "Tissue sample collection H441b_Nissl",
+          "color": "#78b5b5",
+          "data": {
+            "id": "4749738b-c645-11ec-b548-00090faa0001",
+            "type": {
+              "value": "Dataset.TissueSampleCollection"
+            },
+            "title": {
+              "value": "H441b_Nissl"
+            },
+            "tissueSamples": {
+              "value": "38"
+            },
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "anatomicalLocation": [
+              {
+                "reference": null,
+                "value": "brain (Waxholm Space Rat Brain Atlas)"
+              }
+            ],
+            "origin": {
+              "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+              "value": "brain"
+            },
+            "species": [
+              {
+                "reference": "ab532423-1fd7-4255-8c6f-f99dc6df814f",
+                "value": "Rattus norvegicus"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "a0b07cb4-3f13-4c82-b0ac-d1b73b47a057",
+                "value": "Wistar"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "laterality": null,
+            "attributes": [
+              {
+                "reference": "395cf72e-a797-44af-b79b-eb5dd00a22ec",
+                "value": "stained"
+              }
+            ],
+            "tissueSampleType": {
+              "reference": "79cc4385-acb4-467b-a45d-fdc85c26f2ee",
+              "value": "tissue slice"
+            },
+            "age": null,
+            "ageCategory": null,
+            "pathology": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": [
+              {
+                "url": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=WHS_SD_Rat_v4_39um&series=https://data-proxy.ebrains.eu/api/v1/public/buckets/img-4749738b-c645-11ec-b548-00090faa0001/H441b_Nissl_horizontal.json&pyramids=buckets/img-4749738b-c645-11ec-b548-00090faa0001",
+                "value": "Open subject H441b_Nissl in LocaliZoom"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

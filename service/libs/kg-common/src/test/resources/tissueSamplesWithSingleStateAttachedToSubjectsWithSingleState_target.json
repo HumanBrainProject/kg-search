@@ -1,0 +1,2503 @@
+{
+  "key": "root",
+  "parentRelationType": null,
+  "title": "Specimen",
+  "color": "#e3dcdc",
+  "data": {
+    "type": {
+      "value": "Dataset.SpecimenOverview"
+    },
+    "title": null,
+    "numberOfSubjectGroups": {
+      "value": "4"
+    },
+    "numberOfSubjects": {
+      "value": "24"
+    },
+    "numberOfTissueSampleCollections": null,
+    "numberOfTissueSamples": {
+      "value": "24"
+    },
+    "species": [
+      {
+        "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+        "value": "Danio rerio",
+        "count": [
+          "24 subjects",
+          "4 subject groups",
+          "24 tissue samples"
+        ]
+      }
+    ],
+    "sex": [
+      {
+        "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+        "value": "female",
+        "count": [
+          "12 subjects",
+          "2 subject groups"
+        ]
+      },
+      {
+        "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+        "value": "male",
+        "count": [
+          "12 subjects",
+          "2 subject groups"
+        ]
+      }
+    ],
+    "strains": [
+      {
+        "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+        "value": "HAZ (AB background)",
+        "count": [
+          "12 subjects",
+          "2 subject groups"
+        ]
+      },
+      {
+        "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+        "value": "LAZ (AB background)",
+        "count": [
+          "12 subjects",
+          "2 subject groups"
+        ]
+      }
+    ],
+    "geneticStrainTypes": [
+      {
+        "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+        "value": "wildtype",
+        "count": [
+          "24 subjects",
+          "4 subject groups"
+        ]
+      }
+    ],
+    "pathology": null
+  },
+  "legend": {
+    "#ffbe00": "Subject",
+    "#8a1f0d": "Subject group",
+    "#3176e1": "Tissue sample"
+  },
+  "children": [
+    {
+      "key": "84af1057-1c6e-4593-bf85-da0a5d914ac7",
+      "parentRelationType": null,
+      "title": "Subject group HAZ_f",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "7b045be8-0664-4586-a59e-cc8882d7fbe7",
+        "title": {
+          "value": "HAZ_f"
+        },
+        "numberOfSubjects": {
+          "value": "6"
+        },
+        "species": [
+          {
+            "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+            "value": "Danio rerio"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+            "value": "HAZ (AB background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "age": null,
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "4c7ba7ea-8b8f-4e8b-a58d-c42b29024497",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF12",
+          "color": "#ffbe00",
+          "data": {
+            "id": "4bb4b406-1014-4363-9c40-e68f7fdd08a0",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF12"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "9522794e-4e8c-498b-991e-5ae9c3c2a9ed",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF12",
+              "color": "#3176e1",
+              "data": {
+                "id": "98bc5b30-72c2-11ec-8638-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF12"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "de709e97-4887-42fa-8d2a-552ed0cd9476",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF13",
+          "color": "#ffbe00",
+          "data": {
+            "id": "bf0d82fd-1ac4-40ef-9411-9c28c51dc136",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF13"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "097b36e4-25b6-48d0-b119-dc15e5a2e6ef",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF13",
+              "color": "#3176e1",
+              "data": {
+                "id": "98c22883-72c2-11ec-8e82-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF13"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "edef85d5-eb7e-4685-935f-053b028dfbf0",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF19",
+          "color": "#ffbe00",
+          "data": {
+            "id": "60bcf1f9-5e46-4c34-a954-5e5c6976db8a",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF19"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "cb5e7254-ad46-46e9-b4ed-4dd07ef26e1f",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF19",
+              "color": "#3176e1",
+              "data": {
+                "id": "98d1b7da-72c2-11ec-bacc-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF19"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "d3066db6-8484-4584-8a82-b954ad5cdf7a",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF5",
+          "color": "#ffbe00",
+          "data": {
+            "id": "02cc73b6-b821-4a6e-bca5-a1c6ef36251f",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF5"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "884248ca-b4db-48b4-a415-84597ca8b9b1",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF5",
+              "color": "#3176e1",
+              "data": {
+                "id": "9952805e-72c2-11ec-9e5d-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF5"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "ed083a05-72d8-4c76-aaf6-3d1a18748469",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF8",
+          "color": "#ffbe00",
+          "data": {
+            "id": "6baff9c8-a7ec-4b11-82db-d54fead58a80",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF8"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "65424749-ab4e-4e7d-bbf8-54d909cfd737",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF8",
+              "color": "#3176e1",
+              "data": {
+                "id": "9987c180-72c2-11ec-8240-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF8"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "f42e7550-ac04-45ab-ac9b-af4ba52f5ab2",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF9",
+          "color": "#ffbe00",
+          "data": {
+            "id": "c2d69b09-a3fb-4763-b8f9-2c4e48f31f9a",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF9"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "52876d3c-e130-4687-aa89-4741b646ca09",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF9",
+              "color": "#3176e1",
+              "data": {
+                "id": "999618dc-72c2-11ec-8f67-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF9"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "a0f001d9-1684-4dd3-8742-df85fd7b84f4",
+      "parentRelationType": null,
+      "title": "Subject group HAZ_m",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "1de3d781-60c2-426d-b8b6-d440b45ff3bd",
+        "title": {
+          "value": "HAZ_m"
+        },
+        "numberOfSubjects": {
+          "value": "6"
+        },
+        "species": [
+          {
+            "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+            "value": "Danio rerio"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+            "value": "HAZ (AB background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "age": null,
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "7713fbaa-afa6-4090-a4fc-0caf0d08238b",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF17",
+          "color": "#ffbe00",
+          "data": {
+            "id": "ccd1b17e-86fb-47a1-aab0-6ee7cf53a817",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF17"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "acf84b7b-b08f-4f76-a348-45580d5a6a5f",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF17",
+              "color": "#3176e1",
+              "data": {
+                "id": "98c70977-72c2-11ec-b34b-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF17"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "f9713b09-920c-4701-af51-ecd641656087",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF18",
+          "color": "#ffbe00",
+          "data": {
+            "id": "b40bc03c-70fe-4b88-ab77-a844dd4d606e",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF18"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "2c5fb7ce-4399-40ff-9c3a-ce2646b5e035",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF18",
+              "color": "#3176e1",
+              "data": {
+                "id": "98cc399f-72c2-11ec-b073-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF18"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "a14ac17b-dd91-40fb-b3c0-c9490830ebf1",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF20",
+          "color": "#ffbe00",
+          "data": {
+            "id": "a9437d87-6bf5-4bce-be86-32b08908e319",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF20"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "c53aa47b-3b2c-43f5-9689-4c7ebfe4910b",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF20",
+              "color": "#3176e1",
+              "data": {
+                "id": "98d7f966-72c2-11ec-81bd-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF20"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "4948eb5c-a7cb-41c3-a0bb-80e171ea63a7",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF21",
+          "color": "#ffbe00",
+          "data": {
+            "id": "a1e7afb2-e1f3-4e97-9ef2-6401ef2f113b",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF21"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "b5646b4a-0d7f-4ba9-92b0-dda3e8c8ede1",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF21",
+              "color": "#3176e1",
+              "data": {
+                "id": "98ded6b3-72c2-11ec-8b6b-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF21"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "5b8f5433-f97e-45c6-9338-ff61b29d4a87",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF23",
+          "color": "#ffbe00",
+          "data": {
+            "id": "c7837e0b-d5e3-47f7-9f4c-af4767217116",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF23"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "5a94f8b2-24f4-4f85-ac24-79c03d5091d3",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF23",
+              "color": "#3176e1",
+              "data": {
+                "id": "98e60310-72c2-11ec-9284-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF23"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "9ea82509-1bc3-4ad0-9523-869442cfbc75",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF28",
+          "color": "#ffbe00",
+          "data": {
+            "id": "9d031f9e-5f91-4845-84ff-fd117e45e510",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF28"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "45cd8891-e2b7-449d-9abb-f00212643098",
+                "value": "HAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "0a4761e0-7a79-4475-a453-c75a788a1310",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF28",
+              "color": "#3176e1",
+              "data": {
+                "id": "98ed7d3b-72c2-11ec-ae17-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF28"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "4cc86ab4-3698-4ddc-967b-e826f5d8581b",
+      "parentRelationType": null,
+      "title": "Subject group LAZ_f",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "2e8b6701-6669-4c09-ab74-29a951761b64",
+        "title": {
+          "value": "LAZ_f"
+        },
+        "numberOfSubjects": {
+          "value": "6"
+        },
+        "species": [
+          {
+            "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+            "value": "Danio rerio"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+            "value": "female"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+            "value": "LAZ (AB background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "age": null,
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "d4693cba-80de-4ad5-a042-ef39d2f8af7d",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF40",
+          "color": "#ffbe00",
+          "data": {
+            "id": "218c400d-1dc3-4bf9-a61b-62224975cedb",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF40"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "01320e34-b9b9-4ba1-9e04-1095e7271ae9",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF40",
+              "color": "#3176e1",
+              "data": {
+                "id": "9910bc41-72c2-11ec-9239-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF40"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "215fe662-d7b8-4b01-8739-1d477dfc854a",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF41",
+          "color": "#ffbe00",
+          "data": {
+            "id": "1cafb546-cf17-4711-9bfc-f5ace70fc8f4",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF41"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "dcfc2784-4c7f-49c5-a1a2-4e6dddabaeac",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF41",
+              "color": "#3176e1",
+              "data": {
+                "id": "991aa78b-72c2-11ec-865a-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF41"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "abf0465b-736e-473c-bf62-2b7c5746617f",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF44",
+          "color": "#ffbe00",
+          "data": {
+            "id": "f3b3b26b-8b53-4f2b-944a-77d420077513",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF44"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "5f8aaf58-9e64-429d-92c3-bb601ee07eb9",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF44",
+              "color": "#3176e1",
+              "data": {
+                "id": "9924e0ed-72c2-11ec-9f38-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF44"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "b2162d54-c791-40d9-92fd-b0ce6ababaea",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF45",
+          "color": "#ffbe00",
+          "data": {
+            "id": "a40fd710-1b26-4783-b146-836fe122f91e",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF45"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "94535ded-cb47-48db-9267-c971ba2e8608",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF45",
+              "color": "#3176e1",
+              "data": {
+                "id": "993bc5cc-72c2-11ec-b00d-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF45"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "761054f7-73ab-4e93-9cbc-8245f2eccb94",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF46",
+          "color": "#ffbe00",
+          "data": {
+            "id": "c133ed69-ef92-40e2-8130-9f5163be7bf4",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF46"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "31ac5293-936f-40a7-9c76-b6b222ba9cb5",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF46",
+              "color": "#3176e1",
+              "data": {
+                "id": "9930c7cf-72c2-11ec-bb8d-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF46"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "eef4175f-11b4-4a24-b641-dab9204d41fc",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF61",
+          "color": "#ffbe00",
+          "data": {
+            "id": "30e36e34-f3b9-481b-ad2b-847dfe054d16",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF61"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "7606df11-c8d9-4ca4-98e3-8167ce6f432b",
+                "value": "female"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "552772e9-71c3-4d32-af3c-b3f6156b6cd2",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF61",
+              "color": "#3176e1",
+              "data": {
+                "id": "997a7af1-72c2-11ec-b487-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF61"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "681025d5-6401-4b93-ba38-b6a3ff5c4e65",
+      "parentRelationType": null,
+      "title": "Subject group LAZ_m",
+      "color": "#8a1f0d",
+      "data": {
+        "type": {
+          "value": "Dataset.SubjectGroup"
+        },
+        "id": "930317d2-52f6-43e6-82f7-fe2e671d0104",
+        "title": {
+          "value": "LAZ_m"
+        },
+        "numberOfSubjects": {
+          "value": "6"
+        },
+        "species": [
+          {
+            "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+            "value": "Danio rerio"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "strain": [
+          {
+            "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+            "value": "LAZ (AB background)"
+          }
+        ],
+        "geneticStrainType": [
+          {
+            "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+            "value": "wildtype"
+          }
+        ],
+        "age": null,
+        "ageCategory": [
+          {
+            "reference": "584611b0-3c4b-418f-8617-127adafb0cea",
+            "value": "adult"
+          }
+        ],
+        "attributes": null,
+        "handedness": null,
+        "pathology": null,
+        "weight": null,
+        "additionalRemarks": null,
+        "serviceLinks": null,
+        "otherPublications": null
+      },
+      "children": [
+        {
+          "key": "db268961-dcb0-473b-ae70-e966e51a9e3f",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF33",
+          "color": "#ffbe00",
+          "data": {
+            "id": "d51a16ce-162e-4d4f-b008-85d83b154d55",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF33"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "e370bcf6-919f-47dc-bef3-6720760e1a50",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF33",
+              "color": "#3176e1",
+              "data": {
+                "id": "98f54566-72c2-11ec-88de-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF33"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "cc12426c-93f7-4492-a507-d9ee75144f4c",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF36",
+          "color": "#ffbe00",
+          "data": {
+            "id": "a7118124-80cb-40f6-bb72-3427ec476b73",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF36"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "6ae67e4b-0f3d-410b-a751-9a3fc5c873ce",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF36",
+              "color": "#3176e1",
+              "data": {
+                "id": "98fda9d9-72c2-11ec-bc76-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF36"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "c1d2b673-7ea0-43ec-89b0-f36509a3757b",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF39",
+          "color": "#ffbe00",
+          "data": {
+            "id": "44153d89-b9b7-4486-a27c-b242ab2d4378",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF39"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "ed79ba29-322e-47d3-b909-386abfcee90c",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF39",
+              "color": "#3176e1",
+              "data": {
+                "id": "99060e51-72c2-11ec-8e5c-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF39"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "ae0b9a0b-caa2-4474-b8c6-7f4f853297f5",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF48",
+          "color": "#ffbe00",
+          "data": {
+            "id": "c3c01c25-6d6f-4206-9b6c-c238c507cda3",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF48"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "a365544f-56bf-45c1-b967-1c831f18baf6",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF48",
+              "color": "#3176e1",
+              "data": {
+                "id": "99473570-72c2-11ec-ab93-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF48"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "fcda77ce-a7fa-465f-9b05-375fad4784a7",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF50",
+          "color": "#ffbe00",
+          "data": {
+            "id": "5890ee5f-af6e-4044-9d5a-f46281c35195",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF50"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "0d19ab8c-f50c-4901-9d46-999e4f1cdb76",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF50",
+              "color": "#3176e1",
+              "data": {
+                "id": "995f03b4-72c2-11ec-8b41-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF50"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        },
+        {
+          "key": "1c722b57-b239-44af-9308-ce177ca7e357",
+          "parentRelationType": "partOf",
+          "title": "Subject ZF58",
+          "color": "#ffbe00",
+          "data": {
+            "id": "f9f5d7ef-565c-4c9c-8f00-01a9e8e78d50",
+            "type": {
+              "value": "Dataset.Subject"
+            },
+            "title": {
+              "value": "ZF58"
+            },
+            "species": [
+              {
+                "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                "value": "Danio rerio"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "strain": [
+              {
+                "reference": "945bb00a-73c3-426e-b254-8a0dfd50e06f",
+                "value": "LAZ (AB background)"
+              }
+            ],
+            "geneticStrainType": [
+              {
+                "reference": "3557015e-ba94-48ff-b97d-c270e1ca5a17",
+                "value": "wildtype"
+              }
+            ],
+            "ageCategory": null,
+            "attributes": null,
+            "handedness": null,
+            "pathology": null,
+            "age": null,
+            "weight": null,
+            "additionalRemarks": null,
+            "serviceLinks": null,
+            "otherPublications": null
+          },
+          "children": [
+            {
+              "key": "30e30ca7-dd49-4006-8583-22f84f66a611",
+              "parentRelationType": "descendentFrom",
+              "title": "Tissue sample ZF58",
+              "color": "#3176e1",
+              "data": {
+                "id": "996d5b09-72c2-11ec-b6ec-50eb718d9299",
+                "type": {
+                  "value": "Dataset.TissueSample"
+                },
+                "title": {
+                  "value": "ZF58"
+                },
+                "sex": null,
+                "anatomicalLocation": null,
+                "origin": {
+                  "reference": "9f495e52-754d-4196-be82-5de56bd86836",
+                  "value": "brain"
+                },
+                "species": [
+                  {
+                    "reference": "a122404c-246f-47c8-ac34-a349219aa899",
+                    "value": "Danio rerio"
+                  }
+                ],
+                "strain": null,
+                "geneticStrainType": null,
+                "laterality": null,
+                "attributes": null,
+                "tissueSampleType": {
+                  "reference": "e63ee32a-80c7-4e12-a5b7-5bfaa1fd6dce",
+                  "value": "heterogeneous cell population"
+                },
+                "age": null,
+                "ageCategory": null,
+                "pathology": null,
+                "weight": null,
+                "additionalRemarks": null,
+                "serviceLinks": null
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

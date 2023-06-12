@@ -47,29 +47,6 @@ public class SpecimenV3Translator extends TranslatorBase {
     private static final String DESCENDENT_FROM = "descendentFrom";
     private static final String PART_OF = "partOf";
 
-    //fe3da318-c8aa-4c83-ba64-1f0c74b00700 tissue samples with single state attached to subjects with single state
-    //0bf058d2-6bf7-4e0f-8067-345e07109bf8 nested tissue sample collections with single states attached to a subject
-    //d71d369a-c401-4d7e-b97a-3fb78eed06c5 tissue sample collection from other tissue sample with subselection
-    //7f6e14f0-ab5c-4328-9e0e-01b260edd357 tissue sample fully connected to a subject state
-    //4660e79b-a731-40ac-905e-46d0d11c0dd5 subjects with two states and attached tissue sample collections
-    //77aa9e4c-fd9c-493c-9af4-0988284ffa95 tissue sample collections with service links
-    //TODO shall we support the indirect linking of subjects and subject groups or do we require them to be stated explictly?
-    //Tissue sample only (indirect link to subjects)
-    //89ddf976-e732-4eef-be48-08af62cfe40b TSC
-    //65a1a3ca-a8e7-4bc0-a60b-3cffc9122b0e TS
-    //51ad4f55-6fe2-4513-85fc-449fead4c998 TSC
-    //98541109-aa4a-4813-85e2-2ad915659553
-    //df91d605-e261-4c3b-a954-2acd9adec042
-    //bb024285-ab31-48fa-86ff-5450b5e64cd7
-    //1899b724-1100-43ba-940f-4aab44080e9f
-    //0abb83f5-07f1-41b8-bdb3-f245f4c4e673
-    //95f44822-6247-4d7a-a232-23a5247dd91d TS in TSC
-    //103068ab-8993-4f0c-94a8-b55a6b99f109 2 TS in TSC
-    //b4a37f80-e231-4a27-92ca-f47de7b2208d TSC with TS with 2 states
-    //1cfea99c-b9ee-4748-b900-6ed6db944435
-    //2d3757b5-afc8-470d-988e-f382884cf382
-    //62bb226b-47f7-4294-bdff-66662d86e4d5 TS with multiple species and sex
-
 
     public SpecimenV3Translator(String datasetVersionId, List<String> errors) {
         this.translators = Arrays.asList(new SubjectTranslator(datasetVersionId), new SubjectGroupTranslator(datasetVersionId), new TissueSampleTranslator(datasetVersionId), new TissueSampleCollectionTranslator(datasetVersionId));
@@ -137,10 +114,15 @@ public class SpecimenV3Translator extends TranslatorBase {
         final GlobalTranslationContext translationContext = new GlobalTranslationContext(descendentStates, partOfRelations);
 
         //Start the recursive resolution with the root elements (the ones that either don't have states at all or whose states are disconnected)
-        e.setChildren(studiedSpecimen.stream().filter(s -> CollectionUtils.isEmpty(s.getIsPartOf()) && s.getStudiedState().stream().allMatch(st -> CollectionUtils.isEmpty(st.getDescendedFrom()))).map(s -> translateToBasicHierarchyElement(s, translationContext, false, null, null)).sorted(Comparator.comparing(BasicHierarchyElement::getTitle)).collect(Collectors.toList()));
+        e.setChildren(studiedSpecimen.stream().filter(s -> CollectionUtils.isEmpty(s.getIsPartOf()) && !hasMultiLayerDescendendFromElements(s)).map(s -> translateToBasicHierarchyElement(s, translationContext, false, null, null)).sorted(Comparator.comparing(BasicHierarchyElement::getTitle)).collect(Collectors.toList()));
         e.setLegend(sortLegend(collectLegend(e, new HashMap<>())));
         e.setData(translationContext.overviewAggregator.flush());
         return e;
+    }
+
+    private boolean hasMultiLayerDescendendFromElements(DatasetVersionV3.StudiedSpecimen s){
+        final Set<String> allStudiedStateIdsOfCurrentSpecimen = s.getStudiedState().stream().map(DatasetVersionV3.StudiedState::getId).collect(Collectors.toSet());
+        return s.getStudiedState().stream().anyMatch(st -> !CollectionUtils.isEmpty(st.getDescendedFrom()) && !allStudiedStateIdsOfCurrentSpecimen.containsAll(st.getDescendedFrom()));
     }
 
 
@@ -214,15 +196,15 @@ public class SpecimenV3Translator extends TranslatorBase {
                 //There are descendent states. For those which are completely connected to the current state, we can visualize them more naturally by attaching the specimen directly to the state (since it's true that the whole specimen is descendent from this state).
                 final List<DatasetVersionV3.StudiedSpecimen> fullyEnclosedDescendentSpecimen = findFullyEnclosedDescendentSpecimen(descendentStates);
                 final Set<DatasetVersionV3.StudiedState> fullyEnclosedDescendentStates = fullyEnclosedDescendentSpecimen.stream().map(DatasetVersionV3.StudiedSpecimen::getStudiedState).flatMap(Collection::stream).collect(Collectors.toSet());
-                children.addAll(fullyEnclosedDescendentSpecimen.stream().map(s -> translateToBasicHierarchyElement(s, context, false, DESCENDENT_FROM, null)).filter(Objects::nonNull).collect(Collectors.toList()));
+                children.addAll(fullyEnclosedDescendentSpecimen.stream().map(s -> translateToBasicHierarchyElement(s, context, false, DESCENDENT_FROM, null)).filter(Objects::nonNull).toList());
 
                 //Let's also add those which are not fully connected by attaching their state first.
-                final List<DatasetVersionV3.StudiedState> incompleteDescendentStates = descendentStates.stream().filter(d -> !fullyEnclosedDescendentStates.contains(d)).collect(Collectors.toList());
+                final List<DatasetVersionV3.StudiedState> incompleteDescendentStates = descendentStates.stream().filter(d -> !fullyEnclosedDescendentStates.contains(d)).toList();
                 children.addAll(IntStream.range(0, incompleteDescendentStates.size()).mapToObj(idx -> {
                     final DatasetVersionV3.StudiedState descendendState = incompleteDescendentStates.get(idx);
                     boolean isDescendendWithinSameSpecimen = studiedState.getParent().getId().equals(descendendState.getParent().getId());
-                    return translateToBasicHierarchyElement(descendendState, context, !isDescendendWithinSameSpecimen, idx+(isDescendendWithinSameSpecimen ? order+1 : 0), DESCENDENT_FROM);
-                }).filter(Objects::nonNull).collect(Collectors.toList()));
+                    return translateToBasicHierarchyElement(descendendState, context, !isDescendendWithinSameSpecimen, idx + (isDescendendWithinSameSpecimen ? order + 1 : 0), DESCENDENT_FROM);
+                }).filter(Objects::nonNull).toList());
             }
 
 

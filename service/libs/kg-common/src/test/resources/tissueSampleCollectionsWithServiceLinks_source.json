@@ -1,0 +1,1410 @@
+[
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "C183",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 26,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "C183_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/b199f8a1-d1e2-4d57-be15-a92314a14722",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C183",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/efa51073-b8ec-4114-81f2-b16cae6bba29",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "C184",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 26,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "C184_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ddb6f70d-cb8c-4db1-aa91-9d88b70ad3c3",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C184",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/fcdcad3b-40ff-49c9-a061-c685d5e68b73",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "E59",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 26,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "E59_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/930e1fe7-f68a-495a-9c99-6140dfd61a44",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "E59",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/1153b9fb-4ec6-4edc-8fac-97ce65c44138",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "C136",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 24,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "C136_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/9399e333-07e1-43f2-9693-b301dde9695d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C136",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/24d9ac55-0628-4b2e-8757-2ea69e359988",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "E62",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 24,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "E62_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/8414bc2d-52da-4c79-9bbb-30c03bfcc4dd",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "E62",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/9851c58e-fd38-4c17-9c6c-e00a7d831300",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "C228",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 25,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "C228_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/f189f57b-cc67-456e-8756-74c351b48d7d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C228",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/39ebf7d6-e3b5-4552-9404-6c8766d60a3a",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "C117",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 24,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "C117_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/8e5adb58-49ca-4155-892a-7eab25b94cad",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C117",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/f0555e08-bd10-4d55-9fe0-9f52c91304fc",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": null,
+    "lookupLabel": "C132",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/Subject"
+    ],
+    "studiedState": [
+      {
+        "age": {
+          "maxValue": null,
+          "minValue": null,
+          "uncertainty": [],
+          "maxValueUnit": null,
+          "value": 24,
+          "unit": {
+            "fullName": "day",
+            "id": "https://kg.ebrains.eu/api/instances/5440c4bc-a4d7-44b4-a375-a2dc7575a43d"
+          },
+          "minValueUnit": null,
+          "typeOfUncertainty": null
+        },
+        "lookupLabel": "C132_state-01",
+        "serviceLinks": [],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/SubjectState"
+        ],
+        "ageCategory": [
+          {
+            "fullName": "juvenile",
+            "id": "https://kg.ebrains.eu/api/instances/eb76f4bd-d892-43f3-a00a-6d91d0a8eb8b"
+          }
+        ],
+        "attribute": [],
+        "descendedFrom": [],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/238b6d7f-7a4d-4908-a2ac-f015a3a577a2",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C132",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": null,
+    "id": "https://kg.ebrains.eu/api/instances/6bbc68d8-b6be-47f6-8eba-093460601d26",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C183_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C183_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject C183)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C183/C183_final_lz.json&pyramids=imgsvc-9425c655-ee1c-46b3-8088-7bbc35583847"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/b199f8a1-d1e2-4d57-be15-a92314a14722"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ad9fc325-590c-11ec-9e0c-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C183",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/adb0b307-590c-11ec-91ae-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C184_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C184_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject C184)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C184/C184_final_lz.json&pyramids=imgsvc-d4bc7695-2ef3-4775-89cd-a83a496c2edc"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/ddb6f70d-cb8c-4db1-aa91-9d88b70ad3c3"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/adbf5898-590c-11ec-9541-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C184",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/add04783-590c-11ec-9cf4-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "E59_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "E59_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject E59)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/E59/E59_final_lz.json&pyramids=imgsvc-fd7ce419-1b5c-4672-ae3d-4ddf554a4570"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/930e1fe7-f68a-495a-9c99-6140dfd61a44"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ade00078-590c-11ec-9784-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "E59",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/adf1ffe9-590c-11ec-bbbd-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C136_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C136_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject C136)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C136/C136_final_lz.json&pyramids=imgsvc-597f6630-2a0d-4772-883e-1323de60ad35"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/9399e333-07e1-43f2-9693-b301dde9695d"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ae031757-590c-11ec-b7b5-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C136",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ae147e0b-590c-11ec-8e04-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "E62_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "E62_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject E62)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/E62/E62_final_lz.json&pyramids=imgsvc-3b6e6372-4c45-4d3f-83ed-85de25e9c4f3"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/8414bc2d-52da-4c79-9bbb-30c03bfcc4dd"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ae23e5b1-590c-11ec-bee3-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "E62",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ae34fe6a-590c-11ec-9a82-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C228_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C228_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject C228)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C228/C228_final_lz.json&pyramids=imgsvc-09f13601-2d71-4b1f-b5d7-2c85a45f728d"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/f189f57b-cc67-456e-8756-74c351b48d7d"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ae43a2b4-590c-11ec-99fa-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C228",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ae555796-590c-11ec-973b-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C117_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C117_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject C117)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C117/C117_final_lz.json&pyramids=imgsvc-22369ae4-1fbf-4f74-9792-b56108ee27c6"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/8e5adb58-49ca-4155-892a-7eab25b94cad"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ae63fdec-590c-11ec-b68d-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C117",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ae749ee7-590c-11ec-a8c5-50eb718d929d",
+    "additionalRemarks": null
+  },
+  {
+    "anatomicalLocation": [
+      {
+        "versionIdentifier": "CCFv3, 2017",
+        "brainAtlasVersion": null,
+        "fullName": "basic cell groups and regions",
+        "fallbackName": null,
+        "brainAtlas": "Allen Mouse Brain Atlas",
+        "id": "https://kg.ebrains.eu/api/instances/43a1a237-3d2e-4fc3-a688-f9252a5c10b1"
+      }
+    ],
+    "species": [
+      {
+        "species": {
+          "fullName": "Mus musculus",
+          "id": "https://kg.ebrains.eu/api/instances/d9875ebd-260e-4337-a637-b62fed4aa91d"
+        },
+        "fullName": "Tg-Drd1a-EGFP (Arc:Arc(S) background)",
+        "geneticStrainType": {
+          "fullName": "transgenic",
+          "id": "https://kg.ebrains.eu/api/instances/7cd9c53f-6f4b-4fd7-9e83-94cef80ab095"
+        },
+        "id": "https://kg.ebrains.eu/api/instances/f08de335-bef0-4474-a5de-116ec92d30fe"
+      }
+    ],
+    "laterality": [],
+    "subElements": [],
+    "tissueSampleType": {
+      "fullName": "tissue slice",
+      "id": "https://kg.ebrains.eu/api/instances/79cc4385-acb4-467b-a45d-fdc85c26f2ee"
+    },
+    "lookupLabel": "C132_tsc",
+    "numberOfSubjects": null,
+    "serviceLinks": [],
+    "type": [
+      "https://openminds.ebrains.eu/core/TissueSampleCollection"
+    ],
+    "studiedState": [
+      {
+        "age": null,
+        "lookupLabel": "C132_tsc_state-01",
+        "serviceLinks": [
+          {
+            "fromFileBundle": [
+              {
+                "service": "LocaliZoom",
+                "name": "tissue sample collection (subject C132)",
+                "openDataIn": "https://localizoom.apps.hbp.eu/filmstripzoom.html?atlas=ABA_DEV_P28&series=https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000061_D1-F-P25_pub/C132/C132_final_lz.json&pyramids=imgsvc-a4c35bbb-4a20-4d7e-b3a6-346aa4078f8a"
+              }
+            ],
+            "fromFile": []
+          }
+        ],
+        "pathology": [],
+        "type": [
+          "https://openminds.ebrains.eu/core/TissueSampleCollectionState"
+        ],
+        "ageCategory": [],
+        "attribute": [
+          {
+            "fullName": "stained",
+            "id": "https://kg.ebrains.eu/api/instances/395cf72e-a797-44af-b79b-eb5dd00a22ec"
+          }
+        ],
+        "descendedFrom": [
+          "https://kg.ebrains.eu/api/instances/238b6d7f-7a4d-4908-a2ac-f015a3a577a2"
+        ],
+        "handedness": null,
+        "weight": null,
+        "id": "https://kg.ebrains.eu/api/instances/ae836b26-590c-11ec-8898-50eb718d929d",
+        "additionalRemarks": null
+      }
+    ],
+    "biologicalSex": [
+      {
+        "fullName": "female",
+        "id": "https://kg.ebrains.eu/api/instances/7606df11-c8d9-4ca4-98e3-8167ce6f432b"
+      }
+    ],
+    "internalIdentifier": "C132",
+    "numberOfTissueSamples": null,
+    "usedInDatasets": [
+      {
+        "doi": "https://doi.org/10.25493/C3A9-VVM",
+        "groupsWithIndividualSubElementSpecifications": [],
+        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
+      }
+    ],
+    "isPartOf": [],
+    "origin": {
+      "fullName": "brain",
+      "id": "https://kg.ebrains.eu/api/instances/9f495e52-754d-4196-be82-5de56bd86836"
+    },
+    "id": "https://kg.ebrains.eu/api/instances/ae951f99-590c-11ec-bb50-50eb718d929d",
+    "additionalRemarks": null
+  }
+]
