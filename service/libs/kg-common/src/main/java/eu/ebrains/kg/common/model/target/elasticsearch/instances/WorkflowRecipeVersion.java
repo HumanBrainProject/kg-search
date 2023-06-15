@@ -113,6 +113,7 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     private List<Value<String>> outputFormatsForFilter;
 
     @FieldInfo(fieldType = FieldInfo.FieldType.MERMAID)
+    @ElasticSearchInfo(type = "keyword")
     private ValueWithDetails<String> workflow;
 
     @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true, useForSuggestion = true)

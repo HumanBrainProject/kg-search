@@ -22,15 +22,37 @@
  */
 
 package eu.ebrains.kg.common.model.target.elasticsearch.instances.commons;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
 import java.util.Map;
 
 @Getter
-public class ValueWithDetails<T extends Comparable<T>> extends Value<T>{
+@EqualsAndHashCode
+public class ValueWithDetails<T extends Comparable<T>> implements Comparable<Value<T>>{
     private Map<String, Object> details;
+    private T value;
 
     public ValueWithDetails(T value, Map<String, Object> details) {
-        super(value);
+        this.value = value;
         this.details = details;
+    }
+
+    @Override
+    public int compareTo(Value<T> tValue) {
+        T otherValue = tValue==null ? null : tValue.getValue();
+        return compare(otherValue);
+    }
+    private int compare(T otherValue) {
+        if(value == null) {
+            if(otherValue == null) {
+                return 0;
+            }
+            return 1;
+        }
+        if(otherValue == null) {
+            return 1;
+        }
+        return value.compareTo(otherValue);
     }
 }
