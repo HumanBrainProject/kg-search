@@ -87,7 +87,7 @@ public class WorkflowRecipeVersionV3Translator extends TranslatorV3<WorkflowReci
         translatorUtils.defineBadgesAndTrendingState(w, releaseDate, source.getLast30DaysViews());
         w.setFirstRelease(value(releaseDate));
         w.setLastRelease(value(source.getLastReleasedAt()));
-        w.setIdentifier(source.getIdentifier());
+        w.setIdentifier(IdUtils.getUUID(source.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         w.setAllIdentifiers(source.getIdentifier());
         List<Version> versions = parent == null ? null : parent.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
