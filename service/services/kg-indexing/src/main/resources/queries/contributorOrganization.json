@@ -95,8 +95,7 @@
             },
             {
               "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName",
-              "sort": true
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
             },
             {
               "propertyName": "query:fallbackName",
@@ -144,8 +143,7 @@
         },
         {
           "propertyName": "query:fullName",
-          "path": "https://openminds.ebrains.eu/vocab/fullName",
-          "sort": true
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
         },
         {
           "propertyName": "query:fallbackName",
@@ -178,8 +176,7 @@
             },
             {
               "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName",
-              "sort": true
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
             },
             {
               "propertyName": "query:fallbackName",
@@ -227,8 +224,7 @@
         },
         {
           "propertyName": "query:fullName",
-          "path": "https://openminds.ebrains.eu/vocab/fullName",
-          "sort": true
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
         },
         {
           "propertyName": "query:fallbackName",
@@ -261,8 +257,7 @@
             },
             {
               "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName",
-              "sort": true
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
             },
             {
               "propertyName": "query:fallbackName",
@@ -343,8 +338,7 @@
             },
             {
               "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName",
-              "sort": true
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
             },
             {
               "propertyName": "query:fallbackName",
@@ -418,8 +412,7 @@
             },
             {
               "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName",
-              "sort": true
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
             },
             {
               "propertyName": "query:fallbackName",
@@ -493,8 +486,7 @@
             },
             {
               "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName",
-              "sort": true
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
             },
             {
               "propertyName": "query:fallbackName",
