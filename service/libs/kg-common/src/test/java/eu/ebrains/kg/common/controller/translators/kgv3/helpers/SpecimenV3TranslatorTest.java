@@ -27,12 +27,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.util.CollectionUtils;
 
 import java.io.File;
@@ -56,7 +59,7 @@ public class SpecimenV3TranslatorTest {
 
     private void testSpecimenTranslation(String test, String id) {
         //given
-        SpecimenV3Translator translator = new SpecimenV3Translator(String.format("https://kg.ebrains.eu/api/instances/%s", id), new ArrayList<>());
+        SpecimenV3Translator translator = new SpecimenV3Translator(String.format("https://kg.ebrains.eu/api/instances/%s", id), new ArrayList<>(), Mockito.mock(ESServiceClient.class), DataStage.IN_PROGRESS);
 
         final List<DatasetVersionV3.StudiedSpecimen> payload = parseSource(test);
         final BasicHierarchyElement<?> expectation = parseTarget(test);

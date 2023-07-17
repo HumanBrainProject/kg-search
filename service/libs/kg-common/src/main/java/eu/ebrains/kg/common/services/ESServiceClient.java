@@ -23,8 +23,13 @@
 
 package eu.ebrains.kg.common.services;
 
+import eu.ebrains.kg.common.controller.translators.Helpers;
+import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.utils.ESHelper;
+import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +40,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ClientHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -450,9 +457,14 @@ public class ESServiceClient {
     }
 
     public Result searchDocuments(String index, Map<String, Object> payload) {
+        return doSearchDocuments(index, BodyInserters.fromValue(payload));
+    }
+
+    private Result doSearchDocuments(String index, BodyInserter<?, ? super ClientHttpRequest> payload) {
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
-                .body(BodyInserters.fromValue(payload))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(payload)
                 .retrieve()
                 .bodyToMono(Result.class)
                 .block();
@@ -554,5 +566,47 @@ public class ESServiceClient {
                 .retrieve()
                 .bodyToMono(Result.class)
                 .block();
+    }
+
+
+    public List<TargetInternalReference> getOtherPublications(UUID datasetVersionId, UUID specimenId, DataStage stage){
+        String query = String.format("""
+                {
+                  "_source": ["doi.value"],
+                  "query": {
+                    "bool": {
+                      "must": [
+                        {
+                          "terms": {
+                            "specimenIds.keyword": ["%s"]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+                """, specimenId.toString());
+
+        final Result result = doSearchDocuments(ESHelper.getIndexesForDocument(stage), BodyInserters.fromValue(query));
+        if(result.getHits() != null) {
+            final List<Document> hits = result.getHits().getHits();
+            if (hits !=null) {
+                return hits.stream().filter(h -> !h.getId().equals(datasetVersionId.toString())).filter(h -> h.getSource() != null).map(h -> {
+                    final Object doiWrapper = h.getSource().get("doi");
+                    String doi = null;
+                    if(doiWrapper instanceof Map){
+                        final Object doiValue = ((Map) doiWrapper).get("value");
+                        if(doiValue instanceof String){
+                            doi = (String) doiValue;
+                        }
+                    }
+                    if(doi!=null){
+                        return new TargetInternalReference(h.getId(), Helpers.stripDOIPrefix(doi), new TargetInternalReference.Context("Specimen", specimenId.toString()));
+                    }
+                    return null;
+                }).filter(Objects::nonNull).distinct().sorted(Comparator.comparing(TargetInternalReference::getValue)).toList();
+            }
+        }
+        return null;
     }
 }

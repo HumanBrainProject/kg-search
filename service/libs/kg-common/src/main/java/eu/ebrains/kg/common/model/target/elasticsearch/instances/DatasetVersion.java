@@ -42,12 +42,12 @@ import java.util.stream.Stream;
 
 @Getter
 @Setter
-@MetaInfo(name = "Dataset", defaultSelection = true, searchable=true)
-public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews, HasBadges, HasTrendingInformation{
+@MetaInfo(name = "Dataset", defaultSelection = true, searchable = true)
+public class DatasetVersion implements TargetInstance, VersionedInstance, HasCitation, HasPreviews, HasBadges, HasTrendingInformation {
     @JsonIgnore
     private List<String> allIdentifiers;
 
-    public static final String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
+    public static final String RESTRICTED_ACCESS_MESSAGE = "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
 
     public static String createHDGMessage(String id, String containerUrl) {
         if (containerUrl != null && !containerUrl.startsWith("https://data-proxy.ebrains.eu") && !containerUrl.startsWith("https://object.cscs.ch")) {
@@ -68,6 +68,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @ElasticSearchInfo(type = "keyword")
     private List<String> badges;
+
+    @ElasticSearchInfo(type = "keyword")
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private List<String> specimenIds;
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private SchemaOrgInstance meta;
@@ -225,10 +229,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Keywords", useForSuggestion = true, facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     private List<Value<String>> keywords;
 
-    @FieldInfo(layout = "Specimens",  labelHidden = true, fieldType = FieldInfo.FieldType.HIERARCHICAL)
+    @FieldInfo(layout = "Specimens", labelHidden = true, fieldType = FieldInfo.FieldType.HIERARCHICAL)
     private BasicHierarchyElement<?> specimenBySubject;
 
-    @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
+    @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false, isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
 
     @FieldInfo(label = "Used resources", layout = "Related resources")
@@ -242,10 +246,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="SubjectGroup")
+    @MetaInfo(name = "SubjectGroup")
     public static class DSVSubjectGroup {
 
-        public DSVSubjectGroup(){
+        public DSVSubjectGroup() {
             this("Dataset.SubjectGroup");
         }
 
@@ -307,8 +311,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="SubjectGroupState")
-    public static class DSVSubjectGroupState extends DSVSubjectGroup{
+    @MetaInfo(name = "SubjectGroupState")
+    public static class DSVSubjectGroupState extends DSVSubjectGroup {
 
         public DSVSubjectGroupState() {
             super("Dataset.SubjectGroupState");
@@ -317,10 +321,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="Subject")
+    @MetaInfo(name = "Subject")
     public static class DSVSubject {
 
-        public DSVSubject(){
+        public DSVSubject() {
             this("Dataset.Subject");
         }
 
@@ -381,8 +385,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="SubjectState")
-    public static class DSVSubjectState extends DSVSubject{
+    @MetaInfo(name = "SubjectState")
+    public static class DSVSubjectState extends DSVSubject {
 
         public DSVSubjectState() {
             super("Dataset.SubjectState");
@@ -391,7 +395,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="TissueSample")
+    @MetaInfo(name = "TissueSample")
     public static class DSVTissueSample {
         public DSVTissueSample() {
             this("Dataset.TissueSample");
@@ -400,6 +404,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         public DSVTissueSample(String type) {
             this.type = new Value<>(type);
         }
+
         @FieldInfo(ignoreForSearch = true, visible = false)
         private String id;
 
@@ -457,18 +462,18 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="TissueSampleState")
-    public static class DSVTissueSampleState extends DSVTissueSample{
+    @MetaInfo(name = "TissueSampleState")
+    public static class DSVTissueSampleState extends DSVTissueSample {
 
         public DSVTissueSampleState() {
-           super("Dataset.TissueSampleState");
+            super("Dataset.TissueSampleState");
         }
 
     }
 
     @Getter
     @Setter
-    @MetaInfo(name="TissueSampleCollection")
+    @MetaInfo(name = "TissueSampleCollection")
     public static class DSVTissueSampleCollection {
 
         public DSVTissueSampleCollection() {
@@ -540,8 +545,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="TissueSampleCollectionState")
-    public static class DSVTissueSampleCollectionState extends DSVTissueSampleCollection{
+    @MetaInfo(name = "TissueSampleCollectionState")
+    public static class DSVTissueSampleCollectionState extends DSVTissueSampleCollection {
         public DSVTissueSampleCollectionState() {
             super("Dataset.TissueSampleCollectionState");
         }
@@ -549,7 +554,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @Getter
     @Setter
-    @MetaInfo(name="SpecimenOverview")
+    @MetaInfo(name = "SpecimenOverview")
     public static class DSVSpecimenOverview {
 
         @ElasticSearchInfo(type = "keyword")
@@ -603,16 +608,16 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         @JsonIgnore
         private transient Map<String, Map<TargetInternalReference, Map<String, Set<String>>>> collector = new HashMap<>();
 
-        private String normalizeTypeName(String type, boolean plural){
+        private String normalizeTypeName(String type, boolean plural) {
             String typeName = StringUtils.uncapitalize(type);
-            if(plural && !typeName.endsWith("s")){
+            if (plural && !typeName.endsWith("s")) {
                 typeName = String.format("%ss", typeName);
             }
             return typeName;
         }
 
-        private void collect(String sourceId, String key, List<TargetInternalReference> references, String type){
-            if(references!=null && sourceId!=null) {
+        private void collect(String sourceId, String key, List<TargetInternalReference> references, String type) {
+            if (references != null && sourceId != null) {
                 final Map<TargetInternalReference, Map<String, Set<String>>> map = collector.computeIfAbsent(key, k -> new HashMap<>());
                 references.forEach(r -> {
                     final Map<String, Set<String>> countsPerType = map.computeIfAbsent(r, k -> new HashMap<>());
@@ -622,10 +627,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             }
         }
 
-        private List<TargetInternalReference> flush(String key){
+        private List<TargetInternalReference> flush(String key) {
             final Map<TargetInternalReference, Map<String, Set<String>>> map = collector.computeIfAbsent(key, k -> Collections.emptyMap());
             Stream<TargetInternalReference> stream = map.keySet().stream();
-            if(!map.isEmpty()){
+            if (!map.isEmpty()) {
                 stream = stream.map(k -> {
                     final Map<String, Set<String>> count = map.get(k);
                     final TargetInternalReference targetInternalReference = new TargetInternalReference(k.getReference(), k.getValue());
@@ -638,17 +643,17 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
         }
 
 
-        public DSVSpecimenOverview flush(){
-            if(subjectIds.size()>0) {
+        public DSVSpecimenOverview flush() {
+            if (subjectIds.size() > 0) {
                 setNumberOfSubjects(new Value<>(String.valueOf(subjectIds.size())));
             }
-            if(subjectGroupIds.size()>0) {
+            if (subjectGroupIds.size() > 0) {
                 setNumberOfSubjectGroups(new Value<>(String.valueOf(subjectGroupIds.size())));
             }
-            if(tissueSampleIds.size()>0) {
+            if (tissueSampleIds.size() > 0) {
                 setNumberOfTissueSamples(new Value<>(String.valueOf(tissueSampleIds.size())));
             }
-            if(tissueSampleCollectionIds.size()>0) {
+            if (tissueSampleCollectionIds.size() > 0) {
                 setNumberOfTissueSampleCollections(new Value<>(String.valueOf(tissueSampleCollectionIds.size())));
             }
 
@@ -660,24 +665,32 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
             return this;
         }
 
-        public void collectPathology(String sourceId, List<TargetInternalReference> references, String type){
+        public void collectPathology(String sourceId, List<TargetInternalReference> references, String type) {
             collect(sourceId, "pathology", references, type);
         }
 
-        public void collectSpecies(String sourceId, List<TargetInternalReference> references, String type){
+        public void collectSpecies(String sourceId, List<TargetInternalReference> references, String type) {
             collect(sourceId, "species", references, type);
         }
 
-        public void collectSex(String sourceId, List<TargetInternalReference> references, String type){
+        public void collectSex(String sourceId, List<TargetInternalReference> references, String type) {
             collect(sourceId, "sex", references, type);
         }
 
-        public void collectStrains(String sourceId, List<TargetInternalReference> references, String type){
+        public void collectStrains(String sourceId, List<TargetInternalReference> references, String type) {
             collect(sourceId, "strains", references, type);
         }
 
-        public void collectGeneticStrainTypes(String sourceId, List<TargetInternalReference> references, String type){
+        public void collectGeneticStrainTypes(String sourceId, List<TargetInternalReference> references, String type) {
             collect(sourceId, "geneticStrainTypes", references, type);
+        }
+
+        @JsonIgnore
+        public List<String> getAllSpecimenIds() {
+            return Stream.concat(
+                    Stream.concat(getSubjectIds().stream(), getSubjectGroupIds().stream()),
+                    Stream.concat(getTissueSampleIds().stream(), getTissueSampleCollectionIds().stream())
+            ).distinct().toList();
         }
     }
 

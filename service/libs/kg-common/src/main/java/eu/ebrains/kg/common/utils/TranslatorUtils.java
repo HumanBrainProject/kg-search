@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.common.utils;
 
-import eu.ebrains.kg.common.model.ErrorReport;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInformation;
@@ -80,7 +79,6 @@ public class TranslatorUtils {
             throw e;
         }
     }
-
 
     private boolean isNew(Date firstRelease) {
         if(firstRelease !=null) {

@@ -23,14 +23,15 @@
 
 package eu.ebrains.kg.common.controller.translators.kgv3.helpers;
 
-import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.controller.translators.TranslatorBase;
+import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.BasicHierarchyElement;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -48,8 +49,8 @@ public class SpecimenV3Translator extends TranslatorBase {
     private static final String PART_OF = "partOf";
 
 
-    public SpecimenV3Translator(String datasetVersionId, List<String> errors) {
-        this.translators = Arrays.asList(new SubjectTranslator(datasetVersionId), new SubjectGroupTranslator(datasetVersionId), new TissueSampleTranslator(datasetVersionId), new TissueSampleCollectionTranslator(datasetVersionId));
+    public SpecimenV3Translator(String datasetVersionId, List<String> errors, ESServiceClient esServiceClient, DataStage dataStage) {
+        this.translators = Arrays.asList(new SubjectTranslator(datasetVersionId, esServiceClient, dataStage), new SubjectGroupTranslator(datasetVersionId, esServiceClient, dataStage), new TissueSampleTranslator(datasetVersionId, esServiceClient, dataStage), new TissueSampleCollectionTranslator(datasetVersionId, esServiceClient, dataStage));
         this.errors = errors;
     }
 
@@ -278,14 +279,22 @@ public class SpecimenV3Translator extends TranslatorBase {
         private final String stateColor;
 
         protected final String datasetVersionId;
+        private final ESServiceClient esServiceClient;
+        private final DataStage dataStage;
 
-        public SpecimenTranslator(String prefix, String specimenType, String specimenColor, String stateType, String stateColor, String datasetVersionId) {
+        public SpecimenTranslator(String prefix, String specimenType, String specimenColor, String stateType, String stateColor, String datasetVersionId, ESServiceClient esServiceClient, DataStage dataStage) {
             this.prefix = prefix;
             this.specimenType = specimenType;
             this.specimenColor = specimenColor;
             this.stateType = stateType;
             this.stateColor = stateColor;
             this.datasetVersionId = datasetVersionId;
+            this.esServiceClient = esServiceClient;
+            this.dataStage = dataStage;
+        }
+
+        protected List<TargetInternalReference> getOtherPublications(UUID specimenId){
+            return this.esServiceClient.getOtherPublications(UUID.fromString(IdUtils.getUUID(this.datasetVersionId)), specimenId, this.dataStage);
         }
 
         public abstract T translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen);
@@ -324,8 +333,8 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private static class SubjectTranslator extends SpecimenTranslator<DatasetVersion.DSVSubject> {
 
-        public SubjectTranslator(String datasetVersionId) {
-            super("Subject", "https://openminds.ebrains.eu/core/Subject", "#ffbe00", "https://openminds.ebrains.eu/core/SubjectState", "#e68d0d", datasetVersionId);
+        public SubjectTranslator(String datasetVersionId, ESServiceClient esServiceClient, DataStage stage) {
+            super("Subject", "https://openminds.ebrains.eu/core/Subject", "#ffbe00", "https://openminds.ebrains.eu/core/SubjectState", "#e68d0d", datasetVersionId, esServiceClient, stage);
         }
 
         @Override
@@ -385,7 +394,10 @@ public class SpecimenV3Translator extends TranslatorBase {
         private void fillSubjectInformation(DatasetVersion.DSVSubject sub, DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
             sub.setServiceLinks(translateServiceLinks(specimen.getServiceLinks(), sub.getServiceLinks()));
             sub.setSex(ref(specimen.getBiologicalSex()));
-            sub.setOtherPublications(translateOtherPublications(specimen, datasetVersionId, parentSpecimen));
+            final String uuid = IdUtils.getUUID(specimen.getId());
+            if(uuid!=null) {
+                sub.setOtherPublications(getOtherPublications(UUID.fromString(uuid)));
+            }
             List<FullNameRef> indirectSpecies = specimen.getSpecies() != null ? specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getSpecies).filter(Objects::nonNull).collect(Collectors.toList()) : Collections.emptyList();
             sub.setGeneticStrainType(ref(CollectionUtils.isEmpty(specimen.getSpecies()) ? null : specimen.getSpecies().stream().map(DatasetVersionV3.SpeciesOrStrain::getGeneticStrainType).filter(Objects::nonNull).distinct().collect(Collectors.toList())));
             sub.setSpecies(ref(CollectionUtils.isEmpty(indirectSpecies) ? specimen.getSpecies() : indirectSpecies));
@@ -394,41 +406,21 @@ public class SpecimenV3Translator extends TranslatorBase {
         }
     }
 
-    private static List<TargetInternalReference> translateOtherPublications(DatasetVersionV3.StudiedSpecimen specimen, String datasetVersionId, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
-        Set<DatasetVersionV3.RelatedProducts> allRelatedProducts = new HashSet<>();
-        if (parentSpecimen != null && !CollectionUtils.isEmpty(parentSpecimen.getUsedInDatasets())) {
-            for (DatasetVersionV3.RelatedProducts usedInDataset : parentSpecimen.getUsedInDatasets()) {
-                if (CollectionUtils.isEmpty(usedInDataset.getGroupsWithIndividualSubElementSpecification()) || !usedInDataset.getGroupsWithIndividualSubElementSpecification().contains(parentSpecimen.getId())) {
-                    //The parent group doesn't have any additional restrictions by sub element. We therefore can interpret this specimen to be member of the related product by group association.
-                    allRelatedProducts.add(usedInDataset);
-                }
-            }
-        }
-        //Additionally to the (potential) implicit links, we of course also take the explicit references into account
-        if (!CollectionUtils.isEmpty(specimen.getUsedInDatasets())) {
-            allRelatedProducts.addAll(specimen.getUsedInDatasets());
-        }
-        final List<TargetInternalReference> otherPublications = allRelatedProducts.stream().filter(i -> !i.getId().equals(datasetVersionId) && i.getId() != null && i.getDoi() != null).map(i ->
-                new TargetInternalReference(IdUtils.getUUID(i.getId()), Helpers.stripDOIPrefix(i.getDoi()), new TargetInternalReference.Context("Specimen", IdUtils.getUUID(specimen.getId())))).sorted(Comparator.comparing(TargetInternalReference::getValue)).collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(otherPublications)) {
-            return otherPublications;
-        } else {
-            return null;
-        }
-    }
-
     private static class SubjectGroupTranslator extends SpecimenTranslator<DatasetVersion.DSVSubjectGroup> {
 
-        public SubjectGroupTranslator(String datasetVersionId) {
-            super("Subject group", "https://openminds.ebrains.eu/core/SubjectGroup", "#8a1f0d", "https://openminds.ebrains.eu/core/SubjectGroupState", "#8a1f0d", datasetVersionId);
+        public SubjectGroupTranslator(String datasetVersionId, ESServiceClient esServiceClient, DataStage stage) {
+            super("Subject group", "https://openminds.ebrains.eu/core/SubjectGroup", "#8a1f0d", "https://openminds.ebrains.eu/core/SubjectGroupState", "#8a1f0d", datasetVersionId, esServiceClient, stage);
         }
 
         @Override
         public DatasetVersion.DSVSubjectGroup translateSpecimen(DatasetVersionV3.StudiedSpecimen specimen, DatasetVersionV3.StudiedSpecimen parentSpecimen) {
             final DatasetVersion.DSVSubjectGroup subGrp = new DatasetVersion.DSVSubjectGroup();
-            subGrp.setId(IdUtils.getUUID(specimen.getId()));
+            final String uuid = IdUtils.getUUID(specimen.getId());
+            subGrp.setId(uuid);
             subGrp.setTitle(value(specimen.getInternalIdentifier()));
-            subGrp.setOtherPublications(translateOtherPublications(specimen, datasetVersionId, parentSpecimen));
+            if(uuid!=null) {
+                subGrp.setOtherPublications(getOtherPublications(UUID.fromString(uuid)));
+            }
             if (specimen.getNumberOfSubjects() != null) {
                 subGrp.setNumberOfSubjects(value(String.valueOf(specimen.getNumberOfSubjects())));
             }
@@ -502,8 +494,8 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private static class TissueSampleTranslator extends SpecimenTranslator<DatasetVersion.DSVTissueSample> {
 
-        public TissueSampleTranslator(String datasetVersionId) {
-            super("Tissue sample", "https://openminds.ebrains.eu/core/TissueSample", "#3176e1", "https://openminds.ebrains.eu/core/TissueSampleState", "#393ac6", datasetVersionId);
+        public TissueSampleTranslator(String datasetVersionId, ESServiceClient esServiceClient, DataStage stage) {
+            super("Tissue sample", "https://openminds.ebrains.eu/core/TissueSample", "#3176e1", "https://openminds.ebrains.eu/core/TissueSampleState", "#393ac6", datasetVersionId, esServiceClient, stage);
         }
 
         @Override
@@ -576,8 +568,8 @@ public class SpecimenV3Translator extends TranslatorBase {
 
     private static class TissueSampleCollectionTranslator extends SpecimenTranslator<DatasetVersion.DSVTissueSampleCollection> {
 
-        public TissueSampleCollectionTranslator(String datasetVersionId) {
-            super("Tissue sample collection", "https://openminds.ebrains.eu/core/TissueSampleCollection", "#78b5b5", "https://openminds.ebrains.eu/core/TissueSampleCollectionState", "#497d7d", datasetVersionId);
+        public TissueSampleCollectionTranslator(String datasetVersionId, ESServiceClient esServiceClient, DataStage stage) {
+            super("Tissue sample collection", "https://openminds.ebrains.eu/core/TissueSampleCollection", "#78b5b5", "https://openminds.ebrains.eu/core/TissueSampleCollectionState", "#497d7d", datasetVersionId, esServiceClient, stage);
         }
 
         @Override

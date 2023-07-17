@@ -409,8 +409,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId(), translatorUtils.getErrors()).translateToHierarchy(datasetVersion.getStudiedSpecimen());
+        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId(), translatorUtils.getErrors(), translatorUtils.getEsServiceClient(), dataStage).translateToHierarchy(datasetVersion.getStudiedSpecimen());
         if (specimenBySubject != null) {
+            d.setSpecimenIds(specimenBySubject.getData().getAllSpecimenIds());
             if (specimenBySubject.getData().getSpecies() != null) {
                 d.setSpeciesFilter(specimenBySubject.getData().getSpecies().stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).distinct().map(Value::new).collect(Collectors.toList()));
             }
