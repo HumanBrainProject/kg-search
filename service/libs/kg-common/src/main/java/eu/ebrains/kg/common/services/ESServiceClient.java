@@ -591,20 +591,21 @@ public class ESServiceClient {
         if(result.getHits() != null) {
             final List<Document> hits = result.getHits().getHits();
             if (hits !=null) {
-                return hits.stream().filter(h -> !h.getId().equals(datasetVersionId.toString())).filter(h -> h.getSource() != null).map(h -> {
+                final List<TargetInternalReference> targetInternalReferences = hits.stream().filter(h -> !h.getId().equals(datasetVersionId.toString())).filter(h -> h.getSource() != null).map(h -> {
                     final Object doiWrapper = h.getSource().get("doi");
                     String doi = null;
-                    if(doiWrapper instanceof Map){
+                    if (doiWrapper instanceof Map) {
                         final Object doiValue = ((Map) doiWrapper).get("value");
-                        if(doiValue instanceof String){
+                        if (doiValue instanceof String) {
                             doi = (String) doiValue;
                         }
                     }
-                    if(doi!=null){
+                    if (doi != null) {
                         return new TargetInternalReference(h.getId(), Helpers.stripDOIPrefix(doi), new TargetInternalReference.Context("Specimen", specimenId.toString()));
                     }
                     return null;
                 }).filter(Objects::nonNull).distinct().sorted(Comparator.comparing(TargetInternalReference::getValue)).toList();
+                return targetInternalReferences.isEmpty() ? null : targetInternalReferences;
             }
         }
         return null;

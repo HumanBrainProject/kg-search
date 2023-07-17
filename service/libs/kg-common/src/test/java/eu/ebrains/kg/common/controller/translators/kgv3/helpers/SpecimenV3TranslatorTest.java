@@ -59,7 +59,9 @@ public class SpecimenV3TranslatorTest {
 
     private void testSpecimenTranslation(String test, String id) {
         //given
-        SpecimenV3Translator translator = new SpecimenV3Translator(String.format("https://kg.ebrains.eu/api/instances/%s", id), new ArrayList<>(), Mockito.mock(ESServiceClient.class), DataStage.IN_PROGRESS);
+        final ESServiceClient esServiceClientMock = Mockito.mock(ESServiceClient.class);
+        Mockito.when(esServiceClientMock.getOtherPublications(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+        SpecimenV3Translator translator = new SpecimenV3Translator(String.format("https://kg.ebrains.eu/api/instances/%s", id), new ArrayList<>(), esServiceClientMock, DataStage.IN_PROGRESS);
 
         final List<DatasetVersionV3.StudiedSpecimen> payload = parseSource(test);
         final BasicHierarchyElement<?> expectation = parseTarget(test);

@@ -1354,16 +1354,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "13442a24-d205-11ec-8e8d-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -1425,16 +1416,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primaryMotorArea) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "13442a24-d205-11ec-8e8d-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -1496,16 +1478,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "13442a24-d205-11ec-8e8d-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -2869,16 +2842,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "15d50acd-d205-11ec-9bb5-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -2940,16 +2904,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primarySomatosensoryAreaUpperLimb) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "15d50acd-d205-11ec-9bb5-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -3011,16 +2966,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "15d50acd-d205-11ec-9bb5-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -3392,16 +3338,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "16c2a0cf-d205-11ec-bc56-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -3463,16 +3400,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_secondaryMotorArea) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "16c2a0cf-d205-11ec-bc56-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -3534,16 +3462,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "16c2a0cf-d205-11ec-bc56-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -4163,16 +4082,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "1808875c-d205-11ec-a676-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -4234,16 +4144,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primarySomatosensoryAreaMouth) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1808875c-d205-11ec-a676-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -4305,16 +4206,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1808875c-d205-11ec-a676-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -4438,16 +4330,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "186e25ab-d205-11ec-aeae-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -4509,16 +4392,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primarySomatosensoryAreaLowerLimb) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "186e25ab-d205-11ec-aeae-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -4580,16 +4454,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "186e25ab-d205-11ec-aeae-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -5209,16 +5074,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "19c0c1ba-d205-11ec-9428-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -5280,16 +5136,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primarySomatosensoryAreaNose) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "19c0c1ba-d205-11ec-9428-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -5351,16 +5198,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "19c0c1ba-d205-11ec-9428-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -5484,16 +5322,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "1a310ee9-d205-11ec-9600-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -5555,16 +5384,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primaryMotorArea) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1a310ee9-d205-11ec-9600-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -5626,16 +5446,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1a310ee9-d205-11ec-9600-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -5759,16 +5570,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "1a9aa855-d205-11ec-9767-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -5830,16 +5632,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_primarySomatosensoryAreaBarrelField) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1a9aa855-d205-11ec-9767-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -5901,16 +5694,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1a9aa855-d205-11ec-9767-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -6282,16 +6066,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "1b777bac-d205-11ec-9cea-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -6353,16 +6128,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_secondaryMotorArea) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1b777bac-d205-11ec-9cea-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -6424,16 +6190,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1b777bac-d205-11ec-9cea-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -6557,16 +6314,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "1bee0a4c-d205-11ec-b52c-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -6628,16 +6376,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_secondaryMotorArea) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1bee0a4c-d205-11ec-b52c-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -6699,16 +6438,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1bee0a4c-d205-11ec-b52c-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
@@ -8816,16 +8546,7 @@
         "weight": null,
         "additionalRemarks": null,
         "serviceLinks": null,
-        "otherPublications": [
-          {
-            "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-            "value": "10.25493/AJVE-B8G",
-            "context": {
-              "tab": "Specimen",
-              "targetId": "1ff0317b-d205-11ec-8d05-00090faa0001"
-            }
-          }
-        ]
+        "otherPublications": null
       },
       "children": [
         {
@@ -8887,16 +8608,7 @@
               "value": "Iontophoretically injected into the left hemisphere (AMBA_CCFv3_2017_secondaryMotorArea) with a pan-neuronal AAV-expressing EGFP viral tracer (rAAV2/1.hSynapsin.EGFP.WPRE.bGH, Penn Vector Core, AV-1-PV1696, Addgene ID 105539) (Harris et al, 2019)"
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1ff0317b-d205-11ec-8d05-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           }
         },
         {
@@ -8958,16 +8670,7 @@
               "value": "Perfused with 4% paraformaldehyde, before the brain was extracted "
             },
             "serviceLinks": null,
-            "otherPublications": [
-              {
-                "reference": "27dd2588-f4da-406c-9d01-8569bf912b0e",
-                "value": "10.25493/AJVE-B8G",
-                "context": {
-                  "tab": "Specimen",
-                  "targetId": "1ff0317b-d205-11ec-8d05-00090faa0001"
-                }
-              }
-            ]
+            "otherPublications": null
           },
           "children": [
             {
