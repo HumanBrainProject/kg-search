@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.utils.ESHelper;
-import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -230,16 +229,18 @@ public class ESServiceClient {
         String sizeValue = String.format("%d", size);
 
         String sortValue =
-            "[\n" +
-            "    {\"_id\": \"asc\"}\n" +
-            "]";
+                """
+                        [
+                            {"_id": "asc"}
+                        ]""";
 
         String searchAfterValue = "";
         if (searchAfter != null) {
             searchAfterValue = String.format(
-                "  [\n" +
-                "    \"%s\"\n" +
-                "  ]", searchAfter);
+                    """
+                            [
+                              "%s"
+                            ]""".indent(2), searchAfter);
         }
 
         Map<String, String> terms = Map.of(
@@ -280,42 +281,44 @@ public class ESServiceClient {
 
     private String getIdsOfPaginatedQuery(String id, String type) {
         if (id == null) {
-            return String.format("{\n" +
-                    " \"size\": %d,\n" +
-                    " \"sort\": [\n" +
-                    "    {\"_id\": \"asc\"}\n" +
-                    " ],\n" +
-                    "  \"query\": {\n" +
-                    "    \"bool\": {\n" +
-                    "      \"must\": {\n" +
-                    "          \"term\": {\n" +
-                    "            \"type.value\": \"%s\"\n" +
-                    "          }\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "  },\n" +
-                    " \"_source\": \"false\"\n" +
-                    "}", ES_QUERY_SIZE, type);
+            return String.format("""
+                    {
+                     "size": %d,
+                     "sort": [
+                        {"_id": "asc"}
+                     ],
+                      "query": {
+                        "bool": {
+                          "must": {
+                              "term": {
+                                "type.value": "%s"
+                              }
+                            }
+                        }
+                      },
+                     "_source": "false"
+                    }""", ES_QUERY_SIZE, type);
         }
-        return String.format("{\n" +
-                " \"size\": %d,\n" +
-                " \"sort\": [\n" +
-                "    {\"_id\": \"asc\"}\n" +
-                "  ],\n" +
-                "  \"search_after\": [\n" +
-                "      \"%s\"\n" +
-                "  ],\n" +
-                "  \"query\": {\n" +
-                "    \"bool\": {\n" +
-                "      \"must\": {\n" +
-                "          \"term\": {\n" +
-                "            \"type.value\": \"%s\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "    }\n" +
-                "  },\n" +
-                " \"_source\": \"false\"\n" +
-                "}", ES_QUERY_SIZE, id, type);
+        return String.format("""
+                {
+                 "size": %d,
+                 "sort": [
+                    {"_id": "asc"}
+                  ],
+                  "search_after": [
+                      "%s"
+                  ],
+                  "query": {
+                    "bool": {
+                      "must": {
+                          "term": {
+                            "type.value": "%s"
+                          }
+                        }
+                    }
+                  },
+                 "_source": "false"
+                }""", ES_QUERY_SIZE, id, type);
     }
 
     @Getter
@@ -572,6 +575,8 @@ public class ESServiceClient {
     public List<TargetInternalReference> getOtherPublications(UUID datasetVersionId, UUID specimenId, DataStage stage){
         String query = String.format("""
                 {
+                  "from": 0,
+                  "size": %d,
                   "_source": ["doi.value"],
                   "query": {
                     "bool": {
@@ -585,7 +590,7 @@ public class ESServiceClient {
                     }
                   }
                 }
-                """, specimenId.toString());
+                """, ES_QUERY_SIZE, specimenId.toString());
 
         final Result result = doSearchDocuments(ESHelper.getIndexesForDocument(stage), BodyInserters.fromValue(query));
         if(result.getHits() != null) {
