@@ -606,7 +606,7 @@ public class ESServiceClient {
                         }
                     }
                     if (doi != null) {
-                        return new TargetInternalReference(h.getId(), Helpers.stripDOIPrefix(doi), new TargetInternalReference.Context("Specimen", specimenId.toString()));
+                        return new TargetInternalReference(h.getId(), Helpers.stripDOIPrefix(doi), new TargetInternalReference.Context("Specimens", specimenId.toString()));
                     }
                     return null;
                 }).filter(Objects::nonNull).distinct().sorted(Comparator.comparing(TargetInternalReference::getValue)).toList();
