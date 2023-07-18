@@ -578,7 +578,7 @@ public class ESServiceClient {
                       "must": [
                         {
                           "terms": {
-                            "specimenIds.keyword": ["%s"]
+                            "specimenIds": ["%s"]
                           }
                         }
                       ]

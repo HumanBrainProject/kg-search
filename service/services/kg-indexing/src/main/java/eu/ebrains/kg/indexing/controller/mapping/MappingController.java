@@ -55,6 +55,7 @@ public class MappingController {
         properties.put("id", Map.of("type", KEYWORD));
         properties.put("identifier", Map.of("type", KEYWORD));
         properties.put("type", Map.of(PROPERTIES, Map.of("value", Map.of("type", KEYWORD))));
+        properties.put("specimenIds", Map.of("type", KEYWORD));
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
         mapping.put(PROPERTIES, properties);
