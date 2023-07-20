@@ -51,10 +51,6 @@ public class ElasticSearchController {
     }
 
 
-    public Set<String> existingDocuments(List<String> references, DataStage stage){
-        return esServiceClient.existingDocuments(ESHelper.getIndexesForDocument(stage), references);
-    }
-
     public void reindexTemporaryToRealIndex(Class<?> type, DataStage dataStage, boolean autorelease){
         String source =  autorelease ? ESHelper.getAutoReleasedIndex(dataStage, type, true) : ESHelper.getSearchableIndex(dataStage, type, true);
         String target = autorelease ? ESHelper.getAutoReleasedIndex(dataStage, type, false) :ESHelper.getSearchableIndex(dataStage, type, false);

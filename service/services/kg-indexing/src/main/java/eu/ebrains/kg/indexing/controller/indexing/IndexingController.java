@@ -25,6 +25,7 @@ package eu.ebrains.kg.indexing.controller.indexing;
 
 import eu.ebrains.kg.common.controller.kg.KG;
 import eu.ebrains.kg.common.controller.kg.KGv3;
+import eu.ebrains.kg.common.controller.translators.ReferenceResolver;
 import eu.ebrains.kg.common.controller.translators.TargetInstancesResult;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.controller.translators.Translator;
@@ -57,16 +58,19 @@ public class IndexingController {
     private final ESServiceClient esServiceClient;
     private final TranslationController translationController;
 
+    private final ReferenceResolver referenceResolver;
+
     private final KGv3 kgV3;
 
 
-    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv3 kgV3, ESServiceClient esServiceClient) {
+    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv3 kgV3, ESServiceClient esServiceClient, ReferenceResolver referenceResolver) {
         this.mappingController = mappingController;
         this.metricsController = metricsController;
         this.settingsController = settingsController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
         this.esServiceClient = esServiceClient;
+        this.referenceResolver = referenceResolver;
         this.kgV3 = kgV3;
     }
 
@@ -99,22 +103,13 @@ public class IndexingController {
         private final ErrorReport errors = new ErrorReport();
     }
 
-    private <Target extends TargetInstance> void clearNonResolvableReferences(List<Target> instances, DataStage dataStage) {
-        List<TargetInternalReference> references = new ArrayList<>();
-        instances.forEach(i -> collectAllTargetInternalReferences(i, references));
-        final List<String> refs = references.stream().map(TargetInternalReference::getReference).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-        final Set<String> existingRefs = elasticSearchController.existingDocuments(refs, dataStage);
-        references.forEach(r -> {
-            if (r.getReference() != null && !existingRefs.contains(r.getReference())) {
-                r.setReference(null);
-            }
-        });
-    }
+
 
     private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<? extends SourceInstanceV3, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
         final Map<String, Object> translationContext = translator.populateTranslationContext(esServiceClient, dataStage);
         final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
+        final Set<String> existingIdentifiers = referenceResolver.loadAllExistingIdentifiers(dataStage);
         translator.getQueryIds().forEach(queryId -> {
             Integer lastTotal = null;
             boolean hasMore = true;
@@ -129,7 +124,7 @@ public class IndexingController {
                     List<Target> searchableInstances = new ArrayList<>();
                     List<Target> nonSearchableInstances = new ArrayList<>();
                     final List<Target> processableInstances = instances.stream().filter(instance -> !excludedIds.contains(instance.getId())).collect(Collectors.toList());
-                    clearNonResolvableReferences(processableInstances, dataStage);
+                    referenceResolver.clearNonResolvableReferences(processableInstances, existingIdentifiers);
                     processableInstances.forEach(instance -> {
                         Target handledInstance = instanceHandler != null ? instanceHandler.apply(instance) : instance;
                         if (handledInstance.isSearchableInstance()) {

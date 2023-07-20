@@ -53,7 +53,6 @@ public class SpecimenV3Resolver {
     private String createQueryForLoadingTheSpecimenLookupMap(UUID searchAfterId) {
         return String.format("""
                 {
-                  "from": 0,
                   "size": %d,
                   "_source": ["specimenIds", "doi.value", "id"],
                   "sort": [
