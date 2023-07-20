@@ -41,13 +41,16 @@ public class TranslatorUtils {
     private final ESServiceClient esServiceClient;
     private final Integer trendingThreshold;
 
+    private final Map<String, Object> translationContext;
+
     private final List<String> errors;
 
 
-    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold, List<String> errors) {
+    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold, Map<String, Object> translationContext, List<String> errors) {
         this.doiCitationFormatter = doiCitationFormatter;
         this.esServiceClient = esServiceClient;
         this.trendingThreshold = trendingThreshold;
+        this.translationContext = translationContext;
         this.errors = errors != null ? errors : new ArrayList<>();
     }
 

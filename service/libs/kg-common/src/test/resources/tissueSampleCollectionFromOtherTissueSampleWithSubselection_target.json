@@ -221,7 +221,7 @@
                 "pathology": null,
                 "weight": null,
                 "additionalRemarks": {
-                  "value": "The brain was fixed in formalin, MR-imaged, embedded in paraffin, and serially cut with a microtome into 20µm thick sections. Silver staining for cell bodies was performed using a modified Merker method ([Merker, 1983](https://doi.org/10.1016/0165-0270(83)90086-9))."
+                  "value": "The brain was fixed in formalin, MR-imaged, embedded in paraffin, and serially cut with a microtome into 20\u00b5m thick sections. Silver staining for cell bodies was performed using a modified Merker method ([Merker, 1983](https://doi.org/10.1016/0165-0270(83)90086-9))."
                 },
                 "serviceLinks": null
               },

@@ -167,13 +167,6 @@
     ],
     "internalIdentifier": null,
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/80XH-GM8",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/b4a37f80-e231-4a27-92ca-f47de7b2208d"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",

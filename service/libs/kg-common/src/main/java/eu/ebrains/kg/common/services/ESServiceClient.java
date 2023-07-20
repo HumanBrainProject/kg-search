@@ -23,12 +23,8 @@
 
 package eu.ebrains.kg.common.services;
 
-import eu.ebrains.kg.common.controller.translators.Helpers;
-import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +50,7 @@ import java.util.stream.Collectors;
 @Component
 public class ESServiceClient {
 
-    private final static Integer ES_QUERY_SIZE = 10000;
+    public final static Integer ES_QUERY_SIZE = 10000;
 
     private final static String QUERY = "query";
 
@@ -68,7 +64,7 @@ public class ESServiceClient {
 
     private final String elasticSearchEndpoint;
 
-    private static String metricsQuery(int size){
+    private static String metricsQuery(int size) {
         return "{\n" +
                 "  \"fields\": [\n" +
                 "    \"last30DaysViews\"\n" +
@@ -76,7 +72,7 @@ public class ESServiceClient {
                 "  \"sort\": {\n" +
                 "    \"last30DaysViews\": \"desc\"\n" +
                 "  },\n" +
-                "  \"size\": "+size+",\n" +
+                "  \"size\": " + size + ",\n" +
                 "  \"_source\": false\n" +
                 "}";
     }
@@ -106,7 +102,7 @@ public class ESServiceClient {
 
 
     private String getPaginatedQueryForSitemap(String id, Set<String> relevantTypes) {
-        final String types = String.join(", ", relevantTypes.stream().filter(r -> r.matches("[a-zA-Z()\\d ]*")).map(r-> String.format("\"%s\"", r)).collect(Collectors.toSet()));
+        final String types = String.join(", ", relevantTypes.stream().filter(r -> r.matches("[a-zA-Z()\\d ]*")).map(r -> String.format("\"%s\"", r)).collect(Collectors.toSet()));
         if (id == null) {
             return String.format("""
                     {
@@ -141,7 +137,7 @@ public class ESServiceClient {
     }
 
     private String getAgg(String field) {
-        if(StringUtils.isBlank(field)) {
+        if (StringUtils.isBlank(field)) {
             return null;
         }
         return String.format(
@@ -156,12 +152,12 @@ public class ESServiceClient {
 
     private String getAggs(Map<String, String> aggs) {
         List<String> aggList = aggs.entrySet().stream().map(entry -> {
-                String name = entry.getKey();
-                String value = getAgg(entry.getValue());
-                if (StringUtils.isBlank(name) || StringUtils.isBlank(value)) {
-                    return null;
-                }
-                return String.format("\"%s\": %s", name, value);
+                    String name = entry.getKey();
+                    String value = getAgg(entry.getValue());
+                    if (StringUtils.isBlank(name) || StringUtils.isBlank(value)) {
+                        return null;
+                    }
+                    return String.format("\"%s\": %s", name, value);
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -174,7 +170,7 @@ public class ESServiceClient {
     }
 
     private String getQueryTerm(String term, String value) {
-        if(StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value)) {
             return null;
         }
         return String.format(
@@ -328,7 +324,7 @@ public class ESServiceClient {
     }
 
 
-    public Document getDocumentByNativeId(String index, String id){
+    public Document getDocumentByNativeId(String index, String id) {
         return webClient.get()
                 .uri(String.format("%s/%s/_doc/%s", elasticSearchEndpoint, index, id))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -346,7 +342,7 @@ public class ESServiceClient {
                 .retrieve()
                 .bodyToMono(Result.class)
                 .block();
-        Result.Hits hits = result == null ? null:result.getHits();
+        Result.Hits hits = result == null ? null : result.getHits();
         List<Document> documents = hits == null ? Collections.emptyList() : hits.getHits();
         if (documents.isEmpty()) {
             Document doc = new Document();
@@ -388,7 +384,7 @@ public class ESServiceClient {
             if (documents.getHits() != null) {
                 List<Document> hits = documents.getHits().getHits();
                 hits.forEach(hit -> result.add(hit.getId()));
-                searchAfter = hits.size() < ES_QUERY_SIZE ? null:hits.get(hits.size()-1).getId();
+                searchAfter = hits.size() < ES_QUERY_SIZE ? null : hits.get(hits.size() - 1).getId();
                 continueSearch = searchAfter != null;
             } else {
                 searchAfter = null;
@@ -420,8 +416,8 @@ public class ESServiceClient {
                     .retrieve()
                     .bodyToMono(Result.class)
                     .block();
-        } catch(WebClientResponseException e){
-            if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 return null;
             } else {
                 throw e;
@@ -439,8 +435,8 @@ public class ESServiceClient {
                     .retrieve()
                     .bodyToMono(Result.class)
                     .block();
-        } catch(WebClientResponseException e){
-            if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 return null;
             } else {
                 throw e;
@@ -460,12 +456,12 @@ public class ESServiceClient {
     }
 
     public Result searchDocuments(String index, Map<String, Object> payload) {
-        return doSearchDocuments(index, BodyInserters.fromValue(payload));
+        return searchDocuments(index, null, BodyInserters.fromValue(payload));
     }
 
-    private Result doSearchDocuments(String index, BodyInserter<?, ? super ClientHttpRequest> payload) {
+    public Result searchDocuments(String index, String filterPath, BodyInserter<?, ? super ClientHttpRequest> payload) {
         return webClient.post()
-                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .uri(String.format("%s/%s/_search%s", elasticSearchEndpoint, index, filterPath == null ? "" : String.format("?filter_path=%s", filterPath)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
                 .retrieve()
@@ -481,17 +477,16 @@ public class ESServiceClient {
                 .block();
     }
 
-    public void reindex(String source, String target){
+    public void reindex(String source, String target) {
         final Map<String, Map<String, String>> payload = Map.of("source", Map.of(INDEX, source), "dest", Map.of(INDEX, target));
-         webClient.post().uri(String.format("%s/_reindex", elasticSearchEndpoint))
+        webClient.post().uri(String.format("%s/_reindex", elasticSearchEndpoint))
                 .body(BodyInserters.fromValue(payload)).retrieve().bodyToMono(Void.class).block();
     }
 
-    public boolean checkIfIndexExists(String index){
-        try{
+    public boolean checkIfIndexExists(String index) {
+        try {
             return webClient.head().uri(String.format("%s/%s", elasticSearchEndpoint, index)).retrieve().toBodilessEntity().block().getStatusCode().is2xxSuccessful();
-        }
-        catch (WebClientResponseException.NotFound exception){
+        } catch (WebClientResponseException.NotFound exception) {
             return false;
         }
     }
@@ -530,14 +525,14 @@ public class ESServiceClient {
         logger.info(String.format("Done updating index %s", index));
     }
 
-    public Set<String> existingDocuments(String index, List<String> identifiers){
+    public Set<String> existingDocuments(String index, List<String> identifiers) {
         int pageSize = 2000;
-        int numberOfPages = (identifiers.size()/pageSize)+1;
+        int numberOfPages = (identifiers.size() / pageSize) + 1;
         Set<String> result = new HashSet<>();
-        for(int p = 0; p<numberOfPages; p++){
+        for (int p = 0; p < numberOfPages; p++) {
             Object query = Map.of(QUERY,
                     Map.of("terms",
-                            Map.of(IDENTIFIER, identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
+                            Map.of(IDENTIFIER, identifiers.subList(p * pageSize, Math.min(identifiers.size(), (p + 1) * pageSize)))
                     ),
                     "_source", Collections.singletonList(IDENTIFIER));
             Result r = webClient.post()
@@ -547,14 +542,13 @@ public class ESServiceClient {
                     .retrieve()
                     .bodyToMono(Result.class)
                     .block();
-            if(r!=null && r.getHits()!=null && r.getHits().getHits()!=null){
+            if (r != null && r.getHits() != null && r.getHits().getHits() != null) {
                 r.getHits().getHits().forEach(esDocument -> {
-                    if(esDocument != null && esDocument.getSource() !=null) {
-                        result.addAll((List)esDocument.getSource().get(IDENTIFIER));
+                    if (esDocument != null && esDocument.getSource() != null) {
+                        result.addAll((List) esDocument.getSource().get(IDENTIFIER));
                     }
                 });
-            }
-            else{
+            } else {
                 throw new RuntimeException("Wasn't able to read existing documents from elasticsearch");
             }
         }
@@ -572,47 +566,6 @@ public class ESServiceClient {
     }
 
 
-    public List<TargetInternalReference> getOtherPublications(UUID datasetVersionId, UUID specimenId, DataStage stage){
-        String query = String.format("""
-                {
-                  "from": 0,
-                  "size": %d,
-                  "_source": ["doi.value"],
-                  "query": {
-                    "bool": {
-                      "must": [
-                        {
-                          "terms": {
-                            "specimenIds": ["%s"]
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-                """, ES_QUERY_SIZE, specimenId.toString());
 
-        final Result result = doSearchDocuments(ESHelper.getIndexesForDocument(stage), BodyInserters.fromValue(query));
-        if(result.getHits() != null) {
-            final List<Document> hits = result.getHits().getHits();
-            if (hits !=null) {
-                final List<TargetInternalReference> targetInternalReferences = hits.stream().filter(h -> !h.getId().equals(datasetVersionId.toString())).filter(h -> h.getSource() != null).map(h -> {
-                    final Object doiWrapper = h.getSource().get("doi");
-                    String doi = null;
-                    if (doiWrapper instanceof Map) {
-                        final Object doiValue = ((Map) doiWrapper).get("value");
-                        if (doiValue instanceof String) {
-                            doi = (String) doiValue;
-                        }
-                    }
-                    if (doi != null) {
-                        return new TargetInternalReference(h.getId(), Helpers.stripDOIPrefix(doi), new TargetInternalReference.Context("Specimens", specimenId.toString()));
-                    }
-                    return null;
-                }).filter(Objects::nonNull).distinct().sorted(Comparator.comparing(TargetInternalReference::getValue)).toList();
-                return targetInternalReferences.isEmpty() ? null : targetInternalReferences;
-            }
-        }
-        return null;
-    }
+
 }

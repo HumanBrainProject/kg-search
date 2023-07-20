@@ -41,6 +41,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,9 +60,7 @@ public class SpecimenV3TranslatorTest {
 
     private void testSpecimenTranslation(String test, String id) {
         //given
-        final ESServiceClient esServiceClientMock = Mockito.mock(ESServiceClient.class);
-        Mockito.when(esServiceClientMock.getOtherPublications(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
-        SpecimenV3Translator translator = new SpecimenV3Translator(String.format("https://kg.ebrains.eu/api/instances/%s", id), new ArrayList<>(), esServiceClientMock, DataStage.IN_PROGRESS);
+        SpecimenV3Translator translator = new SpecimenV3Translator(String.format("https://kg.ebrains.eu/api/instances/%s", id), new ArrayList<>(), Collections.emptyMap());
 
         final List<DatasetVersionV3.StudiedSpecimen> payload = parseSource(test);
         final BasicHierarchyElement<?> expectation = parseTarget(test);

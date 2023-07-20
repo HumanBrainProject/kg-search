@@ -99,7 +99,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/111404a5-d205-11ec-842e-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -110,15 +110,6 @@
     ],
     "internalIdentifier": "100140949",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/111b5589-d205-11ec-aab5-00090faa0001",
@@ -224,7 +215,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/118dc7c7-d205-11ec-9f8d-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -235,15 +226,6 @@
     ],
     "internalIdentifier": "100141219",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/11931f8c-d205-11ec-b087-00090faa0001",
@@ -349,7 +331,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/11fb568e-d205-11ec-87c8-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -360,15 +342,6 @@
     ],
     "internalIdentifier": "100141473",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/12012158-d205-11ec-bcd0-00090faa0001",
@@ -474,7 +447,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/126b0714-d205-11ec-b353-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -485,15 +458,6 @@
     ],
     "internalIdentifier": "100141495",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/12701148-d205-11ec-b813-00090faa0001",
@@ -599,7 +563,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/12d6746b-d205-11ec-bea5-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -610,15 +574,6 @@
     ],
     "internalIdentifier": "100141599",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/12db7d84-d205-11ec-8521-00090faa0001",
@@ -724,7 +679,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/133f46d2-d205-11ec-be8d-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -735,28 +690,6 @@
     ],
     "internalIdentifier": "100141780",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -864,7 +797,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/13b5df10-d205-11ec-978f-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -875,15 +808,6 @@
     ],
     "internalIdentifier": "100147853",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/13bb6695-d205-11ec-aa97-00090faa0001",
@@ -989,7 +913,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/142933db-d205-11ec-9b48-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1000,15 +924,6 @@
     ],
     "internalIdentifier": "100148142",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/142ecac3-d205-11ec-9f2e-00090faa0001",
@@ -1114,7 +1029,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1495ac5f-d205-11ec-8009-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1125,15 +1040,6 @@
     ],
     "internalIdentifier": "100149109",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/149c2013-d205-11ec-b32f-00090faa0001",
@@ -1239,7 +1145,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/15062175-d205-11ec-8b6e-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1250,15 +1156,6 @@
     ],
     "internalIdentifier": "100149969",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/150ab741-d205-11ec-a2c7-00090faa0001",
@@ -1364,7 +1261,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/156bea07-d205-11ec-b729-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1375,15 +1272,6 @@
     ],
     "internalIdentifier": "112229103",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1570f328-d205-11ec-8f24-00090faa0001",
@@ -1489,7 +1377,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/15d076d1-d205-11ec-a56f-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1500,28 +1388,6 @@
     ],
     "internalIdentifier": "112229814",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -1629,7 +1495,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/164cefe6-d205-11ec-b12d-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1640,15 +1506,6 @@
     ],
     "internalIdentifier": "112373124",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/16544888-d205-11ec-b7cd-00090faa0001",
@@ -1754,7 +1611,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/16bdc049-d205-11ec-b7c5-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1765,28 +1622,6 @@
     ],
     "internalIdentifier": "112952510",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -1894,7 +1729,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/172731b7-d205-11ec-8a01-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -1905,15 +1740,6 @@
     ],
     "internalIdentifier": "113887162",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/172c6891-d205-11ec-9c18-00090faa0001",
@@ -2019,7 +1845,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/179752d5-d205-11ec-80a0-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2030,15 +1856,6 @@
     ],
     "internalIdentifier": "114250546",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/179d33bc-d205-11ec-ad7b-00090faa0001",
@@ -2144,7 +1961,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1803a561-d205-11ec-abf2-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2155,28 +1972,6 @@
     ],
     "internalIdentifier": "114290938",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -2284,7 +2079,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1869451e-d205-11ec-9d20-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2295,28 +2090,6 @@
     ],
     "internalIdentifier": "114292355",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -2424,7 +2197,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/18d59a53-d205-11ec-89b2-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2435,15 +2208,6 @@
     ],
     "internalIdentifier": "117298988",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/18db8d61-d205-11ec-bd18-00090faa0001",
@@ -2549,7 +2313,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/194d664a-d205-11ec-a659-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2560,15 +2324,6 @@
     ],
     "internalIdentifier": "126907302",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1952980b-d205-11ec-83a2-00090faa0001",
@@ -2674,7 +2429,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/19bb9187-d205-11ec-9e22-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2685,28 +2440,6 @@
     ],
     "internalIdentifier": "126908007",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -2814,7 +2547,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1a2a3211-d205-11ec-ad2e-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2825,28 +2558,6 @@
     ],
     "internalIdentifier": "127084296",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -2954,7 +2665,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1a9577e6-d205-11ec-875f-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -2965,28 +2676,6 @@
     ],
     "internalIdentifier": "127866392",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -3094,7 +2783,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1b0a609a-d205-11ec-a805-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3105,15 +2794,6 @@
     ],
     "internalIdentifier": "139426984",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1b100530-d205-11ec-bcf6-00090faa0001",
@@ -3219,7 +2899,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1b727081-d205-11ec-90c6-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3230,28 +2910,6 @@
     ],
     "internalIdentifier": "141602484",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -3359,7 +3017,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1be7c854-d205-11ec-a049-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3370,28 +3028,6 @@
     ],
     "internalIdentifier": "141603190",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -3499,7 +3135,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1c5d6d0f-d205-11ec-bf86-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3510,15 +3146,6 @@
     ],
     "internalIdentifier": "146858006",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1c650eed-d205-11ec-870d-00090faa0001",
@@ -3624,7 +3251,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1cd81bca-d205-11ec-b421-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3635,15 +3262,6 @@
     ],
     "internalIdentifier": "157062358",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1ce08031-d205-11ec-8e80-00090faa0001",
@@ -3749,7 +3367,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1d49cb5c-d205-11ec-80d4-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3760,15 +3378,6 @@
     ],
     "internalIdentifier": "157654817",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1d4ef946-d205-11ec-b376-00090faa0001",
@@ -3874,7 +3483,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1db694b9-d205-11ec-b5ee-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -3885,15 +3494,6 @@
     ],
     "internalIdentifier": "174360333",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1dbbc442-d205-11ec-aad1-00090faa0001",
@@ -3999,7 +3599,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1e27a55e-d205-11ec-b3c7-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -4010,15 +3610,6 @@
     ],
     "internalIdentifier": "180296424",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1e2cae61-d205-11ec-96f3-00090faa0001",
@@ -4124,7 +3715,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1e913d83-d205-11ec-8839-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -4135,15 +3726,6 @@
     ],
     "internalIdentifier": "272697944",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1e964630-d205-11ec-91e7-00090faa0001",
@@ -4249,7 +3831,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1f04734c-d205-11ec-bd5e-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -4260,15 +3842,6 @@
     ],
     "internalIdentifier": "272782668",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1f0ada27-d205-11ec-aac7-00090faa0001",
@@ -4374,7 +3947,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1f7cfc56-d205-11ec-9aa9-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -4385,15 +3958,6 @@
     ],
     "internalIdentifier": "307320960",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1f8316d6-d205-11ec-b3d4-00090faa0001",
@@ -4499,7 +4063,7 @@
         "handedness": null,
         "weight": null,
         "id": "https://kg.ebrains.eu/api/instances/1fe979bd-d205-11ec-b424-00090faa0001",
-        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted "
+        "additionalRemarks": "Perfused with 4% paraformaldehyde, before the brain was extracted\u00a0"
       }
     ],
     "biologicalSex": [
@@ -4510,28 +4074,6 @@
     ],
     "internalIdentifier": "585025284",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [
       "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
     ],
@@ -4609,15 +4151,6 @@
     ],
     "internalIdentifier": "100140949",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -4696,15 +4229,6 @@
     ],
     "internalIdentifier": "100141219",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -4783,15 +4307,6 @@
     ],
     "internalIdentifier": "100141473",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -4870,15 +4385,6 @@
     ],
     "internalIdentifier": "100141495",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -4957,15 +4463,6 @@
     ],
     "internalIdentifier": "100141599",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5044,28 +4541,6 @@
     ],
     "internalIdentifier": "100141780",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5144,15 +4619,6 @@
     ],
     "internalIdentifier": "100147853",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5231,15 +4697,6 @@
     ],
     "internalIdentifier": "100148142",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5318,15 +4775,6 @@
     ],
     "internalIdentifier": "100149109",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5405,15 +4853,6 @@
     ],
     "internalIdentifier": "100149969",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5492,15 +4931,6 @@
     ],
     "internalIdentifier": "112229103",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5579,28 +5009,6 @@
     ],
     "internalIdentifier": "112229814",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5679,15 +5087,6 @@
     ],
     "internalIdentifier": "112373124",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5766,28 +5165,6 @@
     ],
     "internalIdentifier": "112952510",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5866,15 +5243,6 @@
     ],
     "internalIdentifier": "113887162",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -5953,15 +5321,6 @@
     ],
     "internalIdentifier": "114250546",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6040,28 +5399,6 @@
     ],
     "internalIdentifier": "114290938",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6140,28 +5477,6 @@
     ],
     "internalIdentifier": "114292355",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6240,15 +5555,6 @@
     ],
     "internalIdentifier": "117298988",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6327,15 +5633,6 @@
     ],
     "internalIdentifier": "126907302",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6414,28 +5711,6 @@
     ],
     "internalIdentifier": "126908007",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6514,28 +5789,6 @@
     ],
     "internalIdentifier": "127084296",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6614,28 +5867,6 @@
     ],
     "internalIdentifier": "127866392",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6714,15 +5945,6 @@
     ],
     "internalIdentifier": "139426984",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6801,28 +6023,6 @@
     ],
     "internalIdentifier": "141602484",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -6901,28 +6101,6 @@
     ],
     "internalIdentifier": "141603190",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7001,15 +6179,6 @@
     ],
     "internalIdentifier": "146858006",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7088,15 +6257,6 @@
     ],
     "internalIdentifier": "157062358",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7175,15 +6335,6 @@
     ],
     "internalIdentifier": "157654817",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7262,15 +6413,6 @@
     ],
     "internalIdentifier": "174360333",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7349,15 +6491,6 @@
     ],
     "internalIdentifier": "180296424",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7436,15 +6569,6 @@
     ],
     "internalIdentifier": "272697944",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7523,15 +6647,6 @@
     ],
     "internalIdentifier": "272782668",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7610,15 +6725,6 @@
     ],
     "internalIdentifier": "307320960",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -7697,28 +6803,6 @@
     ],
     "internalIdentifier": "585025284",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/AJVE-B8G",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/c4f38ea6-bb1d-477e-a776-868e51fb0b30",
-          "https://kg.ebrains.eu/api/instances/998d34f7-5692-447d-aa0a-bac134904bf7",
-          "https://kg.ebrains.eu/api/instances/934e12a5-c012-4f0c-b8cb-1afd48c957ad",
-          "https://kg.ebrains.eu/api/instances/dc78fd11-ac81-47f6-b7db-9bd708b4b6b5",
-          "https://kg.ebrains.eu/api/instances/be2df3b1-8a68-4094-bf63-0a64c5b0cb77",
-          "https://kg.ebrains.eu/api/instances/b70787c8-c8a4-4fe3-8b74-c51c8556dc5d",
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/27dd2588-f4da-406c-9d01-8569bf912b0e"
-      },
-      {
-        "doi": "https://doi.org/10.25493/QT31-PJS",
-        "groupsWithIndividualSubElementSpecifications": [
-          "https://kg.ebrains.eu/api/instances/ebd9dc35-53ad-4dfe-9061-7106fd717e7a"
-        ],
-        "id": "https://kg.ebrains.eu/api/instances/4660e79b-a731-40ac-905e-46d0d11c0dd5"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",

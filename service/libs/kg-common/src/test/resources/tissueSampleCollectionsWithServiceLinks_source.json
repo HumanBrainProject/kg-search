@@ -67,13 +67,6 @@
     ],
     "internalIdentifier": "C183",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/efa51073-b8ec-4114-81f2-b16cae6bba29",
@@ -147,13 +140,6 @@
     ],
     "internalIdentifier": "C184",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/fcdcad3b-40ff-49c9-a061-c685d5e68b73",
@@ -227,13 +213,6 @@
     ],
     "internalIdentifier": "E59",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/1153b9fb-4ec6-4edc-8fac-97ce65c44138",
@@ -307,13 +286,6 @@
     ],
     "internalIdentifier": "C136",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/24d9ac55-0628-4b2e-8757-2ea69e359988",
@@ -387,13 +359,6 @@
     ],
     "internalIdentifier": "E62",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/9851c58e-fd38-4c17-9c6c-e00a7d831300",
@@ -467,13 +432,6 @@
     ],
     "internalIdentifier": "C228",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/39ebf7d6-e3b5-4552-9404-6c8766d60a3a",
@@ -547,13 +505,6 @@
     ],
     "internalIdentifier": "C117",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/f0555e08-bd10-4d55-9fe0-9f52c91304fc",
@@ -627,13 +578,6 @@
     ],
     "internalIdentifier": "C132",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": null,
     "id": "https://kg.ebrains.eu/api/instances/6bbc68d8-b6be-47f6-8eba-093460601d26",
@@ -720,13 +664,6 @@
     ],
     "internalIdentifier": "C183",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -816,13 +753,6 @@
     ],
     "internalIdentifier": "C184",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -912,13 +842,6 @@
     ],
     "internalIdentifier": "E59",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1008,13 +931,6 @@
     ],
     "internalIdentifier": "C136",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1104,13 +1020,6 @@
     ],
     "internalIdentifier": "E62",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1200,13 +1109,6 @@
     ],
     "internalIdentifier": "C228",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1296,13 +1198,6 @@
     ],
     "internalIdentifier": "C117",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1392,13 +1287,6 @@
     ],
     "internalIdentifier": "C132",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/C3A9-VVM",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/77aa9e4c-fd9c-493c-9af4-0988284ffa95"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",

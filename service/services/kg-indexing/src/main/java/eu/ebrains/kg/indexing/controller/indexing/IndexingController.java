@@ -28,13 +28,11 @@ import eu.ebrains.kg.common.controller.kg.KGv3;
 import eu.ebrains.kg.common.controller.translators.TargetInstancesResult;
 import eu.ebrains.kg.common.controller.translators.TranslationController;
 import eu.ebrains.kg.common.controller.translators.Translator;
-import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.ErrorReport;
-import eu.ebrains.kg.common.model.ErrorReportResult;
-import eu.ebrains.kg.common.model.TranslatorModel;
+import eu.ebrains.kg.common.model.*;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.indexing.controller.mapping.MappingController;
 import eu.ebrains.kg.indexing.controller.metrics.MetricsController;
@@ -55,17 +53,20 @@ public class IndexingController {
     private final MetricsController metricsController;
     private final SettingsController settingsController;
     private final ElasticSearchController elasticSearchController;
+
+    private final ESServiceClient esServiceClient;
     private final TranslationController translationController;
 
     private final KGv3 kgV3;
 
 
-    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv3 kgV3) {
+    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv3 kgV3, ESServiceClient esServiceClient) {
         this.mappingController = mappingController;
         this.metricsController = metricsController;
         this.settingsController = settingsController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
+        this.esServiceClient = esServiceClient;
         this.kgV3 = kgV3;
     }
 
@@ -112,13 +113,14 @@ public class IndexingController {
 
     private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<? extends SourceInstanceV3, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
+        final Map<String, Object> translationContext = translator.populateTranslationContext(esServiceClient, dataStage);
         final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
         translator.getQueryIds().forEach(queryId -> {
             Integer lastTotal = null;
             boolean hasMore = true;
             int from = 0;
             while (hasMore) {
-                TargetInstancesResult<Target> result = translationController.translateToTargetInstances(kg, translator, queryId, dataStage, from, bulkSize, trendThreshold);
+                TargetInstancesResult<Target> result = translationController.translateToTargetInstances(kg, translator, queryId, dataStage, from, bulkSize, trendThreshold, translationContext);
                 if (result.getErrors() != null) {
                     updateResult.errors.putAll(result.getErrors());
                 }

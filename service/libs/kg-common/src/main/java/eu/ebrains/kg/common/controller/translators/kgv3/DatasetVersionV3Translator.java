@@ -27,7 +27,9 @@ import eu.ebrains.kg.common.controller.translators.Helpers;
 import eu.ebrains.kg.common.controller.translators.kgv3.commons.Accessibility;
 import eu.ebrains.kg.common.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.common.controller.translators.kgv3.helpers.SchemaOrgConverter;
+import eu.ebrains.kg.common.controller.translators.kgv3.helpers.SpecimenV3Resolver;
 import eu.ebrains.kg.common.controller.translators.kgv3.helpers.SpecimenV3Translator;
+import eu.ebrains.kg.common.model.DOIReference;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.DatasetVersionV3;
@@ -35,6 +37,7 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -60,6 +63,22 @@ import java.util.stream.Stream;
 
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
+
+    private final String SPECIMEN_LOOKUP_MAP = "specimenLookupMap";
+    @Override
+    public Map<String, Object> populateTranslationContext(ESServiceClient esServiceClient, DataStage stage) {
+        return Collections.singletonMap(SPECIMEN_LOOKUP_MAP, new SpecimenV3Resolver(esServiceClient).loadSpecimenLookupMap(stage));
+    }
+
+    private Map<String, Set<DOIReference>> getSpecimenLookupMapFromContext(TranslatorUtils translatorUtils){
+        if (translatorUtils.getTranslationContext()!=null) {
+            final Object o = translatorUtils.getTranslationContext().get(SPECIMEN_LOOKUP_MAP);
+            if(o instanceof Map) {
+                return  (Map<String, Set<DOIReference>>) o;
+            }
+        }
+        return Collections.emptyMap();
+    }
 
     public static class Result extends ResultsOfKGv3<DatasetVersionV3> {
     }
@@ -409,7 +428,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId(), translatorUtils.getErrors(), translatorUtils.getEsServiceClient(), dataStage).translateToHierarchy(datasetVersion.getStudiedSpecimen());
+        final BasicHierarchyElement<DatasetVersion.DSVSpecimenOverview> specimenBySubject = new SpecimenV3Translator(datasetVersion.getId(), translatorUtils.getErrors(), getSpecimenLookupMapFromContext(translatorUtils)).translateToHierarchy(datasetVersion.getStudiedSpecimen());
         if (specimenBySubject != null) {
             d.setSpecimenIds(specimenBySubject.getData().getAllSpecimenIds());
             if (specimenBySubject.getData().getSpecies() != null) {

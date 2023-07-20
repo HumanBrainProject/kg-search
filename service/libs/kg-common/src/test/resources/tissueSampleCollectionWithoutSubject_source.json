@@ -55,13 +55,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt272_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -126,13 +119,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt273_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -197,13 +183,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt274_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -268,13 +247,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt272_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -339,13 +311,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt276_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -410,13 +375,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt277_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -481,13 +439,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt278_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -552,13 +503,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt279_sch2",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -623,13 +567,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt272_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -694,13 +631,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt273_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -765,13 +695,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt274_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -836,13 +759,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt275_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -907,13 +823,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt276_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -978,13 +887,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt277_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1049,13 +951,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt278_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1120,13 +1015,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt279_racl",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1191,13 +1079,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt273_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1262,13 +1143,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt274_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1333,13 +1207,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt275_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1404,13 +1271,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt276_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1475,13 +1335,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt277_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1546,13 +1399,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt278_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",
@@ -1617,13 +1463,6 @@
     "biologicalSex": [],
     "internalIdentifier": "wt279_mazi",
     "numberOfTissueSamples": null,
-    "usedInDatasets": [
-      {
-        "doi": "https://doi.org/10.25493/91QD-8NC",
-        "groupsWithIndividualSubElementSpecifications": [],
-        "id": "https://kg.ebrains.eu/api/instances/89ddf976-e732-4eef-be48-08af62cfe40b"
-      }
-    ],
     "isPartOf": [],
     "origin": {
       "fullName": "brain",

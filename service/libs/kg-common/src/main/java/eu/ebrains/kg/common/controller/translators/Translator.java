@@ -25,11 +25,14 @@ package eu.ebrains.kg.common.controller.translators;
 
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
+import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<Source>> extends TranslatorBase {
 
@@ -46,6 +49,10 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
     public String getQueryFileName(String semanticType) {
         final String simpleName = getClass().getSimpleName();
         return StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
+    }
+
+    public Map<String, Object> populateTranslationContext(ESServiceClient esServiceClient, DataStage stage){
+        return Collections.emptyMap();
     }
 
 }

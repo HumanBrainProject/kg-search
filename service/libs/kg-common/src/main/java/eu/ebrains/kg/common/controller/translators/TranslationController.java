@@ -55,7 +55,6 @@ public class TranslationController {
     private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
     private final ESServiceClient esServiceClient;
-
     private final Configuration configuration;
 
     public TranslationController(KGv3 kgV3, DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Configuration configuration) {
@@ -65,7 +64,7 @@ public class TranslationController {
         this.esServiceClient = esServiceClient;
     }
 
-    public <Source extends SourceInstanceV3, Target extends TargetInstance> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold) {
+    public <Source extends SourceInstanceV3, Target extends TargetInstance> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size, Integer trendingThreshold, Map<String, Object> translationContext) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
@@ -84,7 +83,7 @@ public class TranslationController {
             List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                 try {
                     List<String> errors = new ArrayList<>();
-                    final Target r = translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold, errors));
+                    final Target r = translator.translate(s, dataStage, false, new TranslatorUtils(doiCitationFormatter, esServiceClient, trendingThreshold, translationContext, errors));
                     if(!CollectionUtils.isEmpty(errors)) {
                         String id = IdUtils.getUUID(r.getId());
                         if (instanceResults.getErrors().get(id) != null) {
@@ -143,7 +142,7 @@ public class TranslationController {
             return null;
         }
         translator.setConfiguration(configuration);
-        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient, null, null));
+        final Target translateResult = translator.translate(source, dataStage, true, new TranslatorUtils(doiCitationFormatter, esServiceClient, null, Collections.emptyMap(), null));
         if (checkReferences) {
             checkReferences(dataStage, useSourceType, translateResult);
         }
@@ -196,6 +195,7 @@ public class TranslationController {
         }
         return reference;
     }
+
 
 
 }
