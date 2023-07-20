@@ -93,7 +93,7 @@ const bypassAuth = {
 interface AuthProviderProps {
   adapter?: AuthAdapter;
   loginRequired?: boolean;
-  silentSSO?: boolean;
+  noSilentSSO?: boolean;
   children?: string | JSX.Element | (null | undefined | string | JSX.Element)[];
 }
 
@@ -101,7 +101,7 @@ interface AuthProviderProps {
 const AuthProvider = ({
   adapter,
   loginRequired,
-  silentSSO,
+  noSilentSSO,
   children
 }: AuthProviderProps) => {
   useEffect(() => {
@@ -119,7 +119,7 @@ const AuthProvider = ({
 
   if (adapter instanceof KeycloakAuthAdapter) {
     const isLoginRequired = loginRequired ?? adapter.initOptions?.onLoad === 'login-required';
-    const canBypassKeyCloak = silentSSO || (BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING && window.location.host.startsWith('localhost') && !isLoginRequired);
+    const canBypassKeyCloak = noSilentSSO || (BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING && window.location.host.startsWith('localhost') && !isLoginRequired);
     if (canBypassKeyCloak) {
       console.info(
         '%cAuth: Keycloak authentication is disabled for local development',

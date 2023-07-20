@@ -86,7 +86,7 @@ public class SitemapController {
             List<Document> documents = esServiceClient.getDocumentsForSitemap(index, relevantTypes);
             documents.forEach(doc -> {
                 SitemapXML.Url url = new SitemapXML.Url();
-                url.setLoc(String.format("%s/instances/%s?silentSSO=true", ebrainsUrl, doc.getId()));
+                url.setLoc(String.format("%s/instances/%s?noSilentSSO=true", ebrainsUrl, doc.getId()));
                 urls.add(url);
             });
         } catch (WebClientResponseException e) {
