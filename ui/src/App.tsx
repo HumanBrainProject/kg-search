@@ -56,7 +56,7 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
 
   const [isReady, setReady] = useState(false);
   const [loginRequired, setLoginRequired] = useState(false);
-  const [noSilentSSO, setNoSilentSSO] = useState(false);
+  const [isNoSilentSSO, setIsNoSilentSSO] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,8 +71,8 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
       const group = (searchToObj() as {[key:string]: string})['group'];
       const hasGroup = !isLive && (group === 'public' || group === 'curated');
       const hasAuthSession = !!getHashKey('session_state');
-      const silentSSO = (searchToObj() as {[key:string]: string})['noSilentSSO'];
-      setNoSilentSSO(silentSSO === 'true' && !isLive && !group);
+      const noSilentSSO = (searchToObj() as {[key:string]: string})['noSilentSSO'];
+      setIsNoSilentSSO(noSilentSSO === 'true' && !isLive && !group);
 
       // search with instance + refresh
       const instance = !hasAuthSession && location.pathname === '/' && !location.hash.startsWith('#error') && location.hash.substring(1);
@@ -105,7 +105,7 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
   }
 
   return (
-    <AuthProvider adapter={authAdapter} loginRequired={loginRequired} noSilentSSO={noSilentSSO} >
+    <AuthProvider adapter={authAdapter} loginRequired={loginRequired} noSilentSSO={isNoSilentSSO} >
       <Theme />
       <Header />
       <main>
