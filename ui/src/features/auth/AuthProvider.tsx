@@ -43,37 +43,33 @@ import type AuthAdapter from '../../services/AuthAdapter';
 import type { JSX } from 'react';
 
 /* For debugging purpose only, when running the ui app locally but connecting to
- * backend prod (where keycloak is not allowing localhost),
- * if the authentication is not required, you can bypass the keycloak authentication
- * by setting the following variable to true
-*/
+   * backend prod (where keycloak is not allowing localhost),
+   * if the authentication is not required, you can bypass the keycloak authentication
+   * by setting the following variable to true
+   */
 const BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING = false;
 
 interface AuthSetupProps {
   adapter?: AuthAdapter;
-  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+  children?: string | JSX.Element | (null | undefined | string | JSX.Element)[];
 }
 
 const AuthSetup = ({ adapter, children }: AuthSetupProps) => {
-
   const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     if (adapter?.unauthorizedRequestResponseHandlerProvider) {
-      adapter.unauthorizedRequestResponseHandlerProvider.unauthorizedRequestResponseHandler = () => {
-        if (isAuthenticated) {
-          logout();
-        }
-      };
+      adapter.unauthorizedRequestResponseHandlerProvider.unauthorizedRequestResponseHandler =
+        () => {
+          if (isAuthenticated) {
+            logout();
+          }
+        };
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 const bypassAuth = {
@@ -97,42 +93,50 @@ const bypassAuth = {
 interface AuthProviderProps {
   adapter?: AuthAdapter;
   loginRequired?: boolean;
-  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+  noSilentSSO?: boolean;
+  children?: string | JSX.Element | (null | undefined | string | JSX.Element)[];
 }
 
 // loginRequired allow to overrule the onLoad option of the keycloak adapter when the authentidation should differ depenging on the route
-const AuthProvider = ({ adapter, loginRequired, children }:AuthProviderProps) => {
-
+const AuthProvider = ({
+  adapter,
+  loginRequired,
+  noSilentSSO,
+  children
+}: AuthProviderProps) => {
   useEffect(() => {
-    if (!(adapter instanceof KeycloakAuthAdapter) && adapter?.unauthorizedRequestResponseHandlerProvider) {
-      adapter.unauthorizedRequestResponseHandlerProvider.unauthorizedRequestResponseHandler = () => {
-        bypassAuth.logout();
-      };
+    if (
+      !(adapter instanceof KeycloakAuthAdapter) &&
+      adapter?.unauthorizedRequestResponseHandlerProvider
+    ) {
+      adapter.unauthorizedRequestResponseHandlerProvider.unauthorizedRequestResponseHandler =
+        () => {
+          bypassAuth.logout();
+        };
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (adapter instanceof KeycloakAuthAdapter) {
     const isLoginRequired = loginRequired ?? adapter.initOptions?.onLoad === 'login-required';
-    const canBypassKeyCloak = BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING && window.location.host.startsWith('localhost') && !isLoginRequired;
+    const canBypassKeyCloak = noSilentSSO || (BYPASSS_KEYCLOAK_FOR_LOCAL_DEBUGGING && window.location.host.startsWith('localhost') && !isLoginRequired);
     if (canBypassKeyCloak) {
-      console.info('%cAuth: Keycloak authentication is disabled for local development', 'color: #f88900;');
+      console.info(
+        '%cAuth: Keycloak authentication is disabled for local development',
+        'color: #f88900;'
+      );
     } else {
       return (
-        <KeycloakAuthProvider adapter={adapter} loginRequired={loginRequired} >
-          <AuthSetup adapter={adapter}>
-            {children}
-          </AuthSetup>
+        <KeycloakAuthProvider adapter={adapter} loginRequired={loginRequired}>
+          <AuthSetup adapter={adapter}>{children}</AuthSetup>
         </KeycloakAuthProvider>
       );
     }
   }
 
   return (
-    <AuthContext.Provider value={bypassAuth} >
-      <AuthSetup adapter={adapter}>
-        {children}
-      </AuthSetup>
+    <AuthContext.Provider value={bypassAuth}>
+      <AuthSetup adapter={adapter}>{children}</AuthSetup>
     </AuthContext.Provider>
   );
 };
