@@ -2509,6 +2509,18 @@
           "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
         }
       ]
+    },
+    {
+      "propertyName": "query:issueDate",
+      "singleValue": "FIRST",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+        {
+          "@id": "https://core.kg.ebrains.eu/vocab/doi",
+          "reverse": true
+        },
+        "https://core.kg.ebrains.eu/vocab/issued"
+      ]
     }
   ]
 }

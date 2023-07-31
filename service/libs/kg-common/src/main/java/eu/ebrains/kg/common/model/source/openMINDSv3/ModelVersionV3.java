@@ -81,7 +81,7 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
     private List<String> outputURLs;
-
+    private String issueDate;
     @Getter
     @Setter
     public static class ModelVersions extends Versions {

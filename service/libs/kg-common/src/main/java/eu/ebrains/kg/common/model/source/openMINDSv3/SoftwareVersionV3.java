@@ -81,7 +81,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 implements IsCiteable, H
     private SoftwareVersions software;
     private String version;
     private Integer last30DaysViews;
-
+    private String issueDate;
     @Getter
     @Setter
     public static class SoftwareVersions extends Versions {

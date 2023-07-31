@@ -147,6 +147,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setId(uuid);
         d.setFirstRelease(value(releaseDate));
         d.setLastRelease(value(datasetVersion.getLastReleasedAt()));
+        d.setReleasedAt(value(datasetVersion.getIssueDate()));
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         List<Version> versions = dataset == null ? null : dataset.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;

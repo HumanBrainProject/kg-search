@@ -88,6 +88,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         translatorUtils.defineBadgesAndTrendingState(m, releaseDate, modelVersion.getLast30DaysViews());
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(modelVersion.getLastReleasedAt()));
+        m.setReleasedAt(value(modelVersion.getIssueDate()));
         m.setAllIdentifiers(modelVersion.getIdentifier());
         m.setIdentifier(IdUtils.getIdentifiersWithPrefix("Model", modelVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = model == null ? null : model.getVersions();

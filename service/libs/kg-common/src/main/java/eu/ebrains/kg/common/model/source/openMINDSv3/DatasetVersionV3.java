@@ -91,6 +91,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
     private List<FullNameRefForResearchProductVersionTarget> inputResearchProductsFromInputBrainAtlasVersions;
+    private String issueDate;
 
     @Getter
     @Setter

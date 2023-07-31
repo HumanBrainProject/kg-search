@@ -85,6 +85,9 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "DOI")
     private Value<String> doi;
 
+    @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
+    private Value<String> releasedAt;
+
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT)
     private List<TargetExternalReference> license;
 

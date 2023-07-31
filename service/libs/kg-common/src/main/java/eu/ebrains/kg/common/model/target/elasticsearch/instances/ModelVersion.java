@@ -109,6 +109,9 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "DOI", hint = "This is the model DOI you must cite if you reuse this model in a way that leads to a publication")
     private Value<String> doi;
 
+    @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
+    private Value<String> releasedAt;
+
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private List<TargetExternalReference> licenseInfo;

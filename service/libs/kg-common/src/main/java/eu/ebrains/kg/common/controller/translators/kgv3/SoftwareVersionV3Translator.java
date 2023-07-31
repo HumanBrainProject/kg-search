@@ -93,6 +93,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         translatorUtils.defineBadgesAndTrendingState(s, releaseDate, softwareVersion.getLast30DaysViews());
         s.setFirstRelease(value(releaseDate));
         s.setLastRelease(value(softwareVersion.getLastReleasedAt()));
+        s.setReleasedAt(value(softwareVersion.getIssueDate()));
         s.setAllIdentifiers(softwareVersion.getIdentifier());
         s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
 
