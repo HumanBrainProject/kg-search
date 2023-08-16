@@ -24,7 +24,7 @@
 import React from 'react';
 
 import FieldsPanel from '../../../components/Field/FieldsPanel';
-import Tags from '../../../components/Tags/Tags';
+import HeaderTags from '../../../components/HeaderTags/HeaderTags';
 import { VersionSelector } from '../../../components/VersionSelector/VersionSelector';
 import ShareButtons from '../../../features/ShareButtons';
 import { Field, Title } from '../../Field/Field';
@@ -34,7 +34,7 @@ import './Header.css';
 const DefaultNavigation = ({ tags }) => (
   <div className="kgs-instance__header_navigation">
     <div className="kgs-instance__header_navigation_left">
-      <Tags tags={tags} />
+      <HeaderTags tags={tags} />
     </div>
     <ShareButtons />
   </div>
@@ -57,7 +57,7 @@ const Header = ({title, version, tags, fields, versions, customNavigationCompone
       <Navigation />
       <div className="kgs-instance__header_fields">
         {customNavigationComponent && (
-          <Tags tags={tags} />
+          <HeaderTags tags={tags} />
         )}
         <div className="kgs-instance__header_title">
           <Title text={title} />

@@ -22,20 +22,14 @@
  */
 
 import React from 'react';
+import './HeaderTags.css';
 
-import './Tags.css';
+const HeaderTags = ({tags}) => (
+  <div className="kgs-header-tags">
+    {tags.map(tag => (
+      <span key={tag} className="kgs-header-tag">{tag}</span>
+    ))}
+  </div>
+);
 
-const Tags = ({ tags }) => {
-  if (!Array.isArray(tags) || tags.length === 0) {
-    return null;
-  }
-  return (
-    <div className="kgs-tags">
-      {tags.map(tag => (
-        <span key={tag} className={'badge rounded-pill kgs-tag'}>{tag}</span>
-      ))}
-    </div>
-  );
-};
-
-export default Tags;
+export default HeaderTags;

@@ -25,6 +25,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import Badges from '../../../components/Badges/Badges';
+import Tags from '../../../components/Tags/Tags';
 import { selectTypeMapping } from '../../../features/instance/instanceSlice';
 
 import { formatHitForHighlight } from '../../../helpers/HitFormattingHelpers';
@@ -153,7 +154,7 @@ export const Hit = ({ data }) => {
     fields: filterHighlightFields(data?.highlight, ['title.value', 'description.value']),
     mapping: mapping
   };
-
+  //['structural connectivity','functional connectivity', 'connectome', 'fMRI time series', 'Preparation', 'Experimental approach', 'Technique', 'tractography', 'anatomical segmentation technique']
   return (
     <div className="kgs-hit" data-type={type}>
       <div className={`kgs-hit__body ${previewImage? 'has-previewImage':''}`}>
@@ -164,6 +165,7 @@ export const Hit = ({ data }) => {
           {fields.map(({ name, data, mapping }) =>
             <PrintViewField key={name} name={name} data={data} mapping={mapping} />
           )}
+          <Tags tags={data?.tags} />
         </div>
         {!!previewImage &&
           <div className="kgs-hit__preview">

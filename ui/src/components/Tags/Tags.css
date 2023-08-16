@@ -21,7 +21,11 @@
  *
  */
 
+ .kgs-tags {
+  order: 2;
+}
+
 .kgs-tags .kgs-tag {
-  text-transform: uppercase;
-  margin-right: 10px;
+  background: var(--color-4);
+  margin: 2px;
 }
