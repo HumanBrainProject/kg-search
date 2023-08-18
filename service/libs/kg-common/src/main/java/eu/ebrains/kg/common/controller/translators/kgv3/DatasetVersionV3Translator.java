@@ -136,6 +136,35 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return title;
     }
 
+    private void defineTags(DatasetVersionV3 datasetVersion, DatasetVersion d) {
+        List<String> tags = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(datasetVersion.getKeyword())) {
+            if (datasetVersion.getKeyword().size() > 5) {
+                tags.addAll(datasetVersion.getKeyword().subList(0,5));
+            } else {
+                tags.addAll(datasetVersion.getKeyword());
+            }
+        }
+        if (!CollectionUtils.isEmpty(datasetVersion.getStudyTarget())) {
+            if (datasetVersion.getStudyTarget().size() > 5) {
+                tags.addAll(datasetVersion.getStudyTarget().stream().map(FullNameRef::getFullName).toList().subList(0,5));
+            } else {
+                tags.addAll(datasetVersion.getStudyTarget().stream().map(FullNameRef::getFullName).toList());
+            }
+        }
+        if (!CollectionUtils.isEmpty(datasetVersion.getTechnique())) {
+            if (datasetVersion.getTechnique().size() > 5) {
+                tags.addAll(datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).toList().subList(0,5));
+            } else {
+                tags.addAll(datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).toList());
+            }
+        }
+        if (!CollectionUtils.isEmpty(tags)) {
+            Collections.sort(tags);
+            d.setTags(tags);
+        }
+    }
+
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
         logger.debug("Translating {}", datasetVersion.getId());
@@ -143,6 +172,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
          final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
         translatorUtils.defineBadgesAndTrendingState(d, releaseDate, datasetVersion.getLast30DaysViews());
+        defineTags(datasetVersion, d);
         String uuid = datasetVersion.getUUID();
         d.setId(uuid);
         d.setFirstRelease(value(releaseDate));

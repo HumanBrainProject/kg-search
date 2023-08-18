@@ -235,6 +235,7 @@ public class SearchController extends FacetAggregationUtils {
             hit.put("category", CastingUtils.getStringValueField(source, "category"));
             hit.put("title", CastingUtils.getStringValueField(source, "title"));
             hit.put("badges", source.get("badges"));
+            hit.put("tags", source.get("tags"));
             if (h.getHighlight() != null) {
                 hit.put("highlight", h.getHighlight());
             }
