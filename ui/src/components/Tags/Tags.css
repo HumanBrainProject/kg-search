@@ -23,9 +23,10 @@
 
  .kgs-tags {
   order: 2;
+  margin-top: 1em;
 }
 
 .kgs-tags .kgs-tag {
-  background: var(--color-4);
+  background: var(--color-38);
   margin: 2px;
 }
