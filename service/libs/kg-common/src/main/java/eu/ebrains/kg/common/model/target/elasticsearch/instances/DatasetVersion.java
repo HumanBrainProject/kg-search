@@ -70,7 +70,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<String> badges;
 
     @ElasticSearchInfo(type = "keyword")
-    @FieldInfo(overview = true, ignoreForSearch = true, visible = false)
     private List<String> tags;
 
     @ElasticSearchInfo(type = "keyword")
