@@ -41,7 +41,6 @@ import java.util.stream.Stream;
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class SearchFieldsController {
     private final Set<String> FIELDS_TO_HIGHLIGHT = Stream.of(
-            "title.value",
             "description.value",
             "contributors.value",
             "custodians.value",
