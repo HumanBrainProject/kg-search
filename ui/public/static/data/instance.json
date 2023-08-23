@@ -117,6 +117,20 @@
         }
       }
     },
+    "neuralActivityVisualizer": [
+      {
+        "name": "96711008.abf",
+        "url": "https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/Migliore_2018_CA1/exp_data/abf-int-bAC/Ivy_960711AHP3/96711008.abf",
+        "showSignals": true,
+        "showSpikeTrains": false
+      },
+      {
+        "name": "spiketrainsx2a.nix",
+        "url": "https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/test/spiketrainsx2a.nix",
+        "showSignals": false,
+        "showSpikeTrains": true
+      }
+    ],
     "specimenBySubject": {
       "key": "root",
       "parentRelationType": null,

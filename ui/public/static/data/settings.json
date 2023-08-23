@@ -266,6 +266,7 @@
           "isMarkdown": true
         },
         "workflow": { "layout": "Workflow", "isMermaid": true },
+        "neuralActivityVisualizer": { "layout": "Neural Activity Visualizer", "isNeuralActivityVisualizer": true },
         "viewData": { "isGroupedLinks": true, "label": "View data" },
         "atlas": { "label": "Brain atlas", "layout": "summary" },
         "region": {

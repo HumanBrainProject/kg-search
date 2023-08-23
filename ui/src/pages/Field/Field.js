@@ -31,6 +31,7 @@ import {
   PrintViewListField
 } from '../../components/Field/ListField';
 import Mermaid from '../../components/Field/Mermaid';
+import NeuralActivityVisualizer from '../../components/Field/NeuralActivityVisualizer';
 import ObjectField from '../../components/Field/ObjectField';
 import TableField from '../../components/Field/TableField';
 import FilePreview from '../../components/FilePreview/FilePreview';
@@ -257,6 +258,12 @@ const getFieldProps = (
       mapping: mapping
     };
     valueComponent = Mermaid;
+  } else if (mapping.isNeuralActivityVisualizer) {
+    valueProps = {
+      data: data,
+      mapping: mapping
+    };
+    valueComponent = NeuralActivityVisualizer;
   } else {
     if (Array.isArray(data) && data.length === 1) {
       data = data[0];
