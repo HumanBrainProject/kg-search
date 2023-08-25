@@ -63,6 +63,7 @@ import java.util.stream.Stream;
 
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
+    private final int TAGS_RESOLVED = 5;
 
     private final String SPECIMEN_LOOKUP_MAP = "specimenLookupMap";
     @Override
@@ -137,31 +138,35 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
     }
 
     private void defineTags(DatasetVersionV3 datasetVersion, DatasetVersion d) {
+        int total = 0;
         List<String> tags = new ArrayList<>();
         if (!CollectionUtils.isEmpty(datasetVersion.getKeyword())) {
-            if (datasetVersion.getKeyword().size() > 5) {
-                tags.addAll(datasetVersion.getKeyword().subList(0,5));
+            if (datasetVersion.getKeyword().size() > TAGS_RESOLVED) {
+                tags.addAll(datasetVersion.getKeyword().subList(0,TAGS_RESOLVED));
             } else {
                 tags.addAll(datasetVersion.getKeyword());
             }
+            total += datasetVersion.getKeyword().size();
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getStudyTarget())) {
-            if (datasetVersion.getStudyTarget().size() > 5) {
-                tags.addAll(datasetVersion.getStudyTarget().stream().map(FullNameRef::getFullName).toList().subList(0,5));
+            if (datasetVersion.getStudyTarget().size() > TAGS_RESOLVED) {
+                tags.addAll(datasetVersion.getStudyTarget().stream().map(FullNameRef::getFullName).toList().subList(0,TAGS_RESOLVED));
             } else {
                 tags.addAll(datasetVersion.getStudyTarget().stream().map(FullNameRef::getFullName).toList());
             }
+            total += datasetVersion.getStudyTarget().size();
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getTechnique())) {
-            if (datasetVersion.getTechnique().size() > 5) {
-                tags.addAll(datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).toList().subList(0,5));
+            if (datasetVersion.getTechnique().size() > TAGS_RESOLVED) {
+                tags.addAll(datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).toList().subList(0,TAGS_RESOLVED));
             } else {
                 tags.addAll(datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).toList());
             }
+            total += datasetVersion.getTechnique().size();
         }
         if (!CollectionUtils.isEmpty(tags)) {
-            Collections.sort(tags);
-            d.setTags(tags);
+            tags.sort(String.CASE_INSENSITIVE_ORDER);
+            d.setTags(new DatasetVersion.Tags(tags, total, tags.size(), 0));
         }
     }
 
