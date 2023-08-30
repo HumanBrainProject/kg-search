@@ -139,7 +139,7 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.TEXT)
+    @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
 
     private String version;
