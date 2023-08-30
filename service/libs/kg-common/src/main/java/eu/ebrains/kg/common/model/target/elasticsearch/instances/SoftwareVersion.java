@@ -88,7 +88,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
     private Value<String> releasedAt;
 
-    @FieldInfo(ignoreForSearch = true, visible = false)
+    @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.TEXT)
     private Value<String> releasedDateForSorting;
 
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT)
