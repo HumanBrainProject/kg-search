@@ -25,14 +25,14 @@ package eu.ebrains.kg.common.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.schemaorg.SchemaOrgInstance;
 import lombok.Getter;
 import lombok.Setter;
@@ -80,6 +80,9 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private Value<String> releasedDateForSorting;
 
     private String version;
 

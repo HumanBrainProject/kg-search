@@ -112,6 +112,9 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
     private Value<String> releasedAt;
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private Value<String> releasedDateForSorting;
+
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private List<TargetExternalReference> licenseInfo;

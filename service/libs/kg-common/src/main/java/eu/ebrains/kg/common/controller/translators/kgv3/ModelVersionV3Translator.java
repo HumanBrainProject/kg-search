@@ -85,10 +85,12 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         Accessibility accessibility = Accessibility.fromPayload(modelVersion);
         m.setId(IdUtils.getUUID(modelVersion.getId()));
         final Date releaseDate = modelVersion.getReleaseDate() != null && modelVersion.getReleaseDate().before(new Date()) ? modelVersion.getReleaseDate() : modelVersion.getFirstReleasedAt();
-        translatorUtils.defineBadgesAndTrendingState(m, releaseDate, modelVersion.getLast30DaysViews());
+        final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(modelVersion.getIssueDate(), releaseDate);
+        translatorUtils.defineBadgesAndTrendingState(m, modelVersion.getIssueDate(), releaseDate, modelVersion.getLast30DaysViews());
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(modelVersion.getLastReleasedAt()));
         m.setReleasedAt(value(modelVersion.getIssueDate()));
+        m.setReleasedDateForSorting(value(releaseDateForSorting));
         m.setAllIdentifiers(modelVersion.getIdentifier());
         m.setIdentifier(IdUtils.getIdentifiersWithPrefix("Model", modelVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = model == null ? null : model.getVersions();

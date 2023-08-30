@@ -129,6 +129,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
     private Value<String> releasedAt;
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private Value<String> releasedDateForSorting;
+
     //HDG terms of use are going to be a license too
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)

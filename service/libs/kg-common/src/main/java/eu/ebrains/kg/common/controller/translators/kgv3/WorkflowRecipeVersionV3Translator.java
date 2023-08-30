@@ -84,9 +84,11 @@ public class WorkflowRecipeVersionV3Translator extends TranslatorV3<WorkflowReci
         final WorkflowRecipeVersionV3.WorkflowReceipeVersions parent = source.getWorkflow();
         w.setId(IdUtils.getUUID(source.getId()));
         final Date releaseDate = source.getReleaseDate() != null && source.getReleaseDate().before(new Date()) ? source.getReleaseDate() : source.getFirstReleasedAt();
-        translatorUtils.defineBadgesAndTrendingState(w, releaseDate, source.getLast30DaysViews());
+        final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
+        translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, source.getLast30DaysViews());
         w.setFirstRelease(value(releaseDate));
         w.setLastRelease(value(source.getLastReleasedAt()));
+        w.setReleasedDateForSorting(value(releaseDateForSorting));
         w.setIdentifier(IdUtils.getUUID(source.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         w.setAllIdentifiers(source.getIdentifier());
         List<Version> versions = parent == null ? null : parent.getVersions();

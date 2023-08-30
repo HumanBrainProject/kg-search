@@ -130,6 +130,9 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private Value<String> releasedDateForSorting;
+
     private String version;
 
     @FieldInfo(ignoreForSearch = true, visible = false)

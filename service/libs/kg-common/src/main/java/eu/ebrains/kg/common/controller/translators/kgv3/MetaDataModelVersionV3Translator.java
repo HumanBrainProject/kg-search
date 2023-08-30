@@ -42,7 +42,10 @@ import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,10 +89,12 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         MetadataModelVersionV3.MetaDataModelVersions metaDataModel = metadataModelVersionV3.getMetaDataModel();
         Accessibility accessibility = Accessibility.fromPayload(metadataModelVersionV3);
         final Date releaseDate = metadataModelVersionV3.getReleaseDate() != null && metadataModelVersionV3.getReleaseDate().before(new Date()) ? metadataModelVersionV3.getReleaseDate() : metadataModelVersionV3.getFirstReleasedAt();
+        final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
-        translatorUtils.defineBadgesAndTrendingState(m, releaseDate, null);//TODO get last 30 days views
+        translatorUtils.defineBadgesAndTrendingState(m, null, releaseDate, null);//TODO get last 30 days views
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(metadataModelVersionV3.getLastReleasedAt()));
+        m.setReleasedDateForSorting(value(releaseDateForSorting));
         m.setAllIdentifiers(metadataModelVersionV3.getIdentifier());
         m.setIdentifier(IdUtils.getUUID(metadataModelVersionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = metaDataModel == null ? null : metaDataModel.getVersions();

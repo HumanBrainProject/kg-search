@@ -29,10 +29,17 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInfo
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+
+import static eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue.ISO_DATE_PATTERN;
 
 @Getter
 public class TranslatorUtils {
@@ -54,9 +61,9 @@ public class TranslatorUtils {
         this.errors = errors != null ? errors : new ArrayList<>();
     }
 
-    public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, Date firstRelease, Integer last30DaysViews) {
+    public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, String issueDate, Date firstRelease, Integer last30DaysViews) {
         List<String> badges = new ArrayList<>();
-        if (isNew(firstRelease)) {
+        if (isNew(issueDate, firstRelease)) {
             badges.add("isNew");
         }
         if(last30DaysViews != null){
@@ -71,6 +78,27 @@ public class TranslatorUtils {
         target.setBadges(badges);
     }
 
+    private Date getIssueDate(String issueDate) {
+        if (StringUtils.isNotBlank(issueDate)) {
+            try {
+                LocalDate localDate = LocalDate.parse(issueDate);
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                return Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+            } catch (DateTimeParseException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public String getReleasedDateForSorting(String issueDate, Date releaseDate) {
+        if (getIssueDate(issueDate) != null) {
+            return issueDate;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(ISO_DATE_PATTERN);
+        return dateFormat.format(releaseDate);
+    }
+
     public Document getResource(String  id){
         try {
             return this.esServiceClient.getDocumentByNativeId(ESHelper.getResourcesIndex(), id);
@@ -83,15 +111,21 @@ public class TranslatorUtils {
         }
     }
 
-    private boolean isNew(Date firstRelease) {
-        if(firstRelease !=null) {
-            Calendar cal = new GregorianCalendar();
-            cal.add(Calendar.DAY_OF_MONTH, -8);
-            Date daysAgo = cal.getTime();
-            return firstRelease.after(daysAgo);
+    private static final int IS_NEW_THRESHOLD = 8;
+    private boolean isDateAfterThreshold(Date date) {
+        Calendar cal = new GregorianCalendar();
+        cal.add(Calendar.DAY_OF_MONTH, -TranslatorUtils.IS_NEW_THRESHOLD);
+        Date daysAgo = cal.getTime();
+        return date.after(daysAgo);
+    }
+
+    private boolean isNew(String issueDate, Date firstRelease) {
+        Date date = getIssueDate(issueDate);
+        if (date != null) {
+            return isDateAfterThreshold(date);
+        } else if(firstRelease !=null) {
+            return isDateAfterThreshold(firstRelease);
         }
-        else{
-            return false;
-        }
+        return false;
     }
 }

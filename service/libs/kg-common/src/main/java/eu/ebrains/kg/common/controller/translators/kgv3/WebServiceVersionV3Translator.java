@@ -91,9 +91,11 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
         w.setIdentifier(IdUtils.getUUID(source.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         w.setId(IdUtils.getUUID(source.getId()));
         final Date releaseDate = source.getReleaseDate() != null && source.getReleaseDate().before(new Date()) ? source.getReleaseDate() : source.getFirstReleasedAt();
-        translatorUtils.defineBadgesAndTrendingState(w, releaseDate, source.getLast30DaysViews());
+        final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
+        translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, source.getLast30DaysViews());
         w.setFirstRelease(value(releaseDate));
         w.setLastRelease(value(source.getLastReleasedAt()));
+        w.setReleasedDateForSorting(value(releaseDateForSorting));
         w.setAllIdentifiers(source.getIdentifier());
         List<Version> versions = parent == null ? null:parent.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;

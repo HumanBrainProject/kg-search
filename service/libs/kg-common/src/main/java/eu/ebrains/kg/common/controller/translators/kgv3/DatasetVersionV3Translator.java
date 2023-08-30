@@ -170,14 +170,16 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         logger.debug("Translating {}", datasetVersion.getId());
         d.setCategory(new Value<>("Dataset"));
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
-         final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
-        translatorUtils.defineBadgesAndTrendingState(d, releaseDate, datasetVersion.getLast30DaysViews());
+        final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
+        final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(datasetVersion.getIssueDate(), releaseDate);
+        translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getIssueDate(), releaseDate, datasetVersion.getLast30DaysViews());
         defineTags(datasetVersion, d);
         String uuid = datasetVersion.getUUID();
         d.setId(uuid);
         d.setFirstRelease(value(releaseDate));
         d.setLastRelease(value(datasetVersion.getLastReleasedAt()));
         d.setReleasedAt(value(datasetVersion.getIssueDate()));
+        d.setReleasedDateForSorting(value(releaseDateForSorting));
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         List<Version> versions = dataset == null ? null : dataset.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
