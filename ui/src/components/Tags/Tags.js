@@ -26,14 +26,15 @@ import React from 'react';
 import './Tags.css';
 
 const Tags = ({ tags }) => {
-  if (!Array.isArray(tags) || tags.length === 0) {
+  if (!tags || !Array.isArray(tags.data) || tags.size === 0) {
     return null;
   }
   return (
     <div className="kgs-tags">
-      {tags.map(tag => (
+      {tags.data.map(tag => (
         <span key={tag} className={'badge rounded-pill kgs-tag'}>{tag}</span>
       ))}
+      {tags.total > tags.size && <span className="kgs-tag-ellipsis" >...</span>}
     </div>
   );
 };

@@ -69,8 +69,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @ElasticSearchInfo(type = "keyword")
     private List<String> badges;
 
-    @ElasticSearchInfo(type = "keyword")
-    private List<String> tags;
+    private Tags tags;
 
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
@@ -252,6 +251,21 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
+
+    @Getter
+    @Setter
+    public static class Tags {
+        public Tags(List<String> data, int total, int size, int from) {
+            this.data = data;
+            this.total = total;
+            this.size = size;
+            this.from = from;
+        }
+        private List<String> data;
+        private int total;
+        private int size;
+        private int from;
+    }
 
     @Getter
     @Setter

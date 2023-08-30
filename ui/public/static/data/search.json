@@ -11,6 +11,22 @@
         ]
       },
       "id": "97d45335-6757-4a42-9824-2d652d9a9721",
+      "tags": {
+        "data": [
+          "H&E staining",
+          "brain",
+          "cancer",
+          "clinical annotated tissue",
+          "high-resolution scanning",
+          "histopathology",
+          "qualitative analysis",
+          "quantitative analysis",
+          "tumour"
+        ],
+        "total": 20,
+        "size": 9,
+        "from": 0
+      },
       "type": "Dataset",
       "category": "Dataset",
       "title": "Neural Correlates of Multisensory Detection Behavior in Primary and Higher-Order Visual Cortex (v1)",

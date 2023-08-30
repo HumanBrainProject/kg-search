@@ -68,11 +68,6 @@
     border-bottom: 0;
 }
 
-.kgs-field__table .table ul {
-    list-style: none;
-    padding: 0;
-}
-
 .kgs-field__table .table th > button {
     display: inline-block;
     border: 0;
