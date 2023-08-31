@@ -112,6 +112,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
     private Value<String> releasedAt;
 
+    @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
 
