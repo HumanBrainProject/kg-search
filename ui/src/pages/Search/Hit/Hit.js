@@ -157,9 +157,9 @@ export const Hit = ({ data }) => {
   //['structural connectivity','functional connectivity', 'connectome', 'fMRI time series', 'Preparation', 'Experimental approach', 'Technique', 'tractography', 'anatomical segmentation technique']
   return (
     <div className="kgs-hit" data-type={type}>
-      <div className={`kgs-hit__body ${previewImage? 'has-previewImage':''}`}>
-        <div className={`kgs-hit__content ${badges? 'has-badges':''}`}>
-          <Badges badges={badges} />
+      <Badges badges={badges} />
+      <div className={`kgs-hit__body ${previewImage? 'has-previewImage':''} ${badges?'has-badges':''}`}>
+        <div className="kgs-hit__content">
           <Title key="title" text={title} />
           <HighlightsField key="highlights" {...highlightsField} />
           {fields.map(({ name, data, mapping }) =>

@@ -30,7 +30,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Neural Correlates of Multisensory Detection Behavior in Primary and Higher-Order Visual Cortex (v1)",
-      "badges": ["isTrending"],
+      "badges": ["isTrending", "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
       "fields": {
         "keywords": [
           { "value": "behavioral training" },
@@ -54,6 +54,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "1024-channel electrophysiological recordings in macaque V1 and V4 during resting state (v1)",
+      "badges": ["isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
       "fields": {
         "keywords": [
           { "value": "infrared eye tracker" },
@@ -95,6 +96,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Impact of area patterning genes on corticopontine projection topography: Anterograde tracing of corticopontine projections in Nr2f1 conditional knockout mice lacking postmitotic expression of Nr2f1 (v1)",
+      "badges": ["isLinkedToImageViewer"],
       "fields": {
         "keywords": [
           { "value": "nuclear receptor and arealization gene (Nr2f1)" },
@@ -153,6 +155,34 @@
       "group": "public"
     },
     {
+      "id": "cc17c126-dec2-486c-a23d-deedf9102269",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Anterogradely labeled axonal projections from the orbitofrontal cortex in rat (v1)",
+      "badges": ["isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
+      "fields": {
+        "releasedAt": {
+          "value": "2022-01-26"
+        },
+        "description": {
+          "value": "The project was initiated to determine the projections of the orbital frontal cortex (OFC) to the parahippocampal region in the rat, using the anterograde tracers biotinylated dextran amine (BDA) and Phaseolus vulgaris-leucoagglutinin (PHA-L). The anterograde tracers were injected into four subdivisions of OFC; the medial (MO), ventral (VO), ventrolateral (VLO) and lateral (LO) orbitofrontal areas. All brains were cut in the coronal plane at 50 µm thickness, and every 6th section was sampled for analysis. Complete series throughout the  anterior-posterior extent  of each brain form the core of the dataset, with a total of 26 animals successfully injected. Out of those 26, 18 were injected with BDA, 4 injected with PHA-L, and 4 injected with both BDA and PHA-L. Locations of all individual injection sites are annotated in the datasets. All sections are in the correct anterior-posterior order. The data show a topographically organized connectivity from OFC to parahippocampal areas, in addition to all other labeled projections throughout the brain."
+        }
+      },
+      "previewImage": "https://object.cscs.ch/v1/AUTH_e3381a02998448a7ab0546582bfdb1fa/ext_d_cc17c126-dec2-486c-a23d-deedf9102269/OPIcome_preview-image_F35_BDA_s49.png",
+      "group": "public",
+      "tags": [
+        "Biotinylated dextran amine",
+        "Phaseolus vulgaris leucoagglutinin",
+        "avidin-biotin complex",
+        "histochemistry",
+        "immunohistochemistry",
+        "orbitofrontal cortex",
+        "perfusion fixation technique",
+        "secondary antibody staining",
+        "stereotactic surgery"
+      ]
+    },
+    {
       "highlight": {
         "description.value": [
           "slow wave, optical imaging and whisker stimulation, it was possible to perform large-scale spatial <em>correlation</em>"
@@ -162,6 +192,7 @@
       "type": "Dataset",
       "category": "Dataset",
       "title": "Wide-field imaging of cortical response to sensory stimulation in GCaMP6f mice at different brain states (v1)",
+      "badges": ["isTrending", "isUsingOthers", "isUsedByOthers", "isFollowingStandards"],
       "fields": {
         "keywords": [{ "value": "whisker stimulation" }],
         "description": {

@@ -21,16 +21,31 @@
  *
  */
 
+import uniqueId from 'lodash/uniqueId';
 import React from 'react';
+import { Tooltip } from 'react-tooltip';
 
 import './Badges.css';
 
-const Badge = ({ title, active, className }) => {
+const Badge = ({ name, title, active }) => {
   if (!active) {
     return null;
   }
   return (
-    <span className={`badge rounded-pill kgs-badge ${className??''}`}>{title}</span>
+    <span className={`badge rounded-pill kgs-badge kgs-badge-${name}`}>{title}</span>
+  );
+};
+
+const MetaBadge = ({ name, title, active }) => {
+  if (!active) {
+    return null;
+  }
+  const id = encodeURI(uniqueId(`kgs-meta-badge-${name}`));
+  return (
+    <span className="kgs-meta-badge-wrapper">
+      <span id={id} className={`kgs-meta-badge kgs-meta-badge-${name}`} title={title} />
+      <Tooltip className="kgs-meta-badge-tooltip" anchorSelect={`#${id}`} place="bottom" variant="dark" content={title} />
+    </span>
   );
 };
 
@@ -41,8 +56,22 @@ const Badges = ({ badges }) => {
   }
   return (
     <div className="kgs-badges">
-      <Badge title="New"      className="kgs-badge-new"      active={badges.includes('isNew')} />
-      <Badge title="Top trending" className="kgs-badge-trending" active={badges.includes('isTrending')} />
+      <div>
+        <Badge name="new"      title="New"           active={badges.includes('isNew')} />
+        <Badge name="trending" title="Top trending"  active={badges.includes('isTrending')} />
+      </div>
+      <div className="kgs-meta-badges">
+        <MetaBadge name="isUsingOthers"               title="EBRAINS dataset/model uses another EBRAINS dataset/model"             active={badges.includes('isUsingOthers')} />
+        <MetaBadge name="isUsedByOthers"              title="EBRAINS dataset/model is being used by another EBRAINS dataset/model" active={badges.includes('isUsedByOthers')} />
+        <MetaBadge name="isFollowingStandards"        title="Organized according to a formal structure/community standards"        active={badges.includes('isFollowingStandards')} />
+        <MetaBadge name="isLinkedToTools"             title="Linked to EBRAINS tools & software"                                   active={badges.includes('isLinkedToTools')} />
+        <MetaBadge name="isLearningResourceAvailable" title="Learning Resource Available"                                          active={badges.includes('isLearningResourceAvailable')} />
+        <MetaBadge name="isLinkedToImageViewer"       title="Linked to Image Viewer Service"                                       active={badges.includes('isLinkedToImageViewer')} />
+        <MetaBadge name="isIntegratedWithAtlas"       title="Integrated with Atlas"                                                active={badges.includes('isIntegratedWithAtlas')} />
+        <MetaBadge name="isReplicable"                title="Model Replicability"                                                  active={badges.includes('isReplicable')} />
+        <MetaBadge name="isUsedInLivePaper"           title="Data/Model used in a live paper"                                      active={badges.includes('isUsedInLivePaper')} />
+        <MetaBadge name="hasInDepthMetaData"          title="Dataset has in-depth metadata"                                        active={badges.includes('hasInDepthMetaData')} />
+      </div>
     </div>
   );
 };
