@@ -43,7 +43,7 @@ const MetaBadge = ({ name, title, active }) => {
   const id = encodeURI(uniqueId(`kgs-meta-badge-${name}`));
   return (
     <span className="kgs-meta-badge-wrapper">
-      <span id={id} className={`kgs-meta-badge kgs-meta-badge-${name}`} title={title} />
+      <span id={id} className={`kgs-meta-badge kgs-meta-badge-${name}`} />
       <Tooltip className="kgs-meta-badge-tooltip" anchorSelect={`#${id}`} place="bottom" variant="dark" content={title} />
     </span>
   );
