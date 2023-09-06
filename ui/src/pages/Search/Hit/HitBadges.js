@@ -21,12 +21,22 @@
  *
  */
 
- .kgs-header-tags {
-  display: inline-block;
- }
+import React from 'react';
+import SimpleBadges from '../../../components/Badges/Badges';
+import MetaBadges from '../../../components/MetaBadges/MetaBadges';
 
-.kgs-header-tags .kgs-header-tag {
-  display: inline-block;
-  text-transform: uppercase;
-  margin-right: 10px;
-}
+import './HitBadges.css';
+
+const HitBadges = ({ badges }) => {
+  if (!Array.isArray(badges) || badges.length === 0) {
+    return null;
+  }
+  return (
+    <div className="kgs-hit-badges">
+      <SimpleBadges badges={badges} />
+      <MetaBadges badges={badges} />
+    </div>
+  );
+};
+
+export default HitBadges;

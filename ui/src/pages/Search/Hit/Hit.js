@@ -23,14 +23,12 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-import Badges from '../../../components/Badges/Badges';
 import Tags from '../../../components/Tags/Tags';
 import { selectTypeMapping } from '../../../features/instance/instanceSlice';
-
 import { formatHitForHighlight } from '../../../helpers/HitFormattingHelpers';
 import { PrintViewField, Title } from '../../Field/Field';
 import HighlightsField from './HighlightsField';
+import HitBadges from './HitBadges';
 
 
 import './Hit.css';
@@ -157,7 +155,7 @@ export const Hit = ({ data }) => {
   //['structural connectivity','functional connectivity', 'connectome', 'fMRI time series', 'Preparation', 'Experimental approach', 'Technique', 'tractography', 'anatomical segmentation technique']
   return (
     <div className="kgs-hit" data-type={type}>
-      <Badges badges={badges} />
+      <HitBadges badges={badges} />
       <div className={`kgs-hit__body ${previewImage? 'has-previewImage':''} ${badges?'has-badges':''}`}>
         <div className="kgs-hit__content">
           <Title key="title" text={title} />

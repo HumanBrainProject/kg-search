@@ -24,40 +24,40 @@
 import React from 'react';
 
 import FieldsPanel from '../../../components/Field/FieldsPanel';
-import HeaderTags from '../../../components/HeaderTags/HeaderTags';
 import { VersionSelector } from '../../../components/VersionSelector/VersionSelector';
 import ShareButtons from '../../../features/ShareButtons';
 import { Field, Title } from '../../Field/Field';
+import TagsAndBadges from './TagsAndBadges';
 
 import './Header.css';
 
-const DefaultNavigation = ({ tags }) => (
+const DefaultNavigation = ({ tags, badges }) => (
   <div className="kgs-instance__header_navigation">
     <div className="kgs-instance__header_navigation_left">
-      <HeaderTags tags={tags} />
+      <TagsAndBadges tags={tags} badges={badges} />
     </div>
     <ShareButtons />
   </div>
 );
 
-const getDefaultNavigation = tags => {
+const getDefaultNavigation = (tags, badges) => {
   const Navigation = () => (
-    <DefaultNavigation tags={tags} />
+    <DefaultNavigation tags={tags} badges={badges} />
   );
   Navigation.displayName = 'Navigation';
   return Navigation;
 };
 
-const Header = ({title, version, tags, fields, versions, customNavigationComponent, onVersionChange}) => {
+const Header = ({title, version, tags, badges, fields, versions, customNavigationComponent, onVersionChange}) => {
 
-  const Navigation = customNavigationComponent?customNavigationComponent:getDefaultNavigation(tags);
+  const Navigation = customNavigationComponent?customNavigationComponent:getDefaultNavigation(tags, badges);
 
   return (
     <div className="kgs-instance__header">
       <Navigation />
       <div className="kgs-instance__header_fields">
         {customNavigationComponent && (
-          <HeaderTags tags={tags} />
+          <TagsAndBadges tags={tags} badges={badges} />
         )}
         <div className="kgs-instance__header_title">
           <Title text={title} />

@@ -21,12 +21,15 @@
  *
  */
 
- .kgs-header-tags {
-  display: inline-block;
- }
+import React from 'react';
+import HeaderTags from '../../../components/HeaderTags/HeaderTags';
+import MetaBadges from '../../../components/MetaBadges/MetaBadges';
 
-.kgs-header-tags .kgs-header-tag {
-  display: inline-block;
-  text-transform: uppercase;
-  margin-right: 10px;
-}
+const TagsAndBadges = ({ tags, badges }) => (
+  <div className="kgs-header-tags-and-badges">
+    <HeaderTags tags={tags} />
+    <MetaBadges badges={badges} />
+  </div>
+);
+
+export default TagsAndBadges;

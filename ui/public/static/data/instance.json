@@ -21,6 +21,7 @@
   "type": "Dataset",
   "category": "Dataset",
   "title": "Atlas of muscarinic M2 receptor distributions in the rat brain (v1)",
+  "badges": ["isTrending", "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
   "fields": {
     "keywords": [{ "value": "3H-Oxotremorine" }, { "value": "horizontal" }],
     "citation": { "value": "10.25493/QFN4-BPS" },
