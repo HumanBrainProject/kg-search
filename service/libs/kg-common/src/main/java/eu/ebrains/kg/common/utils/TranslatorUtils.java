@@ -61,7 +61,7 @@ public class TranslatorUtils {
         this.errors = errors != null ? errors : new ArrayList<>();
     }
 
-    public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, String issueDate, Date firstRelease, Integer last30DaysViews) {
+    public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, String issueDate, Date firstRelease, Integer last30DaysViews, List<String> metaBadges) {
         List<String> badges = new ArrayList<>();
         if (isNew(issueDate, firstRelease)) {
             badges.add("isNew");
@@ -75,6 +75,7 @@ public class TranslatorUtils {
                 target.setTrending(true);
             }
         }
+        badges.addAll(metaBadges);
         target.setBadges(badges);
     }
 

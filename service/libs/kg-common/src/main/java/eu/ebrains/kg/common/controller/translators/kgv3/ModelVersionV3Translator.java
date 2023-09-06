@@ -86,7 +86,9 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         m.setId(IdUtils.getUUID(modelVersion.getId()));
         final Date releaseDate = modelVersion.getReleaseDate() != null && modelVersion.getReleaseDate().before(new Date()) ? modelVersion.getReleaseDate() : modelVersion.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(modelVersion.getIssueDate(), releaseDate);
-        translatorUtils.defineBadgesAndTrendingState(m, modelVersion.getIssueDate(), releaseDate, modelVersion.getLast30DaysViews());
+        List<String> metaBadges = new ArrayList<>();
+        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
+        translatorUtils.defineBadgesAndTrendingState(m, modelVersion.getIssueDate(), releaseDate, modelVersion.getLast30DaysViews(), metaBadges);
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(modelVersion.getLastReleasedAt()));
         m.setReleasedAt(value(modelVersion.getIssueDate()));

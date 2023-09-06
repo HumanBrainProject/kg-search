@@ -177,7 +177,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
         final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(datasetVersion.getIssueDate(), releaseDate);
-        translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getIssueDate(), releaseDate, datasetVersion.getLast30DaysViews());
+        List<String> metaBadges = new ArrayList<>();
+        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
+        translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getIssueDate(), releaseDate, datasetVersion.getLast30DaysViews(), metaBadges);
         defineTags(datasetVersion, d);
         String uuid = datasetVersion.getUUID();
         d.setId(uuid);

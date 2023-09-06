@@ -92,7 +92,9 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
         w.setId(IdUtils.getUUID(source.getId()));
         final Date releaseDate = source.getReleaseDate() != null && source.getReleaseDate().before(new Date()) ? source.getReleaseDate() : source.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
-        translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, source.getLast30DaysViews());
+        List<String> metaBadges = new ArrayList<>();
+        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
+        translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, source.getLast30DaysViews(), metaBadges);
         w.setFirstRelease(value(releaseDate));
         w.setLastRelease(value(source.getLastReleasedAt()));
         w.setReleasedDateForSorting(value(releaseDateForSorting));

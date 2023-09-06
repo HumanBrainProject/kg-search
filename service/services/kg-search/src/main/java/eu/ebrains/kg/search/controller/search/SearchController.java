@@ -277,6 +277,7 @@ public class SearchController extends FacetAggregationUtils {
         res.put("group", getGroup(dataStage));
         res.put("category", CastingUtils.getStringValueField(source, "category"));
         res.put("title", CastingUtils.getStringValueField(source, "title"));
+        res.put("badges", source.get("badges"));
 
         String disclaimer = CastingUtils.getStringValueField(source, "disclaimer");
         if (StringUtils.isNotBlank(disclaimer)) {

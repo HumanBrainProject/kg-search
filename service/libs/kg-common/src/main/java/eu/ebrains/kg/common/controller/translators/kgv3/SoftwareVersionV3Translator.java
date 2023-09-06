@@ -91,7 +91,9 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
         final Date releaseDate = softwareVersion.getReleaseDate() != null && softwareVersion.getReleaseDate().before(new Date()) ? softwareVersion.getReleaseDate() : softwareVersion.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(softwareVersion.getIssueDate(), releaseDate);
-        translatorUtils.defineBadgesAndTrendingState(s, softwareVersion.getIssueDate(), releaseDate, softwareVersion.getLast30DaysViews());
+        List<String> metaBadges = new ArrayList<>();
+        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
+        translatorUtils.defineBadgesAndTrendingState(s, softwareVersion.getIssueDate(), releaseDate, softwareVersion.getLast30DaysViews(), metaBadges);
         s.setFirstRelease(value(releaseDate));
         s.setLastRelease(value(softwareVersion.getLastReleasedAt()));
         s.setReleasedAt(value(softwareVersion.getIssueDate()));
