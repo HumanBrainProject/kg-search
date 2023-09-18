@@ -96,6 +96,9 @@ public class TranslatorUtils {
         if (getIssueDate(issueDate) != null) {
             return issueDate;
         }
+        if(releaseDate == null) {
+            return null;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat(ISO_DATE_PATTERN);
         return dateFormat.format(releaseDate);
     }
