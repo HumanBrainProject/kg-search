@@ -144,6 +144,7 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         }
     }
 
+    @SuppressWarnings("java:S3655") // the check doesn't correctly validate that isPresent is indeed checked before accessing the brainAtlasVersionGroup
     private List<BrainAtlasVersionGroup> organizeBrainAtlasVersions(List<BrainAtlasV3.BrainAtlasVersion> brainAtlasVersions, List<String> errors) {
         List<BrainAtlasVersionGroup> brainAtlasVersionGroups = new ArrayList<>();
 

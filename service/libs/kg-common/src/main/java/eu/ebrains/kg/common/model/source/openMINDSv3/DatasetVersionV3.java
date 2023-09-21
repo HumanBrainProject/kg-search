@@ -352,7 +352,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
                                 int indexOfUnit = orderList.indexOf(val.unit.getFullName());
                                 if (indexOfUnit != -1) {
                                     Long toMinimalUnit = translate.get(indexOfUnit);
-                                    final long valueInMinimalUnit = Double.valueOf(val.value * toMinimalUnit).longValue();
+                                    final long valueInMinimalUnit = (long) (val.value * toMinimalUnit);
                                     if (valueInMinimalUnit < minValueInMinimalUnit) {
                                         minValueInMinimalUnit = valueInMinimalUnit;
                                         range.setMinValue(val.value);
@@ -371,8 +371,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
                                 int indexOfMinUnit = orderList.indexOf(val.minValueUnit.getFullName());
                                 int indexOfMaxUnit = orderList.indexOf(val.maxValueUnit.getFullName());
                                 if (indexOfMinUnit != -1 && indexOfMaxUnit != -1) {
-                                    final long minInMinimalUnit = Double.valueOf(val.minValue * translate.get(indexOfMinUnit)).longValue();
-                                    final long maxInMinimalUnit = Double.valueOf(val.maxValue * translate.get(indexOfMaxUnit)).longValue();
+                                    final long minInMinimalUnit = (long) (val.minValue * translate.get(indexOfMinUnit));
+                                    final long maxInMinimalUnit = (long) (val.maxValue * translate.get(indexOfMaxUnit));
                                     if (minInMinimalUnit < minValueInMinimalUnit) {
                                         minValueInMinimalUnit = minInMinimalUnit;
                                         range.setMinValue(val.minValue);

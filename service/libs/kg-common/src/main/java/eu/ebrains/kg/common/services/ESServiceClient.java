@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ClientHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -381,7 +382,7 @@ public class ESServiceClient {
         boolean continueSearch = true;
         while (continueSearch) {
             Result documents = getPaginatedDocumentIds(index, searchAfter, type);
-            if (documents.getHits() != null) {
+            if (documents!=null && documents.getHits() != null) {
                 List<Document> hits = documents.getHits().getHits();
                 hits.forEach(hit -> result.add(hit.getId()));
                 searchAfter = hits.size() < ES_QUERY_SIZE ? null : hits.get(hits.size() - 1).getId();
@@ -485,7 +486,8 @@ public class ESServiceClient {
 
     public boolean checkIfIndexExists(String index) {
         try {
-            return webClient.head().uri(String.format("%s/%s", elasticSearchEndpoint, index)).retrieve().toBodilessEntity().block().getStatusCode().is2xxSuccessful();
+            final ResponseEntity<Void> response = webClient.head().uri(String.format("%s/%s", elasticSearchEndpoint, index)).retrieve().toBodilessEntity().block();
+            return response!=null && response.getStatusCode().is2xxSuccessful();
         } catch (WebClientResponseException.NotFound exception) {
             return false;
         }
