@@ -24,7 +24,7 @@
 import {faClipboard} from '@fortawesome/free-solid-svg-icons/faClipboard';
 import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState, Suspense, useMemo } from 'react';
+import React, { useState, Suspense, useMemo, useCallback } from 'react';
 import showdown from 'showdown';
 import xssFilter from 'showdown-xss-filter';
 import CopyToClipboardButton from '../../CopyToClipboard/CopyToClipboardButton';
@@ -66,7 +66,7 @@ const Citations = ({ data }) => {
     }, {})
   );
 
-  const handleOnCitationDownloaded = useMemo(() => (doi, citation) => {
+  const handleOnCitationDownloaded = useCallback((doi, citation) => {
     setCitations(citations => ({
       ...citations,
       [doi]: citation?

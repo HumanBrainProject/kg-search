@@ -24,7 +24,7 @@ import {faInfoCircle} from '@fortawesome/free-solid-svg-icons/faInfoCircle';
 import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 
 import { help } from '../../data/help.js';
@@ -81,14 +81,14 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
     setValue(e.target.value);
   };
 
-  const handleSearch = useMemo(() => () => onQueryStringChange(value), [value, onQueryStringChange]);
+  const handleSearch = useCallback(() => onQueryStringChange(value), [value, onQueryStringChange]);
 
   const handleReset = () => {
     setValue('');
     onQueryStringChange('');
   };
 
-  const handleKeyDown = useMemo(() => e => {
+  const handleKeyDown = useCallback(e => {
     if (e.key === 'Enter') {
       onQueryStringChange(value);
     }
