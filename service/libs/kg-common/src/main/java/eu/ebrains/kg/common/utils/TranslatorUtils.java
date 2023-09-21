@@ -142,12 +142,24 @@ public class TranslatorUtils {
     public static String createQueryBuilderText(String type, String id){
         try {
             return String.format("""
-                        To make programmatic use of the (meta-)data of this resource, please first design your own query on the EBRAINS Knowledge Graph (see the <a href="https://docs.kg.ebrains.eu/9b511d36d7608eafc94ea43c918f16b6/tutorials.html" target="_blank">tutorial</a> on how to achieve this)   
-                                                        
-                        Once defined, you can save the query and use it either via the official <a href="https://core.kg.ebrains.eu/swagger-ui.html" target="_blank">EBRAINS KG API</a> or by using the convenient EBRAINS KG Core SDKs. For more information, please visit <a href="https://docs.kg.ebrains.eu" target="_blank">the main documentation of KG</a>.
-                                                        
-                        <a href="https://query.kg.ebrains.eu/queries?type=%s&instanceId=%s" class="btn btn-secondary" style="color:#fff" target="_blank">Build your own query</a>
+                        To make programmatic use of the (meta-)data of EBRAINS, you have different options to interact with the <a href="https://kg.ebrains.eu" target="_blank">EBRAINS Knowledge Graph (KG)</a>:
+                        
+                        <b>KG Query Builder</b>
+                        With the <a href="https://query.kg.ebrains.eu" target="_blank">KG Query Builder</a>, you can design your own query to retrieve metadata for this instance and those of the same type conveniently via UI without the requirement of learning a graph query language (see the <a href="https://docs.kg.ebrains.eu/9b511d36d7608eafc94ea43c918f16b6/tutorials.html" target="_blank">tutorial</a>). You can also save the query and use it with the REST-API and the KG Core SDKs (see below). 
+                        
+                        <a href="https://query.kg.ebrains.eu/queries?type=%s&instanceId=%s" class="btn btn-secondary" style="color:#fff" target="_blank">Build a query for this instance</a>
+                        
+                        
+                        <b>KG REST-API</b>
+                        You can use the <a href="https://core.kg.ebrains.eu/swagger-ui.html" target="_blank">KG REST-API</a> to access and/or manipulate metadata on the EBRAINS KG as well as to run queries saved previously in the KG Query Builder.
+
+                        <b>KG Core SDKs</b>
+                        The <a href="https://github.com/HumanBrainProject/kg-core-sdks" target="_blank">KG Core SDKs</a> provide convenient ways to authenticate and make use of the functionality of the KG REST-API with your favorite programming language (currently available for Python and JavaScript/TypeScript).
+                       
+                        <b>fairgraph</b>
+                        <a href="https://fairgraph.readthedocs.io" _target="blank">fairgraph</a> is a python library which enriches the KG Core Python SDK with knowledge about the metadata structure of choice at EBRAINS called <a href="https://openminds.ebrains.eu" _target="blank">openMINDS</a> and provides additional mechanisms to further simplify the interaction and manipulation of metadata instances on the EBRAINS KG.
                         """, URLEncoder.encode(type, StandardCharsets.UTF_8.toString()), id);
+
         } catch (UnsupportedEncodingException e) {
             return null;
         }

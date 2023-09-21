@@ -106,6 +106,11 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
     private List<Value<String>> publications;
 
+
+
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
+
     @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> inputFormatsForFilter;
 
@@ -141,8 +146,12 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
 
     private List<TargetInternalReference> versions;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "Use workflow", labelHidden = true, ignoreForSearch = true)
     private Value<String> queryBuilderText;
+
+    @FieldInfo(layout = "Use workflow", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
+
 
     public TargetInternalReference getAllVersionRef() {
         return null;

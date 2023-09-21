@@ -159,6 +159,11 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true)
     private List<Value<String>> publications;
 
+
+
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
+
     @FieldInfo(label = "Type", layout = "summary", facet = FieldInfo.Facet.LIST)
     private TargetInternalReference metaDataModelType;
 
@@ -174,7 +179,10 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "Specification format", layout = "summary")
     private List<TargetInternalReference> specificationFormat;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "Use metadata model", labelHidden = true, ignoreForSearch = true)
     private Value<String> queryBuilderText;
+
+    @FieldInfo(layout = "Use metadata model", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
 
 }

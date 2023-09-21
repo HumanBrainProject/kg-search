@@ -30,6 +30,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.MetadataModelVersionV3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.LearningResource;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.MetaDataModelVersion;
@@ -37,6 +38,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
+import eu.ebrains.kg.common.utils.MetaBadgeUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -88,9 +90,6 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         final Date releaseDate = metadataModelVersionV3.getReleaseDate() != null && metadataModelVersionV3.getReleaseDate().before(new Date()) ? metadataModelVersionV3.getReleaseDate() : metadataModelVersionV3.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
-        List<String> metaBadges = new ArrayList<>();
-        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
-        translatorUtils.defineBadgesAndTrendingState(m, null, releaseDate, null, metaBadges);//TODO get last 30 days views
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(metadataModelVersionV3.getLastReleasedAt()));
         m.setReleasedDateForSorting(value(releaseDateForSorting));
@@ -214,6 +213,11 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
             Collections.sort(metadataModelVersionV3.getKeyword());
             m.setKeywords(value(metadataModelVersionV3.getKeyword()));
         }
+        if(!CollectionUtils.isEmpty(metadataModelVersionV3.getLearningResource())) {
+            m.setLearningResources(metadataModelVersionV3.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        m.setLivePapers(link(metadataModelVersionV3.getLivePapers()));
+        translatorUtils.defineBadgesAndTrendingState(m, null, releaseDate, null, MetaBadgeUtils.evaluateMetaBadgeUtils(metadataModelVersionV3, false, false));
         m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(metadataModelVersionV3.getPrimaryType(), m.getId())));
         return m;
     }

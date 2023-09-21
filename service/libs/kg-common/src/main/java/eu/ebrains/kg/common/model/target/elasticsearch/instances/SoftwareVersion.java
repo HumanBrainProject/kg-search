@@ -122,6 +122,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
     private List<Value<String>> publications;
 
+
+
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
+
     @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<TargetInternalReference> features;
 
@@ -177,8 +182,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "Use software", labelHidden = true, ignoreForSearch = true)
     private Value<String> queryBuilderText;
+
+    @FieldInfo(layout = "Use software", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
 
     private String version;
 

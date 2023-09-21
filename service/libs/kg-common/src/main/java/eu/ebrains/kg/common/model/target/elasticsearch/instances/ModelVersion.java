@@ -177,6 +177,11 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true)
     private List<Value<String>> publications;
 
+
+
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
+
     @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>", useForSuggestion = true)
     private List<Value<String>> keywords;
 
@@ -207,7 +212,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Used externally by", layout = "Related resources")
     private List<TargetExternalReference> externalOutputData;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "Use model", labelHidden = true, ignoreForSearch = true)
     private Value<String> queryBuilderText;
+
+    @FieldInfo(layout = "Use model", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
 
 }

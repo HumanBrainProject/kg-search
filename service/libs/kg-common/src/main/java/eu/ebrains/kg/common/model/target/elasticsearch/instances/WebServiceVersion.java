@@ -111,6 +111,9 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
     private List<Value<String>> publications;
 
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
+
     @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> inputFormatsForFilter;
 
@@ -141,8 +144,11 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "Use webservice", labelHidden = true, ignoreForSearch = true)
     private Value<String> queryBuilderText;
+
+    @FieldInfo(layout = "Use webservice", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
 
     private String version;
 
