@@ -48,7 +48,7 @@ const useKeycloak = (adapter: KeycloakAuthAdapter, loginRequired?: boolean) : Au
       setError(undefined);
       setIsError(false);
       try {
-        const keycloak = Keycloak(adapter.config);
+        const keycloak = new Keycloak(adapter.config);
         adapter.setKeycloak(keycloak);
         keycloak.onReady = (authenticated: boolean) => {
           setAuthenticated(authenticated);
