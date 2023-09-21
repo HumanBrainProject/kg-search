@@ -285,7 +285,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
             }).collect(Collectors.toList()));
         }
-
+        s.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(softwareVersion.getPrimaryType(), s.getId())));
         return s;
     }
 

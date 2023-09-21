@@ -32,6 +32,10 @@
       "required": true
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:fullName",
       "path": "https://openminds.ebrains.eu/vocab/fullName"
     },

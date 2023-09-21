@@ -88,6 +88,7 @@ public class CoordinateSpaceV3Translator extends TranslatorV3<CoordinateSpaceV3,
         c.setAnatomicalAxesOritentation(ref(coordinateSpaceV3.getAnatomicalAxesOrientation()));
         c.setNativeUnit(ref(coordinateSpaceV3.getNativeUnit()));
         c.setOntologyIdentifiers(simpleLink(coordinateSpaceV3.getOntologyIdentifier()));
+        c.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(coordinateSpaceV3.getPrimaryType(), c.getId())));
         return c;
     }
 

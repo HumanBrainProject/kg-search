@@ -88,7 +88,7 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the web service.", boost = 10, useForSuggestion = true)
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the web service.", boost = 10, useForSuggestion = true, overview = true)
     private List<TargetInternalReference> custodians;
 
     @FieldInfo(label = "Accessibility", facet = FieldInfo.Facet.LIST)
@@ -140,6 +140,9 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     private TargetInternalReference allVersionRef;
 
     private List<TargetInternalReference> versions;
+
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
     public TargetInternalReference getAllVersionRef() {
         return null;

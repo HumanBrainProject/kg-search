@@ -87,7 +87,7 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the web service.", boost = 10, useForSuggestion = true)
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the web service.", boost = 10, useForSuggestion = true, overview = true)
     private List<TargetInternalReference> custodians;
 
     @FieldInfo(label = "Accessibility", facet = FieldInfo.Facet.LIST)
@@ -123,8 +123,6 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(label = "Output formats", layout = "Output formats", fieldType = FieldInfo.FieldType.TABLE, labelHidden = true)
     private List<Children<FileFormat>> outputFormats;
 
-
-
     @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, overview = true, useForSuggestion = true)
     private Value<String> description;
 
@@ -142,6 +140,9 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
+
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
     private String version;
 

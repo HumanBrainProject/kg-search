@@ -32,6 +32,10 @@
       "required": true
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:fullName",
       "path": "https://openminds.ebrains.eu/vocab/fullName"
     },
@@ -570,6 +574,33 @@
                   "propertyName": "query:fullName",
                   "path": "https://openminds.ebrains.eu/vocab/shortName"
                 }
+              ]
+            }
+          ]
+        },
+        {
+          "propertyName": "query:learningResource",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/about",
+            "reverse": true,
+            "typeFilter": {
+              "@id": "https://openminds.ebrains.eu/publications/LearningResource"
+            }
+          },
+          "structure": [
+            {
+              "propertyName": "query:name",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:IRI",
+              "path": "https://openminds.ebrains.eu/vocab/IRI"
+            },
+            {
+              "propertyName": "query:type",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/type",
+                "https://openminds.ebrains.eu/vocab/name"
               ]
             }
           ]
@@ -1139,6 +1170,53 @@
           "reverse": true
         },
         "https://core.kg.ebrains.eu/vocab/issued"
+      ]
+    },
+    {
+      "propertyName": "query:learningResource",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/about",
+        "reverse": true,
+        "typeFilter": {
+          "@id": "https://openminds.ebrains.eu/publications/LearningResource"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:name",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:IRI",
+          "path": "https://openminds.ebrains.eu/vocab/IRI"
+        },
+        {
+          "propertyName": "query:type",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/type",
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
+        }
+      ]
+    },
+    {
+      "propertyName": "query:livePapers",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/about",
+        "reverse": true,
+        "typeFilter": {
+          "@id": "https://openminds.ebrains.eu/publications/LivePaperVersion"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:label",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:url",
+          "path": "https://openminds.ebrains.eu/vocab/homepage"
+        }
       ]
     }
   ]

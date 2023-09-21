@@ -89,6 +89,8 @@ public class ParcellationEntity implements TargetInstance {
     @FieldInfo(fieldType = FieldInfo.FieldType.TABLE, layout = "Viewers")
     private List<Children<VersionWithServiceLink>> viewerLinks;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
     @Override
     public boolean isSearchableInstance() {

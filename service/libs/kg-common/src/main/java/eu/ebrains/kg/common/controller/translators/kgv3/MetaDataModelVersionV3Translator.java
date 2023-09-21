@@ -214,6 +214,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
             Collections.sort(metadataModelVersionV3.getKeyword());
             m.setKeywords(value(metadataModelVersionV3.getKeyword()));
         }
+        m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(metadataModelVersionV3.getPrimaryType(), m.getId())));
         return m;
     }
 }

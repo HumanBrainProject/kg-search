@@ -32,6 +32,10 @@
       "required": true
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:familyName",
       "path": "https://openminds.ebrains.eu/vocab/familyName"
     },

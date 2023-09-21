@@ -37,4 +37,5 @@ public class Versions {
     private String fullName;
     private String description;
     private List<Version> versions;
+    private List<LearningResource> learningResource;
 }

@@ -110,6 +110,9 @@ public class Subject implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false, facet = FieldInfo.Facet.EXISTS)
     private boolean datasetExists;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
+
     @Override
     public boolean isSearchableInstance() {
         return false;

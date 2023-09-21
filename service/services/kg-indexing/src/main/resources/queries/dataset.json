@@ -30,6 +30,10 @@
       "path": "http://schema.org/identifier"
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:doi",
       "path": [
         {

@@ -91,6 +91,8 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
         s.setStrain(value(subject.getStrain()));
         s.setTitle(value(subject.getTitle()));
         s.setWeight(value(subject.getWeight()));
+
+        s.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(subject.getPrimaryType(), s.getId())));
 //        if(!CollectionUtils.isEmpty(subject.getSamples())) {
 //            s.setSamples(subject.getSamples().stream()
 //                    .map(sample ->

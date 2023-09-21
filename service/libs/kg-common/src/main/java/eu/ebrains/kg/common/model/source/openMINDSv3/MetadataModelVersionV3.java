@@ -23,21 +23,24 @@
 
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.common.model.source.HasAccessibility;
+import eu.ebrains.kg.common.model.source.HasMetaBadges;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasAccessibility {
+public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasAccessibility, HasMetaBadges {
     private String fullName;
     private String versionIdentifier;
     private List<PersonOrOrganizationRef> developer;
@@ -73,6 +76,14 @@ public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteab
     private List<FullNameRefForResearchProductVersion> usedDatasets;
     private List<FullNameRefForResearchProductVersion> producedDatasets;
 
+    private List<LearningResource> learningResource;
+    private List<ExternalRef> livePapers;
+
+    @Override
+    @JsonIgnore
+    public Versions getParentOfVersion() {
+        return getMetaDataModel();
+    }
 
     @Getter
     @Setter
@@ -89,4 +100,21 @@ public class MetadataModelVersionV3 extends SourceInstanceV3 implements IsCiteab
 
     }
 
+    @JsonIgnore
+    @Override
+    public List<ServiceLink> getAllServiceLinks() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getAllContentTypes() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean hasProtocolExecutions() {
+        return false;
+    }
 }

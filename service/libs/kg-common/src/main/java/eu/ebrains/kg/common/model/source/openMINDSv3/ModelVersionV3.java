@@ -23,9 +23,11 @@
 
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.common.model.source.HasAccessibility;
+import eu.ebrains.kg.common.model.source.HasMetaBadges;
 import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ListOrSingleStringAsListDeserializer;
@@ -33,12 +35,13 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics, HasAccessibility {
+public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics, HasAccessibility, HasMetaBadges {
     private String fullName;
     private List<PersonOrOrganizationRef> developer;
     private String howToCite;
@@ -82,6 +85,17 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
     private List<String> outputURLs;
     private String issueDate;
+
+
+    private List<LearningResource> learningResource;
+    private List<ExternalRef> livePapers;
+
+    @JsonIgnore
+    @Override
+    public ModelVersions getParentOfVersion() {
+        return getModel();
+    }
+
     @Getter
     @Setter
     public static class ModelVersions extends Versions {
@@ -104,4 +118,21 @@ public class ModelVersionV3 extends SourceInstanceV3 implements IsCiteable, HasM
 
     }
 
+    @JsonIgnore
+    @Override
+    public List<ServiceLink> getAllServiceLinks() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getAllContentTypes() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean hasProtocolExecutions() {
+        return false;
+    }
 }

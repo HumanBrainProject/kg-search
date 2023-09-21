@@ -116,6 +116,7 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
                 d.setHomepage(new TargetExternalReference(dataset.getHomepage(),dataset.getHomepage()));
             }
 
+            d.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(dataset.getPrimaryType(), d.getId())));
             return d;
         }
         return null;

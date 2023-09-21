@@ -228,6 +228,7 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         pe.setRelatedUberonTerm(ref(parcellationEntity.getRelatedUBERONTerm()));
         pe.setOntologyIdentifier(value(parcellationEntity.getOntologyIdentifier()));
 
+        pe.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(parcellationEntity.getPrimaryType(), pe.getId())));
         return pe;
     }
 }

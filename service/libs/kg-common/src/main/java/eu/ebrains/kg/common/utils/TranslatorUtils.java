@@ -26,6 +26,7 @@ package eu.ebrains.kg.common.utils;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInformation;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import lombok.Getter;
@@ -33,6 +34,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -60,6 +64,8 @@ public class TranslatorUtils {
         this.translationContext = translationContext;
         this.errors = errors != null ? errors : new ArrayList<>();
     }
+
+
 
     public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, String issueDate, Date firstRelease, Integer last30DaysViews, List<String> metaBadges) {
         List<String> badges = new ArrayList<>();
@@ -131,5 +137,19 @@ public class TranslatorUtils {
             return isDateAfterThreshold(firstRelease);
         }
         return false;
+    }
+
+    public static String createQueryBuilderText(String type, String id){
+        try {
+            return String.format("""
+                        To make programmatic use of the (meta-)data of this resource, please first design your own query on the EBRAINS Knowledge Graph (see the <a href="https://docs.kg.ebrains.eu/9b511d36d7608eafc94ea43c918f16b6/tutorials.html" target="_blank">tutorial</a> on how to achieve this)   
+                                                        
+                        Once defined, you can save the query and use it either via the official <a href="https://core.kg.ebrains.eu/swagger-ui.html" target="_blank">EBRAINS KG API</a> or by using the convenient EBRAINS KG Core SDKs. For more information, please visit <a href="https://docs.kg.ebrains.eu" target="_blank">the main documentation of KG</a>.
+                                                        
+                        <a href="https://query.kg.ebrains.eu/queries?type=%s&instanceId=%s" class="btn btn-secondary" style="color:#fff" target="_blank">Build your own query</a>
+                        """, URLEncoder.encode(type, StandardCharsets.UTF_8.toString()), id);
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
     }
 }

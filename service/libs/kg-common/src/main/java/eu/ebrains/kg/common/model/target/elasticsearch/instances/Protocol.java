@@ -85,6 +85,9 @@ public class Protocol implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private SchemaOrgInstance meta;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
+
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() { return false; }

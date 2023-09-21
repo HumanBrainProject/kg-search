@@ -117,6 +117,7 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
         if(m.getCitation()!=null){
             m.setCitationHint(value("Using this citation allows you to reference all versions of this meta data model with one citation.\nUsage of version specific data and metadata should be acknowledged by citing the individual meta data model version."));
         }
+        m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(model.getPrimaryType(), m.getId())));
         return m;
     }
 }

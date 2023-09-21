@@ -29,7 +29,6 @@ import eu.ebrains.kg.common.model.source.openMINDSv3.ControlledTermV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.ControlledTerm;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -178,6 +177,7 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
             t.setExternalDefinitions(externalDefinitions);
         }
         t.setOntologyIdentifier(StringUtils.isBlank(controlledTerm.getPreferredOntologyIdentifier()) ? null : new Value<>(controlledTerm.getPreferredOntologyIdentifier()));
+        t.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(controlledTerm.getPrimaryType(), t.getId())));
         return t;
     }
 }

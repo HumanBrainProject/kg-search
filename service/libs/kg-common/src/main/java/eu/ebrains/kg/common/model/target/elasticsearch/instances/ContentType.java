@@ -108,6 +108,9 @@ public class ContentType implements TargetInstance {
     @FieldInfo(layout = "Models")
     private List<TargetInternalReference> models;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
+
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() { return false; }

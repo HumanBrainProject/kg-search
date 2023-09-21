@@ -21,34 +21,15 @@
  *  (Human Brain Project SGA1, SGA2 and SGA3).
  */
 
-package eu.ebrains.kg.common.model.source.openMINDSv3;
+package eu.ebrains.kg.common.model.source.openMINDSv3.commons;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import eu.ebrains.kg.common.model.source.SourceInstance;
-import eu.ebrains.kg.common.utils.IdUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 @Getter
 @Setter
-public class SourceInstanceV3 implements SourceInstance {
-    private String id;
-    private List<String> identifier;
-    private List<String> type;
-
-    public String getUUID(){
-        return IdUtils.getUUID(id);
-    }
-
-    @JsonIgnore
-    public String getPrimaryType(){
-        if(CollectionUtils.isEmpty(type)){
-            return null;
-        }
-        return type.get(0);
-    }
-
+public class LearningResource {
+    private String name;
+    private String IRI;
+    private String type;
 }

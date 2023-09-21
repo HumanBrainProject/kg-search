@@ -39,11 +39,15 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.IdUtils;
+import eu.ebrains.kg.common.utils.MetaBadgeUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -177,9 +181,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
         final Date releaseDate = datasetVersion.getReleaseDate() != null && datasetVersion.getReleaseDate().before(new Date()) ? datasetVersion.getReleaseDate() : datasetVersion.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(datasetVersion.getIssueDate(), releaseDate);
-        List<String> metaBadges = new ArrayList<>();
-        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
-        translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getIssueDate(), releaseDate, datasetVersion.getLast30DaysViews(), metaBadges);
         defineTags(datasetVersion, d);
         String uuid = datasetVersion.getUUID();
         d.setId(uuid);
@@ -448,7 +449,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))) {
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
-        d.setContentTypes(value(datasetVersion.getContentTypes()));
+        d.setContentTypes(value(datasetVersion.getAllContentTypes()));
 
         if (StringUtils.isNotBlank(datasetVersion.getHomepage())) {
             d.setHomepage(new TargetExternalReference(datasetVersion.getHomepage(), datasetVersion.getHomepage()));
@@ -512,6 +513,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setOutputData(refVersion(new ArrayList<>(outputResearchProducts.values()), true));
 
         d.setMeta(SchemaOrgConverter.translateDatasetVersion(datasetVersion));
+        translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getIssueDate(), releaseDate, datasetVersion.getLast30DaysViews(), MetaBadgeUtils.evaluateMetaBadgeUtils(datasetVersion, !CollectionUtils.isEmpty(d.getOutputData()), !CollectionUtils.isEmpty(d.getInputData())));
+        d.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(datasetVersion.getPrimaryType(), d.getId())));
         return d;
     }
 

@@ -125,7 +125,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication", isSingleWord = true)
     private Value<String> doi;
 
-    @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
+    @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true, hint="This is the release date of the DOI of this dataset version or the first release in the EBRAINS KG if no DOI is registered")
     private Value<String> releasedAt;
 
     @ElasticSearchInfo(type = "keyword")
@@ -143,7 +143,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10, useForSuggestion = true)
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10, useForSuggestion = true, overview = true)
     private List<TargetInternalReference> custodians;
 
     @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
@@ -252,6 +252,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
 
     @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
+
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
     @Getter
     @Setter

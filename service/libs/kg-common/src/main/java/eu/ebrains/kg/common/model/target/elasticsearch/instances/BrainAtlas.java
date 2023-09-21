@@ -93,6 +93,8 @@ public class BrainAtlas implements TargetInstance, HasCitation{
     @FieldInfo(labelHidden = true, fieldType = FieldInfo.FieldType.HIERARCHICAL, layout = "Versions")
     private BasicHierarchyElement<BrainAtlasOverview> versions;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() {

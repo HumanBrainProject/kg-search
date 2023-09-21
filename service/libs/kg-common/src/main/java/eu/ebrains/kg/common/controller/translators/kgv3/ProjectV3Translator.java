@@ -88,6 +88,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
             p.setPublications(value(project.getPublications().stream()
                     .map(rp -> Helpers.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), rp.getIdentifier(), rp.resolvedType())).filter(Objects::nonNull).collect(Collectors.toList())));
         }
+        p.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(project.getPrimaryType(), p.getId())));
         return p;
     }
 }

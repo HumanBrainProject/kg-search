@@ -26,6 +26,10 @@
       "propertyName": "query:identifier",
       "path": "http://schema.org/identifier",
       "required": true
+    },
+    {
+      "propertyName": "query:type",
+      "path": "@type"
     }
   ]
 }

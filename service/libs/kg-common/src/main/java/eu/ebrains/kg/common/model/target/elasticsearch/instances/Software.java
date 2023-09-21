@@ -101,6 +101,9 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
+
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() {

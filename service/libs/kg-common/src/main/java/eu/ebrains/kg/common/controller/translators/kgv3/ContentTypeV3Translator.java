@@ -104,6 +104,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
                c.setModels(models);
            }
        }
+       c.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(contentTypeV3.getPrimaryType(), c.getId())));
        return c;
     }
 }

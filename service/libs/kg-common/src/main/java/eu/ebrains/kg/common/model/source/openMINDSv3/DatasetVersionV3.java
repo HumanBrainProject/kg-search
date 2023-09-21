@@ -23,9 +23,11 @@
 
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.common.model.source.HasAccessibility;
+import eu.ebrains.kg.common.model.source.HasMetaBadges;
 import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.ListOrSingleStringAsListDeserializer;
@@ -39,10 +41,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
-public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics, HasAccessibility {
+public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, HasMetrics, HasAccessibility, HasMetaBadges {
     private String doi;
     private String howToCite;
     private String description;
@@ -74,6 +77,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<File> specialFiles;
     private List<FullNameRef> behavioralProtocol;
     private List<String> contentTypes;
+    private List<String> repositoryContentTypes;
     private List<StudyTarget> studyTarget;
     private List<FullNameRef> preparationDesign;
     private List<ServiceLink> serviceLinks;
@@ -92,6 +96,20 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFiles;
     private List<FullNameRefForResearchProductVersionTarget> inputResearchProductsFromInputBrainAtlasVersions;
     private String issueDate;
+    private List<LearningResource> learningResource;
+
+    private List<ExternalRef> livePapers;
+    private List<ProtocolExecution> protocolExecutionByFile;
+    private List<ProtocolExecution> protocolExecutionByFileBundle;
+    private List<ProtocolExecution> protocolExecutionsBySpecimenState;
+
+
+
+    @Override
+    @JsonIgnore
+    public Versions getParentOfVersion() {
+        return getDataset();
+    }
 
     @Getter
     @Setter
@@ -425,6 +443,32 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     public static class ParcellationEntityFromStudyTarget extends FullNameRefForResearchProductVersion {
         private List<FullNameRefForResearchProductVersion> brainAtlasVersionForParcellationTerminologyVersion;
         private List<FullNameRef> brainAtlasForParcellationEntity;
+    }
+
+    @JsonIgnore
+    @Override
+    public List<ServiceLink> getAllServiceLinks() {
+        return Stream.concat(getServiceLinks() != null ? getServiceLinks().stream(): Stream.empty(), getServiceLinksFromFiles()!=null ? getServiceLinksFromFiles().stream() : Stream.empty()).collect(Collectors.toList());
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getAllContentTypes() {
+        return Stream.concat(getContentTypes() != null ? getContentTypes().stream() : Stream.empty(), getRepositoryContentTypes()!=null ? getRepositoryContentTypes().stream() : Stream.empty()).distinct().sorted().collect(Collectors.toList());
+    }
+
+
+    @Getter
+    @Setter
+    public static class ProtocolExecution extends FullNameRef{
+        private List<FullNameRef> protocol;
+        private List<FullNameRef> behavioralProtocol;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean hasProtocolExecutions() {
+        return !CollectionUtils.isEmpty(protocolExecutionByFile) || !CollectionUtils.isEmpty(protocolExecutionByFileBundle) || !CollectionUtils.isEmpty(protocolExecutionsBySpecimenState);
     }
 }
 

@@ -96,6 +96,7 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         final List<BrainAtlasVersionGroup> brainAtlasVersionGroups = organizeBrainAtlasVersions(brainAtlasV3.getBrainAtlasVersion(), translatorUtils.getErrors());
         b.setParcellationTerminology(buildHierarchyTreeForParcellationTerminology(brainAtlasV3, brainAtlasVersionGroups));
         b.setVersions(buildHierarchyTreeForVersions(brainAtlasV3, brainAtlasVersionGroups));
+        b.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(brainAtlasV3.getPrimaryType(), b.getId())));
         return b;
     }
 

@@ -32,6 +32,10 @@
       "required": true
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:doi",
       "path": [
         {
@@ -387,6 +391,33 @@
               "singleValue": "FIRST"
             }
           ]
+        },
+        {
+          "propertyName": "query:learningResource",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/about",
+            "reverse": true,
+            "typeFilter": {
+              "@id": "https://openminds.ebrains.eu/publications/LearningResource"
+            }
+          },
+          "structure": [
+            {
+              "propertyName": "query:name",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:IRI",
+              "path": "https://openminds.ebrains.eu/vocab/IRI"
+            },
+            {
+              "propertyName": "query:type",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/type",
+                "https://openminds.ebrains.eu/vocab/name"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -721,6 +752,14 @@
           "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
           "reverse": true
         },
+        "https://openminds.ebrains.eu/vocab/format",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:repositoryContentTypes",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/repository",
         "https://openminds.ebrains.eu/vocab/format",
         "https://openminds.ebrains.eu/vocab/name"
       ]
@@ -2201,11 +2240,11 @@
     {
       "propertyName": "query:outputResearchProductsFromReverseInputDOIs",
       "path": [
-          "https://openminds.ebrains.eu/vocab/digitalIdentifier",
-          {
-            "@id": "https://openminds.ebrains.eu/vocab/inputData",
-            "reverse": true
-          }
+        "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/inputData",
+          "reverse": true
+        }
       ],
       "structure": [
         {
@@ -2520,6 +2559,217 @@
           "reverse": true
         },
         "https://core.kg.ebrains.eu/vocab/issued"
+      ]
+    },
+    {
+      "propertyName": "query:learningResource",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/about",
+        "reverse": true,
+        "typeFilter": {
+          "@id": "https://openminds.ebrains.eu/publications/LearningResource"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:name",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:IRI",
+          "path": "https://openminds.ebrains.eu/vocab/IRI"
+        },
+        {
+          "propertyName": "query:type",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/type",
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
+        }
+      ]
+    },
+    {
+      "propertyName": "query:livePapers",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/about",
+        "reverse": true,
+        "typeFilter": {
+          "@id": "https://openminds.ebrains.eu/publications/LivePaperVersion"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:label",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:url",
+          "path": "https://openminds.ebrains.eu/vocab/homepage"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:protocolExecutionByFile",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/repository",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
+          "reverse": true
+        },
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/output",
+          "reverse": true,
+          "typeFilter": {
+            "@id": "https://openminds.ebrains.eu/core/ProtocolExecution"
+          }
+        }
+      ],
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:protocol",
+          "path": "https://openminds.ebrains.eu/vocab/protocol",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:behavioralProtocol",
+          "path": "https://openminds.ebrains.eu/vocab/behavioralProtocol",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "propertyName": "query:protocolExecutionByFileBundle",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/repository",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/isPartOf",
+          "reverse": true
+        },
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/output",
+          "reverse": true,
+          "typeFilter": {
+            "@id": "https://openminds.ebrains.eu/core/ProtocolExecution"
+          }
+        }
+      ],
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:protocol",
+          "path": "https://openminds.ebrains.eu/vocab/protocol",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:behavioralProtocol",
+          "path": "https://openminds.ebrains.eu/vocab/behavioralProtocol",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "propertyName": "query:protocolExecutionsBySpecimenState",
+      "path": [
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/studiedSpecimen"
+        },
+        "https://openminds.ebrains.eu/vocab/studiedState",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/output",
+          "reverse": true,
+          "typeFilter": {
+            "@id": "https://openminds.ebrains.eu/core/ProtocolExecution"
+          }
+        }
+      ],
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:protocol",
+          "path": "https://openminds.ebrains.eu/vocab/protocol",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:behavioralProtocol",
+          "path": "https://openminds.ebrains.eu/vocab/behavioralProtocol",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        }
       ]
     }
   ]

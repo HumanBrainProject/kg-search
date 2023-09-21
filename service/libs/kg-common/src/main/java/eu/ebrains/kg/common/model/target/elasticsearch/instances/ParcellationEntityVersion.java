@@ -76,6 +76,9 @@ public class ParcellationEntityVersion implements TargetInstance, VersionedInsta
 
     private List<Value<String>> brainAtlas;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
+
     @Override
     public boolean isSearchableInstance() {
         return false;

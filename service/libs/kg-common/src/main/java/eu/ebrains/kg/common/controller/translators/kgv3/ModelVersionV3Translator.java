@@ -258,6 +258,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             m.setExternalOutputData(externalOutputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
 
+        m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(modelVersion.getPrimaryType(), m.getId())));
         return m;
     }
 }

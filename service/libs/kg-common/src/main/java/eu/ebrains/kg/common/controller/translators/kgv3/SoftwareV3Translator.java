@@ -109,6 +109,8 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
         if(s.getCitation()!=null){
             s.setCitationHint(value("Using this citation allows you to reference all versions of this software with one citation.\nUsage of version specific software and metadata should be acknowledged by citing the individual software version."));
         }
+
+        s.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(software.getPrimaryType(), s.getId())));
         return s;
     }
 }

@@ -86,6 +86,8 @@ public class CoordinateSpace implements TargetInstance {
     @FieldInfo(label="Native unit")
     private TargetInternalReference nativeUnit;
 
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
     @Override
     @JsonIgnore

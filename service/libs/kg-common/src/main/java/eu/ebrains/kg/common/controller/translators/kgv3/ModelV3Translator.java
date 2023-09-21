@@ -120,6 +120,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
             return new Children<>(version);
         }).collect(Collectors.toList());
         m.setModels(modelVersions);
+        m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(model.getPrimaryType(), m.getId())));
         return m;
     }
 }

@@ -119,7 +119,7 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "Project", boost = 10, order = 3, useForSuggestion = true)
     private List<TargetInternalReference> projects;
 
-    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, useForSuggestion = true, hint = "A custodian is the person responsible for the data bundle.")
+    @FieldInfo(label = "Custodians", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, useForSuggestion = true, hint = "A custodian is the person responsible for the data bundle.", overview = true)
     private List<TargetInternalReference> custodians;
 
     @FieldInfo(label = "Homepage")
@@ -173,5 +173,8 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
 
     @FieldInfo(label = "Specification format", layout = "summary")
     private List<TargetInternalReference> specificationFormat;
+
+    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
 }

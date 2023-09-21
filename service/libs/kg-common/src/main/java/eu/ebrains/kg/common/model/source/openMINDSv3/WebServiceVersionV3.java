@@ -23,20 +23,23 @@
 
 package eu.ebrains.kg.common.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.common.model.source.HasMetaBadges;
 import eu.ebrains.kg.common.model.source.HasMetrics;
 import eu.ebrains.kg.common.model.source.IsCiteable;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-public class WebServiceVersionV3 extends SourceInstanceV3 implements HasMetrics {
+public class WebServiceVersionV3 extends SourceInstanceV3 implements HasMetrics, HasMetaBadges {
     private String fullName;
     private String versionIdentifier;
     private List<PersonOrOrganizationRef> developer;
@@ -67,6 +70,9 @@ public class WebServiceVersionV3 extends SourceInstanceV3 implements HasMetrics 
     private WebServiceVersions webservice;
     private String version;
     private Integer last30DaysViews;
+
+    private List<LearningResource> learningResource;
+    private List<ExternalRef> livePapers;
 
     @Getter
     @Setter
@@ -103,4 +109,26 @@ public class WebServiceVersionV3 extends SourceInstanceV3 implements HasMetrics 
         private String fallbackFullName;
     }
 
+    @Override
+    @JsonIgnore
+    public Versions getParentOfVersion() {
+        return getWebservice();
+    }
+    @JsonIgnore
+    @Override
+    public List<ServiceLink> getAllServiceLinks() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public List<String> getAllContentTypes() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean hasProtocolExecutions() {
+        return false;
+    }
 }

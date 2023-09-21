@@ -91,6 +91,8 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
        else if(behavioralProtocolV3.getDescribedInUrl()!=null){
            b.setDescribedInLink(new TargetExternalReference(behavioralProtocolV3.getDescribedInUrl(), behavioralProtocolV3.getDescribedInUrl()));
        }
-       return b;
+        b.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(behavioralProtocolV3.getPrimaryType(), b.getId())));
+
+        return b;
     }
 }

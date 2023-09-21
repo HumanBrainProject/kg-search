@@ -168,6 +168,8 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
             c.setMetaDataModelCitations(metaDataModelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
+
+        c.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(personOrOrganization.getPrimaryType(), c.getId())));
         return c;
     }
 

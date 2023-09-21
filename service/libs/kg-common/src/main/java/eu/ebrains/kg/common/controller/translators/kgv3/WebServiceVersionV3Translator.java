@@ -250,6 +250,7 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
             }).collect(Collectors.toList()));
         }
 
+        w.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(source.getPrimaryType(), w.getId())));
         return w;
     }
 

@@ -104,6 +104,8 @@ public class WebServiceV3Translator extends TranslatorV3<WebServiceV3, WebServic
                     )).collect(Collectors.toList()));
         }
         w.setCustomCitation(value(webservice.getHowToCite()));
+
+        w.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(webservice.getPrimaryType(), w.getId())));
         return w;
     }
 }

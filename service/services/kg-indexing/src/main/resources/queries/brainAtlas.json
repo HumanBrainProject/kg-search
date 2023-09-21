@@ -25,6 +25,10 @@
       "path": "http://schema.org/identifier"
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:fullName",
       "path": "https://openminds.ebrains.eu/vocab/fullName"
     },

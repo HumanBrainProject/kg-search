@@ -231,6 +231,7 @@ public class WorkflowRecipeVersionV3Translator extends TranslatorV3<WorkflowReci
                 w.setWorkflow(new ValueWithDetails<>((String)mermaid, details instanceof Map ? (Map<String, Object>)details : null));
             }
         }
+        w.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(source.getPrimaryType(), w.getId())));
         return w;
     }
 }

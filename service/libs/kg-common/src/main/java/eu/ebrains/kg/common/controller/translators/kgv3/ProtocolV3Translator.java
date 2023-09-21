@@ -100,6 +100,7 @@ public class ProtocolV3Translator extends TranslatorV3<ProtocolV3, Protocol, Pro
        }
        p.setTechnique(ref(protocolV3.getTechnique()));
        p.setStimulusType(ref(protocolV3.getStimulusType()));
+       p.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(protocolV3.getPrimaryType(), p.getId())));
        return p;
     }
 }
