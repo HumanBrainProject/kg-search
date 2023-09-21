@@ -32,6 +32,7 @@
  *   limitations under the License.
  *
  */
+import KeycloakAuthProvider from '../features/auth/KeycloakAuthProvider';
 import KeyCloakTokenProvider from './KeycloakTokenProvider';
 import UnauthorizedRequestResponseHandlerProvider from './UnauthorizedRequestResponseHandlerProvider';
 import type AuthAdapter from './AuthAdapter';
@@ -66,6 +67,10 @@ class KeycloakAuthAdapter implements AuthAdapter {
     return this._unauthorizedRequestResponseHandlerProvider;
   }
 
+  get authProvider() {
+    return KeycloakAuthProvider;
+  }
+
   setOnLoad(onLoad: KeycloakOnLoad) {
     if (this._initOptions) {
       this._initOptions = {
@@ -79,8 +84,8 @@ class KeycloakAuthAdapter implements AuthAdapter {
     }
   }
 
-  get initOptions(): KeycloakInitOptions | undefined {
-    return this._initOptions ? { ...this._initOptions } : undefined;
+  get initOptions(): Record<string, unknown> | undefined {
+    return this._initOptions?{...this._initOptions} as Record<string, unknown>:undefined;
   }
 
   get redirectUri(): string | undefined {
@@ -91,8 +96,10 @@ class KeycloakAuthAdapter implements AuthAdapter {
     return this._config ? { ...this._config } : undefined;
   }
 
-  setConfig(config: KeycloakConfig | undefined) {
-    this._config = config;
+  setConfig(config: Record<string, unknown> | undefined) {
+    if (config) {
+      this._config = {...config} as unknown as KeycloakConfig;
+    }
   }
 
   get keycloak(): KeycloakInstance | undefined {

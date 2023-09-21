@@ -20,22 +20,34 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
 import React from 'react';
-
 import AuthContext from '../../contexts/AuthContext';
-import useKeycloak from '../../hooks/useKeycloak';
+import type Auth from '../../services/Auth';
 import type { AuthProviderProps } from '../../services/AuthProvider';
-import type KeycloakAuthAdapter from '../../services/KeycloakAuthAdapter';
 
-const KeycloakAuthProvider = ({ adapter, loginRequired, children }:AuthProviderProps) => {
-  const auth = useKeycloak(adapter as unknown as KeycloakAuthAdapter, loginRequired);
-  return (
-    <AuthContext.Provider value={auth} >
-      <>
-        {children}
-      </>
-    </AuthContext.Provider>
-  );
+const mockAuth: Auth = {
+  tokenProvider: undefined,
+  isTokenExpired: false,
+  error: undefined,
+  isError: false,
+  isUninitialized: false,
+  isInitialized: true,
+  isInitializing: false,
+  isAuthenticated: false,
+  isAuthenticating: false,
+  isLogingOut: false,
+  loginRequired: false,
+  userId: undefined,
+  authenticate: async () => Promise.resolve(undefined),
+  login: async () => Promise.resolve(undefined),
+  logout: async () => Promise.resolve(undefined)
 };
-export default KeycloakAuthProvider;
+
+const DefaultMockAuthProvider = ({ children }: AuthProviderProps) => (
+  <AuthContext.Provider value={mockAuth} >
+    <>
+      {children}
+    </>
+  </AuthContext.Provider>
+);
+export default DefaultMockAuthProvider;

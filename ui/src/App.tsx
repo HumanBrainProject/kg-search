@@ -50,7 +50,7 @@ const Preview = React.lazy(() => import('./pages/Preview'));
 
 import './App.css';
 
-const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
+const App = ({ authAdapter}: { authAdapter: AuthAdapter; }) => {
 
   const initializedRef = useRef(false);
 
@@ -135,7 +135,7 @@ const App = ({ authAdapter}: { authAdapter?: AuthAdapter; }) => {
   );
 };
 
-const Component = ({ store, authAdapter}: { store: Store, authAdapter?: AuthAdapter; }) => (
+const Component = ({ store, authAdapter}: { store: Store, authAdapter: AuthAdapter; }) => (
   <Provider store={store}>
     <BrowserRouter>
       <App authAdapter={authAdapter}/>

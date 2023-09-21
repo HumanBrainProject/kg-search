@@ -26,7 +26,6 @@ import { useDispatch } from 'react-redux';
 
 import BgError from '../../components/BgError/BgError';
 import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
-import KeycloakAuthAdapter from '../../services/KeycloakAuthAdapter';
 import Matomo from '../../services/Matomo';
 import Sentry from '../../services/Sentry';
 import { useGetSettingsQuery, getError } from '../../services/api';
@@ -36,7 +35,7 @@ import type AuthAdapter from '../../services/AuthAdapter';
 import type { JSX } from 'react';
 
 interface SettingsProps {
-  authAdapter?: AuthAdapter;
+  authAdapter: AuthAdapter;
   children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
 }
 
@@ -61,9 +60,7 @@ const Settings = ({ authAdapter, children}: SettingsProps) => {
       Matomo.initialize(settings?.matomo);
       Sentry.initialize(settings?.sentry);
       dispatch(setCommit(settings?.commit));
-      if (authAdapter instanceof KeycloakAuthAdapter && settings.keycloak) {
-        authAdapter.setConfig(settings.keycloak);
-      }
+      authAdapter.setConfig(settings.keycloak);
       setReady(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

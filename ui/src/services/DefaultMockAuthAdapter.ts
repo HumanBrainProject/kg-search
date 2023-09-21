@@ -32,16 +32,30 @@
  *   limitations under the License.
  *
  */
-import type { AuthProviderProps } from './AuthProvider';
-import type TokenProvider from './TokenProvider';
-import type UnauthorizedRequestResponseHandlerProvider from './UnauthorizedRequestResponseHandlerProvider';
-import type { JSX } from 'react';
-/* eslint-disable autofix/no-unused-vars */
-interface AuthAdapter {
-    get tokenProvider(): TokenProvider|undefined;
-    get unauthorizedRequestResponseHandlerProvider(): UnauthorizedRequestResponseHandlerProvider|undefined;
-    get authProvider(): (props: AuthProviderProps) => string|JSX.Element|(null|undefined|string|JSX.Element)[];
-    get initOptions(): Record<string, unknown> | undefined;
-    setConfig(config: Record<string, unknown> | undefined): void;
+import DefaultMockAuthProvider from '../features/auth/DefaultMockAuthProvider';
+import type AuthAdapter from './AuthAdapter';
+
+class DefaultMockAuthAdapter implements AuthAdapter {
+  get tokenProvider() {
+    return undefined;
+  }
+
+  get unauthorizedRequestResponseHandlerProvider() {
+    return undefined;
+  }
+
+  get authProvider() {
+    return DefaultMockAuthProvider;
+  }
+
+  get initOptions() {
+    return undefined;
+  }
+
+  setConfig() {
+    // Add implementation
+  }
+
 }
-export default AuthAdapter;
+
+export default DefaultMockAuthAdapter;
