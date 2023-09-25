@@ -33,6 +33,10 @@
       "path": "https://openminds.ebrains.eu/vocab/name"
     },
     {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
       "propertyName": "query:description",
       "path": "https://openminds.ebrains.eu/vocab/description"
     },

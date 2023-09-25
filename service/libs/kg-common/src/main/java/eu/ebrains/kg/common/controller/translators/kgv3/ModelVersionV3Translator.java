@@ -35,6 +35,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
+import eu.ebrains.kg.common.utils.MetaBadgeUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -86,9 +87,6 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         m.setId(IdUtils.getUUID(modelVersion.getId()));
         final Date releaseDate = modelVersion.getReleaseDate() != null && modelVersion.getReleaseDate().before(new Date()) ? modelVersion.getReleaseDate() : modelVersion.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(modelVersion.getIssueDate(), releaseDate);
-        List<String> metaBadges = new ArrayList<>();
-        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
-        translatorUtils.defineBadgesAndTrendingState(m, modelVersion.getIssueDate(), releaseDate, modelVersion.getLast30DaysViews(), metaBadges);
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(modelVersion.getLastReleasedAt()));
         m.setReleasedAt(value(modelVersion.getIssueDate()));
@@ -257,7 +255,11 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         if(!CollectionUtils.isEmpty(externalOutputData)) {
             m.setExternalOutputData(externalOutputData.stream().sorted(Comparator.comparing(TargetExternalReference::getValue)).collect(Collectors.toList()));
         }
-
+        translatorUtils.defineBadgesAndTrendingState(m, modelVersion.getIssueDate(), releaseDate, modelVersion.getLast30DaysViews(), MetaBadgeUtils.evaluateMetaBadgeUtils(modelVersion, !CollectionUtils.isEmpty(m.getOutputData()), !CollectionUtils.isEmpty(m.getInputData())));
+        if(!CollectionUtils.isEmpty(modelVersion.getLearningResource())) {
+            m.setLearningResources(modelVersion.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        m.setLivePapers(link(modelVersion.getLivePapers()));
         m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(modelVersion.getPrimaryType(), m.getId())));
         return m;
     }

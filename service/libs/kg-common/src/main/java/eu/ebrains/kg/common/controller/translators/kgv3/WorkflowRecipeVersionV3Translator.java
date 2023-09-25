@@ -30,6 +30,7 @@ import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.WorkflowRecipeVersionV3;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.LearningResource;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.WorkflowRecipeVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -37,6 +38,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ValueWithDetails;
 import eu.ebrains.kg.common.utils.IdUtils;
+import eu.ebrains.kg.common.utils.MetaBadgeUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -85,9 +87,6 @@ public class WorkflowRecipeVersionV3Translator extends TranslatorV3<WorkflowReci
         w.setId(IdUtils.getUUID(source.getId()));
         final Date releaseDate = source.getReleaseDate() != null && source.getReleaseDate().before(new Date()) ? source.getReleaseDate() : source.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
-        List<String> metaBadges = new ArrayList<>();
-        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
-        translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, source.getLast30DaysViews(), metaBadges);
         w.setFirstRelease(value(releaseDate));
         w.setLastRelease(value(source.getLastReleasedAt()));
         w.setReleasedDateForSorting(value(releaseDateForSorting));
@@ -231,7 +230,12 @@ public class WorkflowRecipeVersionV3Translator extends TranslatorV3<WorkflowReci
                 w.setWorkflow(new ValueWithDetails<>((String)mermaid, details instanceof Map ? (Map<String, Object>)details : null));
             }
         }
+        if(!CollectionUtils.isEmpty(source.getLearningResource())) {
+            w.setLearningResources(source.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        w.setLivePapers(link(source.getLivePapers()));
         w.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(source.getPrimaryType(), w.getId())));
+        translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, null, MetaBadgeUtils.evaluateMetaBadgeUtils(source, false, false));
         return w;
     }
 }

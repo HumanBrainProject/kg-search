@@ -294,7 +294,7 @@ public class BrainAtlasV3Translator extends TranslatorV3<BrainAtlasV3, BrainAtla
         parcellationEntities.forEach(parcellationEntity -> {
             final BasicHierarchyElement<BrainAtlas.ParcellationEntity> currentHierarchyElement = lookupMap.get(parcellationEntity.getId());
             List<String> parentIds = parcellationEntity.getHasParent() != null ? parcellationEntity.getHasParent() : Collections.emptyList();
-            final Set<BasicHierarchyElement<BrainAtlas.ParcellationEntity>> parents = parentIds.stream().map(lookupMap::get).collect(Collectors.toSet());
+            final Set<BasicHierarchyElement<BrainAtlas.ParcellationEntity>> parents = parentIds.stream().map(lookupMap::get).filter(Objects::nonNull).collect(Collectors.toSet());
             if (parents.isEmpty()) {
                 result.add(currentHierarchyElement);
             } else {

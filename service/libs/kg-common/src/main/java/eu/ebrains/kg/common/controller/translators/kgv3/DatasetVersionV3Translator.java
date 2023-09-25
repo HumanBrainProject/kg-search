@@ -514,6 +514,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         d.setMeta(SchemaOrgConverter.translateDatasetVersion(datasetVersion));
         translatorUtils.defineBadgesAndTrendingState(d, datasetVersion.getIssueDate(), releaseDate, datasetVersion.getLast30DaysViews(), MetaBadgeUtils.evaluateMetaBadgeUtils(datasetVersion, !CollectionUtils.isEmpty(d.getOutputData()), !CollectionUtils.isEmpty(d.getInputData())));
+        if(!CollectionUtils.isEmpty(datasetVersion.getLearningResource())) {
+            d.setLearningResources(datasetVersion.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        d.setLivePapers(link(datasetVersion.getLivePapers()));
+
         d.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(datasetVersion.getPrimaryType(), d.getId())));
         return d;
     }

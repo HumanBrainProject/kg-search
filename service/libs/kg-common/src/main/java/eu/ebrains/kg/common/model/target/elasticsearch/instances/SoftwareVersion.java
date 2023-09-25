@@ -111,16 +111,18 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Source code")
     private TargetExternalReference sourceCode;
 
-    @FieldInfo(label = "Documentation")
-    private List<TargetExternalReference> documentation;
-
     @FieldInfo(label = "Support")
     private List<TargetExternalReference> support;
 
 
 
-    @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
     private List<Value<String>> publications;
+
+
+
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
 
     @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<TargetInternalReference> features;
@@ -177,7 +179,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(label = "Documentation", layout = "How to use")
+    private List<TargetExternalReference> documentation;
+
+    @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
+
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
     private Value<String> queryBuilderText;
 
     private String version;

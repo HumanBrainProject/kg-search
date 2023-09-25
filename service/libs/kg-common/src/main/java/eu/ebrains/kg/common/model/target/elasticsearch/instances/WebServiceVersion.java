@@ -99,17 +99,17 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(label = "Source code")
     private TargetExternalReference sourceCode;
 
-    @FieldInfo(label = "Documentation")
-    private List<TargetExternalReference> documentation;
-
     @FieldInfo(label = "Support")
     private List<TargetExternalReference> support;
 
     @FieldInfo(label = "Used software")
     private List<TargetInternalReference> components;
 
-    @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
     private List<Value<String>> publications;
+
+    @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
+    private List<TargetExternalReference> livePapers;
 
     @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> inputFormatsForFilter;
@@ -141,7 +141,14 @@ public class WebServiceVersion implements TargetInstance, VersionedInstance, Has
     @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+
+    @FieldInfo(label = "Documentation", layout = "How to use")
+    private List<TargetExternalReference> documentation;
+
+    @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
+
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
     private Value<String> queryBuilderText;
 
     private String version;

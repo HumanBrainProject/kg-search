@@ -28,16 +28,16 @@ import { Tooltip } from 'react-tooltip';
 import './MetaBadges.css';
 
 const META_BADGES = [
-  { name: 'isUsingOthers',               title: 'EBRAINS dataset/model uses another EBRAINS dataset/model' },
-  { name: 'isUsedByOthers',              title: 'EBRAINS dataset/model is being used by another EBRAINS dataset/model' },
-  { name: 'isFollowingStandards',        title: 'Organized according to a formal structure/community standards' },
+  { name: 'isUsingOthers',               title: 'Uses other EBRAINS dataset/model(s)' },
+  { name: 'isUsedByOthers',              title: 'Is used by other EBRAINS dataset/model(s)' },
+  { name: 'isFollowingStandards',        title: 'Is organized according to a formal structure/community standard' },
   { name: 'isLinkedToTools',             title: 'Linked to EBRAINS tools & software' },
-  { name: 'isLearningResourceAvailable', title: 'Learning Resource Available' },
-  { name: 'isLinkedToImageViewer',       title: 'Linked to Image Viewer Service' },
+  { name: 'isLearningResourceAvailable', title: 'Learning resource available' },
+  { name: 'isLinkedToImageViewer',       title: 'Linked to image viewer' },
   { name: 'isIntegratedWithAtlas',       title: 'Integrated with Atlas' },
-  { name: 'isReplicable',                title: 'Model Replicability' },
-  { name: 'isUsedInLivePaper',           title: 'Data/Model used in a live paper' },
-  { name: 'hasInDepthMetaData',          title: 'Dataset has in-depth metadata' }
+  { name: 'isReplicable',                title: 'Model replicability' },
+  { name: 'isUsedInLivePaper',           title: 'Used in a live paper' },
+  { name: 'hasInDepthMetaData',          title: 'Has in-depth metadata' }
 ];
 
 const MetaBadge = ({ name, title }) => {

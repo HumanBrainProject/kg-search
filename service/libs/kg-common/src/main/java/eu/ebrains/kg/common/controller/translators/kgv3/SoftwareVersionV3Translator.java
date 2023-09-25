@@ -28,6 +28,7 @@ import eu.ebrains.kg.common.controller.translators.kgv3.commons.Constants;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SoftwareVersionV3;
+import eu.ebrains.kg.common.model.source.openMINDSv3.commons.LearningResource;
 import eu.ebrains.kg.common.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
@@ -35,6 +36,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
+import eu.ebrains.kg.common.utils.MetaBadgeUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -91,9 +93,6 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
         final Date releaseDate = softwareVersion.getReleaseDate() != null && softwareVersion.getReleaseDate().before(new Date()) ? softwareVersion.getReleaseDate() : softwareVersion.getFirstReleasedAt();
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(softwareVersion.getIssueDate(), releaseDate);
-        List<String> metaBadges = new ArrayList<>();
-        //TODO: add "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"
-        translatorUtils.defineBadgesAndTrendingState(s, softwareVersion.getIssueDate(), releaseDate, softwareVersion.getLast30DaysViews(), metaBadges);
         s.setFirstRelease(value(releaseDate));
         s.setLastRelease(value(softwareVersion.getLastReleasedAt()));
         s.setReleasedAt(value(softwareVersion.getIssueDate()));
@@ -285,6 +284,11 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                 return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
             }).collect(Collectors.toList()));
         }
+        translatorUtils.defineBadgesAndTrendingState(s, softwareVersion.getIssueDate(), releaseDate, softwareVersion.getLast30DaysViews(), MetaBadgeUtils.evaluateMetaBadgeUtils(softwareVersion, false, false));
+        if(!CollectionUtils.isEmpty(softwareVersion.getLearningResource())) {
+            s.setLearningResources(softwareVersion.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        s.setLivePapers(link(softwareVersion.getLivePapers()));
         s.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(softwareVersion.getPrimaryType(), s.getId())));
         return s;
     }

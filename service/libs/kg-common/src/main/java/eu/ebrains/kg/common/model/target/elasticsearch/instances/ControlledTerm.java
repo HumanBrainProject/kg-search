@@ -91,7 +91,7 @@ public class ControlledTerm implements TargetInstance {
     @FieldInfo(label = "Definition", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> definition;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
     private Value<String> queryBuilderText;
 
     @Override

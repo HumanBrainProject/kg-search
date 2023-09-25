@@ -86,7 +86,7 @@ public class CoordinateSpace implements TargetInstance {
     @FieldInfo(label="Native unit")
     private TargetInternalReference nativeUnit;
 
-    @FieldInfo(layout = "Use (meta-)data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
     private Value<String> queryBuilderText;
 
     @Override

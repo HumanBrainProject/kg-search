@@ -23,23 +23,8 @@
 
 package eu.ebrains.kg.common.model.source.openMINDSv3.commons;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class LearningResource implements IsExternalReference{
-    private String name;
-    @JsonProperty("IRI")
-    private String iri;
-    private String type;
-
-    @JsonIgnore
-    @Override
-    public TargetExternalReference toReference(){
-        return this.getIri() !=null  && this.getName() != null ? new TargetExternalReference(this.getIri(), this.getName()) : null;
-    }
+public interface IsExternalReference {
+    TargetExternalReference toReference();
 }
