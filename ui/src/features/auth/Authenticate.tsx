@@ -29,12 +29,10 @@ import BgError from '../../components/BgError/BgError';
 import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
 import useAuth from '../../hooks/useAuth';
 import { api, getError, tagsToInvalidateOnLogout } from '../../services/api';
-
-
-import type { JSX } from 'react';
+import type { ReactNode } from 'react';
 
 interface AuthenticateProps {
-  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+  children?: ReactNode;
 }
 
 const Authenticate = ({children}: AuthenticateProps) => {

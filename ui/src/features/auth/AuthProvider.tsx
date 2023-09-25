@@ -38,7 +38,7 @@ import useAuth from '../../hooks/useAuth';
 import DefaultMockAuthProvider from './DefaultMockAuthProvider';
 import type AuthAdapter from '../../services/AuthAdapter';
 import type { AuthProviderProps as AuthProviderPropsType } from '../../services/AuthProvider';
-import type { JSX } from 'react';
+import type { ReactNode } from 'react';
 
 /* For debugging purpose only, when running the ui app locally but connecting to
    * backend prod (where keycloak is not allowing localhost),
@@ -48,7 +48,7 @@ import type { JSX } from 'react';
 
 interface AuthSetupProps {
   adapter: AuthAdapter;
-  children?: string | JSX.Element | (null | undefined | string | JSX.Element)[];
+  children?: ReactNode;
 }
 
 const AuthSetup = ({ adapter, children }: AuthSetupProps) => {

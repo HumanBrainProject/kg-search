@@ -31,12 +31,11 @@ import Sentry from '../../services/Sentry';
 import { useGetSettingsQuery, getError } from '../../services/api';
 import { setCommit } from '../application/applicationSlice';
 import type AuthAdapter from '../../services/AuthAdapter';
-
-import type { JSX } from 'react';
+import type { ReactNode } from 'react';
 
 interface SettingsProps {
   authAdapter: AuthAdapter;
-  children?: string|JSX.Element|(null|undefined|string|JSX.Element)[];
+  children?: ReactNode;
 }
 
 const Settings = ({ authAdapter, children}: SettingsProps) => {

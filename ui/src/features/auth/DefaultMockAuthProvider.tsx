@@ -45,9 +45,7 @@ const mockAuth: Auth = {
 
 const DefaultMockAuthProvider = ({ children }: AuthProviderProps) => (
   <AuthContext.Provider value={mockAuth} >
-    <>
-      {children}
-    </>
+    {children}
   </AuthContext.Provider>
 );
 export default DefaultMockAuthProvider;
