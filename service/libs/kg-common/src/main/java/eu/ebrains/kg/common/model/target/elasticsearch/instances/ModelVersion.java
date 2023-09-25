@@ -112,6 +112,9 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
     private Value<String> releasedAt;
 
+    @FieldInfo(label = "Accessibility", isSingleWord = true, overview = true, facet = FieldInfo.Facet.LIST)
+    private Value<String> accessibility;
+
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
@@ -145,8 +148,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Study targets", layout = "summary", useForSuggestion = true)
     private List<TargetInternalReference> studyTargets;
 
-    @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
-    private Value<String> accessibility;
+
 
     @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;

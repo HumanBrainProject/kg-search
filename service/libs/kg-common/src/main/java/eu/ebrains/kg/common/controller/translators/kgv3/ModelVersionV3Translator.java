@@ -89,7 +89,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(modelVersion.getIssueDate(), releaseDate);
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(modelVersion.getLastReleasedAt()));
-        m.setReleasedAt(value(modelVersion.getIssueDate()));
+        m.setReleasedAt(value(releaseDateForSorting));
         m.setReleasedDateForSorting(value(releaseDateForSorting));
         m.setAllIdentifiers(modelVersion.getIdentifier());
         m.setIdentifier(IdUtils.getIdentifiersWithPrefix("Model", modelVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));

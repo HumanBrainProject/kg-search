@@ -128,6 +128,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true, hint="This is the release date of the DOI of this dataset version or the first release in the EBRAINS KG if no DOI is registered")
     private Value<String> releasedAt;
 
+    @FieldInfo(label = "Accessibility", isSingleWord = true, overview = true, facet = FieldInfo.Facet.LIST)
+    private Value<String> dataAccessibility;
+
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private Value<String> releasedDateForSorting;
@@ -164,10 +167,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "View data", fieldType = FieldInfo.FieldType.GROUPED_LINKS)
     private Map<String, List<TargetExternalReference>> viewData;
 
-    //Start filter only
-    @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
-    private Value<String> dataAccessibility;
 
+
+    //Start filter only
     @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, visible = false, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
     private List<Value<String>> speciesFilter;
 

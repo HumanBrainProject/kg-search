@@ -108,6 +108,12 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10, useForSuggestion = true)
     private List<TargetInternalReference> contributors;
 
+    @FieldInfo(label = "Released", isSingleWord = true, overview = true, ignoreForSearch = true)
+    private Value<String> releasedAt;
+
+    @FieldInfo(label = "Accessibility", isSingleWord = true, overview = true, facet = FieldInfo.Facet.LIST)
+    private Value<String> accessibility;
+
     //Overview
     @FieldInfo(label = "DOI", hint = "This is the model DOI you must cite if you reuse this model in a way that leads to a publication")
     private Value<String> doi;
@@ -130,9 +136,6 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
 
     @FieldInfo(label = "Version specification", fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2)
     private Value<String> newInThisVersion;
-
-    @FieldInfo(label = "Accessibility", visible = false, facet = FieldInfo.Facet.LIST)
-    private Value<String> accessibility;
 
     @FieldInfo(layout = "How to cite", labelHidden = true, fieldType = FieldInfo.FieldType.CITATION)
     private Value<String> citation;
