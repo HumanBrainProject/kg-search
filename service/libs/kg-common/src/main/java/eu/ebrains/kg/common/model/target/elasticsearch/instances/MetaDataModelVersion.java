@@ -156,10 +156,8 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     private Value<String> embargo;
 
     //Publications
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
     private List<Value<String>> publications;
-
-
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
     private List<TargetExternalReference> livePapers;
@@ -179,10 +177,10 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance, 
     @FieldInfo(label = "Specification format", layout = "summary")
     private List<TargetInternalReference> specificationFormat;
 
-    @FieldInfo(layout = "Use metadata model", labelHidden = true, ignoreForSearch = true)
-    private Value<String> queryBuilderText;
-
-    @FieldInfo(layout = "Use metadata model", label ="Learning resources", useForSuggestion = true)
+    @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
     private List<TargetExternalReference> learningResources;
+
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
 }

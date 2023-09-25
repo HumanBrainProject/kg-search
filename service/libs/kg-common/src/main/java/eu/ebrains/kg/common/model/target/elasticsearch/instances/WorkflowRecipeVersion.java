@@ -97,16 +97,11 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Documentation")
-    private List<TargetExternalReference> documentation;
-
     @FieldInfo(label = "Support")
     private List<TargetExternalReference> support;
 
-    @FieldInfo(labelHidden = true, layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
     private List<Value<String>> publications;
-
-
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
     private List<TargetExternalReference> livePapers;
@@ -146,11 +141,15 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
 
     private List<TargetInternalReference> versions;
 
-    @FieldInfo(layout = "Use workflow", labelHidden = true, ignoreForSearch = true)
-    private Value<String> queryBuilderText;
 
-    @FieldInfo(layout = "Use workflow", label ="Learning resources", useForSuggestion = true)
+    @FieldInfo(label = "Documentation", layout = "How to use")
+    private List<TargetExternalReference> documentation;
+
+    @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
     private List<TargetExternalReference> learningResources;
+
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
 
     public TargetInternalReference getAllVersionRef() {

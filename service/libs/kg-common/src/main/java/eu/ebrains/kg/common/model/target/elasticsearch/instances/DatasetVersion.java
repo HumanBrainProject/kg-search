@@ -228,7 +228,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<TargetExternalReference> viewer;
 
     //Publications
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true, useForSuggestion = true)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications",useForSuggestion = true)
     private List<Value<String>> publications;
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
@@ -256,11 +256,13 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     @FieldInfo(label = "Used by", layout = "Related resources")
     private List<TargetInternalReference> outputData;
 
-    @FieldInfo(layout = "Use data", labelHidden = true, ignoreForSearch = true)
+    @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
+    private List<TargetExternalReference> learningResources;
+
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
     private Value<String> queryBuilderText;
 
-    @FieldInfo(layout = "Use data", label ="Learning resources", useForSuggestion = true)
-    private List<TargetExternalReference> learningResources;
+
 
     @Getter
     @Setter

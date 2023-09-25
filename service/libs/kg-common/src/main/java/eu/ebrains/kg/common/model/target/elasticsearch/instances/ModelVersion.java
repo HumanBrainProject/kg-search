@@ -174,10 +174,8 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     private List<TargetExternalReference> allFiles;
 
     //Publications
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
     private List<Value<String>> publications;
-
-
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)
     private List<TargetExternalReference> livePapers;
@@ -212,10 +210,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     @FieldInfo(label = "Used externally by", layout = "Related resources")
     private List<TargetExternalReference> externalOutputData;
 
-    @FieldInfo(layout = "Use model", labelHidden = true, ignoreForSearch = true)
-    private Value<String> queryBuilderText;
-
-    @FieldInfo(layout = "Use model", label ="Learning resources", useForSuggestion = true)
+    @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
     private List<TargetExternalReference> learningResources;
+
+    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
+    private Value<String> queryBuilderText;
 
 }
