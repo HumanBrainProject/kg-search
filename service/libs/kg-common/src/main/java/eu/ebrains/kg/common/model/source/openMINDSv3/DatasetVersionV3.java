@@ -212,7 +212,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
                         return String.format("%s (%s: %s %s)", valueWithUnit, typeOfUncertainty.getFullName(), uncertaintyValues, unit.getFullName());
                     }
                 }
-                return valueStr;
+                return valueWithUnit;
             } else {
                 //Value range
                 boolean sameUnit = (minValueUnit == null && maxValueUnit == null) || (minValueUnit != null && minValueUnit.equals(maxValueUnit));
