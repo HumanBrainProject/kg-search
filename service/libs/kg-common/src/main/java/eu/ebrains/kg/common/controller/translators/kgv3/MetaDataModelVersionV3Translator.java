@@ -92,7 +92,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
         m.setFirstRelease(value(releaseDate));
         m.setLastRelease(value(metadataModelVersionV3.getLastReleasedAt()));
-        m.setReleasedAt(value(releaseDateForSorting));
+        m.setReleasedAt(value(releaseDateForSorting != null ? releaseDateForSorting.split("T")[0] : null));
         m.setReleasedDateForSorting(value(releaseDateForSorting));
         m.setAllIdentifiers(metadataModelVersionV3.getIdentifier());
         m.setIdentifier(IdUtils.getUUID(metadataModelVersionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));

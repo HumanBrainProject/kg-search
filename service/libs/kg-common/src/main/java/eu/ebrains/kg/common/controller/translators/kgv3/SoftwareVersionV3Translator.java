@@ -95,7 +95,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(softwareVersion.getIssueDate(), releaseDate);
         s.setFirstRelease(value(releaseDate));
         s.setLastRelease(value(softwareVersion.getLastReleasedAt()));
-        s.setReleasedAt(value(softwareVersion.getIssueDate()));
+        s.setReleasedAt(value(releaseDateForSorting != null ? releaseDateForSorting.split("T")[0] : null));
         s.setReleasedDateForSorting(value(releaseDateForSorting));
         s.setAllIdentifiers(softwareVersion.getIdentifier());
         s.setIdentifier(IdUtils.getIdentifiersWithPrefix("Software", softwareVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
