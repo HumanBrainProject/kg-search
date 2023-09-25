@@ -21,22 +21,19 @@
  *
  */
 
-const regParam = /^(.+)=(.+)$/; //NOSONAR
-
 export const searchToObj = () => {
   const search = window.location.search;
   if (search.length <= 1) {
     return {};
   }
-  return search.replace(/^\??(.*)$/, '$1').split('&').reduce((result, param) => {
-    if (param === '' || !regParam.test(param)) {
-      return result;
-    }
-    const [ , key, value] = param.match(regParam);
+  const urlParams = new URLSearchParams(search);
+  const entries = urlParams.entries();
+  const result = {};
+  for(const [key, value] of entries) {
     const fixedOIDCKey = key.replace(/%5B/g, '[').replace(/%5D/g, ']');
     result[fixedOIDCKey] = value;
-    return result;
-  }, {});
+  }
+  return result;
 };
 
 export const getHashKey = (key, hash) => {
