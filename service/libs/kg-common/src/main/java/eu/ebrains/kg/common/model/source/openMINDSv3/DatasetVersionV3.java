@@ -178,6 +178,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     @Setter
     public static class QuantitativeValueOrRange {
         private Double value;
+        private List<Double> uncertainty;
+        private FullNameRef typeOfUncertainty;
         private FullNameRef unit;
         private Double maxValue;
         private Double minValue;
@@ -200,7 +202,17 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
             String valueStr = getValueDisplay(value);
             if (valueStr != null) {
                 //Single value
-                return unit == null ? valueStr : String.format("%s %s", valueStr, unit.getFullName());
+                String valueWithUnit = unit == null ? valueStr : String.format("%s %s", valueStr, unit.getFullName());
+                if(!CollectionUtils.isEmpty(uncertainty)){
+                    final String uncertaintyValues = uncertainty.stream().map(this::getValueDisplay).filter(Objects::nonNull).collect(Collectors.joining(", "));
+                    if(!uncertaintyValues.isBlank() && typeOfUncertainty != null && typeOfUncertainty.getFullName()!=null){
+                        if(unit == null){
+                            return String.format("%s (%s: %s)", valueWithUnit, typeOfUncertainty.getFullName(), uncertaintyValues);
+                        }
+                        return String.format("%s (%s: %s %s)", valueWithUnit, typeOfUncertainty.getFullName(), uncertaintyValues, unit.getFullName());
+                    }
+                }
+                return valueStr;
             } else {
                 //Value range
                 boolean sameUnit = (minValueUnit == null && maxValueUnit == null) || (minValueUnit != null && minValueUnit.equals(maxValueUnit));
