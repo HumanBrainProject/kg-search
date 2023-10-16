@@ -136,7 +136,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setCustodianOfModel(getReferences(personOrOrganization.getCustodianOfModel()));
         c.setCustodianOfSoftware(getReferences(personOrOrganization.getCustodianOfSoftware()));
         c.setCustodianOfMetaDataModels(getReferences(personOrOrganization.getCustodianOfMetaDataModel()));
-        c.setCustodianOfWebService(getReferences(personOrOrganization.getWebServiceContributions()));
+        c.setCustodianOfWebService(getReferences(personOrOrganization.getCustodianOfWebService()));
 
         c.setDatasetContributions(getReferences(personOrOrganization.getDatasetContributions()));
         c.setModelContributions(getReferences(personOrOrganization.getModelContributions()));
