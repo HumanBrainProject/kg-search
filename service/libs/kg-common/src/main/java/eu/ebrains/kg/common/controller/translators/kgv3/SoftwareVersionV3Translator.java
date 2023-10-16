@@ -161,10 +161,10 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
 
         List<TargetInternalReference> projects = new ArrayList<>();
         if (!CollectionUtils.isEmpty(softwareVersion.getProjects())) {
-            projects.addAll(softwareVersion.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).collect(Collectors.toList()));
+            projects.addAll(softwareVersion.getProjects().stream().map(this::ref).toList());
         }
         if (software != null && !CollectionUtils.isEmpty(software.getProjects())) {
-            projects.addAll(software.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p -> !projects.contains(p)).collect(Collectors.toList()));
+            projects.addAll(software.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p -> !projects.contains(p)).toList());
         }
         if (!CollectionUtils.isEmpty(projects)) {
             s.setProjects(projects);
