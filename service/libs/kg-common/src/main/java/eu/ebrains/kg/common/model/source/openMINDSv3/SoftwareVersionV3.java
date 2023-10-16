@@ -49,7 +49,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 implements IsCiteable, H
     private String swhid;
     private List<License> license;
     private Copyright copyright;
-    private List<FullNameRef> projects;
+    private List<FullNameRefForResearchProductVersion> projects;
     private List<PersonOrOrganizationRef> custodian;
     private String description;
     private String versionInnovation;
@@ -106,7 +106,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 implements IsCiteable, H
         private List<PersonOrOrganizationRef> developer;
 
         @JsonProperty("softwareProjects")
-        private List<FullNameRef> projects;
+        private List<FullNameRefForResearchProductVersion> projects;
 
         @JsonProperty("softwareHomepage")
         private String homepage;
