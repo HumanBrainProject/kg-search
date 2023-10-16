@@ -100,7 +100,7 @@ public class WorkflowRecipeVersion implements TargetInstance, VersionedInstance,
     @FieldInfo(label = "Support")
     private List<TargetExternalReference> support;
 
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Publications")
     private List<Value<String>> publications;
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)

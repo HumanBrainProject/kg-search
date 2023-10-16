@@ -230,7 +230,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance, HasCit
     private List<TargetExternalReference> viewer;
 
     //Publications
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications",useForSuggestion = true)
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Publications",useForSuggestion = true)
     private List<Value<String>> publications;
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)

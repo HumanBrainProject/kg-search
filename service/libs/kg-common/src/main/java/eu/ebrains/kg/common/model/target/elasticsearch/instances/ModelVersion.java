@@ -176,7 +176,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance, HasCitat
     private List<TargetExternalReference> allFiles;
 
     //Publications
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Publications")
     private List<Value<String>> publications;
 
     @FieldInfo(layout = "Publications", label ="Live papers", useForSuggestion = true)

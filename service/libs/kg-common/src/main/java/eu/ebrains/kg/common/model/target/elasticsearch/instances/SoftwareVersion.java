@@ -116,7 +116,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
 
 
 
-    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Peer-reviewed publications")
+    @FieldInfo(layout = "Publications", fieldType = FieldInfo.FieldType.MARKDOWN, label = "Publications")
     private List<Value<String>> publications;
 
 

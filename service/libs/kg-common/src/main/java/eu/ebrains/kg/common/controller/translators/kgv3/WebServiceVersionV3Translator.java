@@ -253,7 +253,6 @@ public class WebServiceVersionV3Translator extends TranslatorV3<WebServiceVersio
         }
         w.setLivePapers(link(source.getLivePapers()));
         translatorUtils.defineBadgesAndTrendingState(w, null, releaseDate, null, MetaBadgeUtils.evaluateMetaBadgeUtils(source, false, false));
-        w.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(source.getPrimaryType(), w.getId())));
         return w;
     }
 
