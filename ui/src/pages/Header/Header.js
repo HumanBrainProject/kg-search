@@ -42,10 +42,10 @@ const Header = () => {
           <ul className="navbar-nav mr-auto">
             {showSearchLink && <li className="nav-item"><button role="link" className="mobile-link" onClick={handleSearchClick}>Search</button></li>}
             <li className="nav-item">
-              <a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
+              <a href="https://www.ebrains.eu/data/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
             </li>
             <li className="nav-item">
-              <a href="https://ebrains.eu/service/find-data" className="mobile-link" target="_blank" rel="noopener noreferrer">About</a>
+              <a href="https://www.ebrains.eu/data/find-data" className="mobile-link" target="_blank" rel="noopener noreferrer">About</a>
             </li>
             <SignIn Tag="li" className="nav-item" />
           </ul>
