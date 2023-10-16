@@ -289,7 +289,6 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setLearningResources(softwareVersion.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
         }
         s.setLivePapers(link(softwareVersion.getLivePapers()));
-        s.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(softwareVersion.getPrimaryType(), s.getId())));
         return s;
     }
 

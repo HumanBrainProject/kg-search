@@ -81,6 +81,9 @@ public class Contributor implements TargetInstance {
     @FieldInfo(label = "Custodian of software", layout = "Custodian of software", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> custodianOfSoftware;
 
+    @FieldInfo(label = "Custodian of web service", layout = "Custodian of web service", labelHidden = true, useForSuggestion = true)
+    private List<TargetInternalReference> custodianOfWebService;
+
     @FieldInfo(label = "Custodian of (meta)data models", layout = "Custodian of (meta)data models", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> custodianOfMetaDataModels;
 
@@ -92,6 +95,9 @@ public class Contributor implements TargetInstance {
 
     @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Software contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> softwareContributions;
+
+    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Web service contributions", labelHidden = true, useForSuggestion = true)
+    private List<TargetInternalReference> webServiceContributions;
 
     @FieldInfo(type = FieldInfo.Type.TEXT, layout = "(Meta)Data model contributions", labelHidden = true, useForSuggestion = true)
     private List<TargetInternalReference> metaDataModelContributions;
@@ -105,6 +111,9 @@ public class Contributor implements TargetInstance {
     @FieldInfo(label = "EBRAINS KG Software citations", layout = "Citations", fieldType = FieldInfo.FieldType.CITATION)
     private List<Citation> softwareCitations;
 
+    @FieldInfo(label = "EBRAINS KG Web service citations", layout = "Citations", fieldType = FieldInfo.FieldType.CITATION)
+    private List<Citation> webServiceCitations;
+
     @FieldInfo(label = "EBRAINS KG (Meta)Data models citations", layout = "Citations", fieldType = FieldInfo.FieldType.CITATION)
     private List<Citation> metaDataModelCitations;
 
@@ -115,9 +124,6 @@ public class Contributor implements TargetInstance {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
-
-    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
-    private Value<String> queryBuilderText;
 
     @Override
     public String getId() { return id; }

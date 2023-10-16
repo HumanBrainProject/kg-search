@@ -122,10 +122,12 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfSoftware()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfMetaDataModel())&&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfModel()) &&
+                        CollectionUtils.isEmpty(personOrOrganization.getCustodianOfWebService()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getDatasetContributions()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getModelContributions()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getSoftwareContributions()) &&
-                    CollectionUtils.isEmpty(personOrOrganization.getMetaDataModelContributions())
+                        CollectionUtils.isEmpty(personOrOrganization.getWebServiceContributions()) &&
+                        CollectionUtils.isEmpty(personOrOrganization.getMetaDataModelContributions())
         ) {
             //No contributions to anything - we don't index it...
             return null;
@@ -134,11 +136,13 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setCustodianOfModel(getReferences(personOrOrganization.getCustodianOfModel()));
         c.setCustodianOfSoftware(getReferences(personOrOrganization.getCustodianOfSoftware()));
         c.setCustodianOfMetaDataModels(getReferences(personOrOrganization.getCustodianOfMetaDataModel()));
+        c.setCustodianOfWebService(getReferences(personOrOrganization.getWebServiceContributions()));
 
         c.setDatasetContributions(getReferences(personOrOrganization.getDatasetContributions()));
         c.setModelContributions(getReferences(personOrOrganization.getModelContributions()));
         c.setSoftwareContributions(getReferences(personOrOrganization.getSoftwareContributions()));
         c.setMetaDataModelContributions(getReferences(personOrOrganization.getMetaDataModelContributions()));
+        c.setWebServiceContributions(getReferences(personOrOrganization.getWebServiceContributions()));
 
         Map<String, Contributor.Citation> datasetCitations = new HashMap<>();
         addCitations(datasetCitations, personOrOrganization.getCustodianOfDataset());
@@ -161,15 +165,19 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
             c.setSoftwareCitations(softwareCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
 
+        Map<String, Contributor.Citation> webserviceCitations = new HashMap<>();
+        addCitations(webserviceCitations, personOrOrganization.getCustodianOfWebService());
+        addCitations(webserviceCitations, personOrOrganization.getWebServiceContributions());
+        if (!CollectionUtils.isEmpty(webserviceCitations)) {
+            c.setWebServiceCitations(webserviceCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
+        }
+
         Map<String, Contributor.Citation> metaDataModelCitations = new HashMap<>();
         addCitations(metaDataModelCitations, personOrOrganization.getCustodianOfMetaDataModel());
         addCitations(metaDataModelCitations, personOrOrganization.getMetaDataModelContributions());
         if (!CollectionUtils.isEmpty(metaDataModelCitations)) {
             c.setMetaDataModelCitations(metaDataModelCitations.values().stream().sorted(Comparator.comparing(Contributor.Citation::getTitle)).collect(Collectors.toList()));
         }
-
-
-        c.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(personOrOrganization.getPrimaryType(), c.getId())));
         return c;
     }
 

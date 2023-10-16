@@ -98,8 +98,6 @@ public class Software implements TargetInstance, HasCitation {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
-    private Value<String> queryBuilderText;
 
     @Override
     @JsonIgnore

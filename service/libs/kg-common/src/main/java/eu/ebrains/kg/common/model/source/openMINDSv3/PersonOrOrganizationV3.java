@@ -45,8 +45,10 @@ public class PersonOrOrganizationV3 extends SourceInstanceV3 {
     private List<ExtendedFullNameRefForResearchProductVersion> custodianOfMetaDataModel;
     private List<ExtendedFullNameRefForResearchProductVersion> custodianOfDataset;
     private List<ExtendedFullNameRefForResearchProductVersion> custodianOfSoftware;
+    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfWebService;
     private List<ExtendedFullNameRefForResearchProductVersion> modelContributions;
     private List<ExtendedFullNameRefForResearchProductVersion> metaDataModelContributions;
     private List<ExtendedFullNameRefForResearchProductVersion> datasetContributions;
     private List<ExtendedFullNameRefForResearchProductVersion> softwareContributions;
+    private List<ExtendedFullNameRefForResearchProductVersion> webServiceContributions;
 }

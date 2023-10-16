@@ -185,8 +185,6 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance, HasCi
     @FieldInfo(layout = "How to use", label ="Learning resources", useForSuggestion = true)
     private List<TargetExternalReference> learningResources;
 
-    @FieldInfo(layout = "How to use", label = "Programmatic access to metadata", ignoreForSearch = true)
-    private Value<String> queryBuilderText;
 
     private String version;
 
