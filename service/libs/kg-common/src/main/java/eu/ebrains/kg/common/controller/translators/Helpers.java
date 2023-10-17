@@ -40,21 +40,18 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access= AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Helpers {
     private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
     private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
 
-    public static String createEmbargoMessage(String type, FileRepository fileRepository, DataStage stage) {
+    public static String createEmbargoMessage(String type, FileRepository fileRepository) {
         if (fileRepository != null && fileRepository.getIri() != null) {
             final String message = String.format("This %s is temporarily under embargo. It will become available for download after the embargo period.", type);
-            if (stage == DataStage.IN_PROGRESS) {
-                final String url = translateInternalFileRepoToUrl(fileRepository);
-                if (url != null) {
-                    return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>.", message, url);
-                }
+            final String url = translateInternalFileRepoToUrl(type, fileRepository);
+            if (url != null) {
+                return String.format("%s <br/><br/>If you are an authorized user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>.", message, url);
             }
-            return message;
         }
         return null;
     }
@@ -78,11 +75,15 @@ public class Helpers {
         return false;
     }
 
-    private static String translateInternalFileRepoToUrl(FileRepository repository) {
+    private static String translateInternalFileRepoToUrl(String type, FileRepository repository) {
         if (repository != null && repository.getIri() != null) {
             if (isDataProxyBucket(repository)) {
                 String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/v1/buckets/", "").replace("https://data-proxy.ebrains.eu/api/v1/public/buckets/", "");
                 return String.format("https://data-proxy.ebrains.eu/%s", id);
+            } else {
+                if (type.equals("dataset")) {
+                    //TODO create a translation to the "embargo collab" for giving access to reviewers.
+                }
             }
         }
         return null;
