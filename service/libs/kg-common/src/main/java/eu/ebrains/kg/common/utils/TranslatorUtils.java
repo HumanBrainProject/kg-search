@@ -48,6 +48,9 @@ import static eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.
 @Getter
 public class TranslatorUtils {
 
+    public static final String IS_NEW_BADGE = "isNew";
+    public static final String IS_TRENDING_BADGE = "isTrending";
+
     private final DOICitationFormatter doiCitationFormatter;
     private final ESServiceClient esServiceClient;
     private final Integer trendingThreshold;
@@ -70,14 +73,14 @@ public class TranslatorUtils {
     public <T extends HasBadges & HasTrendingInformation> void defineBadgesAndTrendingState(T target, String issueDate, Date firstRelease, Integer last30DaysViews, List<String> metaBadges) {
         List<String> badges = new ArrayList<>();
         if (isNew(issueDate, firstRelease)) {
-            badges.add("isNew");
+            badges.add(IS_NEW_BADGE);
         }
         if(last30DaysViews != null){
             target.setLast30DaysViews(last30DaysViews);
         }
         if (this.trendingThreshold != null && this.trendingThreshold > 0 && last30DaysViews != null) {
             if (last30DaysViews >= this.trendingThreshold) {
-                badges.add("isTrending");
+                badges.add(IS_TRENDING_BADGE);
                 target.setTrending(true);
             }
         }

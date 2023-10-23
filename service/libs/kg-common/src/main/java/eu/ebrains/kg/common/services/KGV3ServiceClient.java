@@ -38,11 +38,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class KGV3ServiceClient  {
+public class KGV3ServiceClient {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -67,7 +68,7 @@ public class KGV3ServiceClient  {
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
-            if(result!=null) {
+            if (result != null) {
                 Map data = (Map) result.get("data");
                 return data.get("endpoint").toString();
             }
@@ -77,15 +78,15 @@ public class KGV3ServiceClient  {
         return null;
     }
 
-    public Set<UUID> getInvitationsFromKG(){
+    public Set<UUID> getInvitationsFromKG() {
         String url = String.format("%s/users/me/roles", kgCoreEndpoint);
-        final Map<?,?> result = userWebClient.get()
+        final Map<?, ?> result = userWebClient.get()
                 .uri(url)
                 .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
-        if(result!=null) {
+        if (result != null) {
             final Object data = result.get("data");
             if (data instanceof Map) {
                 final Object invitations = ((Map<?, ?>) data).get("invitations");
@@ -108,15 +109,38 @@ public class KGV3ServiceClient  {
         String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
         try {
             return executeCallForInstance(clazz, url, asServiceAccount);
-        } catch (WebClientResponseException.NotFound e){
+        } catch (WebClientResponseException.NotFound e) {
             return null;
         }
     }
 
     @SuppressWarnings("java:S3740")
-    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) { 
+    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) {
         String url = String.format("%s/instances/%s?stage=%s", kgCoreEndpoint, id, dataStage);
         return executeCallForInstance(Map.class, url, asServiceAccount);
+    }
+
+    private final static String ID_FOR_BADGE_REGISTRATION = "8909ab6c-45c9-4b57-9f8a-6111eef752f6";
+
+    public void persistBadges(String type, Map<String, Object> badges) {
+        final String typeSpecificBadgeRegistration = UUID.nameUUIDFromBytes(String.format("%s/%s", ID_FOR_BADGE_REGISTRATION, type).getBytes(StandardCharsets.UTF_8)).toString();
+        Map<String, Object> document = new HashMap<>();
+        document.put("@type", "https://search.kg.ebrains.eu/SearchAggregations");
+        badges.put("@type", "https://search.kg.ebrains.eu/Badges");
+        document.put("https://search.kg.ebrains.eu/vocab/badges", badges);
+        document.put("https://search.kg.ebrains.eu/vocab/forType", type);
+        try {
+            try {
+                serviceAccountWebClient.put().uri(String.format("%s/instances/%s", kgCoreEndpoint, typeSpecificBadgeRegistration)).body(BodyInserters.fromValue(document)).headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                        .retrieve().bodyToMono(Void.class).block();
+            } catch (WebClientResponseException.NotFound e) {
+                serviceAccountWebClient.post().uri(String.format("%s/instances/%s?space=kg-search", kgCoreEndpoint, typeSpecificBadgeRegistration)).body(BodyInserters.fromValue(document)).headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                        .retrieve().bodyToMono(Void.class).block();
+            }
+            serviceAccountWebClient.put().uri(String.format("%s/instances/%s/release", kgCoreEndpoint, typeSpecificBadgeRegistration)).retrieve().bodyToMono(Void.class).block();
+        } catch (WebClientResponseException e) {
+            logger.error(String.format("Was not able to update the badge information in KG - %s", e.getMessage()), e);
+        }
     }
 
     public void uploadQuery(String queryId, String payload) {
@@ -147,7 +171,7 @@ public class KGV3ServiceClient  {
     }
 
     private <T> T doExecuteCallForIndexing(Class<T> clazz, String url, int currentTry) {
-        try{
+        try {
             return serviceAccountWebClient.get()
                     .uri(url)
                     .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
@@ -155,22 +179,19 @@ public class KGV3ServiceClient  {
                     .bodyToMono(clazz).doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
                     .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
                     .block();
-        }
-        catch (WebClientResponseException e){
+        } catch (WebClientResponseException e) {
             logger.warn("Was not able to execute call for indexing", e);
-            if(currentTry<MAX_RETRIES){
+            if (currentTry < MAX_RETRIES) {
                 final long waitingTime = currentTry * currentTry * 10000L;
-                logger.warn("Retrying to execute call for indexing for max {} more times - next time in {} seconds", MAX_RETRIES-currentTry, waitingTime/1000);
-                try{
+                logger.warn("Retrying to execute call for indexing for max {} more times - next time in {} seconds", MAX_RETRIES - currentTry, waitingTime / 1000);
+                try {
                     Thread.sleep(waitingTime);
-                    return doExecuteCallForIndexing(clazz, url, currentTry+1);
-                }
-                catch (InterruptedException ie){
+                    return doExecuteCallForIndexing(clazz, url, currentTry + 1);
+                } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     return null;
                 }
-            }
-            else{
+            } else {
                 logger.error("Was not able to execute the call for indexing. Going to skip it.", e);
                 return null;
             }

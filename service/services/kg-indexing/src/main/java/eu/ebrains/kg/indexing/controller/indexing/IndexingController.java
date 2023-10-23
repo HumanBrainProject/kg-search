@@ -32,8 +32,9 @@ import eu.ebrains.kg.common.controller.translators.Translator;
 import eu.ebrains.kg.common.model.*;
 import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
 import eu.ebrains.kg.common.services.ESServiceClient;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.indexing.controller.mapping.MappingController;
 import eu.ebrains.kg.indexing.controller.metrics.MetricsController;
@@ -87,6 +88,9 @@ public class IndexingController {
             }
             searchableIds.addAll(updateResultV3.searchableIds);
             nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
+            if(!updateResultV3.badges.isEmpty()) {
+                kgV3.persistBadges(translatorModel.getV3translator().getTargetType().getSimpleName(), updateResultV3.badges);
+            }
         }
         if (translatorModel.isAutoRelease()) {
             elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds, temporary);
@@ -101,15 +105,18 @@ public class IndexingController {
         private final Set<String> searchableIds = new HashSet<>();
         private final Set<String> nonSearchableIds = new HashSet<>();
         private final ErrorReport errors = new ErrorReport();
+
+        private final Map<String, Object> badges = new HashMap<>();
     }
 
 
-
+    private static final List<String> relevantBadges = Arrays.asList(TranslatorUtils.IS_NEW_BADGE, TranslatorUtils.IS_TRENDING_BADGE);
     private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<? extends SourceInstanceV3, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
         final Map<String, Object> translationContext = translator.populateTranslationContext(esServiceClient, dataStage);
         final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
         final Set<String> existingIdentifiers = referenceResolver.loadAllExistingIdentifiers(dataStage);
+
         translator.getQueryIds().forEach(queryId -> {
             Integer lastTotal = null;
             boolean hasMore = true;
@@ -133,6 +140,16 @@ public class IndexingController {
                         } else {
                             updateResult.nonSearchableIds.add(handledInstance.getId());
                             nonSearchableInstances.add(handledInstance);
+                        }
+                        if(handledInstance instanceof HasBadges){
+                            final List<String> badges = ((HasBadges) handledInstance).getBadges();
+                            if(badges != null){
+                                badges.stream().filter(relevantBadges::contains).forEach(badge -> {
+                                    String qualifiedProperty = String.format("https://search.kg.ebrains.eu/vocab/badges/%s", badge);
+                                    updateResult.badges.computeIfAbsent(qualifiedProperty, k -> new ArrayList<>());
+                                    ((List)updateResult.badges.get(qualifiedProperty)).add(Map.of("@id", String.format("https://kg.ebrains.eu/api/instances/%s", handledInstance.getId())));
+                                });
+                            }
                         }
                     });
                     if (!CollectionUtils.isEmpty(searchableInstances)) {

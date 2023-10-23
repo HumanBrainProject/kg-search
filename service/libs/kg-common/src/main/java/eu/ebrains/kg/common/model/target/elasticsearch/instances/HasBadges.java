@@ -29,4 +29,6 @@ public interface HasBadges {
 
     void setBadges(List<String> badges);
 
+    List<String> getBadges();
+
 }

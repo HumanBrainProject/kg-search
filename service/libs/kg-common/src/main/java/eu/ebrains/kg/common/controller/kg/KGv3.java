@@ -53,6 +53,10 @@ public class KGv3 implements KG {
         return kgServiceClient.getInvitationsFromKG();
     }
 
+    public void persistBadges(String type, Map<String, Object> badges){
+        kgServiceClient.persistBadges(type, badges);
+    }
+
 
     @SuppressWarnings("java:S3740") // we keep the generics intentionally
     public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
