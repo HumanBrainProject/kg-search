@@ -25,7 +25,7 @@ import type {Config} from '@jest/types';
 // Sync object
 const config: Config.InitialOptions = {
   verbose: true,
-  testMatch: ["<rootDir>/src/**/*.test.js"],
+  testMatch: ["<rootDir>/src/**/*.test.js", "<rootDir>/e2e/*.test.js"],
   transform: {
     "^.+\\.tsx?$": "ts-jest",
     "^.+\\.jsx?$": "babel-jest",

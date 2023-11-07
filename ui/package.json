@@ -70,6 +70,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "testCI": "CI=true react-scripts test --env=jsdom --coverage --testResultsProcessor=jest-sonar-reporter",
+    "test:e2e": "jest e2e",
     "lint": "eslint src/",
     "eject": "react-scripts eject"
   },
@@ -92,5 +93,9 @@
       "not dead",
       "not op_mini all"
     ]
+  },
+  "devDependencies": {
+    "puppeteer": "^21.5.0",
+    "ts-node": "^10.9.1"
   }
 }
