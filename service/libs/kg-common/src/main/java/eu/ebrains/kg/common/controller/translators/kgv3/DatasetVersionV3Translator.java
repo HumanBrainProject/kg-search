@@ -216,7 +216,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, containerUrl)));
                     break;
                 case UNDER_EMBARGO:
-                    Value<String> embargoMessage = value(Helpers.createEmbargoMessage("dataset", datasetVersion.getFileRepository()));
+                    Value<String> embargoMessage = value(Helpers.createEmbargoMessage("dataset", datasetVersion.getFileRepository(), uuid));
                     if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {
                         d.setEmbargoRestrictedAccess(embargoMessage);
                     } else {

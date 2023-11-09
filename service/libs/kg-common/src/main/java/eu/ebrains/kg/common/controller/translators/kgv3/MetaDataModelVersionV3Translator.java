@@ -151,7 +151,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         }
 
         if (accessibility == Accessibility.UNDER_EMBARGO) {
-            m.setEmbargo(value(Helpers.createEmbargoMessage("metadata model", metadataModelVersionV3.getFileRepository())));
+            m.setEmbargo(value(Helpers.createEmbargoMessage("metadata model", metadataModelVersionV3.getFileRepository(), null)));
         } else {
             if (metadataModelVersionV3.getFileRepository() != null && metadataModelVersionV3.getFileRepository().getIri() != null) {
                 final String iri = metadataModelVersionV3.getFileRepository().getIri();

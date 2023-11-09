@@ -28,15 +28,15 @@ import { Tooltip } from 'react-tooltip';
 import './MetaBadges.css';
 
 const META_BADGES = [
-  { name: 'isUsingOthers',               title: 'Uses other EBRAINS dataset/model(s)' },
-  { name: 'isUsedByOthers',              title: 'Is used by other EBRAINS dataset/model(s)' },
+  { name: 'isUsingOthers',               title: 'Related resources: Uses other resources' },
+  { name: 'isUsedByOthers',              title: 'Related resources:  Is used by other resources' },
   { name: 'isFollowingStandards',        title: 'Is organized according to a formal structure/community standard' },
   { name: 'isLinkedToTools',             title: 'Linked to EBRAINS tools & software' },
-  { name: 'isLearningResourceAvailable', title: 'Learning resource available' },
+  { name: 'isLearningResourceAvailable', title: 'How to use: Learning resource available' },
   { name: 'isLinkedToImageViewer',       title: 'Linked to image viewer' },
   { name: 'isIntegratedWithAtlas',       title: 'Integrated with Atlas' },
   { name: 'isReplicable',                title: 'Model replicability' },
-  { name: 'isUsedInLivePaper',           title: 'Used in a live paper' },
+  { name: 'isUsedInLivePaper',           title: 'How to use: Live paper available' },
   { name: 'hasInDepthMetaData',          title: 'Has in-depth metadata' }
 ];
 

@@ -45,10 +45,10 @@ public class Helpers {
     private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
     private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
 
-    public static String createEmbargoMessage(String type, FileRepository fileRepository) {
+    public static String createEmbargoMessage(String type, FileRepository fileRepository, String uuid) {
         if (fileRepository != null && fileRepository.getIri() != null) {
             final String message = String.format("This %s is temporarily under embargo. It will become available for download after the embargo period.", type);
-            final String url = translateInternalFileRepoToUrl(type, fileRepository);
+            final String url = translateInternalFileRepoToUrl(type, fileRepository, uuid);
             if (url != null) {
                 return String.format("%s <br/><br/>If you are an authorized user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>.", message, url);
             }
@@ -75,14 +75,14 @@ public class Helpers {
         return false;
     }
 
-    private static String translateInternalFileRepoToUrl(String type, FileRepository repository) {
+    private static String translateInternalFileRepoToUrl(String type, FileRepository repository, String uuid) {
         if (repository != null && repository.getIri() != null) {
             if (isDataProxyBucket(repository)) {
                 String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/v1/buckets/", "").replace("https://data-proxy.ebrains.eu/api/v1/public/buckets/", "");
                 return String.format("https://data-proxy.ebrains.eu/%s", id);
             } else {
-                if (type.equals("dataset")) {
-                    //TODO create a translation to the "embargo collab" for giving access to reviewers.
+                if (uuid != null && type.equals("dataset")) {
+                    return String.format("https://wiki.ebrains.eu/bin/view/Collabs/sga3-data-under-embargo/%s", uuid);
                 }
             }
         }

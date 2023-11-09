@@ -148,7 +148,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         }
 
         if (accessibility == Accessibility.UNDER_EMBARGO) {
-            m.setEmbargo(value(Helpers.createEmbargoMessage("model", modelVersion.getFileRepository())));
+            m.setEmbargo(value(Helpers.createEmbargoMessage("model", modelVersion.getFileRepository(), null)));
         } else {
             if (modelVersion.getFileRepository() != null && modelVersion.getFileRepository().getIri() != null) {
                 final String iri = modelVersion.getFileRepository().getIri();
