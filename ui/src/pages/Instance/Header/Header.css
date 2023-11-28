@@ -45,6 +45,16 @@
   margin-left: 15px;
 }
 
+.kgs-instance__header_navigation .kgs-actions-buttons {
+  margin-left: 15px;
+  margin-top: 2px;
+}
+
+.kgs-instance__header_navigation .kgs-actions-buttons .kgs-share-links {
+  margin-left: 0;
+  margin-top: 0;
+}
+
 .kgs-instance__header_navigation_left > a,
 .kgs-instance__header_navigation_left > a:hover  {
   text-decoration: none;

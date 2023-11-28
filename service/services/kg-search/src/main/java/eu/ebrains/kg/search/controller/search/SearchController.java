@@ -105,6 +105,24 @@ public class SearchController extends FacetAggregationUtils {
         return invitationsFromKG.contains(fileRepositoryId);
     }
 
+    public boolean isBookmarked(UUID id){
+        return !CollectionUtils.isEmpty(kg.getBookmarkIdsFromInstance(id));
+    }
+    public void addBookmark(UUID id) {
+        Set<UUID> bookmarkIdsFromInstance = kg.getBookmarkIdsFromInstance(id);
+        if (CollectionUtils.isEmpty(bookmarkIdsFromInstance)) {
+            kg.addBookmark(id);
+        }
+    }
+
+    public void deleteBookmark(UUID id) {
+        Set<UUID> bookmarkIdsFromInstance = kg.getBookmarkIdsFromInstance(id);
+        bookmarkIdsFromInstance.forEach(kg::deleteBookmark);
+    }
+
+    public Set<UUID> getBookmarkIdsFromInstance(UUID id) {
+        return kg.getBookmarkIdsFromInstance(id);
+    }
 
     private Map<String, Object> formatFileAggregation(Result esResult, String aggregation) {
         Map<String, Object> result = new HashMap<>();

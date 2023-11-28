@@ -21,22 +21,11 @@
  *
  */
 
-import React from 'react';
-import ShareButtons from '../../../features/ActionsButtons';
-import TermsShortNotice from '../../../features/TermsShortNotice';
-import Pagination from '../../../features/search/Pagination';
-import './Footer.css';
+.kgs-actions-buttons {
+  display: inline-block;
+  padding-left: 6px;
+}
 
-const Footer = () => (
-  <div className="kgs-footer">
-    <TermsShortNotice className="kgs-footer__terms-short-notice" />
-    <div className="kgs-footer-nav">
-      <Pagination />
-      <ShareButtons/>
-      <div className="kgs-space" />
-      <div className="kgs-space2" />
-    </div>
-  </div>
-);
-
-export default Footer;
+.kgs-actions-buttons .kgs-share-links .kgs-share-links-panel {
+  padding-left: 0px;
+}

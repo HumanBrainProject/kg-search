@@ -25,7 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import FetchingPanel from '../../../components/FetchingPanel/FetchingPanel';
-import ShareButtons from '../../../features/ShareButtons';
+import ActionsButtons from '../../../features/ActionsButtons';
 import { reset } from '../../../features/instance/instanceSlice';
 
 import InstanceView from '../../Instance/InstanceView';
@@ -60,7 +60,7 @@ const DetailView = () => {
 
     return (
       <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
-        <Carousel className="kgs-detailView" data={data} itemComponent={itemComponent} navigationComponent={ShareButtons} onBack={handleOnBack} onClose={handleOnClose} />
+        <Carousel className="kgs-detailView" data={data} itemComponent={itemComponent} navigationComponent={ActionsButtons} onBack={handleOnBack} onClose={handleOnClose} />
       </Suspense>
     );
   }

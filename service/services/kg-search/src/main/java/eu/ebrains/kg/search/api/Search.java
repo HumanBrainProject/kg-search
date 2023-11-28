@@ -36,6 +36,8 @@ import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.search.controller.settings.SettingsController;
 import eu.ebrains.kg.search.model.FacetValue;
 import org.apache.commons.lang3.StringUtils;
+import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -372,6 +374,74 @@ public class Search {
             }
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/{id}/bookmark")
+    public ResponseEntity<?> userBookmarkedInstance(@PathVariable("id") String id, Principal principal) {
+        KeycloakAuthenticationToken authenticationToken = (KeycloakAuthenticationToken) principal;
+        if(authenticationToken==null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        KeycloakSecurityContext keycloakSecurityContext = authenticationToken.getAccount().getKeycloakSecurityContext();
+        if (keycloakSecurityContext.getToken().isExpired()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        UUID uuid = MetaModelUtils.castToUUID(id);
+        if (uuid == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try {
+            Map<String, Object> result = Map.of(
+                    "bookmarked", searchController.isBookmarked(uuid)
+            );
+            return ResponseEntity.ok(result);
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @DeleteMapping("/{id}/bookmark")
+    public ResponseEntity<?> userDeleteBookmarkOfInstance(@PathVariable("id") String id, Principal principal) {
+        KeycloakAuthenticationToken authenticationToken = (KeycloakAuthenticationToken) principal;
+        if(authenticationToken==null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        KeycloakSecurityContext keycloakSecurityContext = authenticationToken.getAccount().getKeycloakSecurityContext();
+        if (keycloakSecurityContext.getToken().isExpired()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        UUID uuid = MetaModelUtils.castToUUID(id);
+        if (uuid == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try {
+            searchController.deleteBookmark(uuid);
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @PutMapping("/{id}/bookmark")
+    public ResponseEntity<?> userBookmarkInstance(@PathVariable("id") String id, Principal principal) {
+        KeycloakAuthenticationToken authenticationToken = (KeycloakAuthenticationToken) principal;
+        if(authenticationToken==null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        KeycloakSecurityContext keycloakSecurityContext = authenticationToken.getAccount().getKeycloakSecurityContext();
+        if (keycloakSecurityContext.getToken().isExpired()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        UUID uuid = MetaModelUtils.castToUUID(id);
+        if (uuid == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try {
+            searchController.addBookmark(MetaModelUtils.castToUUID(id));
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
 }

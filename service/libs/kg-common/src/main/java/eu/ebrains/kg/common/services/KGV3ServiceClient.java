@@ -38,9 +38,14 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 
 @Component
 public class KGV3ServiceClient {
@@ -98,6 +103,70 @@ public class KGV3ServiceClient {
         return Collections.emptySet();
     }
 
+    public void addBookmark(UUID id) {
+        String url = String.format("%s/instances?space=myspace", kgCoreEndpoint);
+        String fullyQualifyId = String.format("https://kg.ebrains.eu/api/instances/%s", id);
+        Map<String, Object> payload = Map.of(
+                "@type", "https://core.kg.ebrains.eu/vocab/type/Bookmark",
+                "https://core.kg.ebrains.eu/vocab/bookmarkOf", Map.of("@id", fullyQualifyId)
+        );
+        userWebClient.post()
+                .uri(url)
+                .body(BodyInserters.fromValue(payload))
+                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void deleteBookmark(UUID id) {
+        String url = String.format("%s/instances/%s", kgCoreEndpoint, id);
+        userWebClient.delete()
+                .uri(url)
+                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public Set<UUID> getBookmarkIdsFromInstance(UUID id) {
+        try {
+            String fullyQualifyId = String.format("https://kg.ebrains.eu/api/instances/%s", id);
+            String type = "https://core.kg.ebrains.eu/vocab/type/Bookmark";
+            String encodedType = URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
+            String url = String.format("%s/instances?stage=IN_PROGRESS&type=%s&space=myspace&from=0&size=1000", kgCoreEndpoint, encodedType);
+            final Map<?, ?> result = userWebClient.get()
+                    .uri(url)
+                    .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            if (result != null) {
+                final Object data = result.get("data");
+                if (data instanceof List) {
+                    return ((List<?>) data).stream().filter(i -> i instanceof Map).map(i -> {
+                        final Map<?, ?> bookmark = (Map<?, ?>) i;
+                        final Object instance = bookmark.get("https://core.kg.ebrains.eu/vocab/bookmarkOf");
+                        if (instance instanceof Map) {
+                            final Object instanceId = ((Map<?, ?>) instance).get("@id");
+                            if (instanceId instanceof String && instanceId.equals(fullyQualifyId)) {
+                                final Object bookmarkId = bookmark.get("@id");
+                                if (bookmarkId instanceof String) {
+                                    final String uuid = substringAfterLast((String) bookmarkId, "/");
+                                    return MetaModelUtils.castToUUID(uuid);
+                                }
+                            }
+                        }
+                        return null;
+                    }).filter(Objects::nonNull).collect(Collectors.toSet());
+                }
+            }
+            return Collections.emptySet();
+        } catch (UnsupportedEncodingException e) {
+            return Collections.emptySet();
+        }
+    }
+
 
     public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size) {
         String url = String.format("%s/queries/%s/instances?stage=%s&from=%d&size=%d", kgCoreEndpoint, queryId, dataStage, from, size);
@@ -123,7 +192,7 @@ public class KGV3ServiceClient {
     private final static String ID_FOR_BADGE_REGISTRATION = "8909ab6c-45c9-4b57-9f8a-6111eef752f6";
 
     public void persistBadges(String type, Map<String, Object> badges) {
-        final String typeSpecificBadgeRegistration = UUID.nameUUIDFromBytes(String.format("%s/%s", ID_FOR_BADGE_REGISTRATION, type).getBytes(StandardCharsets.UTF_8)).toString();
+        final String typeSpecificBadgeRegistration = UUID.nameUUIDFromBytes(String.format("%s/%s", ID_FOR_BADGE_REGISTRATION, type).getBytes(UTF_8)).toString();
         Map<String, Object> document = new HashMap<>();
         document.put("@type", "https://search.kg.ebrains.eu/SearchAggregations");
         badges.put("@type", "https://search.kg.ebrains.eu/Badges");

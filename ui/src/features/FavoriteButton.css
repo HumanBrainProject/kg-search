@@ -21,22 +21,25 @@
  *
  */
 
-import React from 'react';
-import ShareButtons from '../../../features/ActionsButtons';
-import TermsShortNotice from '../../../features/TermsShortNotice';
-import Pagination from '../../../features/search/Pagination';
-import './Footer.css';
+.kgs-favorite_button {
+  display: inline-block;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;  
+  padding: 0 10px;
+  border: 0;
+  border-radius: 3px;
+  background-color: transparent;
+  font-weight: 500;
+  color: var(--color-2);
+  font-size: 22px;
+  text-align: center;
+  transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
+  line-height: 1.5em;
+}
 
-const Footer = () => (
-  <div className="kgs-footer">
-    <TermsShortNotice className="kgs-footer__terms-short-notice" />
-    <div className="kgs-footer-nav">
-      <Pagination />
-      <ShareButtons/>
-      <div className="kgs-space" />
-      <div className="kgs-space2" />
-    </div>
-  </div>
-);
-
-export default Footer;
+.kgs-favorite_loading_icon {
+  /*color: #FDBD03;*/
+  transform: scale(0.5);
+}

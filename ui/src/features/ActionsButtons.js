@@ -24,8 +24,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import ShareButtons from '../components/ShareButtons/ShareButtons';
+import FavoriteButton from './FavoriteButton';
 
-import ShareButtonsComponent from '../components/ShareButtons/ShareButtons';
+import './ActionsButtons.css';
 
 const getUrlToShare = (location, instanceId, group, defaultGroup) => {
   if (location.pathname === '/' && instanceId) {
@@ -35,7 +37,7 @@ const getUrlToShare = (location, instanceId, group, defaultGroup) => {
   return window.location.href;
 };
 
-const ShareButtons = () => {
+const ActionsButtons = () => {
   const location = useLocation();
 
   const instanceId = useSelector(state => state.instance.instanceId);
@@ -44,9 +46,18 @@ const ShareButtons = () => {
 
   const url = getUrlToShare(location, instanceId, group, defaultGroup);
 
+  if (instanceId) {
+    return (
+      <span className="kgs-actions-buttons">
+        <FavoriteButton  />
+        <ShareButtons url={url} />
+      </span>
+    );
+  }
+
   return (
-    <ShareButtonsComponent url={url} />
+    <ShareButtons url={url} />
   );
 };
 
-export default ShareButtons;
+export default ActionsButtons;

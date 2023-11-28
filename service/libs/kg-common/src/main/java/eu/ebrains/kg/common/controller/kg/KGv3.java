@@ -81,5 +81,15 @@ public class KGv3 implements KG {
         return Collections.emptyList();
     }
 
+    public void addBookmark(UUID id){
+       kgServiceClient.addBookmark(id);
+    }
 
+    public void deleteBookmark(UUID id){
+        kgServiceClient.deleteBookmark(id);
+    }
+
+    public Set<UUID> getBookmarkIdsFromInstance(UUID id){
+        return kgServiceClient.getBookmarkIdsFromInstance(id);
+    }
 }

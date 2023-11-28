@@ -25,7 +25,7 @@ import React from 'react';
 
 import FieldsPanel from '../../../components/Field/FieldsPanel';
 import { VersionSelector } from '../../../components/VersionSelector/VersionSelector';
-import ShareButtons from '../../../features/ShareButtons';
+import ActionsButtons from '../../../features/ActionsButtons';
 import { Field, Title } from '../../Field/Field';
 import TagsAndBadges from './TagsAndBadges';
 
@@ -36,7 +36,7 @@ const DefaultNavigation = ({ tags, badges }) => (
     <div className="kgs-instance__header_navigation_left">
       <TagsAndBadges tags={tags} badges={badges} />
     </div>
-    <ShareButtons />
+    <ActionsButtons />
   </div>
 );
 

@@ -159,6 +159,38 @@ export const api = createApi({
       keepUnusedDataFor: 0.0001, // no cache for live
       providesTags: ['LinkedPreview']
     }),
+    getIsFavorite: builder.query({
+      // query: () => '../static/data/instance.json',
+      // transformResponse: (data, _meta, arg) => {
+      //   (data as {id: string}).id = arg.id;
+      //   return data;
+      // },
+      query: ({ instanceId }) => `/${instanceId}/bookmark`,
+      //transformResponse: (data, meta, arg) => data,
+      keepUnusedDataFor: 0.0001, // no cache
+      providesTags: ['Bookmark'],
+    }),
+    addFavorite: builder.mutation({
+      query(instanceId) {
+        return {
+          url: `/${instanceId}/bookmark`,
+          method: 'PUT'
+        };
+      },
+      // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
+      // that newly created post could show up in any lists.
+      invalidatesTags: [{ type: 'favorites', id: 'LIST' }],
+    }),
+    deleteFavorite: builder.mutation({
+      query(instanceId) {
+        return {
+          url: `/${instanceId}/bookmark`,
+          method: 'DELETE'
+        };
+      },
+      // Invalidates all queries that subscribe to this Post `id` only.
+      invalidatesTags: (result, error, id) => [{ type: 'favorites', id }],
+    })
   })
 });
 
@@ -178,6 +210,9 @@ export const {
   useListPreviewGroupingTypesQuery,
   useGetLinkedInstanceQuery,
   useGetLinkedPreviewQuery,
+  useGetIsFavoriteQuery,
+  useAddFavoriteMutation,
+  useDeleteFavoriteMutation
 } = api;
 
 interface ErrorStatusText {
