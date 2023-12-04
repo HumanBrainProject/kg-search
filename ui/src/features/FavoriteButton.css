@@ -37,9 +37,32 @@
   text-align: center;
   transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
   line-height: 1.5em;
+  vertical-align: middle;
+  transform: translate(0,-3px);
 }
 
-.kgs-favorite_loading_icon {
-  /*color: #FDBD03;*/
+.kgs-favorite_button.kgs-favorite_loading {
+  display: inline-block;
+  transform: translate(4px,0);
+}
+
+.kgs-favorite_stack {
   transform: scale(0.5);
+}
+
+.kgs-favorite_inner {
+  display: inline-block;
+  transform: translate(-8px, -18px);
+}
+
+.kgs-favorite_inner.kgs-favorite_on {
+  color: #FDBD03;
+}
+
+.kgs-favorite_error {
+  display: inline-block;
+} 
+
+.kgs-favorite_error_message {
+  color: var(--code-color);
 }

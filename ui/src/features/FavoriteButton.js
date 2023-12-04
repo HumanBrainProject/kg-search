@@ -22,13 +22,73 @@
  */
 import {faBookmark as off} from '@fortawesome/free-regular-svg-icons/faBookmark';
 import {faBookmark as on} from '@fortawesome/free-solid-svg-icons/faBookmark';
+import {faCircleNotch} from '@fortawesome/free-solid-svg-icons/faCircleNotch';
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import {faSyncAlt} from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import useAuth from '../hooks/useAuth';
-import { useGetIsFavoriteQuery, useAddFavoriteMutation, useDeleteFavoriteMutation } from '../services/api';
+import { useGetIsFavoriteQuery, useAddFavoriteMutation, useDeleteFavoriteMutation, getError } from '../services/api';
 
 import './FavoriteButton.css';
+
+const FavoriteToggle = ({ instanceId, isBookmarked, onClick }) => {
+
+  const addFavoriteMutation = useAddFavoriteMutation();
+  const deleteFavoriteMutation = useDeleteFavoriteMutation();
+
+  const [trigger, { error, isLoading, isSuccess, isError, isUninitialized, reset }] = isBookmarked?deleteFavoriteMutation:addFavoriteMutation;
+
+  useEffect(() => {
+    if (!isUninitialized && isSuccess) {
+      reset();
+      onClick(!isBookmarked);
+    }
+  }, [error, isSuccess, isError, isUninitialized, isBookmarked, reset, onClick]);
+
+  const handleToggle = () => trigger(instanceId);
+
+  if (isError) {
+    return (
+      <FavoriteError error={getError(error, isBookmarked?'Failed to add bookmark':'Failed to remove bookmark')} onRetry={handleToggle} />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <FavoriteLoading isBookmarked={isBookmarked} />
+    );
+  }
+
+  const label = isBookmarked?'Remove from bookmarks':'Add to bookmarks';
+  return (
+    <button className="kgs-favorite_button" onClick={handleToggle} title={label} aria-label={label}>
+      <FontAwesomeIcon icon={isBookmarked?on:off} />
+    </button>
+  );
+};
+
+
+const FavoriteError = ({ error, onRetry }) => (
+  <div className="kgs-favorite_error">
+    <span className="kgs-favorite_error_message"><FontAwesomeIcon icon={faExclamationTriangle} />&nbsp;{error} </span>
+    <FontAwesomeIcon icon={faSyncAlt} onClick={onRetry} style={{cursor: 'pointer'}} title="Retry" />
+  </div>
+);
+
+
+const FavoriteLoading = ({ isBookmarked }) => (
+  <span className="kgs-favorite_button kgs-favorite_loading" aria-label={isBookmarked?'Removing from bookmarks':'Adding to bookmarks'} >
+    <span className="fa-layers fa-fw kgs-favorite_stack">
+      <FontAwesomeIcon icon={isBookmarked?on:off} size="2x" />
+      <span className={`kgs-favorite_inner ${isBookmarked?'kgs-favorite_on':''}`}>
+        <FontAwesomeIcon icon={faCircleNotch} spin size="1x" />
+      </span>
+    </span>
+  </span>
+);
+
 
 const FavoriteButton = () => {
 
@@ -36,60 +96,44 @@ const FavoriteButton = () => {
 
   const instanceId = useSelector(state => state.instance.instanceId);
 
-  const favoriteResult = useGetIsFavoriteQuery({instanceId: instanceId}, { skip: !isAuthenticated || !instanceId});
-  const [addFavoriteTrigger, addFavoriteResult] = useAddFavoriteMutation();
-  const [deleteFavoriteTrigger, deleteFavoriteResult] = useDeleteFavoriteMutation();
+  const {
+    data,
+    //currentData,
+    error,
+    isUninitialized,
+    //isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    refetch
+  } = useGetIsFavoriteQuery({instanceId: instanceId}, { skip: !isAuthenticated || !instanceId});
 
   const [isBookmarked, setIsBookmarked] = useState(undefined);
 
   useEffect(() => {
-    if (favoriteResult.isSuccess) {
-      setIsBookmarked(!!favoriteResult.data?.bookmarked);
-    } else if (favoriteResult.isUninitialized) {
-      setIsBookmarked(undefined);
+    if (isSuccess) {
+      setIsBookmarked(!!data?.bookmarked);
     }
-  }, [favoriteResult.data, favoriteResult.error, favoriteResult.isUninitialized, favoriteResult.isFetching, favoriteResult.isSuccess, favoriteResult.isError]);
-
-  useEffect(() => {
-    if (!addFavoriteResult.isUninitialized) {
-      if (addFavoriteResult.isSuccess) {
-        setIsBookmarked(true);
-      }
-    }
-  }, [addFavoriteResult.isSuccess, addFavoriteResult.isError, addFavoriteResult.isLoading, addFavoriteResult.isUninitialized]);
-
-
-  useEffect(() => {
-    if (!deleteFavoriteResult.isUninitialized) {
-      if (deleteFavoriteResult.isSuccess) {
-        setIsBookmarked(false);
-      }
-    }
-  }, [deleteFavoriteResult.isSuccess, deleteFavoriteResult.isError, deleteFavoriteResult.isLoading, deleteFavoriteResult.isUninitialized]);
-
-
-  const handleOnClick = async () => {
-    const bookmark = !isBookmarked;
-    const trigger = bookmark?addFavoriteTrigger:deleteFavoriteTrigger;
-    try {
-      trigger(instanceId);
-    } catch (e) {
-      //console.error(e);
-    }
-  };
+  }, [data, error, isSuccess, isError]);
 
   if (!isAuthenticated || !instanceId) {
     return null;
   }
 
-  const isLoading = favoriteResult.isFetching  || addFavoriteResult.isLoading || deleteFavoriteResult.isLoading;
-  const isError = favoriteResult.isError ||  addFavoriteResult.isError || deleteFavoriteResult.isError;
-  const isDisabled = favoriteResult.isUninitialized || isLoading || isError;
+  if (isError) {
+    return (
+      <FavoriteError error={getError(error, 'Failed to retrieve bookmark status')} onRetry={refetch} />
+    );
+  }
+
+  if (isUninitialized || isFetching) {
+    return (
+      <FavoriteLoading isBookmarked={!!isBookmarked} />
+    );
+  }
 
   return (
-    <button className="kgs-favorite_button" onClick={handleOnClick} title={isBookmarked?'Remove from bookmarks':'Add to bookmars'} disabled={isDisabled} aria-label={isBookmarked?'Remove from bookmarks':'Add to bookmarks'}>
-      <FontAwesomeIcon icon={isBookmarked?on:off} className="kgs-favorite_icon" />
-    </button>
+    <FavoriteToggle instanceId={instanceId} isBookmarked={isBookmarked} onClick={setIsBookmarked}  />
   );
 };
 

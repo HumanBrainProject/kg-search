@@ -26,7 +26,7 @@ const transformInstanceResponse = (data: QueryResultData, _meta: unknown, arg: Q
 
 const unauthenticatedEndpoints = ['getSettings', 'getCitation', 'getBibtex'];
 
-const tagTypes = ['Group', 'Search', 'Instance', 'Preview', 'Files', 'PreviewFiles', 'Format', 'PreviewFormat', 'GroupingType', 'PreviewGroupingType', 'LinkedInstance', 'LinkedPreview'];
+const tagTypes = ['Group', 'Search', 'Instance', 'Preview', 'Files', 'PreviewFiles', 'Format', 'PreviewFormat', 'GroupingType', 'PreviewGroupingType', 'LinkedInstance', 'LinkedPreview', 'Favorites'];
 
 export const tagsToInvalidateOnLogout = tagTypes.map(tag => ({ type: tag, id: 'LIST' }));
 
@@ -168,7 +168,7 @@ export const api = createApi({
       query: ({ instanceId }) => `/${instanceId}/bookmark`,
       //transformResponse: (data, meta, arg) => data,
       keepUnusedDataFor: 0.0001, // no cache
-      providesTags: ['Bookmark'],
+      providesTags: ['Favorites'],
     }),
     addFavorite: builder.mutation({
       query(instanceId) {
@@ -179,7 +179,10 @@ export const api = createApi({
       },
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created post could show up in any lists.
-      invalidatesTags: [{ type: 'favorites', id: 'LIST' }],
+      invalidatesTags: (result, error, id) => [
+        { type: 'Favorites', id: 'LIST' },
+        { type: 'Favorites', id: id }
+      ]
     }),
     deleteFavorite: builder.mutation({
       query(instanceId) {
@@ -189,7 +192,10 @@ export const api = createApi({
         };
       },
       // Invalidates all queries that subscribe to this Post `id` only.
-      invalidatesTags: (result, error, id) => [{ type: 'favorites', id }],
+      invalidatesTags: (result, error, id) => [
+        { type: 'Favorites', id: 'LIST' },
+        { type: 'Favorites', id: id }
+      ]
     })
   })
 });
@@ -265,7 +271,7 @@ const errorStatusText: ErrorStatusText = {
   499: 'Client Closed Request'
 };
 
-export const getError = (error?: FetchBaseQueryError|SerializedError|string) => {
+export const getError = (error: FetchBaseQueryError|SerializedError|string|undefined, messagePrefix?: string) => {
   if (!error) {
     return '';
   }
@@ -294,7 +300,7 @@ export const getError = (error?: FetchBaseQueryError|SerializedError|string) => 
     }
     technicalError += error.data;
   }
-  let message = 'The service is temporary unavailable. Please retry in a moment.';
+  let message = messagePrefix??'The service is temporary unavailable. Please retry in a moment.';
   if (technicalError) {
     message += `(${technicalError})`;
   }
