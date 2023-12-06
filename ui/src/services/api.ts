@@ -165,33 +165,30 @@ export const api = createApi({
       //   (data as {id: string}).id = arg.id;
       //   return data;
       // },
-      query: ({ instanceId }) => `/${instanceId}/bookmark`,
+      query: id => `/${id}/bookmark`,
       //transformResponse: (data, meta, arg) => data,
-      keepUnusedDataFor: 0.0001, // no cache
-      providesTags: ['Favorites'],
+      keepUnusedDataFor: 60, // no cache
+      providesTags: ['Favorites']
     }),
     addFavorite: builder.mutation({
-      query(instanceId) {
-        return {
-          url: `/${instanceId}/bookmark`,
-          method: 'PUT'
-        };
-      },
+      query: id => ({
+        url: `/${id}/bookmark`,
+        method: 'PUT'
+      }),
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created post could show up in any lists.
+      // Invalidates all queries that subscribe to this Post `id` only.
       invalidatesTags: (result, error, id) => [
         { type: 'Favorites', id: 'LIST' },
         { type: 'Favorites', id: id }
       ]
     }),
     deleteFavorite: builder.mutation({
-      query(instanceId) {
-        return {
-          url: `/${instanceId}/bookmark`,
-          method: 'DELETE'
-        };
-      },
-      // Invalidates all queries that subscribe to this Post `id` only.
+      query: id => ({
+        url: `/${id}/bookmark`,
+        method: 'DELETE'
+      }),
+      // Invalidates all queries that subscribe to this Delete `id` only.
       invalidatesTags: (result, error, id) => [
         { type: 'Favorites', id: 'LIST' },
         { type: 'Favorites', id: id }

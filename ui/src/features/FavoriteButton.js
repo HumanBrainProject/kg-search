@@ -106,7 +106,7 @@ const FavoriteButton = () => {
     isSuccess,
     isError,
     refetch
-  } = useGetIsFavoriteQuery({instanceId: instanceId}, { skip: !isAuthenticated || !instanceId});
+  } = useGetIsFavoriteQuery(instanceId, { skip: !isAuthenticated || !instanceId});
 
   const [isBookmarked, setIsBookmarked] = useState(undefined);
 

@@ -393,6 +393,7 @@ public class Search {
         }
         try {
             Map<String, Object> result = Map.of(
+                    "id", id,
                     "bookmarked", searchController.isBookmarked(uuid)
             );
             return ResponseEntity.ok(result);
@@ -417,7 +418,11 @@ public class Search {
         }
         try {
             searchController.deleteBookmark(uuid);
-            return ResponseEntity.ok().build();
+            Map<String, Object> result = Map.of(
+                    "id", id,
+                    "bookmarked", false
+            );
+            return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -439,7 +444,11 @@ public class Search {
         }
         try {
             searchController.addBookmark(MetaModelUtils.castToUUID(id));
-            return ResponseEntity.ok().build();
+            Map<String, Object> result = Map.of(
+                    "id", id,
+                    "bookmarked", true
+            );
+            return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
