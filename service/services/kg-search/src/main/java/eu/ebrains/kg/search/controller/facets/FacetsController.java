@@ -27,13 +27,17 @@ import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.model.Facet;
+import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.utils.FacetsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class FacetsController {

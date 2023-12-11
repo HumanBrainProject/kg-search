@@ -23,9 +23,9 @@
 
 package eu.ebrains.kg.search.utils;
 
-import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.FacetValue;
+import eu.ebrains.kg.search.model.Facet;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -67,9 +67,10 @@ public class FiltersUtils {
         );
     }
 
-    public static Map<String, Object> getActiveFilters(List<Facet> facets, String type, Map<String, FacetValue> values) {
+    public static Map<String, Object> getActiveFilters(List<Facet> facets, String type, List<UUID> idsToFiler, Map<String, FacetValue> values) {
         Map<String, Object> filters = new HashMap<>();
         addTypeFilter(filters, type);
+        addIdsFilter(filters, idsToFiler);
         facets.forEach(facet -> {
             if (values.containsKey(facet.getName())) {
                 if (facet.getType() == FieldInfo.Facet.LIST) {
@@ -109,27 +110,46 @@ public class FiltersUtils {
     }
 
     private static void addExistsFilter(Map<String, Object> filters, Facet facet) {
+        String path = FacetsUtils.getPath(facet.getPath(), facet.getProperty());
+        String field = facet.getField(path);
         Map<String, Object> exists = Map.of(
                 "exists", Map.of(
-                        "field", String.format("%s.value.keyword", FacetsUtils.getPath(facet.getPath(), facet.getProperty()))
+                        "field", field
                 )
         );
         filters.put(facet.getName(), exists);
     }
 
     private static void addTypeFilter(Map<String, Object> filters, String type) {
-        Map<String, Object> typeFilter = Map.of(
+        Map<String, Object> filter = Map.of(
                 "term", Map.of(
                         "type.value", type
                 )
         );
-        filters.put(FACET_TYPE, typeFilter);
+        filters.put(FACET_TYPE, filter);
+    }
+
+    private static void addIdsFilter(Map<String, Object> filters, List<UUID> ids) {
+        if (!CollectionUtils.isEmpty(ids)) {
+            List<Object> terms = ids.stream().map(id -> Map.of(
+                    "term", Map.of(
+                            "id", id
+                    )
+            )).collect(Collectors.toList());
+            Map<String, Object> filter = Map.of(
+                    "bool", Map.of(
+                            "should", terms
+                    )
+            );
+            filters.put("id_filter", filter);
+        }
     }
 
     private static Map<String, Object> getFacetFilter(Facet facet, String value) {
-
+        String path = FacetsUtils.getPath(facet.getPath(), facet.getProperty());
+        String getField = facet.getField(path);
         Map<String, String> term = Map.of(
-                String.format("%s.value.keyword", FacetsUtils.getPath(facet.getPath(), facet.getProperty())), value
+                getField, value
         );
 
         if (facet.isChild()) {

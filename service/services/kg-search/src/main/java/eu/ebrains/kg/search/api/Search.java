@@ -349,10 +349,12 @@ public class Search {
             @RequestParam(required = false, defaultValue = "", name = "type") String type,
             @RequestParam(required = false, defaultValue = "0", name = "from") int from,
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
-            @RequestBody Map<String, FacetValue> facetValues
+            @RequestBody Map<String, FacetValue> facetValues,
+            Principal principal
     ) {
         try {
-            return ResponseEntity.ok(searchController.search(q, type, from, size, facetValues, DataStage.RELEASED));
+            Map<String, Object> result = searchController.search(q, type, from, size, facetValues, DataStage.RELEASED,  (KeycloakAuthenticationToken) principal);
+            return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -368,7 +370,8 @@ public class Search {
             Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             try {
-                return ResponseEntity.ok(searchController.search(q, type, from, size, facetValues, DataStage.IN_PROGRESS));
+                Map<String, Object> result = searchController.search(q, type, from, size, facetValues, DataStage.IN_PROGRESS, (KeycloakAuthenticationToken) principal);
+                return ResponseEntity.ok(result);
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }

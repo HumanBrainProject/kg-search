@@ -38,6 +38,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static eu.ebrains.kg.search.utils.FacetsUtils.FACET_BOOKMARKS;
+
 @Component
 public class SettingsController {
 
@@ -183,14 +185,14 @@ public class SettingsController {
         Map<Integer, Object> types = new LinkedHashMap<>();
         for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
             Class<?> targetModel = model.getTargetClass();
-            Map<String, Object> type = generateType(targetModel, MetaModelUtils.getNameForClass(targetModel));
+            Map<String, Object> type = generateType(targetModel, MetaModelUtils.getNameForClass(targetModel), true);
             if (type != null) {
                 types.put(types.size(), type);
             }
             //Also add inner models to the types
             Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
                     .forEachOrdered(innerClass -> {
-                        Map<String, Object> innerType = generateType(innerClass, String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)));
+                        Map<String, Object> innerType = generateType(innerClass, String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), false);
                         if (innerType != null) {
                             types.put(types.size()+1, innerType);
                         }
@@ -207,7 +209,7 @@ public class SettingsController {
         }
     }
 
-    public Map<String, Object> generateType(Class<?> clazz, String label) {
+    public Map<String, Object> generateType(Class<?> clazz, String label, boolean includeBookmarkFacet) {
         MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
         if (metaInfo == null || !metaInfo.searchable()) {
             return null;
@@ -216,7 +218,18 @@ public class SettingsController {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("type", type);
         result.put("label", label);
-        result.put("facets", listFacets(type));
+        List<Object> facets = listFacets(type);
+        if (includeBookmarkFacet) {
+            Map<String, Object> bookmarksFacet = Map.of(
+                    "name", FACET_BOOKMARKS,
+                    "label", "Bookmarks",
+                    "subLabel", "Is Bookmarked",
+                    "type", "exists",
+                    "authenticationRequired", true
+            );
+            facets.add(0, bookmarksFacet);
+        }
+        result.put("facets", facets);
         List<Map<String, String>> sortFields = new ArrayList<>();
         result.put("sortFields", sortFields);
         if (metaInfo.defaultSelection()) {

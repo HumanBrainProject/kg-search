@@ -21,25 +21,18 @@
  *
  */
 
-import React from 'react';
-import SimpleBadges from '../../../components/Badges/Badges';
-import BookmarkBadge from '../../../components/BookmarkBadge/BookmarkBadge';
-import MetaBadges from '../../../components/MetaBadges/MetaBadges';
+ .kgs-bookmark-badge {
+  display: inline-block;
+  margin-left: 10px;
+  color: #39B54A;
+}
 
-import './HitBadges.css';
+.kgs-bookmark-badge svg {
+  transform: scale(0.9);
+}
 
-const HitBadges = ({ badges }) => {
-  if (!Array.isArray(badges) || badges.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="kgs-hit-badges">
-      <SimpleBadges badges={badges} />
-      <MetaBadges badges={badges} />
-      <BookmarkBadge isBookmarked={badges.includes('isBookmarked')} />
-    </div>
-  );
-};
-
-export default HitBadges;
+.kgs-bookmark-badge-tooltip {
+  z-index: 100000;
+  background-color: var(--color-8);
+  opacity: 1;
+}

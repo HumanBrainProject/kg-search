@@ -24,12 +24,13 @@
 package eu.ebrains.kg.search.utils;
 
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
+import eu.ebrains.kg.search.model.Facet;
 
-import java.util.*;
-
-import eu.ebrains.kg.search.utils.FacetsUtils;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AggsUtils {
 
@@ -67,12 +68,16 @@ public class AggsUtils {
         String orderDirection =  facet.getOrder() == FieldInfo.FacetOrder.BYVALUE? "asc" : "desc";
         if (facet.isChild()) {
             if (facet.getIsHierarchical()) {
-                Map<String, Object> aggs = getLeafAggs(facet.getParentPath(), orderDirection, size, false);
-                Map<String, Object> childAggs = getLeafAggs(facet.getProperty(), orderDirection, size, false);
+                String field = facet.getField(facet.getParentPath());
+                Map<String, Object> aggs = getLeafAggs(field, orderDirection, size, false);
+                String childField = facet.getField(facet.getProperty());
+                Map<String, Object> childAggs = getLeafAggs(childField, orderDirection, size, false);
                 aggs.put("aggs", childAggs);
                 return aggs;
             }
-            Map<String, Object> aggs = getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getProperty()), orderDirection, size, false);
+            String path = FacetsUtils.getPath(facet.getPath(), facet.getProperty());
+            String field = facet.getField(path);
+            Map<String, Object> aggs = getLeafAggs(field, orderDirection, size, false);
             Map<String, Object> childAggs = Map.of(
                     "inner", Map.of(
                             "aggs", getLeafAggs(facet.getProperty(), orderDirection, size, true),
@@ -84,16 +89,17 @@ public class AggsUtils {
             aggs.put("aggs", childAggs);
             return aggs;
         }
-        return getLeafAggs(FacetsUtils.getPath(facet.getPath(), facet.getProperty()), orderDirection, size, false);
+        String path = FacetsUtils.getPath(facet.getPath(), facet.getProperty());
+        String field = facet.getField(path);
+        return getLeafAggs(field, orderDirection, size, false);
     }
 
-    private static Map<String, Object> getLeafAggs(String key, String orderDirection, Integer size, boolean reverseNested) {
-        String name = String.format("%s.value.keyword", key);
+    private static Map<String, Object> getLeafAggs(String field, String orderDirection, Integer size, boolean reverseNested) {
         Map<String, Object> terms = new HashMap<>();
         if (size != null) {
             terms.put("size", size);
         }
-        terms.put("field", name);
+        terms.put("field", field);
         if (orderDirection != null) {
             terms.put("order", Map.of(
                     "_count", orderDirection
@@ -105,7 +111,7 @@ public class AggsUtils {
         ));
         leafAggs.put("total", Map.of(
                 "cardinality", Map.of(
-                        "field", name
+                        "field", field
                 )
             )
         );

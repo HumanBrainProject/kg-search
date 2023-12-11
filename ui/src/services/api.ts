@@ -28,7 +28,7 @@ const unauthenticatedEndpoints = ['getSettings', 'getCitation', 'getBibtex'];
 
 const tagTypes = ['Group', 'Search', 'Instance', 'Preview', 'Files', 'PreviewFiles', 'Format', 'PreviewFormat', 'GroupingType', 'PreviewGroupingType', 'LinkedInstance', 'LinkedPreview', 'Favorites'];
 
-export const tagsToInvalidateOnLogout = tagTypes.map(tag => ({ type: tag, id: 'LIST' }));
+export const tagsToInvalidateOnLogout = tagTypes;
 
 export const api = createApi({
   reducerPath: 'api',
@@ -178,9 +178,9 @@ export const api = createApi({
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created post could show up in any lists.
       // Invalidates all queries that subscribe to this Post `id` only.
-      invalidatesTags: (result, error, id) => [
-        { type: 'Favorites', id: 'LIST' },
-        { type: 'Favorites', id: id }
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Favorites', id: id },
+        'Search'
       ]
     }),
     deleteFavorite: builder.mutation({
@@ -189,9 +189,9 @@ export const api = createApi({
         method: 'DELETE'
       }),
       // Invalidates all queries that subscribe to this Delete `id` only.
-      invalidatesTags: (result, error, id) => [
-        { type: 'Favorites', id: 'LIST' },
-        { type: 'Favorites', id: id }
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Favorites', id: id },
+        'Search'
       ]
     })
   })

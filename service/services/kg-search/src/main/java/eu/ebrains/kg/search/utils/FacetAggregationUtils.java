@@ -25,8 +25,8 @@ package eu.ebrains.kg.search.utils;
 
 import eu.ebrains.kg.common.model.elasticsearch.*;
 import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
+import eu.ebrains.kg.search.model.Facet;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;

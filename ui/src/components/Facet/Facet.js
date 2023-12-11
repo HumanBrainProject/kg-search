@@ -115,7 +115,7 @@ const Facet = ({ facet, onChange, onViewChange }) => {
     Component = Item;
     parameters = {
       item: {
-        label: `Has ${facet.label}`,
+        label: facet.subLabel??`Has ${facet.label}`,
         count: facet.count,
         checked: !!facet.value
       },
@@ -128,7 +128,7 @@ const Facet = ({ facet, onChange, onViewChange }) => {
   }
   if (Component) {
     return ( <div className = "kgs-facet" >
-      <div className = "kgs-facet-title" > { facet.label } </div>
+      <div className = "kgs-facet-title" > { facet.title??facet.label } </div>
       <Component {...parameters }/>
     </div>
     );

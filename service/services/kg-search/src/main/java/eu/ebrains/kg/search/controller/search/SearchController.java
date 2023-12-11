@@ -40,10 +40,11 @@ import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
-import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.FacetValue;
+import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.utils.*;
 import org.apache.commons.lang3.StringUtils;
+import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -57,6 +58,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static eu.ebrains.kg.search.utils.FacetsUtils.FACET_BOOKMARKS;
 
 @Component
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
@@ -109,19 +112,47 @@ public class SearchController extends FacetAggregationUtils {
         return !CollectionUtils.isEmpty(kg.getBookmarkIdsFromInstance(id));
     }
     public void addBookmark(UUID id) {
-        Set<UUID> bookmarkIdsFromInstance = kg.getBookmarkIdsFromInstance(id);
+        List<UUID> bookmarkIdsFromInstance = kg.getBookmarkIdsFromInstance(id);
         if (CollectionUtils.isEmpty(bookmarkIdsFromInstance)) {
             kg.addBookmark(id);
         }
     }
 
     public void deleteBookmark(UUID id) {
-        Set<UUID> bookmarkIdsFromInstance = kg.getBookmarkIdsFromInstance(id);
+        List<UUID> bookmarkIdsFromInstance = kg.getBookmarkIdsFromInstance(id);
         bookmarkIdsFromInstance.forEach(kg::deleteBookmark);
     }
 
-    public Set<UUID> getBookmarkIdsFromInstance(UUID id) {
+    public List<UUID> getBookmarkIdsFromInstance(UUID id) {
         return kg.getBookmarkIdsFromInstance(id);
+    }
+
+    private boolean isAuthenticationTokenValid(KeycloakAuthenticationToken authenticationToken) {
+        if(authenticationToken ==null) {
+            return false;
+        }
+        KeycloakSecurityContext keycloakSecurityContext = authenticationToken.getAccount().getKeycloakSecurityContext();
+        if (keycloakSecurityContext.getToken().isExpired()) {
+            return false;
+        }
+        return true;
+    }
+
+    private List<UUID> getBookmarkedIds(Map<String, FacetValue> facetValues, String type, KeycloakAuthenticationToken authenticationToken) {
+        if (isAuthenticationTokenValid(authenticationToken)) {
+            List<String> semanticTypes = MetaModelUtils.getSemanticTypes(type);
+            if (!CollectionUtils.isEmpty(semanticTypes)) {
+                List<UUID> ids = new ArrayList<>();
+                semanticTypes.forEach(s -> {
+                    try {
+                        ids.addAll(kg.getBookmarkedInstancesOfType(s));
+                    } catch (WebClientResponseException e) {
+                    }
+                });
+                return ids;
+            }
+        }
+        return Collections.emptyList();
     }
 
     private Map<String, Object> formatFileAggregation(Result esResult, String aggregation) {
@@ -195,8 +226,20 @@ public class SearchController extends FacetAggregationUtils {
         return ResponseEntity.ok(result);
     }
 
-
-    public Map<String, Object> search(String q, String type, int from, int size, Map<String, FacetValue> facetValues, DataStage dataStage) {
+    public Map<String, Object> search(String q, String type, int from, int size, Map<String, FacetValue> facetValues, DataStage dataStage, KeycloakAuthenticationToken authenticationToken) {
+        boolean isFilteredByBookmarks = facetValues != null && facetValues.containsKey(FACET_BOOKMARKS);
+        if (isFilteredByBookmarks) {
+            facetValues.remove(FACET_BOOKMARKS);
+        }
+        List<UUID> bookmarkedIds = getBookmarkedIds(facetValues, type, authenticationToken);
+        int nbOfBookmarks = 0;
+        if (!CollectionUtils.isEmpty(bookmarkedIds)) {
+            nbOfBookmarks = bookmarkedIds.size();
+        }
+        List<UUID> idsToFiler = null;
+        if (isFilteredByBookmarks) {
+            idsToFiler = bookmarkedIds;
+        }
         Map<String, Object> payload = new HashMap<>();
         payload.put("from", from);
         payload.put("size", size);
@@ -211,7 +254,7 @@ public class SearchController extends FacetAggregationUtils {
         }
         payload.put("sort", getEsSort(metaInfo, StringUtils.isNotBlank(q)));
         List<Facet> facets = facetsController.getFacets(type);
-        Map<String, Object> activeFilters = FiltersUtils.getActiveFilters(facets, type, facetValues);
+        Map<String, Object> activeFilters = FiltersUtils.getActiveFilters(facets, type, idsToFiler, facetValues);
         Object esPostFilter = FiltersUtils.getFilter(activeFilters, null);
         payload.put("post_filter", esPostFilter);
         Object esAggs = AggsUtils.getAggs(facets, activeFilters, facetValues);
@@ -224,10 +267,16 @@ public class SearchController extends FacetAggregationUtils {
         String index = ESHelper.getIndexesForSearch(dataStage);
         Result result = esServiceClient.searchDocuments(index, payload);
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
+        Map<String, Object> facetAggregation = getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0);
+        if (total != 0 && nbOfBookmarks != 0) {
+            facetAggregation.put(FACET_BOOKMARKS, Map.of(
+                    "count", nbOfBookmarks
+            ));
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);
-        response.put("hits", getHits(result, type, dataStage, metaInfo));
-        response.put("aggregations", getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0));
+        response.put("hits", getHits(result, type, dataStage, metaInfo, bookmarkedIds));
+        response.put("aggregations", facetAggregation);
         response.put("types", getTypesAggregation(result.getAggregations()));
         response.put("suggestions", getSuggestions(sanitizedQuery, dataStage, type));
 
@@ -239,7 +288,7 @@ public class SearchController extends FacetAggregationUtils {
     }
 
 
-    private List<Map<String, Object>> getHits(Result result, String type, DataStage dataStage, MetaInfo metaInfo) {
+    private List<Map<String, Object>> getHits(Result result, String type, DataStage dataStage, MetaInfo metaInfo, List<UUID> bookmarkedIds) {
         if (result.getHits() == null || result.getHits().getHits() == null) {
             return Collections.emptyList();
         }
@@ -247,12 +296,21 @@ public class SearchController extends FacetAggregationUtils {
         return result.getHits().getHits().stream().map(h -> {
             Map<String, Object> source = h.getSource();
             Map<String, Object> hit = new HashMap<>();
-            hit.put("id", source.get("id"));
+            String id = h.getId();
+            hit.put("id", id);
             hit.put("type", type); // getValueField(source, "type")
             hit.put("group", getGroup(dataStage));
             hit.put("category", CastingUtils.getStringValueField(source, "category"));
             hit.put("title", CastingUtils.getStringValueField(source, "title"));
-            hit.put("badges", source.get("badges"));
+            List<String> badges = new ArrayList<>();
+            Object oBadges = source.get("badges");
+            if (oBadges instanceof List) {
+                badges = (List<String>) oBadges;
+            }
+            if (bookmarkedIds != null && bookmarkedIds.contains(MetaModelUtils.castToUUID(id))) {
+                badges.add("isBookmarked");
+            }
+            hit.put("badges", badges);
             hit.put("tags", source.get("tags"));
             if (h.getHighlight() != null) {
                 hit.put("highlight", h.getHighlight());

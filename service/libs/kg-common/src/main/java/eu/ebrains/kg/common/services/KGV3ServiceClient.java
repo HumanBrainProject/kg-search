@@ -49,6 +49,48 @@ import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 
 @Component
 public class KGV3ServiceClient {
+    private static final String BookmarkedInstancesOfParametrisedTypeQuery = """
+            {
+             "@context": {
+               "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+               "query": "https://schema.hbp.eu/myQuery/",
+               "propertyName": {
+                 "@id": "propertyName",
+                 "@type": "@id"
+               },
+               "path": {
+                 "@id": "path",
+                 "@type": "@id"
+               }
+             },
+             "meta": {
+               "name": "BookmarkOf",
+               "responseVocab": "https://schema.hbp.eu/myQuery/",
+               "type": "https://core.kg.ebrains.eu/vocab/type/Bookmark"
+             },
+             "structure": [
+               {
+                 "propertyName": "query:bookmarkOfId",
+                 "singleValue": "FIRST",
+                 "path": [
+                   "https://core.kg.ebrains.eu/vocab/bookmarkOf",
+                   "@id"
+                 ]
+               },
+               {
+                 "propertyName": "query:BookmarkOfType",
+                 "singleValue": "FIRST",
+                 "filter": {
+                   "op": "EQUALS",
+                   "parameter": "type"
+                 },
+                 "path": [
+                   "https://core.kg.ebrains.eu/vocab/bookmarkOf",
+                   "@type"
+                 ]
+               }
+             ]
+           }""";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -129,7 +171,7 @@ public class KGV3ServiceClient {
                 .block();
     }
 
-    public Set<UUID> getBookmarkIdsFromInstance(UUID id) {
+    public List<UUID> getBookmarkIdsFromInstance(UUID id) {
         try {
             String fullyQualifyId = String.format("https://kg.ebrains.eu/api/instances/%s", id);
             String type = "https://core.kg.ebrains.eu/vocab/type/Bookmark";
@@ -158,12 +200,47 @@ public class KGV3ServiceClient {
                             }
                         }
                         return null;
-                    }).filter(Objects::nonNull).collect(Collectors.toSet());
+                    }).filter(Objects::nonNull).collect(Collectors.toList());
                 }
             }
-            return Collections.emptySet();
+            return Collections.emptyList();
         } catch (UnsupportedEncodingException e) {
-            return Collections.emptySet();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<UUID> getBookmarkedInstancesOfType(String type) {
+        try {
+            String encodedType = URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
+            //TODO: add parameter restrictToSpaces=myspace myspace is fixed in KG Core
+            //String url = String.format("%s/queries?size=1000&from=0&stage=IN_PROGRESS&&restrictToSpaces=myspace&type=%s", kgCoreEndpoint, encodedType);
+            String url = String.format("%s/queries?size=1000&from=0&stage=IN_PROGRESS&type=%s", kgCoreEndpoint, encodedType);
+            String payload =  BookmarkedInstancesOfParametrisedTypeQuery;
+
+            final Map<?, ?> result = userWebClient.post()
+                    .uri(url)
+                    .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                    .body(BodyInserters.fromValue(payload))
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+            if (result != null) {
+                final Object data = result.get("data");
+                if (data instanceof List) {
+                    return ((List<?>) data).stream().filter(i -> i instanceof Map).map(i -> {
+                        final Map<?, ?> bookmark = (Map<?, ?>) i;
+                        final Object instanceId = bookmark.get("bookmarkOfId");
+                        if (instanceId instanceof String) {
+                            final String uuid = substringAfterLast((String) instanceId, "/");
+                            return MetaModelUtils.castToUUID(uuid);
+                        }
+                        return null;
+                    }).filter(Objects::nonNull).collect(Collectors.toList());
+                }
+            }
+            return Collections.emptyList();
+        } catch (UnsupportedEncodingException e) {
+            return Collections.emptyList();
         }
     }
 

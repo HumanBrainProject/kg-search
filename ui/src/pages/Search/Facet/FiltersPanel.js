@@ -28,17 +28,21 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Facet from '../../../components/Facet/Facet';
 import { setFacet, setFacetSize, resetFacets, selectFacets } from '../../../features/search/searchSlice';
+import useAuth from '../../../hooks/useAuth';
 
 
 import './FiltersPanel.css';
 
 const FiltersPanel = () => {
 
+  const { isAuthenticated } = useAuth();
+
   const [collapsed, setCollapsed] = useState(true);
 
   const dispatch = useDispatch();
 
-  const facets = useSelector(state => selectFacets(state, state.search.selectedType));
+  const typeFacets = useSelector(state => selectFacets(state, state.search.selectedType));
+  const facets = isAuthenticated?typeFacets:typeFacets.filter(f => !f.authenticationRequired);
 
   const handleToggleFilters = () => setCollapsed(!collapsed);
 

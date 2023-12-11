@@ -23,18 +23,22 @@
 
 package eu.ebrains.kg.search.model;
 
+import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.utils.FacetsUtils;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 
 @Getter
 @Setter
 public class Facet {
     private String name;
+    @Setter(AccessLevel.NONE)
     private String parentPath;
+    @Setter(AccessLevel.NONE)
     private String path;
+    @Setter(AccessLevel.NONE)
     private String property;
     private FieldInfo.Facet type;
     private FieldInfo.FacetOrder order = FieldInfo.FacetOrder.BYCOUNT;
@@ -51,7 +55,12 @@ public class Facet {
         this.property = property;
     }
 
+    public String getField(String path) {
+        return String.format("%s.value.keyword", path);
+    }
+
     public boolean isChild() {
         return StringUtils.isNotBlank(this.path);
     }
 }
+

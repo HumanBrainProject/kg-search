@@ -21,25 +21,25 @@
  *
  */
 
+import {faBookmark } from '@fortawesome/free-solid-svg-icons/faBookmark';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import uniqueId from 'lodash/uniqueId';
 import React from 'react';
-import SimpleBadges from '../../../components/Badges/Badges';
-import BookmarkBadge from '../../../components/BookmarkBadge/BookmarkBadge';
-import MetaBadges from '../../../components/MetaBadges/MetaBadges';
+import { Tooltip } from 'react-tooltip';
 
-import './HitBadges.css';
+import './BookmarkBadge.css';
 
-const HitBadges = ({ badges }) => {
-  if (!Array.isArray(badges) || badges.length === 0) {
+const BookmarkBadge = ({ isBookmarked }) => {
+  if (!isBookmarked) {
     return null;
   }
-
+  const id = encodeURI(uniqueId('kgs-hit-bookmark'));
   return (
-    <div className="kgs-hit-badges">
-      <SimpleBadges badges={badges} />
-      <MetaBadges badges={badges} />
-      <BookmarkBadge isBookmarked={badges.includes('isBookmarked')} />
-    </div>
+    <span className="kgs-bookmark-badge">
+      <FontAwesomeIcon id={id} icon={faBookmark} size="2x" />
+      <Tooltip className="kgs-bookmark-badge-tooltip" anchorSelect={`#${id}`} place="bottom" variant="dark" content="Is bookmarked" />
+    </span>
   );
 };
 
-export default HitBadges;
+export default BookmarkBadge;

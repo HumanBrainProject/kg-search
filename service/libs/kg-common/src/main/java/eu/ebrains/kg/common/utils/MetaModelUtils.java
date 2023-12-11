@@ -29,6 +29,7 @@ import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -182,12 +183,32 @@ public class MetaModelUtils {
     }
 
     public static Class<?> getClassForType(String type){
-        for (int i = 0; i < TranslatorModel.MODELS.size(); i++) {
-            Class<?> targetModel = TranslatorModel.MODELS.get(i).getTargetClass();
-            if (StringUtils.isNotBlank(type) && MetaModelUtils.getNameForClass(targetModel).equals(type)) {
-                return targetModel;
+        if (StringUtils.isNotBlank(type)) {
+            for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
+                Class<?> targetModel = model.getTargetClass();
+                if (MetaModelUtils.getNameForClass(targetModel).equals(type)) {
+                    return targetModel;
+                }
             }
         }
         return null;
     }
+
+    public static List<String> getSemanticTypes(String type) {
+        if (!StringUtils.isBlank(type)) {
+            for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
+                Class<?> targetModel = model.getTargetClass();
+                String name = MetaModelUtils.getNameForClass(targetModel);
+                if (name.equals(type)) {
+                    List<String> semanticTypes = model.getV3translator().semanticTypes();
+                    if (CollectionUtils.isEmpty(semanticTypes)) {
+                        return Collections.emptyList();
+                    }
+                    return semanticTypes;
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
+
 }
