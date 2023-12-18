@@ -112,16 +112,18 @@ const Facet = ({ facet, onChange, onViewChange }) => {
     break;
   }
   case 'exists':
-    Component = Item;
-    parameters = {
-      item: {
-        label: facet.subLabel??`Has ${facet.label}`,
-        count: facet.count,
-        checked: !!facet.value
-      },
-      ItemComponent: FacetCheckbox,
-      onClick: item => onChange(facet.name, !item.checked)
-    };
+    if (facet.count !== null) { // set null value to skip the facet
+      Component = Item;
+      parameters = {
+        item: {
+          label: facet.subLabel??`Has ${facet.label}`,
+          count: facet.count,
+          checked: !!facet.value
+        },
+        ItemComponent: FacetCheckbox,
+        onClick: item => onChange(facet.name, !item.checked)
+      };
+    }
     break;
   default:
     break;

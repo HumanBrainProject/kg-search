@@ -133,8 +133,13 @@ const updateFacetsFromResults = (facets, isSelectedType, results) => {
       if (facet.type === 'list') {
         facet.keywords = (res?.keywords)?res.keywords:[];
         facet.others =  (res?.others)?res.others:0;
+        facet.count = res?.count;
       }
-      facet.count = res?.count;
+      if (facet.type === 'exists') {
+        facet.count = res?res.count:null; //null value to hide the facet, undefined to hide the count
+      } else {
+        facet.count = res?.count;
+      }
     }
   });
 };
