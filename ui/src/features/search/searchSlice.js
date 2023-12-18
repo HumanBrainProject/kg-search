@@ -134,7 +134,7 @@ const updateFacetsFromResults = (facets, isSelectedType, results) => {
         facet.keywords = (res?.keywords)?res.keywords:[];
         facet.others =  (res?.others)?res.others:0;
       }
-      facet.count = res.count;
+      facet.count = res?.count;
     }
   });
 };
