@@ -269,9 +269,7 @@ public class SearchController extends FacetAggregationUtils {
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> facetAggregation = getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0);
         if (total != 0 && nbOfBookmarks != 0) {
-            facetAggregation.put(FACET_BOOKMARKS, Map.of(
-                    "count", nbOfBookmarks
-            ));
+            facetAggregation.put(FACET_BOOKMARKS, Collections.emptyMap()); //Bookmarks is not a real facet
         }
         Map<String, Object> response = new HashMap<>();
         response.put("total", total);

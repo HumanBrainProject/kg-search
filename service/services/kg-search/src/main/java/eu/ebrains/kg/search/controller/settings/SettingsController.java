@@ -223,7 +223,7 @@ public class SettingsController {
             Map<String, Object> bookmarksFacet = Map.of(
                     "name", FACET_BOOKMARKS,
                     "label", "Bookmarks",
-                    "subLabel", "Is Bookmarked",
+                    "subLabel", "Only bookmarks",
                     "type", "exists",
                     "authenticationRequired", true
             );

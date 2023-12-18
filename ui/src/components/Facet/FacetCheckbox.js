@@ -42,7 +42,9 @@ const FacetCheckbox = ({ item: { label, count, checked, hasAnyChildChecked } }) 
   <div className={`kgs-facet-checkbox ${checked ? 'is-active' : ''}  ${hasAnyChildChecked ? 'has-any-child-active' : ''}`}>
     <input type="checkbox" tabIndex="-1" name={label}/><Icon checked={checked} hasAnyChildChecked={hasAnyChildChecked} />
     <div className="kgs-facet-checkbox__text">{label}</div>
-    <div className="kgs-facet-checkbox__count">{count}</div>
+    {count !== undefined && (
+      <div className="kgs-facet-checkbox__count">{count}</div>
+    )}
   </div>
 );
 

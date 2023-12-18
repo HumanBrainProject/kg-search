@@ -37,7 +37,7 @@ export const resetFacet = facet => {
 
 export const constructFacet = facet => ({
   ...facet,
-  count: 0,
+  count: undefined,
   value: null,
   keywords: [],
   others: 0,
