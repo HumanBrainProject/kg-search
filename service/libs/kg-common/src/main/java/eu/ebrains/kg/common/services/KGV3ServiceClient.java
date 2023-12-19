@@ -145,24 +145,54 @@ public class KGV3ServiceClient {
         return Collections.emptySet();
     }
 
-    public void addBookmark(UUID id) {
+    public void addBookmark(UUID instanceId) {
+        //save
         String url = String.format("%s/instances?space=myspace", kgCoreEndpoint);
-        String fullyQualifyId = String.format("https://kg.ebrains.eu/api/instances/%s", id);
+        String fullyQualifyInstanceId = String.format("https://kg.ebrains.eu/api/instances/%s", instanceId);
         Map<String, Object> payload = Map.of(
                 "@type", "https://core.kg.ebrains.eu/vocab/type/Bookmark",
-                "https://core.kg.ebrains.eu/vocab/bookmarkOf", Map.of("@id", fullyQualifyId)
+                "https://core.kg.ebrains.eu/vocab/bookmarkOf", Map.of("@id", fullyQualifyInstanceId)
         );
-        userWebClient.post()
+        final Map<?, ?> result = userWebClient.post()
                 .uri(url)
                 .body(BodyInserters.fromValue(payload))
                 .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(Map.class)
                 .block();
+        if (result != null) {
+            final Object data = result.get("data");
+            if (data instanceof Map) {
+                final Object fullyQualifyBookmarkId = ((Map<?, ?>) data).get("@id");
+                if (fullyQualifyBookmarkId instanceof String) {
+                    final String uuid = substringAfterLast((String) fullyQualifyBookmarkId, "/");
+                    final UUID bookmarkId = MetaModelUtils.castToUUID(uuid);
+                    if (bookmarkId != null) {
+                        //release
+                        String releaseUrl = String.format("%s/instances/%s/release", kgCoreEndpoint, bookmarkId);
+                        userWebClient.put()
+                                .uri(releaseUrl)
+                                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                                .retrieve()
+                                .bodyToMono(Void.class)
+                                .block();
+                    }
+                }
+            }
+        }
     }
 
-    public void deleteBookmark(UUID id) {
-        String url = String.format("%s/instances/%s", kgCoreEndpoint, id);
+    public void deleteBookmark(UUID bookmarkId) {
+        //unrelease
+        String releaseUrl = String.format("%s/instances/%s/release", kgCoreEndpoint,  bookmarkId);
+        userWebClient.delete()
+                .uri(releaseUrl)
+                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+        //delete
+        String url = String.format("%s/instances/%s", kgCoreEndpoint, bookmarkId);
         userWebClient.delete()
                 .uri(url)
                 .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
@@ -176,7 +206,7 @@ public class KGV3ServiceClient {
             String fullyQualifyId = String.format("https://kg.ebrains.eu/api/instances/%s", id);
             String type = "https://core.kg.ebrains.eu/vocab/type/Bookmark";
             String encodedType = URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
-            String url = String.format("%s/instances?stage=IN_PROGRESS&type=%s&space=myspace&from=0&size=1000", kgCoreEndpoint, encodedType);
+            String url = String.format("%s/instances?stage=%s&type=%s&space=myspace&from=0&size=1000", kgCoreEndpoint, DataStage.RELEASED, encodedType);
             final Map<?, ?> result = userWebClient.get()
                     .uri(url)
                     .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
@@ -212,9 +242,8 @@ public class KGV3ServiceClient {
     public List<UUID> getBookmarkedInstancesOfType(String type) {
         try {
             String encodedType = URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
-            //TODO: add parameter restrictToSpaces=myspace myspace is fixed in KG Core
-            //String url = String.format("%s/queries?size=1000&from=0&stage=IN_PROGRESS&&restrictToSpaces=myspace&type=%s", kgCoreEndpoint, encodedType);
-            String url = String.format("%s/queries?size=1000&from=0&stage=IN_PROGRESS&type=%s", kgCoreEndpoint, encodedType);
+            String restrictToSpaces = "myspace,common,dataset,model,metadatamodel,software,webservice";
+            String url = String.format("%s/queries?size=1000&from=0&stage=%s&&restrictToSpaces=%s&type=%s", kgCoreEndpoint, DataStage.RELEASED, restrictToSpaces, encodedType);
             String payload =  BookmarkedInstancesOfParametrisedTypeQuery;
 
             final Map<?, ?> result = userWebClient.post()
