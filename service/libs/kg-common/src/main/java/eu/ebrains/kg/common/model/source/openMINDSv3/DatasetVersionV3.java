@@ -51,9 +51,11 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private String description;
     private String fullName;
     private String homepage;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> supportChannels;
     @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> keyword;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> ethicsAssessment;
     private String version;
     private String versionInnovation;
@@ -76,7 +78,9 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private FileRepository fileRepository;
     private List<File> specialFiles;
     private List<FullNameRef> behavioralProtocol;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> contentTypes;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> repositoryContentTypes;
     private List<StudyTarget> studyTarget;
     private List<FullNameRef> preparationDesign;
@@ -90,6 +94,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 implements IsCiteable, Ha
     private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputDOIs;
     private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFileBundles;
     private List<FullNameRefForResearchProductVersion> outputResearchProductsFromReverseInputFiles;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> inputURLs;
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputDOIs;
     private List<FullNameRefForResearchProductVersion> inputResearchProductsFromReverseOutputFileBundles;
