@@ -21,29 +21,26 @@
  *
  */
 
-import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
+import DOMPurify from 'dompurify';
 
-import './Notification.css';
+import './Disclaimer.css';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const converter = new showdown.Converter();
 
-const Notification = ({className, text}) => {
-  if (!text) {
+const Disclaimer = ({ content }) => {
+  if (!content) {
     return null;
   }
-
-  const html = converter.makeHtml(text);
-  const classNames = `kgs-notification ${className??''}`;
+  let html = DOMPurify.sanitize(converter.makeHtml(content));
+  const m = html.match(/^<p>(.+)<\/p>$/);
+  if (m) {
+    html = m[1];
+  }
   return (
-    <div className={classNames}>
-      <FontAwesomeIcon icon={faExclamationTriangle} size="2x" className="kgs-notification_warning-icon" />
-      <span className="kgs-notification_text" dangerouslySetInnerHTML={{__html:html}} />
-    </div>
+    <strong className="kgs-instance-disclaimer" dangerouslySetInnerHTML={{ __html: html }} />
   );
 };
 
-export default Notification;
+export default Disclaimer;

@@ -10,7 +10,7 @@ exports[`ErrorPanel component renders initially 1`] = `
     <span
       className="kgs-error-message"
       dangerouslySetInnerHTML={
-        Object {
+        {
           "__html": "<p>some message</p>",
         }
       }
@@ -20,13 +20,13 @@ exports[`ErrorPanel component renders initially 1`] = `
     >
       <button
         className=""
-        onClick={Object {}}
+        onClick={{}}
       >
         cancel label
       </button>
       <button
         className=""
-        onClick={Object {}}
+        onClick={{}}
       >
         retry label
       </button>

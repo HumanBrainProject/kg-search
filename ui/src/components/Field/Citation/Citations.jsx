@@ -26,14 +26,14 @@ import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclama
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, Suspense, useMemo, useCallback } from 'react';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
+import DOMPurify from 'dompurify';
 import CopyToClipboardButton from '../../CopyToClipboard/CopyToClipboardButton';
 
 const CitationsList = React.lazy(() => import('./CitationsList'));
 
 import './Citations.css';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const converter = new showdown.Converter();
 
 const Loading = () => (
   <>
@@ -49,7 +49,7 @@ const Citations = ({ data }) => {
       return {
         ...c,
         key: c.id,
-        citation: converter.makeHtml(c.citation)
+        citation: DOMPurify.sanitize(converter.makeHtml(c.citation))
       };
     }
     return {

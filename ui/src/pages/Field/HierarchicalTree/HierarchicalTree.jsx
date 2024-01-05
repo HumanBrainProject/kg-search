@@ -33,7 +33,7 @@ import LinkedInstance from '../../Instance/LinkedInstance';
 
 import './HierarchicalTree.css';
 
-const Tree = React.lazy(() => import('./Tree.js'));
+const Tree = React.lazy(() => import('./Tree.jsx'));
 
 const Icon = ({ color }) => (
   <FontAwesomeIcon icon={faCircle} style={{ color: color ? color : 'gray' }} />

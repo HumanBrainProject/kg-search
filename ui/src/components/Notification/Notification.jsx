@@ -21,12 +21,29 @@
  *
  */
 
-module.exports = {
-  process() {
-    return "module.exports = {};";
-  },
-  getCacheKey() {
-    // The output is always the same.
-    return "cssStub";
-  },
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import showdown from 'showdown';
+import DOMPurify from 'dompurify';
+
+import './Notification.css';
+
+const converter = new showdown.Converter();
+
+const Notification = ({className, text}) => {
+  if (!text) {
+    return null;
+  }
+
+  const html = DOMPurify.sanitize(converter.makeHtml(text));
+  const classNames = `kgs-notification ${className??''}`;
+  return (
+    <div className={classNames}>
+      <FontAwesomeIcon icon={faExclamationTriangle} size="2x" className="kgs-notification_warning-icon" />
+      <span className="kgs-notification_text" dangerouslySetInnerHTML={{__html:html}} />
+    </div>
+  );
 };
+
+export default Notification;

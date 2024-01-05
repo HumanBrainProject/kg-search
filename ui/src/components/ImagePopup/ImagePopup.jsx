@@ -26,12 +26,12 @@ import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect, useRef } from 'react';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
+import DOMPurify from 'dompurify';
 import Hint from '../Hint/Hint';
 
 import './ImagePopup.css';
 
-const converter = new showdown.Converter({ extensions: [xssFilter] });
+const converter = new showdown.Converter();
 
 const Media = ({label, srcState}) => {
   const isVideo = typeof srcState === 'string' && srcState.endsWith('.mp4');
@@ -93,7 +93,7 @@ const ImagePopup = ({ className, src, label, link, onClick }) => {
                 {!!label && (
                   <Hint className="kgs-image_popup-hint" value={label} />
                 )}
-                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: converter.makeHtml(link) }} />}
+                {link && <div className="kgs-image_popup-link" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(converter.makeHtml(link)) }} />}
               </React.Fragment>
           }
           <div className="kgs-image_popup-close" ref={closeBtnRef}>

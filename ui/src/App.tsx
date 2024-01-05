@@ -44,13 +44,18 @@ import Header from './pages/Header/Header';
 import type AuthAdapter from './services/AuthAdapter';
 import type { Store } from 'redux';
 
-const Search = React.lazy(() => import('./pages/Search'));
-const Instance = React.lazy(() => import('./pages/Instance'));
-const Preview = React.lazy(() => import('./pages/Preview'));
+// @ts-ignore
+const SearchComp = React.lazy(() => import('./pages/Search.jsx'));
+// @ts-ignore
+const InstanceComp = React.lazy(() => import('./pages/Instance.jsx'));
+// @ts-ignore
+const PreviewComp = React.lazy(() => import('./pages/Preview.jsx'));
 
 import './App.css';
 
 const App = ({ authAdapter}: { authAdapter: AuthAdapter; }) => {
+
+  console.log(import.meta.env.MODE)
 
   const initializedRef = useRef(false);
 
@@ -116,11 +121,11 @@ const App = ({ authAdapter}: { authAdapter: AuthAdapter; }) => {
               <Groups>
                 <Suspense fallback={<FetchingPanel message="Loading resource..." />}>
                   <Routes>
-                    <Route path="/" element={<Search />} />
-                    <Route path="/instances/:id" element={<Instance />} />
-                    <Route path="/instances/:type/:id" element={<Instance />} />
-                    <Route path="/live/:org/:domain/:schema/:version/:id" element={<Preview />} />
-                    <Route path="/live/:id" element={<Preview />} />
+                    <Route path="/" element={<SearchComp />} />
+                    <Route path="/instances/:id" element={<InstanceComp />} />
+                    <Route path="/instances/:type/:id" element={<InstanceComp />} />
+                    <Route path="/live/:org/:domain/:schema/:version/:id" element={<PreviewComp />} />
+                    <Route path="/live/:id" element={<PreviewComp />} />
                     <Route path="*" element={<Navigate to="/" replace={true} />} />
                   </Routes>
                 </Suspense>

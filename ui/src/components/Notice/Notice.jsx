@@ -21,26 +21,38 @@
  *
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
+import DOMPurify from 'dompurify';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
+import './Notice.css';
 
-import './Disclaimer.css';
+const converter = new showdown.Converter();
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
-
-const Disclaimer = ({ content }) => {
-  if (!content) {
+export const Notice = ({className, show, text, agreeLabel='I agree', onAgree}) => {
+  if (!show || !text) {
     return null;
   }
-  let html = converter.makeHtml(content);
-  const m = html.match(/^<p>(.+)<\/p>$/);
-  if (m) {
-    html = m[1];
-  }
+
+  const html = DOMPurify.sanitize(converter.makeHtml(text));
   return (
-    <strong className="kgs-instance-disclaimer" dangerouslySetInnerHTML={{ __html: html }} />
+    <div className={`kgs-notice ${className??''}`}>
+      <div className="kgs-notice-panel">
+        <span className="kgs-notice-content" dangerouslySetInnerHTML={{__html:html}} />
+      </div>
+      {onAgree && (
+        <button className="btn btn-primary kgs-notice-agree-button" onClick={onAgree}>{agreeLabel}</button>
+      )}
+    </div>
   );
 };
 
-export default Disclaimer;
+Notice.propTypes = {
+  className: PropTypes.string,
+  show: PropTypes.bool,
+  text: PropTypes.string,
+  agreeLabel: PropTypes.string,
+  onAgree: PropTypes.func
+};
+
+export default Notice;

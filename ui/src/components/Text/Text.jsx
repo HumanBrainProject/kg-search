@@ -23,10 +23,10 @@
 
 import React from 'react';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
+import DOMPurify from 'dompurify';
 import './Text.css';
 
-const converter = new showdown.Converter({ extensions: [xssFilter] });
+const converter = new showdown.Converter();
 
 export const Text = ({ content, isMarkdown }) => {
   if (!content) {
@@ -40,7 +40,7 @@ export const Text = ({ content, isMarkdown }) => {
     );
   }
 
-  const html = converter.makeHtml(content)
+  const html = DOMPurify.sanitize(converter.makeHtml(content))
     .replace(/<p>\s+<\/p>/g, '')
     .replace(/<\/p>\n<p>/g, '</p><p>')
     .replace(/<\/li>\n<li>/g, '</li><li>')

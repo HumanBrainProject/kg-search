@@ -23,12 +23,12 @@
 
 import {faBan} from '@fortawesome/free-solid-svg-icons/faBan';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DOMPurify from 'dompurify';
 import React from 'react';
 import './BgError.css';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const converter = new showdown.Converter();
 
 interface BgErrorProps {
   message?: string;
@@ -41,7 +41,7 @@ interface BgErrorProps {
 }
 
 const BgError = ({ message, cancelLabel='Cancel', onCancelClick, cancelVariant, retryLabel='Retry', onRetryClick, retryVariant }: BgErrorProps) => {
-  const html = message?converter.makeHtml(message):'';
+  const html = DOMPurify.sanitize(message?converter.makeHtml(message):'');
   return (
     <div className="kgs-bg-error">
       <FontAwesomeIcon icon={faBan} className="kgs-bg-error-icon" size="5x"/><br/>

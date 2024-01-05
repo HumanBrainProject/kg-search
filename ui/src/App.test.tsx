@@ -20,39 +20,24 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
-import PropTypes from 'prop-types';
+import {describe, it} from '@jest/globals';
 import React from 'react';
-import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
-import './Notice.css';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import DefaultMockAuthAdapter from './services/DefaultMockAuthAdapter';
+import store from './services/store';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
-
-export const Notice = ({className, show, text, agreeLabel='I agree', onAgree}) => {
-  if (!show || !text) {
-    return null;
-  }
-
-  const html = converter.makeHtml(text);
-  return (
-    <div className={`kgs-notice ${className??''}`}>
-      <div className="kgs-notice-panel">
-        <span className="kgs-notice-content" dangerouslySetInnerHTML={{__html:html}} />
-      </div>
-      {onAgree && (
-        <button className="btn btn-primary kgs-notice-agree-button" onClick={onAgree}>{agreeLabel}</button>
-      )}
-    </div>
-  );
-};
-
-Notice.propTypes = {
-  className: PropTypes.string,
-  show: PropTypes.bool,
-  text: PropTypes.string,
-  agreeLabel: PropTypes.string,
-  onAgree: PropTypes.func
-};
-
-export default Notice;
+const authAdapter = new DefaultMockAuthAdapter();
+// eslint-disable-next-line no-undef
+describe('Test launching the app', () => {
+  // eslint-disable-next-line no-undef, jest/expect-expect
+  it('renders without crashing', () => {
+    const container = document.createElement('div');
+    const root = createRoot(container);
+    root.render(
+      <React.StrictMode>
+        <App store={store} authAdapter={authAdapter}/>
+      </React.StrictMode>
+    );
+  });
+});

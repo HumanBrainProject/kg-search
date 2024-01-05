@@ -27,7 +27,7 @@ import React, { useState } from 'react';
 
 import { InfoPanel } from '../../../components/InfoPanel/InfoPanel';
 
-import { termsOfUse } from '../../../data/termsOfUse.js';
+import { termsOfUse } from '../../../data/termsOfUse.jsx';
 import Matomo from '../../../services/Matomo';
 
 import './Download.css';

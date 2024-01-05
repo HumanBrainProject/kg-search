@@ -12,3 +12,4 @@ test-report.xml
 .cache
 .env
 .history/
+**/*.test.js.snap

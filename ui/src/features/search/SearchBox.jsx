@@ -27,7 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 
-import { help } from '../../data/help.js';
+import { help } from '../../data/help.jsx';
 import { searchToObj } from '../../helpers/BrowserHelpers';
 import { withFloatingScrollEventsSubscription } from '../../helpers/withFloatingScrollEventsSubscription';
 import { setInfo } from '../application/applicationSlice';

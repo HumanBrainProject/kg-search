@@ -24,12 +24,30 @@
 import type {Config} from '@jest/types';
 // Sync object
 const config: Config.InitialOptions = {
-  verbose: true,
-  testMatch: ["<rootDir>/src/**/*.test.js"],
-  transform: {
-    "^.+\\.tsx?$": "ts-jest",
-    "^.+\\.jsx?$": "babel-jest",
-    "^.+\\.css$": "<rootDir>/CSSStub.js"
-  }
-};
+    verbose: true,
+    testMatch: ["<rootDir>/src/**/*.test.[jt]s?(x)"],
+    transform: {
+        "^.+\\.tsx?$": [
+            "ts-jest",
+            {
+                diagnostics: {
+                    ignoreCodes: [1343]
+                },
+                astTransformers: {
+                    before: [
+                        {
+                            path: 'ts-jest-mock-import-meta',
+                            options: {metaObjectReplacement: {env: {MODE: 'development'}}}
+                        }
+                    ]
+                }
+            }],
+        "^.+\\.jsx$": "babel-jest",
+        "^.+\\.js$": "babel-jest"
+    },
+    moduleNameMapper: {
+        "^.+\\.(css|less)$": "identity-obj-proxy"
+    }
+}
+
 export default config;

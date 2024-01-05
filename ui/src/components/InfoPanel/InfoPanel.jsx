@@ -26,11 +26,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
+import DOMPurify from 'dompurify';
 
 import './InfoPanel.css';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const converter = new showdown.Converter();
 
 export const InfoPanel = ({text, onClose}) => {
   const ref = useRef();
@@ -47,7 +47,7 @@ export const InfoPanel = ({text, onClose}) => {
     return null;
   }
 
-  const html = converter.makeHtml(text);
+  const html = DOMPurify.sanitize(converter.makeHtml(text));
   return (
     <div className="kgs-info" onClick={handleOnClose} >
       <div className="kgs-info__panel" ref={ref}>

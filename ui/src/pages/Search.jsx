@@ -332,3 +332,4 @@ export const Search = withTabKeyNavigation(
 )(SearchBase);
 
 export default Search;
+

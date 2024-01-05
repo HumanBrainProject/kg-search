@@ -22,17 +22,23 @@
  */
 
 import React from 'react';
-import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
-import Citation from './Citation';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+import './Badges.css';
 
-const MarkDownCitation = ({ text }) => {
-  const html = converter.makeHtml(text);
-  return(
-    <Citation citation={html} />
+const BadgesEnum = [
+  { name: 'isNew', title: 'New' },
+  { name: 'isTrending', title: 'Top trending' }
+];
+
+const Badge = ({ name, title }) => <span className={`badge rounded-pill kgs-badge kgs-badge-${name}`}>{title}</span>;
+
+const Badges = ({ badges }) => {
+  const list = Array.isArray(badges)?BadgesEnum.filter(badge => badges.includes(badge.name)):[];
+  return (
+    <div className="kgs-badges">
+      {list.map(badge => <Badge key={badge.name} name={badge.name} title={badge.title} />)}
+    </div>
   );
 };
 
-export default MarkDownCitation;
+export default Badges;

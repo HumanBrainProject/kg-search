@@ -8,7 +8,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   env: {
     browser: true,
-    es2021: true,
+    es2022: true,
     node: true,
     jest: true
   },

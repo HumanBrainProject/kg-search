@@ -68,4 +68,4 @@ const developmentConfiguration: ConfigureStoreOptions = {
     .concat(logger)
 };
 
-export default configureStore(process.env.NODE_ENV === 'production'?prodConfiguration:developmentConfiguration);
+export default configureStore(import.meta.env.MODE === 'production'?prodConfiguration:developmentConfiguration);

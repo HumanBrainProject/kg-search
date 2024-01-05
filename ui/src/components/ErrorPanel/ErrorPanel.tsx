@@ -21,11 +21,11 @@
  *
  */
 
+import DOMPurify from 'dompurify';
 import React from 'react';
 import showdown from 'showdown';
-import xssFilter from 'showdown-xss-filter';
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const converter = new showdown.Converter();
 
 import './ErrorPanel.css';
 
@@ -40,7 +40,7 @@ interface ErrorPanelProps {
 }
 
 const ErrorPanel = ({ message, onCancelClick, onRetryClick, cancelVariant, retryVariant, cancelLabel='Cancel', retryLabel='Retry' }: ErrorPanelProps) => {
-  const html = converter.makeHtml(message);
+  const html = DOMPurify.sanitize(converter.makeHtml(message));
   return (
     <div className="kgs-error-container">
       <div className="kgs-error-panel">
