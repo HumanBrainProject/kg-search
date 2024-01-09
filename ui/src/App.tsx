@@ -44,19 +44,13 @@ import Header from './pages/Header/Header';
 import type AuthAdapter from './services/AuthAdapter';
 import type { Store } from 'redux';
 
-// @ts-ignore
 const SearchComp = React.lazy(() => import('./pages/Search.jsx'));
-// @ts-ignore
 const InstanceComp = React.lazy(() => import('./pages/Instance.jsx'));
-// @ts-ignore
 const PreviewComp = React.lazy(() => import('./pages/Preview.jsx'));
 
 import './App.css';
 
 const App = ({ authAdapter}: { authAdapter: AuthAdapter; }) => {
-
-  console.log(import.meta.env.MODE)
-
   const initializedRef = useRef(false);
 
   const [isReady, setReady] = useState(false);
