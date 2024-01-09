@@ -10,7 +10,7 @@ exports[`Notice component renders initially 1`] = `
     <span
       className="kgs-notice-content"
       dangerouslySetInnerHTML={
-        Object {
+        {
           "__html": "<p>some text</p>",
         }
       }
