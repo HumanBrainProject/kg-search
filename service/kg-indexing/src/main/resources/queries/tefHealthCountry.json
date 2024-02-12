@@ -1,0 +1,76 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://ebrains.eu/tef-health/Country",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    },
+    {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
+      "propertyName": "query:name",
+      "path": "http://schema.org/name"
+    },
+    {
+      "propertyName": "query:institutions",
+      "path": {
+        "@id": "https://ebrains.eu/tef-health/country",
+        "reverse": true,
+        "typeFilter": {
+          "@id": "https://ebrains.eu/tef-health/Institution"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:services",
+      "path": {
+        "@id": "https://ebrains.eu/tef-health/country",
+        "reverse": true,
+        "typeFilter": {
+          "@id": "https://ebrains.eu/tef-health/Service"
+        }
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    }
+  ]
+}
