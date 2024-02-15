@@ -24,9 +24,8 @@
 package eu.ebrains.kg.common.utils;
 
 import eu.ebrains.kg.common.model.elasticsearch.Document;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasTrendingInformation;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.HasBadges;
+import eu.ebrains.kg.common.model.target.HasTrendingInformation;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import lombok.Getter;
@@ -43,7 +42,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-import static eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.ISODateValue.ISO_DATE_PATTERN;
+import static eu.ebrains.kg.common.model.target.ISODateValue.ISO_DATE_PATTERN;
 
 @Getter
 public class TranslatorUtils {
@@ -54,17 +53,19 @@ public class TranslatorUtils {
     private final DOICitationFormatter doiCitationFormatter;
     private final ESServiceClient esServiceClient;
     private final Integer trendingThreshold;
+    private final ESHelper esHelper;
 
     private final Map<String, Object> translationContext;
 
     private final List<String> errors;
 
 
-    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold, Map<String, Object> translationContext, List<String> errors) {
+    public TranslatorUtils(DOICitationFormatter doiCitationFormatter, ESServiceClient esServiceClient, Integer trendingThreshold, Map<String, Object> translationContext, List<String> errors, ESHelper esHelper) {
         this.doiCitationFormatter = doiCitationFormatter;
         this.esServiceClient = esServiceClient;
         this.trendingThreshold = trendingThreshold;
         this.translationContext = translationContext;
+        this.esHelper = esHelper;
         this.errors = errors != null ? errors : new ArrayList<>();
     }
 
@@ -114,7 +115,7 @@ public class TranslatorUtils {
 
     public Document getResource(String  id){
         try {
-            return this.esServiceClient.getDocumentByNativeId(ESHelper.getResourcesIndex(), id);
+            return this.esServiceClient.getDocumentByNativeId(esHelper.getResourcesIndex(), id);
         }
         catch (WebClientResponseException e){
             if(e.getStatusCode() == HttpStatus.NOT_FOUND){

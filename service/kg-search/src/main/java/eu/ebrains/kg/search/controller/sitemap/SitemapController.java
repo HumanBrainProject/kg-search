@@ -23,8 +23,9 @@
 
 package eu.ebrains.kg.search.controller.sitemap;
 
+import eu.ebrains.kg.common.controller.translation.TranslatorRegistry;
+import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.TranslatorModel;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
@@ -49,11 +50,15 @@ public class SitemapController {
     String ebrainsUrl;
 
     private final ESServiceClient esServiceClient;
+    private final ESHelper esHelper;
+    private final TranslatorRegistry translatorRegistry;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public SitemapController(ESServiceClient esServiceClient) {
+    public SitemapController(ESServiceClient esServiceClient, ESHelper esHelper, TranslatorRegistry translatorRegistry) {
         this.esServiceClient = esServiceClient;
+        this.esHelper = esHelper;
+        this.translatorRegistry = translatorRegistry;
     }
 
     public boolean isInAdminRole() {
@@ -70,8 +75,8 @@ public class SitemapController {
 
     private SitemapXML fetchSitemap() {
         List<SitemapXML.Url> urls = new ArrayList<>();
-        String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
-        final Set<String> relevantTypes = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAddToSitemap).map(t -> {
+        String index = esHelper.getIndexesForDocument(DataStage.RELEASED);
+        final Set<String> relevantTypes = translatorRegistry.getTranslators().stream().filter(TranslatorModel::isAddToSitemap).map(t -> {
             try {
                 return t.getTargetClass().getConstructor().newInstance().getType().getValue();
             } catch (InstantiationException | IllegalAccessException| InvocationTargetException | NoSuchMethodException e) {

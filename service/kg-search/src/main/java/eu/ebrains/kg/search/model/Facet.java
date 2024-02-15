@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.common.model.target.FieldInfo;
 import eu.ebrains.kg.search.utils.FacetsUtils;
 import lombok.AccessLevel;
 import lombok.Getter;

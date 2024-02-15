@@ -1,0 +1,119 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://ebrains.eu/tef-health/Institution",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    },
+    {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
+      "propertyName": "query:name",
+      "path": "http://schema.org/name"
+    },
+    {
+      "propertyName": "query:providedServices",
+      "path": {
+        "@id": "https://ebrains.eu/tef-health/providedBy",
+        "reverse": true
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:providedServiceCategories",
+      "path": [
+        {
+          "@id": "https://ebrains.eu/tef-health/providedBy",
+          "reverse": true
+        },
+        "https://ebrains.eu/tef-health/serviceCategory",
+        "http://schema.org/name"
+      ]
+    },
+    {
+      "propertyName": "query:country",
+      "path": "https://ebrains.eu/tef-health/country",
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:associations",
+      "path": "https://ebrains.eu/tef-health/associations",
+      "structure": [
+        {
+          "propertyName": "query:name",
+          "path": "http://schema.org/name"
+        },
+        {
+          "propertyName": "query:memberOf",
+          "path": "https://ebrains.eu/tef-health/memberOf",
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "http://schema.org/name"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:associatedTo",
+          "path": "https://ebrains.eu/tef-health/associatedTo",
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "http://schema.org/name"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

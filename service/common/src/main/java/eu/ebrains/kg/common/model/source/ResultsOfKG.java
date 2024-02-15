@@ -24,16 +24,32 @@
 package eu.ebrains.kg.common.model.source;
 
 import eu.ebrains.kg.common.model.ErrorReport;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-public interface ResultsOfKG<E> {
+@Setter
+@Getter
+public class ResultsOfKG<E>{
 
-    List<E> getData();
-    Integer getTotal();
-    Integer getFrom();
-    Integer getSize();
-    ErrorReport getErrors();
-    void setErrors(ErrorReport errors);
+    @Setter
+    @Getter
+    public static class Error {
+        private Integer code;
+        private String message;
+
+    }
+
+    private List<E> data;
+    private String message;
+    private Error error;
+    private Long startTime;
+    private Long durationInMs;
+    private Integer total;
+    private Integer size;
+    private Integer from;
+    private ErrorReport errors;
+
 
 }

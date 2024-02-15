@@ -23,10 +23,8 @@
 
 package eu.ebrains.kg.search.controller.facets;
 
-import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.common.model.target.FieldInfo;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
-import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.model.Facet;
 import eu.ebrains.kg.search.utils.FacetsUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +50,7 @@ public class FacetsController {
     public List<Facet> getFacets(String type) {
         List<Facet> facets  = new ArrayList<>();
         if (StringUtils.isNotBlank(type)) {
-            TranslatorModel.MODELS.stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).forEach(m -> {
+            utils.getTranslatorModels().stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).forEach(m -> {
                 Class<?> targetModel = m.getTargetClass();
                 handleChildren(targetModel, type, facets, "", "");
             });

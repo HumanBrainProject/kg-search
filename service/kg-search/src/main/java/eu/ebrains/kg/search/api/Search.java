@@ -23,13 +23,14 @@
 
 package eu.ebrains.kg.search.api;
 
-import eu.ebrains.kg.common.controller.kg.KGv3;
-import eu.ebrains.kg.common.controller.translators.TranslationController;
+import eu.ebrains.kg.common.controller.kg.KG;
+import eu.ebrains.kg.common.controller.translation.TranslationController;
+import eu.ebrains.kg.common.controller.translation.TranslatorRegistry;
+import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.common.model.target.TargetInstance;
 import eu.ebrains.kg.common.services.DOICitationFormatter;
-import eu.ebrains.kg.common.services.KGV3ServiceClient;
+import eu.ebrains.kg.common.services.KGServiceClient;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.search.controller.search.SearchController;
@@ -42,33 +43,33 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.security.Principal;
 import java.util.*;
 
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 @SuppressWarnings("java:S1452") // we keep the generics intentionally
 public class Search {
-    private final KGV3ServiceClient kgv3ServiceClient;
+    private final KGServiceClient kgv3ServiceClient;
     private final SettingsController definitionController;
     private final SearchController searchController;
     private final TranslationController translationController;
-    private final KGv3 kgV3;
+    private final KG kgV3;
     private final DOICitationFormatter doiCitationFormatter;
+    private final TranslatorRegistry translatorRegistry;
 
-    public Search(KGV3ServiceClient kgv3ServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
+    public Search(KGServiceClient kgv3ServiceClient, SettingsController definitionController, SearchController searchController, TranslationController translationController, KG kgV3, DOICitationFormatter doiCitationFormatter, TranslatorRegistry translatorRegistry) {
         this.kgv3ServiceClient = kgv3ServiceClient;
         this.definitionController = definitionController;
         this.searchController = searchController;
         this.translationController = translationController;
         this.kgV3 = kgV3;
         this.doiCitationFormatter = doiCitationFormatter;
+        this.translatorRegistry = translatorRegistry;
     }
 
     @GetMapping("/settings")
@@ -145,11 +146,11 @@ public class Search {
     public ResponseEntity<Map> translate(@PathVariable("id") String id, @RequestParam(required = false, defaultValue = "false") boolean skipReferenceCheck) throws TranslationException {
         try {
             final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
-            final TranslatorModel<?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
+            final TranslatorModel<?, ?> translatorModel = this.translatorRegistry.getTranslators().stream().filter(m -> m.getTranslator() != null && m.getTranslator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
             if (translatorModel != null) {
-                final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
+                final String queryId = typesOfInstance.stream().map(type -> translatorModel.getTranslator().getQueryIdByType(type)).findFirst().orElse(null);
                 if (queryId != null) {
-                    final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, !skipReferenceCheck);
+                    final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getTranslator(), queryId, DataStage.IN_PROGRESS, id, false, !skipReferenceCheck);
                     if (v != null) {
                         return ResponseEntity.ok(searchController.getLiveDocument(v));
                     }

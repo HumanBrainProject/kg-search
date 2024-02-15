@@ -1,0 +1,102 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://openminds.ebrains.eu/core/BehavioralProtocol",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    },
+    {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
+      "propertyName": "query:name",
+      "path": "https://openminds.ebrains.eu/vocab/name"
+    },
+    {
+      "propertyName": "query:internalIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
+    },
+    {
+      "propertyName": "query:description",
+      "path": "https://openminds.ebrains.eu/vocab/description"
+    },
+    {
+      "propertyName": "query:describedInUrl",
+      "singleValue": "FIRST",
+      "path": [
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/describedIn",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/WebResource"
+            }
+          ]
+        },
+        "https://openminds.ebrains.eu/vocab/IRI"
+      ]
+    },
+    {
+      "propertyName": "query:describedInFile",
+      "path": [
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/describedIn",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/File"
+            }
+          ]
+        }
+      ],
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:name",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:iri",
+          "path": "https://openminds.ebrains.eu/vocab/IRI"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:describedInDOI",
+      "singleValue": "FIRST",
+      "path": [
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/describedIn",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/DOI"
+            }
+          ]
+        },
+        "https://openminds.ebrains.eu/vocab/identifier"
+      ]
+    }
+  ]
+}

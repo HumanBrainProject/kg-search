@@ -23,24 +23,19 @@
 
 package eu.ebrains.kg.search.controller.search;
 
-import eu.ebrains.kg.common.controller.kg.KGv3;
+import eu.ebrains.kg.common.controller.kg.KG;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.elasticsearch.Bucket;
 import eu.ebrains.kg.common.model.elasticsearch.Document;
 import eu.ebrains.kg.common.model.elasticsearch.Result;
 import eu.ebrains.kg.common.model.elasticsearch.Suggestion;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.File;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasPreviews;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.VersionedInstance;
+import eu.ebrains.kg.common.model.target.*;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
-import eu.ebrains.kg.search.model.FacetValue;
 import eu.ebrains.kg.search.model.Facet;
+import eu.ebrains.kg.search.model.FacetValue;
 import eu.ebrains.kg.search.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -65,8 +60,8 @@ public class SearchController extends FacetAggregationUtils {
     private final FacetsController facetsController;
     private final SearchFieldsController searchFieldsController;
     private final MetaModelUtils utils;
-
-    private final KGv3 kg;
+    private final ESHelper esHelper;
+    private final KG kg;
 
     private final static String TOTAL = "total";
 
@@ -75,12 +70,15 @@ public class SearchController extends FacetAggregationUtils {
             FacetsController facetsController,
             SearchFieldsController searchFieldsController,
             MetaModelUtils utils,
-            KGv3 kg
+            ESHelper esHelper,
+            KG kg
+
     ) {
         this.esServiceClient = esServiceClient;
         this.facetsController = facetsController;
         this.searchFieldsController = searchFieldsController;
         this.utils = utils;
+        this.esHelper = esHelper;
         this.kg = kg;
     }
 
@@ -110,7 +108,7 @@ public class SearchController extends FacetAggregationUtils {
 
     private List<UUID> getBookmarkedIds(Map<String, FacetValue> facetValues, String type) {
 //        if (principal != null && principal.getToken() != null && principal.getToken().getExpiresAt()!=null && principal.getToken().getExpiresAt().isBefore(Instant.now())){
-            List<String> semanticTypes = MetaModelUtils.getSemanticTypes(type);
+            List<String> semanticTypes = this.utils.getSemanticTypes(type);
             if (!CollectionUtils.isEmpty(semanticTypes)) {
                 List<UUID> ids = new ArrayList<>();
                 semanticTypes.forEach(s -> {
@@ -151,7 +149,7 @@ public class SearchController extends FacetAggregationUtils {
 
     private ResponseEntity<?> getFileAggregationFromRepo(DataStage stage, UUID id, String field) {
         try {
-            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
+            String fileIndex = esHelper.getAutoReleasedIndex(stage, utils.getFileClass(), false);
             Map<String, String> aggs = Map.of("patterns", field);
             Result esResult = esServiceClient.getFilesAggregationsFromRepo(fileIndex, id, aggs);
             Map<String, Object> result = formatFileAggregation(esResult, "patterns");
@@ -174,7 +172,7 @@ public class SearchController extends FacetAggregationUtils {
         UUID searchAfterUUID = null;
         int total = 0;
         boolean isFirstRequest = true;
-        String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
+        String fileIndex = esHelper.getAutoReleasedIndex(stage, utils.getFileClass(), false);
         while (isFirstRequest || searchAfterUUID != null) {
             isFirstRequest = false;
             try {
@@ -234,7 +232,7 @@ public class SearchController extends FacetAggregationUtils {
         if (query != null) {
             payload.put("query", query);
         }
-        String index = ESHelper.getIndexesForSearch(dataStage);
+        String index = esHelper.getIndexesForSearch(dataStage);
         Result result = esServiceClient.searchDocuments(index, payload);
         int total = (result.getHits() != null && result.getHits().getTotal() != null) ? result.getHits().getTotal().getValue() : 0;
         Map<String, Object> facetAggregation = getFacetAggregation(facets, result.getAggregations(), facetValues, total != 0);
@@ -307,7 +305,7 @@ public class SearchController extends FacetAggregationUtils {
 
 
     public Map<String, Object> getSearchDocument(DataStage dataStage, String id) throws WebClientResponseException {
-        String index = ESHelper.getIndexesForDocument(dataStage);
+        String index = esHelper.getIndexesForDocument(dataStage);
         Document doc = esServiceClient.getDocument(index, id);
         if (doc == null || doc.getSource() == null) {
             return null;
@@ -526,7 +524,7 @@ public class SearchController extends FacetAggregationUtils {
         Map<String, String> result = new LinkedHashMap<>();
         if (!sanitizedQuery.isEmpty()) {
             final String query = String.join(" ", sanitizedQuery);
-            String index = ESHelper.getSearchableIndex(dataStage, MetaModelUtils.getClassForType(type), false);
+            String index = esHelper.getSearchableIndex(dataStage, this.utils.getClassForType(type), false);
             Map<String, Object> payload = new HashMap<>();
             Map<String, Object> suggest = new HashMap<>();
             payload.put("suggest", suggest);

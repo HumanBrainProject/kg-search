@@ -23,9 +23,8 @@
 
 package eu.ebrains.kg.search.controller.search;
 
-import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.common.model.target.FieldInfo;
+import eu.ebrains.kg.common.model.target.Value;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -53,9 +52,7 @@ public class SearchFieldsController {
 
     private final MetaModelUtils utils;
 
-    public SearchFieldsController(
-            MetaModelUtils utils
-    ) {
+    public SearchFieldsController(MetaModelUtils utils) {
         this.utils = utils;
     }
 
@@ -120,8 +117,8 @@ public class SearchFieldsController {
     public List<String> getEsQueryFields(String type) {
         Map<String, Double> fieldsWithBoost = new HashMap<>();
         Class<?> targetModelForType = null;
-        for (int i = 0; i < TranslatorModel.MODELS.size(); i++) {
-            Class<?> targetModel = TranslatorModel.MODELS.get(i).getTargetClass();
+        for (int i = 0; i < utils.getTranslatorModels().size(); i++) {
+            Class<?> targetModel = utils.getTranslatorModels().get(i).getTargetClass();
             String targetModelName = MetaModelUtils.getNameForClass(targetModel);
             if (StringUtils.isNotBlank(type) && targetModelName.equals(type)) {
                 targetModelForType = targetModel;
@@ -133,12 +130,11 @@ public class SearchFieldsController {
         if (targetModelForType != null) {
             reflectFields(fieldsWithBoost, targetModelForType, null);
         }
-        List<String> fields = fieldsWithBoost.entrySet().stream().map(e -> {
+        return fieldsWithBoost.entrySet().stream().map(e -> {
             String field = e.getKey();
             double boost = e.getValue() == null ? 1.0 : (double) e.getValue();
             return String.format("%s^%d", field, (int) boost);
         }).sorted().collect(Collectors.toList());
-        return fields;
     }
 
     private void reflectFields(Map<String, Double> boosts, Class<?> clazz, Predicate<FieldInfo> filter) {

@@ -23,4 +23,30 @@
 
 package eu.ebrains.kg.common.model.source;
 
-public interface SourceInstance {}
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import eu.ebrains.kg.common.utils.IdUtils;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+@Getter
+@Setter
+public class SourceInstance {
+    private String id;
+    private List<String> identifier;
+    private List<String> type;
+
+    public String getUUID(){
+        return IdUtils.getUUID(id);
+    }
+
+    @JsonIgnore
+    public String getPrimaryType(){
+        if(CollectionUtils.isEmpty(type)){
+            return null;
+        }
+        return type.getFirst();
+    }
+}

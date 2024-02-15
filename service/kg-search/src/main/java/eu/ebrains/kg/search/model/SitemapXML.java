@@ -26,6 +26,8 @@ package eu.ebrains.kg.search.model;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -35,29 +37,16 @@ public class SitemapXML implements Serializable {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
+    @Setter
+    @Getter
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<Url> url;
 
-    public List<Url> getUrl() {
-        return url;
-    }
-
-    public void setUrl(List<Url> url) {
-        this.url = url;
-    }
-
+    @Setter
+    @Getter
     @JacksonXmlRootElement(localName = "url")
     public static class Url implements Serializable {
-
         private String loc;
-
-        public String getLoc() {
-            return loc;
-        }
-
-        public void setLoc(String loc) {
-            this.loc = loc;
-        }
     }
 
 

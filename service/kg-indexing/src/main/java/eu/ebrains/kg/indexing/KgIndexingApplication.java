@@ -33,11 +33,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-
+@SuppressWarnings("SpringComponentScan") //The package "eu.ebrains.kg.projects" is going to be fulfilled by the customization package
 @SpringBootApplication
 @EnableAsync
 @EnableWebSecurity
-@ComponentScan(basePackages = {"eu.ebrains.kg.common", "eu.ebrains.kg.indexing"})
+@ComponentScan(basePackages = {"eu.ebrains.kg.common", "eu.ebrains.kg.indexing", "eu.ebrains.kg.projects"})
 public class KgIndexingApplication {
 
     public static void main(String[] args) {

@@ -1,0 +1,105 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://ebrains.eu/tef-health/Service",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    },
+    {
+      "propertyName": "query:type",
+      "path": "@type"
+    },
+    {
+      "propertyName": "query:name",
+      "path": "http://schema.org/name"
+    },
+    {
+      "propertyName": "query:description",
+      "path": "http://schema.org/description"
+    },
+    {
+      "propertyName": "query:providedBy",
+      "path": "https://ebrains.eu/tef-health/providedBy",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:country",
+      "path": "https://ebrains.eu/tef-health/country",
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:serviceCategory",
+      "path": [
+        "https://ebrains.eu/tef-health/serviceCategory",
+        "http://schema.org/name"
+      ],
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "http://schema.org/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:useCaseCategories",
+      "path": [
+        "https://ebrains.eu/tef-health/useCaseCategories",
+        "http://schema.org/name"
+      ]
+    },
+    {
+      "propertyName": "query:useCaseDomains",
+      "path": [
+        "https://ebrains.eu/tef-health/useCaseDomains",
+        "http://schema.org/name"
+      ]
+    },
+    {
+      "propertyName": "query:useCaseDomainOtherDescription",
+      "path": "https://ebrains.eu/tef-health/useCaseDomainOtherDescription"
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+/*
+ *  Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
+ *  Copyright 2021 - 2023 EBRAINS AISBL
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  This open source software code was developed in part or in whole in the
+ *  Human Brain Project, funded from the European Union's Horizon 2020
+ *  Framework Programme for Research and Innovation under
+ *  Specific Grant Agreements No. 720270, No. 785907, and No. 945539
+ *  (Human Brain Project SGA1, SGA2 and SGA3).
+ */
+
+package eu.ebrains.kg.projects.ebrains.translators;
+
+import eu.ebrains.kg.common.model.DataStage;
+import eu.ebrains.kg.common.model.source.FullNameRef;
+import eu.ebrains.kg.common.model.source.ResultsOfKG;
+import eu.ebrains.kg.common.model.target.TargetExternalReference;
+import eu.ebrains.kg.common.model.target.TargetInternalReference;
+import eu.ebrains.kg.common.model.target.Value;
+import eu.ebrains.kg.common.utils.IdUtils;
+import eu.ebrains.kg.projects.ebrains.EBRAINSTranslatorUtils;
+import eu.ebrains.kg.projects.ebrains.source.MetadataModelVersionV3;
+import eu.ebrains.kg.projects.ebrains.source.commons.LearningResource;
+import eu.ebrains.kg.projects.ebrains.source.commons.PersonOrOrganizationRef;
+import eu.ebrains.kg.projects.ebrains.source.commons.Version;
+import eu.ebrains.kg.projects.ebrains.target.MetaDataModelVersion;
+import eu.ebrains.kg.common.utils.TranslationException;
+import eu.ebrains.kg.common.utils.TranslatorUtils;
+import eu.ebrains.kg.projects.ebrains.translators.commons.Accessibility;
+import eu.ebrains.kg.projects.ebrains.translators.commons.Constants;
+import eu.ebrains.kg.projects.ebrains.translators.commons.EBRAINSTranslator;
+import eu.ebrains.kg.projects.ebrains.translators.utils.MetaBadgeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class MetaDataModelVersionTranslator extends EBRAINSTranslator<MetadataModelVersionV3, MetaDataModelVersion, MetaDataModelVersionTranslator.Result> {
+
+    public static class Result extends ResultsOfKG<MetadataModelVersionV3> {
+    }
+
+    @Override
+    public Class<MetadataModelVersionV3> getSourceType() {
+        return MetadataModelVersionV3.class;
+    }
+
+    @Override
+    public Class<MetaDataModelVersion> getTargetType() {
+        return MetaDataModelVersion.class;
+    }
+
+    @Override
+    public Class<Result> getResultType() {
+        return Result.class;
+    }
+
+    @Override
+    public List<String> getQueryIds() {
+        return Collections.singletonList("f58f0ea3-72f2-4da5-aeb6-ce7339595037");
+    }
+
+    @Override
+    public List<String> semanticTypes() {
+        return Collections.singletonList("https://openminds.ebrains.eu/core/MetaDataModelVersion");
+    }
+
+
+    public MetaDataModelVersion translate(MetadataModelVersionV3 metadataModelVersionV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
+        MetaDataModelVersion m = new MetaDataModelVersion();
+
+        m.setCategory(new Value<>("Meta Data Model"));
+        m.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible."));
+
+        MetadataModelVersionV3.MetaDataModelVersions metaDataModel = metadataModelVersionV3.getMetaDataModel();
+        Accessibility accessibility = Accessibility.fromPayload(metadataModelVersionV3);
+        final Date releaseDate = metadataModelVersionV3.getReleaseDate() != null && metadataModelVersionV3.getReleaseDate().before(new Date()) ? metadataModelVersionV3.getReleaseDate() : metadataModelVersionV3.getFirstReleasedAt();
+        final String releaseDateForSorting = translatorUtils.getReleasedDateForSorting(null, releaseDate);
+        m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
+        m.setFirstRelease(value(releaseDate));
+        m.setLastRelease(value(metadataModelVersionV3.getLastReleasedAt()));
+        m.setReleasedAt(value(releaseDateForSorting != null ? releaseDateForSorting.split("T")[0] : null));
+        m.setReleasedDateForSorting(value(releaseDateForSorting));
+        m.setAllIdentifiers(metadataModelVersionV3.getIdentifier());
+        m.setIdentifier(IdUtils.getUUID(metadataModelVersionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
+        List<Version> versions = metaDataModel == null ? null : metaDataModel.getVersions();
+        boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
+        if (hasMultipleVersions) {
+            m.setVersion(metadataModelVersionV3.getVersionIdentifier());
+            List<Version> sortedVersions = EBRAINSTranslatorUtils.sort(versions, translatorUtils.getErrors());
+            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
+            references.add(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "version overview"));
+            m.setVersions(references);
+            m.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(metaDataModel.getId()), "version overview"));
+            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
+            m.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(metadataModelVersionV3.getId()));
+        } else {
+            m.setSearchable(true);
+        }
+
+        if (StringUtils.isNotBlank(metadataModelVersionV3.getDescription())) {
+            m.setDescription(value(metadataModelVersionV3.getDescription()));
+        } else if (metaDataModel != null) {
+            m.setDescription(value(metaDataModel.getDescription()));
+        }
+
+        if (StringUtils.isNotBlank(metadataModelVersionV3.getVersionInnovation()) && !Constants.VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(metadataModelVersionV3.getVersionInnovation()).toLowerCase())) {
+            m.setNewInThisVersion(new Value<>(metadataModelVersionV3.getVersionInnovation()));
+        }
+        m.setHomepage(link(metadataModelVersionV3.getHomepage()));
+
+        if (StringUtils.isNotBlank(metadataModelVersionV3.getFullName())) {
+            if (hasMultipleVersions || StringUtils.isBlank(metadataModelVersionV3.getVersionIdentifier())) {
+                m.setTitle(value(metadataModelVersionV3.getFullName()));
+            } else {
+                m.setTitle(value(String.format("%s (%s)", metadataModelVersionV3.getFullName(), metadataModelVersionV3.getVersionIdentifier())));
+            }
+        } else if (metaDataModel != null && StringUtils.isNotBlank(metaDataModel.getFullName())) {
+            if (hasMultipleVersions || StringUtils.isBlank(metadataModelVersionV3.getVersionIdentifier())) {
+                m.setTitle(value(metaDataModel.getFullName()));
+            } else {
+                m.setTitle(value(String.format("%s (%s)", metaDataModel.getFullName(), metadataModelVersionV3.getVersionIdentifier())));
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(metadataModelVersionV3.getDeveloper())) {
+            m.setContributors(metadataModelVersionV3.getDeveloper().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            EBRAINSTranslatorUtils.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        } else if (metaDataModel != null && !CollectionUtils.isEmpty(metaDataModel.getDeveloper())) {
+            m.setContributors(metaDataModel.getDeveloper().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            EBRAINSTranslatorUtils.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        }
+
+        if (accessibility == Accessibility.UNDER_EMBARGO) {
+            m.setEmbargo(value(EBRAINSTranslatorUtils.createEmbargoMessage("metadata model", metadataModelVersionV3.getFileRepository(), null)));
+        } else {
+            if (metadataModelVersionV3.getFileRepository() != null && metadataModelVersionV3.getFileRepository().getIri() != null) {
+                final String iri = metadataModelVersionV3.getFileRepository().getIri();
+                final boolean allowEmbedding = Constants.DOMAINS_ALLOWING_EMBEDDING.stream().anyMatch(iri::startsWith);
+                if (allowEmbedding) {
+                    m.setEmbeddedModelSource(new TargetExternalReference(iri, metadataModelVersionV3.getFileRepository().getFullName()));
+                } else {
+                    if (metadataModelVersionV3.getFileRepository() != null) {
+                        if (EBRAINSTranslatorUtils.isCscsContainer(metadataModelVersionV3.getFileRepository()) || EBRAINSTranslatorUtils.isDataProxyBucket(metadataModelVersionV3.getFileRepository())) {
+                            m.setFileRepositoryId(IdUtils.getUUID(metadataModelVersionV3.getFileRepository().getId()));
+                        } else {
+                            m.setExternalDownload(link(metadataModelVersionV3.getFileRepository()));
+                        }
+                    }
+                }
+            }
+        }
+
+        handleCitation(metadataModelVersionV3, m);
+
+        m.setLicenseInfo(link(metadataModelVersionV3.getLicense()));
+        List<FullNameRef> projects = null;
+        if (metadataModelVersionV3.getProjects() != null && metaDataModel != null && metaDataModel.getProjects() != null) {
+            projects = Stream.concat(metadataModelVersionV3.getProjects().stream(), metaDataModel.getProjects().stream()).distinct().collect(Collectors.toList());
+        } else if (metadataModelVersionV3.getProjects() != null) {
+            projects = metadataModelVersionV3.getProjects();
+        } else if (metaDataModel != null && metaDataModel.getProjects() != null) {
+            projects = metaDataModel.getProjects();
+        }
+        m.setProjects(ref(projects));
+
+
+        List<PersonOrOrganizationRef> custodians = metadataModelVersionV3.getCustodian();
+        if (CollectionUtils.isEmpty(custodians) && metadataModelVersionV3.getMetaDataModel() != null) {
+            custodians = metadataModelVersionV3.getMetaDataModel().getCustodian();
+        }
+
+        if (!CollectionUtils.isEmpty(custodians)) {
+            m.setCustodians(custodians.stream().map(c -> new TargetInternalReference(IdUtils.getUUID(c.getId()), EBRAINSTranslatorUtils.getFullName(c.getFullName(), c.getFamilyName(), c.getGivenName()))).collect(Collectors.toList()));
+        }
+
+        if (!CollectionUtils.isEmpty(metadataModelVersionV3.getRelatedPublications())) {
+            m.setPublications(metadataModelVersionV3.getRelatedPublications().stream().map(p -> EBRAINSTranslatorUtils.getFormattedDigitalIdentifier(translatorUtils.getDoiCitationFormatter(), p.getIdentifier(), p.resolvedType())).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(metadataModelVersionV3.getSupportChannel())){
+            m.setSupport(metadataModelVersionV3.getSupportChannel().stream().map(s -> {
+                if(s.contains("@")){
+                    return new TargetExternalReference(String.format("mailto:%s", s), s);
+                }
+                else{
+                    return new TargetExternalReference(s, s);
+                }
+            }).collect(Collectors.toList()));
+        }
+        m.setMetaDataModelType(ref(metadataModelVersionV3.getModelType()));
+        m.setSerializationFormat(ref(metadataModelVersionV3.getSerializationFormat()));
+        m.setSpecificationFormat(ref(metadataModelVersionV3.getSpecificationFormat()));
+        if (!CollectionUtils.isEmpty(metadataModelVersionV3.getKeyword())) {
+            Collections.sort(metadataModelVersionV3.getKeyword());
+            m.setKeywords(value(metadataModelVersionV3.getKeyword()));
+        }
+        if(!CollectionUtils.isEmpty(metadataModelVersionV3.getLearningResource())) {
+            m.setLearningResources(metadataModelVersionV3.getLearningResource().stream().map(LearningResource::toReference).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        m.setLivePapers(link(metadataModelVersionV3.getLivePapers()));
+        translatorUtils.defineBadgesAndTrendingState(m, null, releaseDate, null, MetaBadgeUtils.evaluateMetaBadgeUtils(metadataModelVersionV3, false, false));
+        m.setQueryBuilderText(value(TranslatorUtils.createQueryBuilderText(metadataModelVersionV3.getPrimaryType(), m.getId())));
+        return m;
+    }
+}

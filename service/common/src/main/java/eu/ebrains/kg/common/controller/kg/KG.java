@@ -24,10 +24,74 @@
 package eu.ebrains.kg.common.controller.kg;
 
 import eu.ebrains.kg.common.model.DataStage;
+import eu.ebrains.kg.common.services.KGServiceClient;
+import org.springframework.stereotype.Component;
 
-public interface KG {
+import java.util.*;
 
-    <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, int from, int size);
 
-    <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount);
+@Component
+public class KG  {
+    private final KGServiceClient kgServiceClient;
+
+    public KG(KGServiceClient kgServiceClient) {
+        this.kgServiceClient = kgServiceClient;
+    }
+
+    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, int from, int size) {
+        return kgServiceClient.executeQueryForIndexing(clazz, dataStage, queryId, from, size);
+    }
+
+    public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount) {
+        return kgServiceClient.executeQueryForInstance(clazz, dataStage, queryId, id, asServiceAccount);
+    }
+
+    public Set<UUID> getInvitationsFromKG(){
+        //TODO can we cache this?
+        return kgServiceClient.getInvitationsFromKG();
+    }
+
+    public void persistBadges(String type, Map<String, Object> badges){
+        kgServiceClient.persistBadges(type, badges);
+    }
+
+
+    @SuppressWarnings("java:S3740") // we keep the generics intentionally
+    public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
+        final Map<?, ?> instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount);
+        if (instance != null) {
+            final Object data = instance.get("data");
+            if (data instanceof Map) {
+                final Object type = ((Map<?, ?>) data).get("@type");
+                return getType(type);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> getType(Object type) {
+        if (type instanceof String) {
+            return Collections.singletonList((String) type);
+        }
+        if (type instanceof List) {
+            return (List<String>) type;
+        }
+        return Collections.emptyList();
+    }
+
+    public void addBookmark(UUID id){
+       kgServiceClient.addBookmark(id);
+    }
+
+    public void deleteBookmark(UUID id){
+        kgServiceClient.deleteBookmark(id);
+    }
+
+    public List<UUID> getBookmarkIdsFromInstance(UUID id){
+        return kgServiceClient.getBookmarkIdsFromInstance(id);
+    }
+
+    public List<UUID> getBookmarkedInstancesOfType(String type){
+        return kgServiceClient.getBookmarkedInstancesOfType(type);
+    }
 }

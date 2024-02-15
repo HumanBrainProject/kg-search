@@ -35,11 +35,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+@SuppressWarnings("SpringComponentScan") //The package "eu.ebrains.kg.projects" is going to be fulfilled by the customization package
 @SpringBootApplication
 @EnableAsync
 @EnableWebSecurity
 @EnableMethodSecurity
-@ComponentScan(basePackages = {"eu.ebrains.kg.common", "eu.ebrains.kg.search"})
+@ComponentScan(basePackages = {"eu.ebrains.kg.common", "eu.ebrains.kg.search",  "eu.ebrains.kg.projects"})
 public class KgSearchApplication {
 
     public static void main(String[] args) {

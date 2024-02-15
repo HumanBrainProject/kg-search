@@ -24,29 +24,29 @@
 package eu.ebrains.kg.indexing.controller.indexing;
 
 import eu.ebrains.kg.common.controller.kg.KG;
-import eu.ebrains.kg.common.controller.kg.KGv3;
-import eu.ebrains.kg.common.controller.translators.ReferenceResolver;
-import eu.ebrains.kg.common.controller.translators.TargetInstancesResult;
-import eu.ebrains.kg.common.controller.translators.TranslationController;
-import eu.ebrains.kg.common.controller.translators.Translator;
+import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
+import eu.ebrains.kg.common.controller.translation.utils.ReferenceResolver;
+import eu.ebrains.kg.common.controller.translation.models.TargetInstancesResult;
+import eu.ebrains.kg.common.controller.translation.TranslationController;
+import eu.ebrains.kg.common.controller.translation.models.Translator;
 import eu.ebrains.kg.common.model.*;
-import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
-import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.HasBadges;
+import eu.ebrains.kg.common.model.source.SourceInstance;
+import eu.ebrains.kg.common.model.target.TargetInstance;
+import eu.ebrains.kg.common.model.target.HasBadges;
 import eu.ebrains.kg.common.services.ESServiceClient;
+import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.indexing.controller.mapping.MappingController;
 import eu.ebrains.kg.indexing.controller.metrics.MetricsController;
 import eu.ebrains.kg.indexing.controller.settings.SettingsController;
+import org.apache.tomcat.util.buf.EncodedSolidusHandling;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static eu.ebrains.kg.common.controller.translators.Helpers.collectAllTargetInternalReferences;
 
 @Component
 public class IndexingController {
@@ -57,39 +57,41 @@ public class IndexingController {
     private final ElasticSearchController elasticSearchController;
 
     private final ESServiceClient esServiceClient;
+    private final ESHelper esHelper;
     private final TranslationController translationController;
 
     private final ReferenceResolver referenceResolver;
 
-    private final KGv3 kgV3;
+    private final KG kgV3;
 
 
-    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv3 kgV3, ESServiceClient esServiceClient, ReferenceResolver referenceResolver) {
+    public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KG kgV3, ESServiceClient esServiceClient, ESHelper esHelper, ReferenceResolver referenceResolver) {
         this.mappingController = mappingController;
         this.metricsController = metricsController;
         this.settingsController = settingsController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
         this.esServiceClient = esServiceClient;
+        this.esHelper = esHelper;
         this.referenceResolver = referenceResolver;
         this.kgV3 = kgV3;
     }
 
-    public <v3Input extends SourceInstanceV3, Target extends TargetInstance> ErrorReportResult.ErrorReportResultByTargetType populateIndex(TranslatorModel<v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
+    public <Input extends SourceInstance, Target extends TargetInstance> ErrorReportResult.ErrorReportResultByTargetType populateIndex(TranslatorModel<Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
         ErrorReportResult.ErrorReportResultByTargetType errorReportByTargetType =  null;
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
-        if (translatorModel.getV3translator() != null) {
-            final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.emptySet(), instance -> instance, translatorModel.isAutoRelease(), temporary);
+        if (translatorModel.getTranslator() != null) {
+            final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getTranslator(), translatorModel.getBulkSize(), dataStage, Collections.emptySet(), instance -> instance, translatorModel.isAutoRelease(), temporary);
             if (!updateResultV3.errors.isEmpty()) {
                 errorReportByTargetType = new ErrorReportResult.ErrorReportResultByTargetType();
-                errorReportByTargetType.setTargetType(translatorModel.getV3translator().getTargetType().getSimpleName());
+                errorReportByTargetType.setTargetType(translatorModel.getTranslator().getTargetType().getSimpleName());
                 errorReportByTargetType.setErrors(updateResultV3.errors);
             }
             searchableIds.addAll(updateResultV3.searchableIds);
             nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
             if(!updateResultV3.badges.isEmpty()) {
-                kgV3.persistBadges(translatorModel.getV3translator().getTargetType().getSimpleName(), updateResultV3.badges);
+                kgV3.persistBadges(translatorModel.getTranslator().getTargetType().getSimpleName(), updateResultV3.badges);
             }
         }
         if (translatorModel.isAutoRelease()) {
@@ -111,9 +113,9 @@ public class IndexingController {
 
 
     private static final List<String> relevantBadges = Arrays.asList(TranslatorUtils.IS_NEW_BADGE, TranslatorUtils.IS_TRENDING_BADGE);
-    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<? extends SourceInstanceV3, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
+    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<? extends SourceInstance, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease, boolean temporary) {
         UpdateResult updateResult = new UpdateResult();
-        final Map<String, Object> translationContext = translator.populateTranslationContext(esServiceClient, dataStage);
+        final Map<String, Object> translationContext = translator.populateTranslationContext(esServiceClient, esHelper, dataStage);
         final Integer trendThreshold = metricsController.getTrendThreshold(type, dataStage);
         final Set<String> existingIdentifiers = referenceResolver.loadAllExistingIdentifiers(dataStage);
         translator.getQueryIds().forEach(queryId -> {

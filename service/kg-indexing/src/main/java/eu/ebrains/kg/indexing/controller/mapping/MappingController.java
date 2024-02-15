@@ -23,9 +23,9 @@
 
 package eu.ebrains.kg.indexing.controller.mapping;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.ElasticSearchInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.instances.commons.Children;
+import eu.ebrains.kg.common.model.target.ElasticSearchInfo;
+import eu.ebrains.kg.common.model.target.FieldInfo;
+import eu.ebrains.kg.common.model.target.Children;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

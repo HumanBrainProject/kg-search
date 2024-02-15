@@ -23,8 +23,9 @@
 
 package eu.ebrains.kg.indexing.controller.queries;
 
-import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.services.KGV3ServiceClient;
+import eu.ebrains.kg.common.controller.translation.TranslatorRegistry;
+import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
+import eu.ebrains.kg.common.services.KGServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
@@ -42,17 +43,19 @@ import java.util.Objects;
 public class QueryController {
 
 
-    private final KGV3ServiceClient kgv3ServiceClient;
+    private final KGServiceClient kgv3ServiceClient;
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final TranslatorRegistry translatorRegistry;
 
-    public QueryController(KGV3ServiceClient kgv3ServiceClient) {
+    public QueryController(KGServiceClient kgv3ServiceClient, TranslatorRegistry translatorRegistry) {
         this.kgv3ServiceClient = kgv3ServiceClient;
+        this.translatorRegistry = translatorRegistry;
     }
 
     @Async
     public void uploadQueries(){
         logger.info("Now uploading queries for search...");
-        TranslatorModel.MODELS.parallelStream().map(TranslatorModel::getV3translator).filter(Objects::nonNull).forEach(t -> {
+        translatorRegistry.getTranslators().parallelStream().map(TranslatorModel::getTranslator).filter(Objects::nonNull).forEach(t -> {
             try{
                 for (String semanticType : t.semanticTypes()) {
                     String filename = t.getQueryFileName(semanticType);

@@ -23,9 +23,9 @@
 
 package eu.ebrains.kg.search.controller.settings;
 
-import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
+import eu.ebrains.kg.common.model.target.FieldInfo;
+import eu.ebrains.kg.common.model.target.MetaInfo;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
 import eu.ebrains.kg.search.controller.facets.FacetsController;
 import eu.ebrains.kg.search.model.Facet;
@@ -54,14 +54,12 @@ public class SettingsController {
     @Cacheable(value = "typeMappings", unless = "#result == null")
     public Map<String, Object> generateTypeMappings() {
         Map<String, Object> labels = new LinkedHashMap<>();
-        for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
+        for (TranslatorModel<?, ?> model : utils.getTranslatorModels()) {
             Class<?> targetModel = model.getTargetClass();
             labels.put(MetaModelUtils.getNameForClass(targetModel), generateTypeMappings(targetModel));
             //Also add inner models to the labels
             Arrays.stream(targetModel.getDeclaredClasses()).filter(c -> c.getAnnotation(MetaInfo.class) != null)
-                    .forEachOrdered(innerClass -> {
-                        labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateTypeMappings(innerClass));
-                    });
+                    .forEachOrdered(innerClass -> labels.put(String.format("%s.%s", MetaModelUtils.getNameForClass(targetModel), MetaModelUtils.getNameForClass(innerClass)), generateTypeMappings(innerClass)));
         }
         return labels;
     }
@@ -183,7 +181,7 @@ public class SettingsController {
     @Cacheable(value = "types", unless = "#result == null")
     public List<Object> generateTypes() {
         Map<Integer, Object> types = new LinkedHashMap<>();
-        for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
+        for (TranslatorModel<?, ?> model : utils.getTranslatorModels()) {
             Class<?> targetModel = model.getTargetClass();
             Map<String, Object> type = generateType(targetModel, MetaModelUtils.getNameForClass(targetModel), true);
             if (type != null) {
@@ -227,7 +225,7 @@ public class SettingsController {
                     "type", "exists",
                     "authenticationRequired", true
             );
-            facets.add(0, bookmarksFacet);
+            facets.addFirst(bookmarksFacet);
         }
         result.put("facets", facets);
         List<Map<String, String>> sortFields = new ArrayList<>();
@@ -252,10 +250,10 @@ public class SettingsController {
                 facet.put("type", f.getType().name().toLowerCase());
             }
             if (f.getIsFilterable() != null && f.getIsFilterable()) {
-                facet.put("isFilterable", f.getIsFilterable());
+                facet.put("isFilterable", true);
             }
             if (f.getIsHierarchical() != null && f.getIsHierarchical()) {
-                facet.put("isHierarchical", f.getIsHierarchical());
+                facet.put("isHierarchical", true);
             }
         });
         return result;

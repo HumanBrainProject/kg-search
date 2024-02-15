@@ -23,13 +23,9 @@
 
 package eu.ebrains.kg.search.model;
 
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.search.utils.FacetsUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter

@@ -24,9 +24,10 @@
 package eu.ebrains.kg.common.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.common.model.TranslatorModel;
-import eu.ebrains.kg.common.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.common.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.common.controller.translation.TranslatorRegistry;
+import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
+import eu.ebrains.kg.common.model.target.FieldInfo;
+import eu.ebrains.kg.common.model.target.MetaInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -41,6 +42,20 @@ public class MetaModelUtils {
 
     @FieldInfo
     private static Object defaultFieldAnnotations;
+
+    private final TranslatorRegistry translatorRegistry;
+
+    public MetaModelUtils(TranslatorRegistry translatorRegistry) {
+        this.translatorRegistry = translatorRegistry;
+    }
+
+    public Class<?> getFileClass(){
+        return this.translatorRegistry.getFileClass();
+    }
+
+    public List<TranslatorModel<?,?>> getTranslatorModels(){
+        return this.translatorRegistry.getTranslators();
+    }
 
     public static class FieldWithGenericTypeInfo {
         private final Field field;
@@ -71,7 +86,7 @@ public class MetaModelUtils {
     }
 
     public Type getTypeTargetClass(String type) {
-        List<TranslatorModel<?, ?>> match = TranslatorModel.MODELS.stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).collect(Collectors.toList());
+        List<TranslatorModel<?, ?>> match = translatorRegistry.getTranslators().stream().filter(m -> MetaModelUtils.getNameForClass(m.getTargetClass()).equals(type)).collect(Collectors.toList());
         if (match.isEmpty()) {
             return null;
         }
@@ -182,9 +197,9 @@ public class MetaModelUtils {
         }
     }
 
-    public static Class<?> getClassForType(String type){
+    public Class<?> getClassForType(String type){
         if (StringUtils.isNotBlank(type)) {
-            for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
+            for (TranslatorModel<?, ?> model : translatorRegistry.getTranslators()) {
                 Class<?> targetModel = model.getTargetClass();
                 if (MetaModelUtils.getNameForClass(targetModel).equals(type)) {
                     return targetModel;
@@ -194,13 +209,13 @@ public class MetaModelUtils {
         return null;
     }
 
-    public static List<String> getSemanticTypes(String type) {
+    public List<String> getSemanticTypes(String type) {
         if (!StringUtils.isBlank(type)) {
-            for (TranslatorModel<?, ?> model : TranslatorModel.MODELS) {
+            for (TranslatorModel<?, ?> model : translatorRegistry.getTranslators()) {
                 Class<?> targetModel = model.getTargetClass();
                 String name = MetaModelUtils.getNameForClass(targetModel);
                 if (name.equals(type)) {
-                    List<String> semanticTypes = model.getV3translator().semanticTypes();
+                    List<String> semanticTypes = model.getTranslator().semanticTypes();
                     if (CollectionUtils.isEmpty(semanticTypes)) {
                         return Collections.emptyList();
                     }

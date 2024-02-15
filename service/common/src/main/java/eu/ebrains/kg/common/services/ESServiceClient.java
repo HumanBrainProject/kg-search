@@ -499,7 +499,9 @@ public class ESServiceClient {
                 .uri(String.format("%s/%s", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(mapping))
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(Void.class).doOnError(e -> {
+                    logger.error(String.format("Was not able to create index %s", index), e);
+                })
                 .block();
     }
 

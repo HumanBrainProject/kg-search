@@ -42,16 +42,19 @@ public class MetricsController {
     public final int MAX_NUMBER_OF_TRENDING_INSTANCES = 5;
     public final int MINIMAL_NUMBER_OF_VISITS_TO_BE_REGARDED_TRENDING = 10;
     private final ESServiceClient esServiceClient;
+    private final ESHelper esHelper;
 
     public MetricsController(
-            ESServiceClient esServiceClient
+            ESServiceClient esServiceClient,
+            ESHelper esHelper
     ) {
         this.esServiceClient = esServiceClient;
+        this.esHelper = esHelper;
     }
 
     public Integer getTrendThreshold(Class<?> clazz, DataStage stage) {
         try {
-            String index = ESHelper.getSearchableIndex(stage, clazz, false);
+            String index = esHelper.getSearchableIndex(stage, clazz, false);
             Result result = esServiceClient.getMetrics(index, MAX_NUMBER_OF_TRENDING_INSTANCES+1); //We need one instance more to check if it's exactly the limit or less
             if (result == null || result.getHits() == null || CollectionUtils.isEmpty(result.getHits().getHits())) {
                 return null;

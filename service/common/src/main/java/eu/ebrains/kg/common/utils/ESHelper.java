@@ -23,43 +23,60 @@
 
 package eu.ebrains.kg.common.utils;
 
+import eu.ebrains.kg.common.controller.translation.TranslatorRegistry;
 import eu.ebrains.kg.common.model.DataStage;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access= AccessLevel.PRIVATE)
+@Component
 public class ESHelper {
+
+    private final TranslatorRegistry translatorRegistry;
+
+    public ESHelper(TranslatorRegistry translatorRegistry) {
+        this.translatorRegistry = translatorRegistry;
+    }
 
     private final static String INDEX_PREFIX_IN_PROGRESS = "in_progress";
     private final static String INDEX_PREFIX_PUBLICLY_RELEASED = "publicly_released";
 
     private final static String INDEX_SUFFIX_IDENTIFIERS = "identifiers";
 
-    private static String getIndexPrefix(DataStage dataStage) {
-        return dataStage == DataStage.IN_PROGRESS ? INDEX_PREFIX_IN_PROGRESS : INDEX_PREFIX_PUBLICLY_RELEASED;
+    private String getProfilePrefix(){
+        if (this.translatorRegistry.getIndexPrefix().isPresent()) {
+            return String.format("%s_", translatorRegistry.getIndexPrefix().get());
+        }
+        else{
+            return "";
+        }
     }
 
-    public static String getSearchableIndex(DataStage dataStage, Class<?> type, boolean temporary) {
+    private String getIndexPrefix(DataStage dataStage) {
+        String indexPrefix =  dataStage == DataStage.IN_PROGRESS ? INDEX_PREFIX_IN_PROGRESS : INDEX_PREFIX_PUBLICLY_RELEASED;
+        return getProfilePrefix()+indexPrefix;
+    }
+
+
+    public String getSearchableIndex(DataStage dataStage, Class<?> type, boolean temporary) {
         return String.format("%s%s_searchable_%s", temporary ? "temporary_" : "", getIndexPrefix(dataStage), MetaModelUtils.getIndexNameForClass(type));
     }
 
-    public static String getIdentifierIndex(DataStage dataStage) {
+    public String getIdentifierIndex(DataStage dataStage) {
         return String.format("%s_%s", getIndexPrefix(dataStage), INDEX_SUFFIX_IDENTIFIERS);
     }
 
-    public static String getIndexesForDocument(DataStage dataStage) {
+    public String getIndexesForDocument(DataStage dataStage) {
         return String.format("%s_*", getIndexPrefix(dataStage));
     }
 
-    public static String getIndexesForSearch(DataStage dataStage) {
+    public String getIndexesForSearch(DataStage dataStage) {
         return String.format("%s_searchable_*", getIndexPrefix(dataStage));
     }
 
-    public static String getAutoReleasedIndex(DataStage dataStage, Class<?> type, boolean temporary) {
+    public String getAutoReleasedIndex(DataStage dataStage, Class<?> type, boolean temporary) {
         return String.format("%s%s_%s", temporary ? "temporary_" : "", getIndexPrefix(dataStage), MetaModelUtils.getIndexNameForClass(type));
     }
 
-    public static String getResourcesIndex(){
-        return "resources";
+    public String getResourcesIndex(){
+        return getProfilePrefix()+"resources";
     }
 }

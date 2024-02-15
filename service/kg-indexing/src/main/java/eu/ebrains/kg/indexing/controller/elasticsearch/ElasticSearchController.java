@@ -26,7 +26,7 @@ package eu.ebrains.kg.indexing.controller.elasticsearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ebrains.kg.common.model.DataStage;
-import eu.ebrains.kg.common.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.common.model.target.TargetInstance;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.MetaModelUtils;
@@ -43,24 +43,26 @@ import java.util.*;
 public class ElasticSearchController {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ESServiceClient esServiceClient;
+    private final ESHelper esHelper;
     private final int ESOperationsMaxCharPayload = 1000000;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public ElasticSearchController(ESServiceClient esServiceClient) {
+    public ElasticSearchController(ESServiceClient esServiceClient, ESHelper esHelper) {
         this.esServiceClient = esServiceClient;
+        this.esHelper = esHelper;
     }
 
 
     public void reindexTemporaryToRealIndex(Class<?> type, DataStage dataStage, boolean autorelease){
-        String source =  autorelease ? ESHelper.getAutoReleasedIndex(dataStage, type, true) : ESHelper.getSearchableIndex(dataStage, type, true);
-        String target = autorelease ? ESHelper.getAutoReleasedIndex(dataStage, type, false) :ESHelper.getSearchableIndex(dataStage, type, false);
+        String source =  autorelease ? esHelper.getAutoReleasedIndex(dataStage, type, true) : esHelper.getSearchableIndex(dataStage, type, true);
+        String target = autorelease ? esHelper.getAutoReleasedIndex(dataStage, type, false) :esHelper.getSearchableIndex(dataStage, type, false);
         esServiceClient.reindex(source, target);
         //We remove the temporary index after it has been reindexed.
         esServiceClient.deleteIndex(source);
     }
 
     public void recreateSearchIndex(Map<String, Object> mapping, Class<?> type, DataStage dataStage, boolean temporary) {
-        String index = ESHelper.getSearchableIndex(dataStage, type, temporary);
+        String index = esHelper.getSearchableIndex(dataStage, type, temporary);
         logger.info(String.format("Creating index Was %s for %s", index, MetaModelUtils.getNameForClass(type)));
         try {
             esServiceClient.deleteIndex(index);
@@ -74,7 +76,7 @@ public class ElasticSearchController {
     }
 
     public void recreateIdentifiersIndex(Map<String, Object> mapping, DataStage dataStage) {
-        String index = ESHelper.getIdentifierIndex(dataStage);
+        String index = esHelper.getIdentifierIndex(dataStage);
         logger.info(String.format("Creating identifier index %s", index));
         try {
             esServiceClient.deleteIndex(index);
@@ -88,7 +90,7 @@ public class ElasticSearchController {
     }
 
     public void recreateAutoReleasedIndex(DataStage stage, Map<String, Object> mapping, Class<?> type, boolean temporary) {
-        String index = ESHelper.getAutoReleasedIndex(stage, type, temporary);
+        String index = esHelper.getAutoReleasedIndex(stage, type, temporary);
         logger.info(String.format("Creating index %s for %s", index, MetaModelUtils.getNameForClass(type)));
         try {
             esServiceClient.deleteIndex(index);
@@ -158,8 +160,8 @@ public class ElasticSearchController {
     }
 
     public void ensureResourcesIndex(){
-        if(!esServiceClient.checkIfIndexExists(ESHelper.getResourcesIndex())) {
-            esServiceClient.createIndex(ESHelper.getResourcesIndex(), Collections.emptyMap());
+        if(!esServiceClient.checkIfIndexExists(esHelper.getResourcesIndex())) {
+            esServiceClient.createIndex(esHelper.getResourcesIndex(), Collections.emptyMap());
         }
     }
 
@@ -172,38 +174,38 @@ public class ElasticSearchController {
             throw new RuntimeException(e);
         }
         op.append('\n');
-        esServiceClient.updateIndex(ESHelper.getResourcesIndex(), op.toString());
+        esServiceClient.updateIndex(esHelper.getResourcesIndex(), op.toString());
     }
 
     public void deleteResource(String id){
         StringBuilder op = new StringBuilder();
         op.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", id));
-        esServiceClient.updateIndex(ESHelper.getResourcesIndex(), op.toString());
+        esServiceClient.updateIndex(esHelper.getResourcesIndex(), op.toString());
     }
 
 
     public void updateSearchIndex(List<? extends TargetInstance> instances, Class<?> type, DataStage dataStage, boolean temporary) {
-        updateIndex(ESHelper.getSearchableIndex(dataStage, type, temporary), instances);
+        updateIndex(esHelper.getSearchableIndex(dataStage, type, temporary), instances);
     }
 
     public void updateIdentifiersIndex(List<? extends TargetInstance> instances, DataStage dataStage) {
-        updateIndex(ESHelper.getIdentifierIndex(dataStage), instances);
+        updateIndex(esHelper.getIdentifierIndex(dataStage), instances);
     }
 
     public void updateAutoReleasedIndex(List<? extends TargetInstance> instances, DataStage dataStage, Class<?> type, boolean temporary) {
-        updateIndex(ESHelper.getAutoReleasedIndex(dataStage, type, temporary), instances);
+        updateIndex(esHelper.getAutoReleasedIndex(dataStage, type, temporary), instances);
     }
 
     public void removeDeprecatedDocumentsFromSearchIndex( Class<?> type, DataStage dataStage, Set<String> idsToKeep, boolean temporary) {
-        removeDeprecatedDocuments(ESHelper.getSearchableIndex(dataStage, type, temporary), type, idsToKeep);
+        removeDeprecatedDocuments(esHelper.getSearchableIndex(dataStage, type, temporary), type, idsToKeep);
     }
 
     public void removeDeprecatedDocumentsFromIdentifiersIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
-        removeDeprecatedDocuments(ESHelper.getIdentifierIndex(dataStage), type, idsToKeep);
+        removeDeprecatedDocuments(esHelper.getIdentifierIndex(dataStage), type, idsToKeep);
     }
 
     public void removeDeprecatedDocumentsFromAutoReleasedIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep, boolean temporary) {
-        removeDeprecatedDocuments(ESHelper.getAutoReleasedIndex(dataStage, type, temporary), type, idsToKeep);
+        removeDeprecatedDocuments(esHelper.getAutoReleasedIndex(dataStage, type, temporary), type, idsToKeep);
     }
 
 

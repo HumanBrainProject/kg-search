@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import eu.ebrains.kg.common.model.ErrorReport;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.model.source.openMINDSv3.SourceInstanceV3;
+import eu.ebrains.kg.common.model.source.SourceInstance;
 import eu.ebrains.kg.common.utils.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,14 +94,14 @@ public class GracefulDeserializationProblemHandler extends DeserializationProble
 
     public static <T> void parsingErrorHandler(T result){
         final Map<Integer, List<String>> errorMap = GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.get();
-        if(errorMap!=null && result instanceof ResultsOfKG){
+        if(errorMap!=null && result instanceof ResultsOfKG<?>){
             final ResultsOfKG<?> resultsOfKG = (ResultsOfKG<?>) result;
             final List<?> data = resultsOfKG.getData();
             for (Integer index : errorMap.keySet()) {
                 final Object instance = data.get(index);
                 String identifier;
-                if (instance instanceof SourceInstanceV3){
-                    identifier = IdUtils.getUUID(((SourceInstanceV3)instance).getId());
+                if (instance instanceof SourceInstance){
+                    identifier = IdUtils.getUUID(((SourceInstance)instance).getId());
                 }
                 else{
                     throw new RuntimeException(String.format("Unexpected type in error handling: %s", instance.getClass().getName()));
