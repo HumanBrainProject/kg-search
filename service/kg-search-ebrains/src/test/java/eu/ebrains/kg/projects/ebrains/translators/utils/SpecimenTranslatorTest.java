@@ -42,10 +42,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class SpecimenV3TranslatorTest {
+public class SpecimenTranslatorTest {
     private final ObjectMapper objectMapper;
 
-    public SpecimenV3TranslatorTest() {
+    public SpecimenTranslatorTest() {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
