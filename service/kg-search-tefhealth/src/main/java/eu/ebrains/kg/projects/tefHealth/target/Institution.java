@@ -57,6 +57,9 @@ public class Institution implements TargetInstance {
     @FieldInfo(label = "Name", layout = "header", labelHidden = true)
     private Value<String> title;
 
+    @FieldInfo(label = "Abbreviation", useForSuggestion = true)
+    private Value<String> abbreviation;
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> category;
 

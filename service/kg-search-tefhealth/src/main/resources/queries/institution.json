@@ -33,6 +33,10 @@
       "path": "http://schema.org/name"
     },
     {
+      "propertyName": "query:abbreviation",
+      "path": "https://ebrains.eu/tef-health/abbreviation"
+    },
+    {
       "propertyName": "query:providedServices",
       "path": {
         "@id": "https://ebrains.eu/tef-health/providedBy",

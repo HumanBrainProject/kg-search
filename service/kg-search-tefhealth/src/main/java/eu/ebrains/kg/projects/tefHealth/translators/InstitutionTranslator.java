@@ -78,6 +78,7 @@ public class InstitutionTranslator extends Translator<InstitutionFromKG, Institu
         t.setAllIdentifiers(tefHealthInstitutionV3.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(tefHealthInstitutionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthInstitutionV3.getName()));
+        t.setAbbreviation(value(tefHealthInstitutionV3.getAbbreviation()));
         t.setProvidedServiceCategories(value(tefHealthInstitutionV3.getProvidedServiceCategories().stream().sorted().toList()));
         t.setProvidedServices(ref(tefHealthInstitutionV3.getProvidedServices(), true));
         t.setCountry(ref(tefHealthInstitutionV3.getCountry()));

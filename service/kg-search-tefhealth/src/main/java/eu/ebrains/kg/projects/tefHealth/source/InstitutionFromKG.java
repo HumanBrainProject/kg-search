@@ -35,6 +35,7 @@ import java.util.List;
 public class InstitutionFromKG extends SourceInstance {
 
     private String name;
+    private String abbreviation;
     private List<FullNameRef> providedServices;
     private List<String> providedServiceCategories;
     private FullNameRef country;
