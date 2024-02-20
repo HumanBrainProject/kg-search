@@ -25,19 +25,26 @@ import { connect } from 'react-redux';
 import ThemeToggle from '../../features/theme/ThemeToggle';
 
 import './Footer.css';
+import profiles from "../../data/profiles";
 
-const Footer = ({ commit, theme }) => (
+const Footer = ({ commit, profile, theme }) => (
   <footer className="site-footer">
     <div className="footer__header">
       <div className="footer__primary">
-        <a href="https://ebrains.eu" aria-label="Ebrains homepage" title="Ebrains homepage" className="logo nuxt-link-exact-active nuxt-link-active">
-          <img src={`/static/img/${theme === 'dark'?'ebrains_logo_dark.svg':'ebrains_logo.svg'}`} alt="ebrains" height="100" />
-        </a>
-      </div>
-    </div>
-    <div className="footer__content">
-      <div className="footer__secondary">
-        <p>EBRAINS is powered by the EU-cofunded Human Brain Project</p>
+
+
+          {profile !== 'ebrains' &&
+              <span className="service-at"><a href={profiles[profile]["home"]} aria-label="Homepage" title="Homepage" className="logo nuxt-link-exact-active nuxt-link-active"> <img src={`/static/img/${theme === 'dark' ? profile + "_logo_dark.svg" : profile + '_logo.svg'}`}
+                                                                                                                                                              height="100" /></a> @ </span>}
+                <a href="https://ebrains.eu" aria-label="Ebrains homepage" title="Ebrains homepage" className="logo nuxt-link-exact-active nuxt-link-active"><img
+                    src={`/static/img/${theme === 'dark' ? "ebrains_logo_dark.svg" : 'ebrains_logo.svg'}`}
+                    height="100"/>
+                </a>
+              </div>
+            </div>
+            <div className="footer__content">
+            <div className="footer__secondary">
+            <p>EBRAINS is powered by the EU-cofunded Human Brain Project</p>
         <div className="powered-by">
           <a className="hbp-logo" href="https://www.humanbrainproject.eu/" title="Human Brain Project" target="_blank" rel="noopener noreferrer">
             <img src="/static/img/hbp.svg" alt="Human Brain Project" />
@@ -46,7 +53,7 @@ const Footer = ({ commit, theme }) => (
             <img src="/static/img/eu_cofunded_logo.png" alt="Cofunded by EU" />
           </a>
         </div>
-        <ThemeToggle />
+              {profile==="ebrains" && <ThemeToggle />}
       </div>
       <div className="footer__menu footer__menu-1">
         <ul>
@@ -157,6 +164,7 @@ const Footer = ({ commit, theme }) => (
 export default connect(
   state => ({
     commit: state.application.commit,
+    profile: state.application.profile,
     theme: state.application.theme
   })
 )(Footer);

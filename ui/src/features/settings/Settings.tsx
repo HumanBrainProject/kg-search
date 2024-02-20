@@ -29,7 +29,7 @@ import FetchingPanel from '../../components/FetchingPanel/FetchingPanel';
 import Matomo from '../../services/Matomo';
 import Sentry from '../../services/Sentry';
 import { useGetSettingsQuery, getError } from '../../services/api';
-import { setCommit } from '../application/applicationSlice';
+import {setCommit, setProfile} from '../application/applicationSlice';
 import type AuthAdapter from '../../services/AuthAdapter';
 import type { ReactNode } from 'react';
 
@@ -59,6 +59,7 @@ const Settings = ({ authAdapter, children}: SettingsProps) => {
       Matomo.initialize(settings?.matomo);
       Sentry.initialize(settings?.sentry);
       dispatch(setCommit(settings?.commit));
+      dispatch(setProfile(settings?.profile));
       authAdapter.setConfig(settings.keycloak);
       setReady(true);
     }

@@ -21,6 +21,9 @@
  *
  */
 
+.service-at {
+  margin-right: 2em;
+}
 
 .site-footer {
     border-top: 1px solid var(--border-color);
@@ -44,7 +47,6 @@
   
   .site-footer .footer__header .footer__primary img{
     min-width: 220px;
-    height: 100%;
     transform: translateX(-20px);
   }
   
@@ -237,7 +239,7 @@
     color: var(--color-1);
     min-width: 200px;
   }
-  
+
   .logo img {
     display: inline-block;
   }

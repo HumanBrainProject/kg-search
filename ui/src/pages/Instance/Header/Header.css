@@ -30,6 +30,12 @@
     color: var(--color-36);
 }
 
+body[profile="tefhealth"] .kgs-instance__header{
+
+  background-color: #DDF8DC;
+  background-image: url("../../../../public/static/img/tefhealth_mainheader.png");
+}
+
 .kgs-instance__header_navigation {
   display: flex;
   padding: 10px 15px 10px 25px;

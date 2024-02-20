@@ -75,6 +75,10 @@
   color: var(--color-8);
 }
 
+body[profile="tefhealth"]{
+    background: url("../../../public/static/img/tefhealth_header.png");
+}
+
 body[theme="dark"] .kgs-navbar.navbar-light .navbar-toggler {
     border-color: var(--color-8);
 }

@@ -81,17 +81,18 @@ public class InstitutionTranslator extends Translator<InstitutionFromKG, Institu
         t.setProvidedServiceCategories(value(tefHealthInstitutionV3.getProvidedServiceCategories().stream().sorted().toList()));
         t.setProvidedServices(ref(tefHealthInstitutionV3.getProvidedServices(), true));
         t.setCountry(ref(tefHealthInstitutionV3.getCountry()));
-        t.setAssociations(tefHealthInstitutionV3.getAssociations().stream().map(a -> {
-            if(a.getAssociatedTo()!=null){
+        List<TargetInternalReference> associations = tefHealthInstitutionV3.getAssociations().stream().map(a -> {
+            if (a.getAssociatedTo() != null) {
                 return new TargetInternalReference(IdUtils.getUUID(a.getAssociatedTo().getId()), a.getName());
-            }
-            else if(a.getMemberOf()!=null){
+            } else if (a.getMemberOf() != null) {
                 return new TargetInternalReference(IdUtils.getUUID(a.getMemberOf().getId()), a.getName());
-            }
-            else{
+            } else {
                 return null;
             }
-        }).filter(Objects::nonNull).sorted().toList());
+        }).filter(Objects::nonNull).sorted().toList();
+        if(!associations.isEmpty()) {
+            t.setAssociations(associations);
+        }
         return t;
     }
 }

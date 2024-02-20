@@ -140,7 +140,17 @@
     --site-margin: 12px;
     --site-margin-desktop: 42px;
 }
-  
+
+:root body[profile="tefhealth"] {
+    --font-stack: "Montserrat", sans-serif;
+    --font-stack-bold: "Montserrat", sans-serif;
+    --color-37: #4FD64B;
+    --color-29: #4FD64B;
+    --link-highlight-color: #4FD64B;
+    --color-32: #293984;
+    --color-selected: #4FD64B;
+}
+
 /* TODO: Uncomment if you want dark mode enabled */
 /* @media (prefers-color-scheme: dark) { */
 :root body[theme="dark"] {

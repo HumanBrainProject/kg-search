@@ -110,6 +110,7 @@ public class Search {
                     "siteId", matomoSiteId
             ));
         }
+        result.put("profile", translatorRegistry.getIndexPrefix().orElse("ebrains"));
         result.put("types", definitionController.generateTypes());
         result.put("typeMappings", definitionController.generateTypeMappings());
         return result;

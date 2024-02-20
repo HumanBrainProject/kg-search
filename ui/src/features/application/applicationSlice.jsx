@@ -36,7 +36,8 @@ const initialState = {
     localStorage.getItem(TermsShortNoticeLocalStorageKey) &&
     localStorage.getItem(TermsShortNoticeLocalStorageKey) !==
       termsCurrentVersion,
-  theme: localStorage.getItem('currentTheme')
+  theme: localStorage.getItem('currentTheme'),
+  profile: "ebrains"
 };
 
 const applicationSlice = createSlice({
@@ -45,6 +46,10 @@ const applicationSlice = createSlice({
   reducers: {
     setTheme(state, action) {
       state.theme = action.payload;
+    },
+    setProfile(state, action) {
+      state.profile = action.payload;
+      document.body.setAttribute('profile', state.profile);
     },
     setCommit(state, action) {
       state.commit = action.payload;
@@ -63,5 +68,5 @@ const applicationSlice = createSlice({
   }
 });
 
-export const { setTheme, setCommit, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
+export const { setTheme, setProfile, setCommit, agreeTermsShortNotice, setInfo } = applicationSlice.actions;
 export default applicationSlice.reducer;
