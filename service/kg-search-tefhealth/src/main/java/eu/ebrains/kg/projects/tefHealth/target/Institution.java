@@ -38,7 +38,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Institution", searchable = true)
+@MetaInfo(name = "Institution", searchable = true, sortByRelevance = false)
 public class Institution implements TargetInstance {
 
     @JsonIgnore

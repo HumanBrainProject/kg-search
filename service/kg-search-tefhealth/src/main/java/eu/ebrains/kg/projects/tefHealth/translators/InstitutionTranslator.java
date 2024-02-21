@@ -33,6 +33,7 @@ import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.projects.tefHealth.source.InstitutionFromKG;
 import eu.ebrains.kg.projects.tefHealth.target.Institution;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -77,8 +78,8 @@ public class InstitutionTranslator extends Translator<InstitutionFromKG, Institu
         t.setId(IdUtils.getUUID(tefHealthInstitutionV3.getId()));
         t.setAllIdentifiers(tefHealthInstitutionV3.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(tefHealthInstitutionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
-        t.setTitle(value(tefHealthInstitutionV3.getName()));
-        t.setAbbreviation(value(tefHealthInstitutionV3.getAbbreviation()));
+        String title = StringUtils.isNotBlank(tefHealthInstitutionV3.getName()) ? StringUtils.isNotBlank(tefHealthInstitutionV3.getAbbreviation()) ? String.format("%s (%s)", tefHealthInstitutionV3.getName(), tefHealthInstitutionV3.getAbbreviation()) : tefHealthInstitutionV3.getName() : null;
+        t.setTitle(value(title));
         t.setProvidedServiceCategories(value(tefHealthInstitutionV3.getProvidedServiceCategories().stream().sorted().toList()));
         t.setProvidedServices(ref(tefHealthInstitutionV3.getProvidedServices(), true));
         t.setCountry(ref(tefHealthInstitutionV3.getCountry()));

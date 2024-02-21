@@ -47,6 +47,10 @@
         {
           "propertyName": "query:fullName",
           "path": "http://schema.org/name"
+        },
+        {
+          "singleValue": "FIRST",
+          "path": "https://ebrains.eu/tef-health/abbreviation"
         }
       ]
     },

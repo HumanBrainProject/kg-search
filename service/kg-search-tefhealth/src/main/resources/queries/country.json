@@ -71,7 +71,8 @@
           "path": "http://schema.org/name"
         },
         {
-          "propertyName": "query:providedBy",
+          "propertyName": "query:abbreviation",
+          "singleValue": "FIRST",
           "path": [
             "https://ebrains.eu/tef-health/providedBy",
             "https://ebrains.eu/tef-health/abbreviation"

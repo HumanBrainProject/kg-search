@@ -38,7 +38,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Country", searchable = true)
+@MetaInfo(name = "Country", searchable = true, sortByRelevance = false)
 public class Country implements TargetInstance {
 
     @JsonIgnore
