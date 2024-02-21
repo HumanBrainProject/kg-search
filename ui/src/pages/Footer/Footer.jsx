@@ -102,7 +102,7 @@ const Footer = ({ commit, profile, theme }) => (
     <hr className="full-width" />
     <div className="footer__end">
       <div className="footer__copyright">
-        &copy;2019-{new Date().getFullYear()}&nbsp;ebrains.eu
+        &copy;{profiles[profile]["copyrightSince"] !== new Date().getFullYear().toString() && profiles[profile]["copyrightSince"]+'-'}{new Date().getFullYear()}&nbsp;{profiles[profile]["copyright"]}
       </div>
       <div className="commit">
         {commit && <span>build: <i>{commit}</i></span>}

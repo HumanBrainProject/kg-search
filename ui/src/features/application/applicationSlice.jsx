@@ -37,7 +37,7 @@ const initialState = {
     localStorage.getItem(TermsShortNoticeLocalStorageKey) !==
       termsCurrentVersion,
   theme: localStorage.getItem('currentTheme'),
-  profile: "ebrains"
+  profile: ""
 };
 
 const applicationSlice = createSlice({

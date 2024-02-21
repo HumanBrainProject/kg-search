@@ -25,6 +25,7 @@ package eu.ebrains.kg.projects.tefHealth.source;
 
 import eu.ebrains.kg.common.model.source.FullNameRef;
 import eu.ebrains.kg.common.model.source.SourceInstance;
+import eu.ebrains.kg.projects.tefHealth.source.models.FullNameRefWithProvidedBy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +37,6 @@ public class CountryFromKG extends SourceInstance {
 
     private String name;
     private List<FullNameRef> institutions;
-    private List<FullNameRef> services;
+    private List<FullNameRefWithProvidedBy> services;
 
 }

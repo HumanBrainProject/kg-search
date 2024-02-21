@@ -69,6 +69,13 @@
         {
           "propertyName": "query:fullName",
           "path": "http://schema.org/name"
+        },
+        {
+          "propertyName": "query:providedBy",
+          "path": [
+            "https://ebrains.eu/tef-health/providedBy",
+            "https://ebrains.eu/tef-health/abbreviation"
+          ]
         }
       ]
     }

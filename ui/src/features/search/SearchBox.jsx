@@ -25,7 +25,7 @@ import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { connect } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 
 import { help } from '../../data/help.jsx';
 import { searchToObj } from '../../helpers/BrowserHelpers';
@@ -34,8 +34,10 @@ import { setInfo } from '../application/applicationSlice';
 import { setQueryString } from './searchSlice';
 
 import './SearchBox.css';
+import profiles from "../../data/profiles";
 
 const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, onHelp }) => {
+  const profile = useSelector(state => state.application.profile);
   const textInput = useRef();
   const [value, setValue] = useState(queryString);
 
@@ -101,7 +103,7 @@ const SeachBoxBaseComponent = ({ queryString, onQueryStringChange, isFloating, o
           <FontAwesomeIcon icon={faSearch} size="2x" className="kg-search-bar__icon" />
           <input className="kg-search-bar"
             type="text"
-            placeholder="Search (e.g. mouse hippocampus or calbindin)"
+            placeholder={'Search '+profiles[profile]["searchExample"]}
             aria-label="Search"
             value={value}
             onChange={handleChange}
