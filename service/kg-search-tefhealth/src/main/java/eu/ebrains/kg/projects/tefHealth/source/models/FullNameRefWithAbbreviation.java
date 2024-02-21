@@ -16,7 +16,7 @@ public class FullNameRefWithAbbreviation extends FullNameRef {
     @Override
     public String getFullName(){
         if(StringUtils.isNotBlank(super.getFullName()) && StringUtils.isNotBlank(abbreviation)){
-            return String.format("%s (provided by %s)", super.getFullName(), abbreviation);
+            return String.format("%s (%s)", super.getFullName(), abbreviation);
         } else if (StringUtils.isNotBlank(super.getFullName())) {
             return super.getFullName();
         }
