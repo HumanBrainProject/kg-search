@@ -35,8 +35,8 @@ const Header = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light kgs-navbar">
       <div className="container-fluid">
-        <a href={profiles[profile]["home"]} aria-label="EBRAINS homepage" className="logo nuxt-link-active navbar-brand">
-          <img src={`/static/img/${theme === 'dark'? profile+'_logo_dark.svg': profile+'_logo.svg'}`} alt="ebrains" height="100" />
+        <a href={profiles[profile]["home"]} aria-label={profiles[profile]["name"]+` homepage`} className="logo nuxt-link-active navbar-brand">
+          <img src={`/static/img/${theme === 'dark'? profiles[profile]["logo_dark"] : profiles[profile]["logo"]}`} alt={profile} height="100" />
         </a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <FontAwesomeIcon icon={faBars} />

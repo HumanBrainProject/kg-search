@@ -34,7 +34,7 @@ const Footer = ({ commit, profile, theme }) => (
 
 
           {profile !== 'ebrains' &&
-              <span className="service-at"><a href={profiles[profile]["home"]} aria-label="Homepage" title="Homepage" className="logo nuxt-link-exact-active nuxt-link-active"> <img src={`/static/img/${theme === 'dark' ? profile + "_logo_dark.svg" : profile + '_logo.svg'}`}
+              <span className="service-at"><a href={profiles[profile]["home"]} aria-label="Homepage" title="Homepage" className="logo nuxt-link-exact-active nuxt-link-active"> <img src={`/static/img/${theme === 'dark' ? profiles[profile]["logo_dark"] : profiles[profile]["logo"]}`}
                                                                                                                                                               height="100" /></a> @ </span>}
                 <a href="https://ebrains.eu" aria-label="Ebrains homepage" title="Ebrains homepage" className="logo nuxt-link-exact-active nuxt-link-active"><img
                     src={`/static/img/${theme === 'dark' ? "ebrains_logo_dark.svg" : 'ebrains_logo.svg'}`}
