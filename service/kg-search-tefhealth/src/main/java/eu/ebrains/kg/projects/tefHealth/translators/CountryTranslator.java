@@ -70,7 +70,7 @@ public class CountryTranslator extends Translator<CountryFromKG, Country, Countr
     public Country translate(CountryFromKG tefHealthCountryV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) {
         Country t = new Country();
         t.setCategory(new Value<>("Country"));
-        t.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns, so we can forward this information to the custodian responsible."));
+        t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthCountryV3.getId()));
         t.setAllIdentifiers(tefHealthCountryV3.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(tefHealthCountryV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));

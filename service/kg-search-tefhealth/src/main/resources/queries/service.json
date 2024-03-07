@@ -55,15 +55,18 @@
     },
     {
       "propertyName": "query:country",
-      "path": "https://ebrains.eu/tef-health/country",
+      "path": [
+        "https://ebrains.eu/tef-health/providedBy",
+        "https://ebrains.eu/tef-health/country"
+      ],
       "structure": [
-        {
-          "propertyName": "query:id",
-          "path": "@id"
-        },
         {
           "propertyName": "query:fullName",
           "path": "http://schema.org/name"
+        },
+        {
+          "propertyName": "query:id",
+          "path": "@id"
         }
       ]
     },
@@ -72,16 +75,6 @@
       "path": [
         "https://ebrains.eu/tef-health/serviceCategory",
         "http://schema.org/name"
-      ],
-      "structure": [
-        {
-          "propertyName": "query:id",
-          "path": "@id"
-        },
-        {
-          "propertyName": "query:fullName",
-          "path": "http://schema.org/name"
-        }
       ]
     },
     {

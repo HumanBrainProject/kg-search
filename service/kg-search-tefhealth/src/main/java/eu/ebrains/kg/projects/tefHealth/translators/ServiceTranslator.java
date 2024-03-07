@@ -78,7 +78,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         t.setTitle(value(tefHealthServiceV3.getName()));
         t.setDescription(value(tefHealthServiceV3.getDescription()));
         t.setProvidedBy(ref(tefHealthServiceV3.getProvidedBy(), true));
-        t.setNodes(ref(tefHealthServiceV3.getCountry()));
+        t.setCountries(ref(tefHealthServiceV3.getCountry()));
         t.setServiceCategories(value(tefHealthServiceV3.getServiceCategory()));
         t.setUseCaseCategories(value(tefHealthServiceV3.getUseCaseCategories().stream().sorted().toList()));
         t.setUseCaseDomains(value(tefHealthServiceV3.getUseCaseDomains().stream().sorted().toList()));
