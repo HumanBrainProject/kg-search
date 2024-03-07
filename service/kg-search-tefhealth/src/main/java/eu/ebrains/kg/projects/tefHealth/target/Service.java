@@ -72,11 +72,11 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Provided by", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true, overview = true)
     private List<TargetInternalReference> providedBy;
 
-    @FieldInfo(label = "Country", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private TargetInternalReference country;
+    @FieldInfo(label = "Nodes", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
+    private List<TargetInternalReference> nodes;
 
     @FieldInfo(label = "Service category", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private Value<String> serviceCategory;
+    private List<Value<String>> serviceCategories;
 
     @FieldInfo(label = "Categories", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> useCaseCategories;

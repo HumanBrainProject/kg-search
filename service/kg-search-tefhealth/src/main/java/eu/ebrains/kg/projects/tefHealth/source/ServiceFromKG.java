@@ -38,8 +38,8 @@ public class ServiceFromKG extends SourceInstance {
     private String name;
     private String description;
     private List<FullNameRefWithAbbreviation> providedBy;
-    private FullNameRef country;
-    private String serviceCategory;
+    private List<FullNameRef> country;
+    private List<String> serviceCategory;
     private List<String> useCaseCategories;
     private List<String> useCaseDomains;
     private String useCaseDomainOtherDescription;

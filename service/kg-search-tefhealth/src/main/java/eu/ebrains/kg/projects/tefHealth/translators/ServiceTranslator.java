@@ -71,15 +71,15 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
     public Service translate(ServiceFromKG tefHealthServiceV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Service t = new Service();
         t.setCategory(new Value<>("Service"));
-        t.setDisclaimer(new Value<>("Please alert us at [curation-support@ebrains.eu](mailto:curation-support@ebrains.eu) for errors or quality concerns, so we can forward this information to the custodian responsible."));
+        t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthServiceV3.getId()));
         t.setAllIdentifiers(tefHealthServiceV3.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthServiceV3.getName()));
         t.setDescription(value(tefHealthServiceV3.getDescription()));
         t.setProvidedBy(ref(tefHealthServiceV3.getProvidedBy(), true));
-        t.setCountry(ref(tefHealthServiceV3.getCountry()));
-        t.setServiceCategory(value(tefHealthServiceV3.getServiceCategory()));
+        t.setNodes(ref(tefHealthServiceV3.getCountry()));
+        t.setServiceCategories(value(tefHealthServiceV3.getServiceCategory()));
         t.setUseCaseCategories(value(tefHealthServiceV3.getUseCaseCategories().stream().sorted().toList()));
         t.setUseCaseDomains(value(tefHealthServiceV3.getUseCaseDomains().stream().sorted().toList()));
         t.setUseCaseDomainOtherDescription(value(tefHealthServiceV3.getUseCaseDomainOtherDescription()));

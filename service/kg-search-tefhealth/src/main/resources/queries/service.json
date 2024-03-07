@@ -56,7 +56,6 @@
     {
       "propertyName": "query:country",
       "path": "https://ebrains.eu/tef-health/country",
-      "singleValue": "FIRST",
       "structure": [
         {
           "propertyName": "query:id",
@@ -74,7 +73,6 @@
         "https://ebrains.eu/tef-health/serviceCategory",
         "http://schema.org/name"
       ],
-      "singleValue": "FIRST",
       "structure": [
         {
           "propertyName": "query:id",
