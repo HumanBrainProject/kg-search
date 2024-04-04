@@ -27,6 +27,11 @@ public abstract class EBRAINSTranslator<Source, Target, ListResult extends Resul
         }
         return null;
     }
+
+    protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref) {
+        return EBRAINSTranslatorUtils.ref(ref);
+    }
+
     protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProduct> refs, boolean sorted) {
         if (!CollectionUtils.isEmpty(refs)) {
             Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(r -> {
