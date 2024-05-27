@@ -54,7 +54,7 @@ public class Country implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Country");
 
-    @FieldInfo(label = "Name", layout = "header", labelHidden = true)
+    @FieldInfo(label = "Name", layout = "header", labelHidden = true, boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     @ElasticSearchInfo(type = "keyword")
@@ -66,8 +66,8 @@ public class Country implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private SchemaOrgInstance meta;
 
-    @FieldInfo(label = "Institutions", labelHidden = true, layout="Institutions")
-    private List<TargetInternalReference> institutions;
+    @FieldInfo(label = "Organizations", labelHidden = true, layout="Organizations")
+    private List<TargetInternalReference> organizations;
 
     @FieldInfo(label = "Services", labelHidden = true, layout="Services")
     private List<TargetInternalReference> services;

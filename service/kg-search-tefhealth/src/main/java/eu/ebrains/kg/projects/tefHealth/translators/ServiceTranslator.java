@@ -31,6 +31,7 @@ import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.projects.tefHealth.source.ServiceFromKG;
+import eu.ebrains.kg.projects.tefHealth.source.models.NameRef;
 import eu.ebrains.kg.projects.tefHealth.target.Service;
 
 import java.util.Collections;
@@ -62,7 +63,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
 
     @Override
     public List<String> semanticTypes() {
-        return Collections.singletonList("https://ebrains.eu/tef-health/Service");
+        return Collections.singletonList("https://tefhealth.eu/serviceCatalogue/types/Service");
     }
 
     public static class Result extends ResultsOfKG<ServiceFromKG> {
@@ -77,12 +78,13 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthServiceV3.getName()));
         t.setDescription(value(tefHealthServiceV3.getDescription()));
-        t.setProvidedBy(ref(tefHealthServiceV3.getProvidedBy(), true));
-        t.setCountries(ref(tefHealthServiceV3.getCountry()));
-        t.setServiceCategories(value(tefHealthServiceV3.getServiceCategory()));
-        t.setUseCaseCategories(value(tefHealthServiceV3.getUseCaseCategories().stream().sorted().toList()));
-        t.setUseCaseDomains(value(tefHealthServiceV3.getUseCaseDomains().stream().sorted().toList()));
-        t.setUseCaseDomainOtherDescription(value(tefHealthServiceV3.getUseCaseDomainOtherDescription()));
+        t.setServiceInput(value(tefHealthServiceV3.getServiceInput()));
+        t.setServiceOutput(value(tefHealthServiceV3.getServiceOutput()));
+        t.setCertificationSupport(value(tefHealthServiceV3.getCertificationSupport().stream().map(NameRef::getName).toList()));
+        t.setDependenciesAndRestrictions(value(tefHealthServiceV3.getDependenciesAndRestrictions().stream().map(NameRef::getName).toList()));
+        t.setOfferings(value(tefHealthServiceV3.getOfferings().stream().map(NameRef::getName).toList()));
+        t.setProvidedBy(ref(tefHealthServiceV3.getProvider().getOrganization()));
+        t.setServiceCategories(value(tefHealthServiceV3.getCategory().stream().map(NameRef::getName).toList()));
         return t;
     }
 }

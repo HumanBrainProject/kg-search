@@ -3,9 +3,9 @@ package eu.ebrains.kg.projects.tefHealth;
 import eu.ebrains.kg.common.controller.translation.TranslatorRegistry;
 import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
 import eu.ebrains.kg.projects.tefHealth.target.Country;
-import eu.ebrains.kg.projects.tefHealth.target.Institution;
+import eu.ebrains.kg.projects.tefHealth.target.Organization;
 import eu.ebrains.kg.projects.tefHealth.translators.CountryTranslator;
-import eu.ebrains.kg.projects.tefHealth.translators.InstitutionTranslator;
+import eu.ebrains.kg.projects.tefHealth.translators.OrganizationTranslator;
 import eu.ebrains.kg.projects.tefHealth.target.Service;
 import eu.ebrains.kg.projects.tefHealth.translators.ServiceTranslator;
 import org.springframework.context.annotation.Profile;
@@ -21,7 +21,7 @@ public class TEFHealthTranslatorRegistry implements TranslatorRegistry {
 
     private final List<eu.ebrains.kg.common.controller.translation.models.TranslatorModel<?,?>> TRANSLATORS = Arrays.asList(
             new TranslatorModel<>(Service.class, new ServiceTranslator(), false, 1000, true),
-            new TranslatorModel<>(Institution.class, new InstitutionTranslator(), false, 1000, true),
+            new TranslatorModel<>(Organization.class, new OrganizationTranslator(), false, 1000, true),
             new TranslatorModel<>(Country.class, new CountryTranslator(), false, 1000, true)
     );
 

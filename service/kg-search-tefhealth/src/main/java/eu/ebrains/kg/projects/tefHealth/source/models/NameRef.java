@@ -1,6 +1,6 @@
 /*
  *  Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
- *  Copyright 2021 - 2024 EBRAINS AISBL
+ *  Copyright 2021 - 2023 EBRAINS AISBL
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,32 +21,25 @@
  *  (Human Brain Project SGA1, SGA2 and SGA3).
  */
 
-package eu.ebrains.kg.projects.tefHealth.source;
+package eu.ebrains.kg.projects.tefHealth.source.models;
 
 import eu.ebrains.kg.common.model.source.FullNameRef;
-import eu.ebrains.kg.common.model.source.SourceInstance;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Comparator;
 
 @Getter
 @Setter
-public class InstitutionFromKG extends SourceInstance {
+public class NameRef extends FullNameRef {
 
     private String name;
-    private String abbreviation;
-    private List<FullNameRef> providedServices;
-    private List<String> providedServiceCategories;
-    private FullNameRef country;
-    private List<Association> associations;
 
-    @Getter
-    @Setter
-    public static class Association {
-        private String name;
-        private FullNameRef memberOf;
-        private FullNameRef associatedTo;
+    public static final Comparator<NameRef> COMPARATOR = Comparator.comparing(NameRef::getName, Comparator.nullsFirst(String::compareToIgnoreCase));
+
+    @Override
+    public String getFullName() {
+        return getName();
     }
-
 }
