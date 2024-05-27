@@ -31,8 +31,9 @@ import eu.ebrains.kg.common.model.target.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
-import eu.ebrains.kg.projects.tefHealth.source.InstitutionFromKG;
-import eu.ebrains.kg.projects.tefHealth.target.Institution;
+import eu.ebrains.kg.projects.tefHealth.source.OrganizationFromKG;
+import eu.ebrains.kg.projects.tefHealth.source.models.ServiceRef;
+import eu.ebrains.kg.projects.tefHealth.target.Organization;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -40,7 +41,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class InstitutionTranslator extends Translator<InstitutionFromKG, Institution, InstitutionTranslator.Result> {
+public class OrganizationTranslator extends Translator<OrganizationFromKG, Organization, OrganizationTranslator.Result> {
     private static final String QUERY_ID = "8614e3b4-a831-41ee-ad9e-b85dacc36439";
 
     @Override
@@ -54,47 +55,36 @@ public class InstitutionTranslator extends Translator<InstitutionFromKG, Institu
     }
 
     @Override
-    public Class<InstitutionFromKG> getSourceType() {
-        return InstitutionFromKG.class;
+    public Class<OrganizationFromKG> getSourceType() {
+        return OrganizationFromKG.class;
     }
 
     @Override
-    public Class<Institution> getTargetType() {
-        return Institution.class;
+    public Class<Organization> getTargetType() {
+        return Organization.class;
     }
 
     @Override
     public List<String> semanticTypes() {
-        return Collections.singletonList("https://ebrains.eu/tef-health/Institution");
+        return Collections.singletonList("https://tefhealth.eu/serviceCatalogue/types/Organization");
     }
 
-    public static class Result extends ResultsOfKG<InstitutionFromKG> {
+    public static class Result extends ResultsOfKG<OrganizationFromKG> {
     }
 
-    public Institution translate(InstitutionFromKG tefHealthInstitutionV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
-        Institution t = new Institution();
-        t.setCategory(new Value<>("Institution"));
+    public Organization translate(OrganizationFromKG tefHealthInstitutionV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
+        Organization t = new Organization();
+        t.setCategory(new Value<>("Organization"));
         t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthInstitutionV3.getId()));
         t.setAllIdentifiers(tefHealthInstitutionV3.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(tefHealthInstitutionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         String title = StringUtils.isNotBlank(tefHealthInstitutionV3.getName()) ? StringUtils.isNotBlank(tefHealthInstitutionV3.getAbbreviation()) ? String.format("%s (%s)", tefHealthInstitutionV3.getName(), tefHealthInstitutionV3.getAbbreviation()) : tefHealthInstitutionV3.getName() : null;
         t.setTitle(value(title));
-        t.setProvidedServiceCategories(value(tefHealthInstitutionV3.getProvidedServiceCategories().stream().sorted().toList()));
-        t.setProvidedServices(ref(tefHealthInstitutionV3.getProvidedServices(), true));
-        t.setCountry(ref(tefHealthInstitutionV3.getCountry()));
-        List<TargetInternalReference> associations = tefHealthInstitutionV3.getAssociations().stream().map(a -> {
-            if (a.getAssociatedTo() != null) {
-                return new TargetInternalReference(IdUtils.getUUID(a.getAssociatedTo().getId()), a.getName());
-            } else if (a.getMemberOf() != null) {
-                return new TargetInternalReference(IdUtils.getUUID(a.getMemberOf().getId()), a.getName());
-            } else {
-                return null;
-            }
-        }).filter(Objects::nonNull).sorted().toList();
-        if(!associations.isEmpty()) {
-            t.setAssociations(associations);
+        if(tefHealthInstitutionV3.getServices()!=null) {
+            t.setProvidedServices(ref(tefHealthInstitutionV3.getServices(), true));
         }
+        t.setCountry(ref(tefHealthInstitutionV3.getCountry()));
         return t;
     }
 }

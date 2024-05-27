@@ -23,9 +23,10 @@
 
 package eu.ebrains.kg.projects.tefHealth.source;
 
+import eu.ebrains.kg.common.model.source.FullNameRef;
 import eu.ebrains.kg.common.model.source.SourceInstance;
 import eu.ebrains.kg.projects.tefHealth.source.models.NameRef;
-import eu.ebrains.kg.projects.tefHealth.source.models.NameRefWithAbbreviation;
+import eu.ebrains.kg.projects.tefHealth.source.models.ServiceRef;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,34 +34,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ServiceFromKG extends SourceInstance {
+public class OrganizationFromKG extends SourceInstance {
 
     private String name;
-    private String description;
-    private String serviceInput;
-    private String serviceOutput;
-    private List<NameRef> category;
-    private List<NameRef> certificationSupport;
-    private List<NameRef> dependenciesAndRestrictions;
-    private List<NameRef> offerings;
-    private PricingInformation pricing;
-    private Provider provider;
-
-
-
-    @Getter
-    @Setter
-    public static class PricingInformation {
-        private String billing;
-        private Double fullPriceInEuro;
-        private Double reducedPriceInEuro;
-    }
-
-    @Getter
-    @Setter
-    public static class Provider {
-        private NameRefWithAbbreviation organization;
-        private List<NameRef> contacts;
-    }
+    private String abbreviation;
+    private List<ServiceRef> services;
+    private NameRef country;
 
 }

@@ -12,7 +12,7 @@
     }
   },
   "meta": {
-    "type": "https://ebrains.eu/tef-health/Country",
+    "type": "https://tefhealth.eu/serviceCatalogue/types/Country",
     "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
@@ -21,25 +21,22 @@
       "path": "@id"
     },
     {
-      "propertyName": "query:identifier",
-      "path": "http://schema.org/identifier"
-    },
-    {
       "propertyName": "query:type",
       "path": "@type"
     },
     {
       "propertyName": "query:name",
-      "path": "http://schema.org/name"
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
     },
     {
-      "propertyName": "query:institutions",
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    },
+    {
+      "propertyName": "query:organizations",
       "path": {
-        "@id": "https://ebrains.eu/tef-health/country",
-        "reverse": true,
-        "typeFilter": {
-          "@id": "https://ebrains.eu/tef-health/Institution"
-        }
+        "@id": "https://tefhealth.eu/serviceCatalogue/vocab/country",
+        "reverse": true
       },
       "structure": [
         {
@@ -47,35 +44,52 @@
           "path": "@id"
         },
         {
-          "propertyName": "query:fullName",
-          "path": "http://schema.org/name"
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+        },
+        {
+          "propertyName": "query:abbreviation",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/abbreviation"
         }
       ]
     },
     {
-      "propertyName": "query:services",
-      "path": {
-        "@id": "https://ebrains.eu/tef-health/country",
-        "reverse": true,
-        "typeFilter": {
-          "@id": "https://ebrains.eu/tef-health/Service"
+      "propertyName": "query:country",
+      "path": [
+        {
+          "@id": "https://tefhealth.eu/serviceCatalogue/vocab/country",
+          "reverse": true
+        },
+        {
+          "@id": "https://tefhealth.eu/serviceCatalogue/vocab/organization",
+          "reverse": true
+        },
+        {
+          "@id": "https://tefhealth.eu/serviceCatalogue/vocab/provider",
+          "reverse": true
         }
-      },
+      ],
       "structure": [
         {
           "propertyName": "query:id",
           "path": "@id"
         },
         {
-          "propertyName": "query:fullName",
-          "path": "http://schema.org/name"
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
         },
         {
-          "propertyName": "query:abbreviation",
-          "singleValue": "FIRST",
-          "path": [
-            "https://ebrains.eu/tef-health/providedBy",
-            "https://ebrains.eu/tef-health/abbreviation"
+          "propertyName": "query:categories",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/category",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:name",
+              "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+            }
           ]
         }
       ]

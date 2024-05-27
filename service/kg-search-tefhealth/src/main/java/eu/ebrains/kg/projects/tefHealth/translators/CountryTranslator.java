@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CountryTranslator extends Translator<CountryFromKG, Country, CountryTranslator.Result> {
-    private static final String QUERY_ID = "e269521f-276d-4031-a52e-56d68bf6de63";
+    private static final String QUERY_ID = "d4f6cffd-f94c-442f-b76d-25633ea1b819";
 
     @Override
     public List<String> getQueryIds() {
@@ -61,7 +61,7 @@ public class CountryTranslator extends Translator<CountryFromKG, Country, Countr
 
     @Override
     public List<String> semanticTypes() {
-        return Collections.singletonList("https://ebrains.eu/tef-health/Country");
+        return Collections.singletonList("https://tefhealth.eu/serviceCatalogue/types/Country");
     }
 
     public static class Result extends ResultsOfKG<CountryFromKG> {
@@ -75,7 +75,7 @@ public class CountryTranslator extends Translator<CountryFromKG, Country, Countr
         t.setAllIdentifiers(tefHealthCountryV3.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(tefHealthCountryV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthCountryV3.getName()));
-        t.setInstitutions(ref(tefHealthCountryV3.getInstitutions(), true));
+        t.setOrganizations(ref(tefHealthCountryV3.getOrganizations(), true));
         t.setServices(ref(tefHealthCountryV3.getServices(), true));
         return t;
     }

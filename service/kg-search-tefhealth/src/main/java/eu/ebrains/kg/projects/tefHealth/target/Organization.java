@@ -38,8 +38,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Institution", searchable = true, sortByRelevance = false)
-public class Institution implements TargetInstance {
+@MetaInfo(name = "Organization", searchable = true, sortByRelevance = false)
+public class Organization implements TargetInstance {
 
     @JsonIgnore
     private List<String> allIdentifiers;
@@ -52,9 +52,9 @@ public class Institution implements TargetInstance {
     private List<String> identifier;
 
     @ElasticSearchInfo(type = "keyword")
-    private Value<String> type = new Value<>("Institution");
+    private Value<String> type = new Value<>("Organization");
 
-    @FieldInfo(label = "Name", layout = "header", labelHidden = true)
+    @FieldInfo(label = "Name", layout = "header", labelHidden = true, boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     @FieldInfo(label = "Abbreviation", useForSuggestion = true)
@@ -69,17 +69,11 @@ public class Institution implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private SchemaOrgInstance meta;
 
-    @FieldInfo(label = "Service categories", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private List<Value<String>> providedServiceCategories;
-
     @FieldInfo(label = "Services", useForSuggestion = true)
     private List<TargetInternalReference> providedServices;
 
-    @FieldInfo(label = "Country", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
+    @FieldInfo(layout = "header", label = "Country", labelHidden = true, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private TargetInternalReference country;
-
-    @FieldInfo(label = "Associations")
-    private List<TargetInternalReference> associations;
 
 
     @Override

@@ -12,7 +12,7 @@
     }
   },
   "meta": {
-    "type": "https://ebrains.eu/tef-health/Service",
+    "type": "https://tefhealth.eu/serviceCatalogue/types/Service",
     "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
@@ -20,6 +20,7 @@
       "propertyName": "query:id",
       "path": "@id"
     },
+
     {
       "propertyName": "query:identifier",
       "path": "http://schema.org/identifier"
@@ -30,70 +31,128 @@
     },
     {
       "propertyName": "query:name",
-      "path": "http://schema.org/name"
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
     },
     {
       "propertyName": "query:description",
-      "path": "http://schema.org/description"
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/description"
     },
     {
-      "propertyName": "query:providedBy",
-      "path": "https://ebrains.eu/tef-health/providedBy",
+      "propertyName": "query:serviceInput",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/serviceInput"
+    },
+    {
+      "propertyName": "query:serviceOutput",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/serviceOutput"
+    },
+    {
+      "propertyName": "query:category",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/category",
       "structure": [
         {
           "propertyName": "query:id",
           "path": "@id"
         },
         {
-          "propertyName": "query:fullName",
-          "path": "http://schema.org/name"
-        },
-        {
-          "path": "https://ebrains.eu/tef-health/abbreviation"
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
         }
       ]
     },
     {
-      "propertyName": "query:country",
-      "path": [
-        "https://ebrains.eu/tef-health/providedBy",
-        "https://ebrains.eu/tef-health/country"
-      ],
+      "propertyName": "query:certificationSupport",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/certificationSupport",
       "structure": [
-        {
-          "propertyName": "query:fullName",
-          "path": "http://schema.org/name"
-        },
         {
           "propertyName": "query:id",
           "path": "@id"
+        },
+        {
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
         }
       ]
     },
     {
-      "propertyName": "query:serviceCategory",
-      "path": [
-        "https://ebrains.eu/tef-health/serviceCategory",
-        "http://schema.org/name"
+      "propertyName": "query:dependenciesAndRestrictions",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/dependenciesAndRestrictions",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+        }
       ]
     },
     {
-      "propertyName": "query:useCaseCategories",
-      "path": [
-        "https://ebrains.eu/tef-health/useCaseCategories",
-        "http://schema.org/name"
+      "propertyName": "query:offerings",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/offerings",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+        }
       ]
     },
     {
-      "propertyName": "query:useCaseDomains",
-      "path": [
-        "https://ebrains.eu/tef-health/useCaseDomains",
-        "http://schema.org/name"
+      "propertyName": "query:pricing",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/pricing",
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:billing",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/billing"
+        },
+        {
+          "propertyName": "query:fullPriceInEuro",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/fullPriceInEuro"
+        },
+        {
+          "propertyName": "query:reducedPriceInEuro",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/reducedPriceInEuro"
+        }
       ]
     },
     {
-      "propertyName": "query:useCaseDomainOtherDescription",
-      "path": "https://ebrains.eu/tef-health/useCaseDomainOtherDescription"
+      "propertyName": "query:provider",
+      "singleValue": "FIRST",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/provider",
+      "structure": [
+        {
+          "propertyName": "query:organization",
+          "singleValue": "FIRST",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/organization",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:name",
+              "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+            },
+            {
+              "propertyName": "query:abbreviation",
+              "path": "https://tefhealth.eu/serviceCatalogue/vocab/abbreviation"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:contacts",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/contacts",
+          "structure": {
+            "propertyName": "query:name",
+            "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+          }
+        }
+      ]
     }
   ]
 }

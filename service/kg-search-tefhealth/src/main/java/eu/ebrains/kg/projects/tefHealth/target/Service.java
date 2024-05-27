@@ -54,7 +54,7 @@ public class Service implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Service");
 
-    @FieldInfo(label = "Name", layout = "header", labelHidden = true)
+    @FieldInfo(label = "Name", layout = "header", labelHidden = true, boost = 20, useForSuggestion = true)
     private Value<String> title;
 
     @ElasticSearchInfo(type = "keyword")
@@ -66,26 +66,33 @@ public class Service implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private SchemaOrgInstance meta;
 
+    @FieldInfo(layout="header", label = "Provided by", labelHidden = true, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true, overview = true)
+    private TargetInternalReference providedBy;
+
     @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Provided by", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true, overview = true)
-    private List<TargetInternalReference> providedBy;
+    @FieldInfo(label = "Service input")
+    private Value<String> serviceInput;
 
-    @FieldInfo(label = "Countries", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
+    @FieldInfo(label = "Service output")
+    private Value<String> serviceOutput;
+
+    @FieldInfo(label = "Certification support", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
+    private List<Value<String>> certificationSupport;
+
+    @FieldInfo(label = "Dependencies and restrictions", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
+    private List<Value<String>> dependenciesAndRestrictions;
+
+    @FieldInfo(label = "Offerings")
+    private List<Value<String>> offerings;
+
+
+    @FieldInfo(label = "Country", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private List<TargetInternalReference> countries;
 
     @FieldInfo(label = "Service category", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> serviceCategories;
-
-    @FieldInfo(label = "Categories", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private List<Value<String>> useCaseCategories;
-
-    @FieldInfo(label = "Domain", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private List<Value<String>> useCaseDomains;
-
-    @FieldInfo(labelHidden = true, type = FieldInfo.Type.TEXT)
-    private Value<String> useCaseDomainOtherDescription;
 
 
     @Override
