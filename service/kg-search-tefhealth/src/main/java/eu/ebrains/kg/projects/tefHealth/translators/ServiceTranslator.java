@@ -26,6 +26,8 @@ package eu.ebrains.kg.projects.tefHealth.translators;
 import eu.ebrains.kg.common.controller.translation.models.Translator;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
+import eu.ebrains.kg.common.model.target.Tags;
+import eu.ebrains.kg.common.model.target.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
@@ -36,6 +38,7 @@ import eu.ebrains.kg.projects.tefHealth.target.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ServiceTranslator extends Translator<ServiceFromKG, Service, ServiceTranslator.Result> {
@@ -71,10 +74,23 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
 
     public Service translate(ServiceFromKG tefHealthServiceV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
         Service t = new Service();
-        t.setCategory(new Value<>("Service"));
         t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthServiceV3.getId()));
+        t.setContact(new TargetExternalReference("mailto:info@tefhealth.eu", "info@tefhealth.eu"));
         t.setAllIdentifiers(tefHealthServiceV3.getIdentifier());
+        List<String> categoryNames = tefHealthServiceV3.getCategory().stream().map(c -> String.format("%s service", c.getName())).sorted().toList();
+        if(!categoryNames.isEmpty()){
+            t.setTags(new Tags(categoryNames, categoryNames.size(), categoryNames.size(), 0));
+            t.setServiceCategories(value(categoryNames));
+            t.setCategory(value(categoryNames.getFirst()));
+        }
+        else{
+            t.setCategory(value("Service"));
+        }
+        if (tefHealthServiceV3.getPricing() != null) {
+            t.setPricing(value(pricing(tefHealthServiceV3.getPricing())));
+        }
+
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthServiceV3.getName()));
         t.setDescription(value(tefHealthServiceV3.getDescription()));
@@ -84,7 +100,25 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         t.setDependenciesAndRestrictions(value(tefHealthServiceV3.getDependenciesAndRestrictions().stream().map(NameRef::getName).toList()));
         t.setOfferings(value(tefHealthServiceV3.getOfferings().stream().map(NameRef::getName).toList()));
         t.setProvidedBy(ref(tefHealthServiceV3.getProvider().getOrganization()));
-        t.setServiceCategories(value(tefHealthServiceV3.getCategory().stream().map(NameRef::getName).toList()));
         return t;
+    }
+
+    private String pricing(ServiceFromKG.PricingInformation pricingInformation) {
+        String template = """
+                Pricing van vary.
+                          
+                **Non-binding example:**
+                %s""";
+        String pricing = "";
+        if (pricingInformation.getFullPriceInEuro() != null) {
+            pricing += String.format("%s€%.2f %s\n", pricingInformation.getReducedPriceInEuro() != null ? "*Full price:* " : "", pricingInformation.getFullPriceInEuro(), Objects.toString(pricingInformation.getBilling(), ""));
+        }
+
+        if (pricingInformation.getReducedPriceInEuro() != null) {
+            pricing += String.format("*Reduced price:* €%.2f %s", pricingInformation.getReducedPriceInEuro(), Objects.toString(pricingInformation.getBilling(), "")).trim();
+        }
+        return String.format(template, pricing);
+
+
     }
 }

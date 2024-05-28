@@ -169,7 +169,7 @@ public class DatasetVersionTranslator extends EBRAINSTranslator<DatasetVersionV3
         }
         if (!CollectionUtils.isEmpty(tags)) {
             tags.sort(String.CASE_INSENSITIVE_ORDER);
-            d.setTags(new DatasetVersion.Tags(tags, total, tags.size(), 0));
+            d.setTags(new Tags(tags, total, tags.size(), 0));
         }
     }
 

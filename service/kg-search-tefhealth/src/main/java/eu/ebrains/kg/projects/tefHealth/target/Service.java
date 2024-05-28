@@ -24,13 +24,7 @@
 package eu.ebrains.kg.projects.tefHealth.target;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import eu.ebrains.kg.common.model.target.FieldInfo;
-import eu.ebrains.kg.common.model.target.MetaInfo;
-import eu.ebrains.kg.common.model.target.TargetInstance;
-import eu.ebrains.kg.common.model.target.ElasticSearchInfo;
-import eu.ebrains.kg.common.model.target.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.Value;
-import eu.ebrains.kg.common.model.target.SchemaOrgInstance;
+import eu.ebrains.kg.common.model.target.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,6 +51,8 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Name", layout = "header", labelHidden = true, boost = 20, useForSuggestion = true)
     private Value<String> title;
 
+    private Tags tags;
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> category;
 
@@ -68,6 +64,15 @@ public class Service implements TargetInstance {
 
     @FieldInfo(layout="header", label = "Provided by", labelHidden = true, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true, overview = true)
     private TargetInternalReference providedBy;
+
+    @FieldInfo(label = "Service category", visible = false, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
+    private List<Value<String>> serviceCategories;
+
+    @FieldInfo(label = "Offerings")
+    private List<Value<String>> offerings;
+
+    @FieldInfo(label = "Contact")
+    private TargetExternalReference contact;
 
     @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
@@ -84,15 +89,12 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Dependencies and restrictions", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
     private List<Value<String>> dependenciesAndRestrictions;
 
-    @FieldInfo(label = "Offerings")
-    private List<Value<String>> offerings;
+    @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
+    private Value<String> pricing;
 
-
-    @FieldInfo(label = "Country", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
+    @FieldInfo(layout = "Pricing", label = "Country", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private List<TargetInternalReference> countries;
 
-    @FieldInfo(label = "Service category", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private List<Value<String>> serviceCategories;
 
 
     @Override
