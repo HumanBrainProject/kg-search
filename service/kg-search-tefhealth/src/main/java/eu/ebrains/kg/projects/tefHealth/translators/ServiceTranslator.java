@@ -92,7 +92,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
             t.setPricing(value(pricing(tefHealthServiceV3.getPricing())));
         }
         if(!CollectionUtils.isEmpty(tefHealthServiceV3.getCalls())){
-            t.setCalls(tefHealthServiceV3.getCalls().stream().map(c -> value(c.getName())).toList());
+            t.setCalls(tefHealthServiceV3.getCalls().stream().map(c -> value(c.getName())).sorted().toList());
         }
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthServiceV3.getName()));
