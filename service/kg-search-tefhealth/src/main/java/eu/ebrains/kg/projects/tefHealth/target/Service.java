@@ -74,7 +74,7 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Contact")
     private TargetExternalReference contact;
 
-    @FieldInfo(isFilterableFacet = true,  labelHidden = true, facet = FieldInfo.Facet.LIST, separator = " & ")
+    @FieldInfo(label = "Calls", isFilterableFacet = true,  labelHidden = true, facet = FieldInfo.Facet.LIST, separator = " & ")
     private List<Value<String>> calls;
 
     @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
