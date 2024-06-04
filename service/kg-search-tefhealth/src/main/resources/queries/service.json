@@ -46,6 +46,20 @@
       "path": "https://tefhealth.eu/serviceCatalogue/vocab/serviceOutput"
     },
     {
+      "propertyName": "query:calls",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/calls",
+      "structure": [
+        {
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+        },
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        }
+      ]
+    },
+    {
       "propertyName": "query:category",
       "path": "https://tefhealth.eu/serviceCatalogue/vocab/category",
       "structure": [

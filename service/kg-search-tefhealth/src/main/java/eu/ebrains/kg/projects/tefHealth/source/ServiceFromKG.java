@@ -39,6 +39,7 @@ public class ServiceFromKG extends SourceInstance {
     private String description;
     private String serviceInput;
     private String serviceOutput;
+    private List<NameRef> calls;
     private List<NameRef> category;
     private List<NameRef> certificationSupport;
     private List<NameRef> dependenciesAndRestrictions;
@@ -52,8 +53,8 @@ public class ServiceFromKG extends SourceInstance {
     @Setter
     public static class PricingInformation {
         private String billing;
-        private Double fullPriceInEuro;
-        private Double reducedPriceInEuro;
+        private String fullPriceInEuro;
+        private String reducedPriceInEuro;
     }
 
     @Getter

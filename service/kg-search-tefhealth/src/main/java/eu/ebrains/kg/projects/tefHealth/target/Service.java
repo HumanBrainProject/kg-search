@@ -74,6 +74,9 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Contact")
     private TargetExternalReference contact;
 
+    @FieldInfo(isFilterableFacet = true,  labelHidden = true, facet = FieldInfo.Facet.LIST, separator = " & ")
+    private List<Value<String>> calls;
+
     @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
 
@@ -83,17 +86,14 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Service output")
     private Value<String> serviceOutput;
 
-    @FieldInfo(label = "Certification support", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
+    @FieldInfo(label = "Certification support")
     private List<Value<String>> certificationSupport;
 
-    @FieldInfo(label = "Dependencies and restrictions", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true)
+    @FieldInfo(label = "Dependencies and restrictions")
     private List<Value<String>> dependenciesAndRestrictions;
 
     @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> pricing;
-
-    @FieldInfo(layout = "Pricing", label = "Country", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
-    private List<TargetInternalReference> countries;
 
 
 

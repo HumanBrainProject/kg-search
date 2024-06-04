@@ -35,6 +35,7 @@ import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.projects.tefHealth.source.ServiceFromKG;
 import eu.ebrains.kg.projects.tefHealth.source.models.NameRef;
 import eu.ebrains.kg.projects.tefHealth.target.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -90,7 +91,9 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         if (tefHealthServiceV3.getPricing() != null) {
             t.setPricing(value(pricing(tefHealthServiceV3.getPricing())));
         }
-
+        if(!CollectionUtils.isEmpty(tefHealthServiceV3.getCalls())){
+            t.setCalls(tefHealthServiceV3.getCalls().stream().map(c -> value(c.getName())).toList());
+        }
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(value(tefHealthServiceV3.getName()));
         t.setDescription(value(tefHealthServiceV3.getDescription()));
@@ -111,11 +114,11 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
                 %s""";
         String pricing = "";
         if (pricingInformation.getFullPriceInEuro() != null) {
-            pricing += String.format("%s€%.2f %s\n", pricingInformation.getReducedPriceInEuro() != null ? "*Full price:* " : "", pricingInformation.getFullPriceInEuro(), Objects.toString(pricingInformation.getBilling(), ""));
+            pricing += String.format("%s€%s %s\n", pricingInformation.getReducedPriceInEuro() != null ? "*Full price:* " : "", pricingInformation.getFullPriceInEuro(), Objects.toString(pricingInformation.getBilling(), ""));
         }
 
         if (pricingInformation.getReducedPriceInEuro() != null) {
-            pricing += String.format("*Reduced price:* €%.2f %s", pricingInformation.getReducedPriceInEuro(), Objects.toString(pricingInformation.getBilling(), "")).trim();
+            pricing += String.format("*Reduced price:* €%s %s", pricingInformation.getReducedPriceInEuro(), Objects.toString(pricingInformation.getBilling(), "")).trim();
         }
         return String.format(template, pricing);
 
