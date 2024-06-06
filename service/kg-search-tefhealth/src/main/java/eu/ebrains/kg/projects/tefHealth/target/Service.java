@@ -68,7 +68,7 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Service category", visible = false, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> serviceCategories;
 
-    @FieldInfo(label = "Offerings")
+    @FieldInfo(label = "Offerings",facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> offerings;
 
     @FieldInfo(label = "Contact")
