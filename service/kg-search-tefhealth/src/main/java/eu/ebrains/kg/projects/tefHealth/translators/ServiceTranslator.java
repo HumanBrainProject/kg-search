@@ -74,6 +74,10 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
     }
 
     public Service translate(ServiceFromKG tefHealthServiceV3, DataStage dataStage, boolean liveMode, TranslatorUtils translatorUtils) throws TranslationException {
+        Value<String> title = value(tefHealthServiceV3.getName());
+        if(title == null){
+            title = new Value<>("");
+        }
         Service t = new Service();
         t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthServiceV3.getId()));
@@ -96,7 +100,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
             t.setCalls(tefHealthServiceV3.getCalls().stream().map(c -> value(c.getName())).sorted().toList());
         }
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
-        t.setTitle(value(tefHealthServiceV3.getName()));
+        t.setTitle(title);
         t.setDescription(value(tefHealthServiceV3.getDescription()));
         t.setServiceInput(value(tefHealthServiceV3.getServiceInput()));
         t.setServiceOutput(value(tefHealthServiceV3.getServiceOutput()));
