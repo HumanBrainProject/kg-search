@@ -90,6 +90,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         }
         if (tefHealthServiceV3.getPricing() != null) {
             t.setPricing(value(pricing(tefHealthServiceV3.getPricing())));
+            t.setPricingDetails(value(tefHealthServiceV3.getPricing().getPricingDetails()));
         }
         if(!CollectionUtils.isEmpty(tefHealthServiceV3.getCalls())){
             t.setCalls(tefHealthServiceV3.getCalls().stream().map(c -> value(c.getName())).sorted().toList());
@@ -99,6 +100,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         t.setDescription(value(tefHealthServiceV3.getDescription()));
         t.setServiceInput(value(tefHealthServiceV3.getServiceInput()));
         t.setServiceOutput(value(tefHealthServiceV3.getServiceOutput()));
+        t.setServiceStandards(value(tefHealthServiceV3.getServiceStandards().stream().map(NameRef::getName).toList()));
         t.setCertificationSupport(value(tefHealthServiceV3.getCertificationSupport().stream().map(NameRef::getName).toList()));
         t.setDependenciesAndRestrictions(value(tefHealthServiceV3.getDependenciesAndRestrictions().stream().map(NameRef::getName).toList()));
         t.setOfferings(value(tefHealthServiceV3.getOfferings().stream().map(NameRef::getName).toList()));
