@@ -92,9 +92,14 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Dependencies and restrictions")
     private List<Value<String>> dependenciesAndRestrictions;
 
+    @FieldInfo(label = "Service standards")
+    private List<Value<String>> serviceStandards;
+
     @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> pricing;
 
+    @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
+    private Value<String> pricingDetails;
 
 
     @Override

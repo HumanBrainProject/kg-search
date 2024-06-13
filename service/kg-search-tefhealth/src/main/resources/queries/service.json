@@ -20,7 +20,6 @@
       "propertyName": "query:id",
       "path": "@id"
     },
-
     {
       "propertyName": "query:identifier",
       "path": "http://schema.org/identifier"
@@ -88,6 +87,20 @@
       ]
     },
     {
+      "propertyName": "query:serviceStandards",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/serviceStandards",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:name",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
+        }
+      ]
+    },
+    {
       "propertyName": "query:dependenciesAndRestrictions",
       "path": "https://tefhealth.eu/serviceCatalogue/vocab/dependenciesAndRestrictions",
       "structure": [
@@ -131,6 +144,10 @@
         {
           "propertyName": "query:reducedPriceInEuro",
           "path": "https://tefhealth.eu/serviceCatalogue/vocab/reducedPriceInEuro"
+        },
+        {
+          "propertyName": "query:pricingDetails",
+          "path": "https://tefhealth.eu/serviceCatalogue/vocab/pricingDetails"
         }
       ]
     },
