@@ -101,7 +101,7 @@ public class Service implements TargetInstance {
     @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> pricingDetails;
 
-    @FieldInfo(label = "Price example", facet = FieldInfo.Facet.EXISTS, ignoreForSearch = true)
+    @FieldInfo(label = "Price example", facet = FieldInfo.Facet.EXISTS)
     private boolean hasPriceExample;
 
     @Override
