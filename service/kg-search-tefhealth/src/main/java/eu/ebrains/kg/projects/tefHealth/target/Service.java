@@ -68,7 +68,7 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Service category", visible = false, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> serviceCategories;
 
-    @FieldInfo(label = "Offerings",facet = FieldInfo.Facet.LIST, andFilter = true, isFilterableFacet = true, useForSuggestion = true)
+    @FieldInfo(label = "Offerings",facet = FieldInfo.Facet.LIST, isFilterableFacet = true, useForSuggestion = true)
     private List<Value<String>> offerings;
 
     @FieldInfo(label = "Contact")
@@ -101,8 +101,8 @@ public class Service implements TargetInstance {
     @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> pricingDetails;
 
-    @FieldInfo(layout = "Price example", facet = FieldInfo.Facet.EXISTS, visible = false)
-    private Value<Boolean> hasPriceExample;
+    @FieldInfo(label = "Price example", facet = FieldInfo.Facet.EXISTS, visible = false)
+    private Value<String> hasPriceExample;
 
     @Override
     public boolean isSearchableInstance() {

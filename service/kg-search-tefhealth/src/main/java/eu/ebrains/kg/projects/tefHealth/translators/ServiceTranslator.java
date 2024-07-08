@@ -93,7 +93,7 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
             t.setCategory(value("Service"));
         }
         if (tefHealthServiceV3.getPricing() != null) {
-            t.setHasPriceExample(value(true));
+            t.setHasPriceExample(value("TRUE"));
             t.setPricing(value(pricing(tefHealthServiceV3.getPricing())));
             t.setPricingDetails(value(tefHealthServiceV3.getPricing().getPricingDetails()));
         }
