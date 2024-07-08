@@ -44,6 +44,8 @@ public @interface FieldInfo {
 
     FieldType fieldType() default FieldType.DEFAULT;
 
+    boolean andFilter() default false;
+
     boolean visible() default true;
 
     boolean labelHidden() default false;

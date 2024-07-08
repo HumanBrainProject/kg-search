@@ -97,6 +97,9 @@ public class FacetsController {
                 if (info.isFilterableFacet() != defaultFieldInfo.isFilterableFacet()) {
                     facet.setIsFilterable(info.isFilterableFacet());
                 }
+                if (info.andFilter()){
+                    facet.setExclusiveSelection(true);
+                }
                 //facetExclusiveSelection
                 //facetMissingTerm
 
