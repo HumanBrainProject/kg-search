@@ -34,7 +34,7 @@ const authAdapter = new KeycloakAuthAdapter({
   onLoad: 'check-sso',
   flow: 'standard',
   pkceMethod: 'S256',
-  checkLoginIframe: true,
+  checkLoginIframe: false,
   enableLogging: true
 }, `${window.location.protocol}//${window.location.host}`);
 
