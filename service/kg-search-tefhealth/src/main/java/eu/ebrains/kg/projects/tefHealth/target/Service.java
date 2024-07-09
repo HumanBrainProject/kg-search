@@ -100,9 +100,9 @@ public class Service implements TargetInstance {
 
     @FieldInfo(layout = "Pricing", fieldType = FieldInfo.FieldType.MARKDOWN)
     private Value<String> pricingDetails;
-
-    @FieldInfo(label = "Price example", facet = FieldInfo.Facet.EXISTS)
-    private boolean hasPriceExample;
+//
+//    @FieldInfo(label = "Price example", facet = FieldInfo.Facet.EXISTS)
+//    private boolean hasPriceExample;
 
     @Override
     public boolean isSearchableInstance() {
