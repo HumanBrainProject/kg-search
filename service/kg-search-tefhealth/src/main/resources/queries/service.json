@@ -177,11 +177,10 @@
         },
         {
           "propertyName": "query:contacts",
-          "path": "https://tefhealth.eu/serviceCatalogue/vocab/contacts",
-          "structure": {
-            "propertyName": "query:name",
-            "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
-          }
+          "path": [
+            "https://tefhealth.eu/serviceCatalogue/vocab/contacts",
+            "https://tefhealth.eu/serviceCatalogue/vocab/email"
+          ]
         }
       ]
     }
