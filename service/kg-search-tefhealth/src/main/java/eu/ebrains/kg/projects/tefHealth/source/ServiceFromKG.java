@@ -63,7 +63,7 @@ public class ServiceFromKG extends SourceInstance {
     @Setter
     public static class Provider {
         private NameRefWithAbbreviation organization;
-        private List<NameRef> contacts;
+        private List<String> contacts;
     }
 
 }

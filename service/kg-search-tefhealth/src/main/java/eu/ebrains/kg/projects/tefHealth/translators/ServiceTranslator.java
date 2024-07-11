@@ -81,7 +81,9 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         Service t = new Service();
         t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthServiceV3.getId()));
-        t.setContact(new TargetExternalReference("mailto:info@tefhealth.eu", "info@tefhealth.eu"));
+        if(tefHealthServiceV3.getProvider() != null && !CollectionUtils.isEmpty(tefHealthServiceV3.getProvider().getContacts())) {
+            t.setContact(tefHealthServiceV3.getProvider().getContacts().stream().map(c -> new TargetExternalReference(String.format("mailto:%s", c), c)).toList());
+        }
         t.setAllIdentifiers(tefHealthServiceV3.getIdentifier());
         List<String> categoryNames = tefHealthServiceV3.getCategory().stream().map(c -> String.format("%s service", c.getName())).sorted().toList();
         if(!categoryNames.isEmpty()){

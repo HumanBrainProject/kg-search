@@ -72,7 +72,7 @@ public class Service implements TargetInstance {
     private List<Value<String>> offerings;
 
     @FieldInfo(label = "Contact")
-    private TargetExternalReference contact;
+    private List<TargetExternalReference> contact;
 
     @FieldInfo(label = "Calls for discount application", isFilterableFacet = true,  labelHidden = true, facet = FieldInfo.Facet.LIST, separator = " & ")
     private List<Value<String>> calls;
