@@ -1,0 +1,728 @@
+{
+  "hits": [
+    {
+      "highlight": {
+        "title.value": [
+          "Neural <em>Correlates</em> of Multisensory Detection Behavior in Primary and Higher-Order Visual Cortex (v1)"
+        ],
+        "description.value": [
+          "is saved in MATLAB files holding relevant information such as animals response information (such as <em>correct</em>",
+          "Results indicate area AL <em>correlated</em> more with multisensory detection than V1."
+        ]
+      },
+      "id": "97d45335-6757-4a42-9824-2d652d9a9721",
+      "tags": {
+        "data": [
+          "H&E staining",
+          "brain",
+          "cancer",
+          "clinical annotated tissue",
+          "high-resolution scanning",
+          "histopathology",
+          "qualitative analysis",
+          "quantitative analysis",
+          "tumour"
+        ],
+        "total": 20,
+        "size": 9,
+        "from": 0
+      },
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Neural Correlates of Multisensory Detection Behavior in Primary and Higher-Order Visual Cortex (v1)",
+      "badges": ["isTrending", "isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
+      "fields": {
+        "keywords": [
+          { "value": "behavioral training" },
+          { "value": "integration" },
+          { "value": "multimodal" },
+          { "value": "multisensory" }
+        ],
+        "description": {
+          "value": "The brain acts on the environment by gathering multisensory information. The information from multiple senses is combined effectively in the mammalian brain to form one unified perceptual experience. This process of multisensory integration has been linked to multimodal activity in sensory areas of the neocortex, but the precise mechanisms and relevant areas are still not fully elucidated. In this work, we imaged neuronal activity in the primary visual cortex (V1) and Anterolateral visual cortex (AL) of the mouse during a visual, auditory and audiovisual detection task. Animals were trained to respond by licking a lickspout if a stimulus was perceived, and withhold licking if there was no stimulus.  This paradigm provides us with the chance to see enhanced responses in multisensory conditions. The task information is saved in MATLAB files holding relevant information such as animals response information (such as correct/incorrect, response time) and stimulus information (such as modality, contrast or loudness). Two-photon data were collected and processed; individual cells’ dF/F traces have been extracted and are presented in the same MATLAB files (see Usage notes for more details about the data layout). With these data, we found that AL neurons are more sensitive to weak stimuli compared to V1. Both V1 and AL cells showed modulation of visual responses in the multisensory condition, meaning the addition of an auditory stimulus to the visual one changed the cell responses. For multisensory stimuli, area AL showed stronger responses when the animal reported to have seen a stimulus, versus when it did not. Results indicate area AL correlated more with multisensory detection than V1."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Co-variations in resting state activity are thought to arise from a variety of <em>correlated</em> inputs to neurons"
+        ]
+      },
+      "id": "0d9193c5-3ad2-4a15-a967-7b729ef97386",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "1024-channel electrophysiological recordings in macaque V1 and V4 during resting state (v1)",
+      "badges": ["isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
+      "fields": {
+        "keywords": [
+          { "value": "infrared eye tracker" },
+          { "value": "resting state" }
+        ],
+        "description": {
+          "value": "Co-variations in resting state activity are thought to arise from a variety of correlated inputs to neurons, such as bottom-up activity from lower areas, feedback from higher areas, recurrent processing in local circuits, and fluctuations in neuromodulatory systems. Most studies have examined resting state activity throughout the brain using MRI scans, or observed local co-variations in activity by recording from a small number of electrodes. We carried out electrophysiological recordings from over a thousand chronically implanted electrodes in the visual cortex of non-human primates, yielding a resting state dataset with unprecedentedly high channel counts and spatiotemporal resolution. Such signals could be used to observe brain waves across larger regions of cortex, offering a temporally detailed picture of brain activity. In this paper, we provide the dataset, describe the raw and processed data formats and data acquisition methods, and indicate how the data can be used to yield new insights into the ‘background’ activity that influences the processing of visual information in our brain."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "In addition, weighted gene co-expression network analysis (WGCNA) identified 12 modules of highly <em>correlated</em>"
+        ]
+      },
+      "id": "fe3da318-c8aa-4c83-ba64-1f0c74b00700",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Fighting the mirror: Brain transcriptome of high and low mirror aggression zebrafish (v1)",
+      "badges": ["isNew", "isTrending"],
+      "fields": {
+        "description": {
+          "value": "Zebrafish, like many other animals, are not able to recognize themselves in the mirror and typically respond to their own reflection with aggression. In the current work, we have investigated the genetic basis of mirror aggression by using a classic forward genetics approach - selective breeding for high- and low mirror aggression zebrafish (HAZ and LAZ). For this AB wild-type zebrafish were characterised for their response to the mirror image and both aggressive and non-aggressive fish were inbred over generations. RNAseq analysis revealed that around 500 protein-encoding genes with diverse important biological functions were differentially expressed between the most aggressive HAZ and the least aggressive LAZ, suggesting a strong genetic contribution to this phenotype. DAVID pathway analysis showed that a number of diverse pathways are enriched in HAZ over LAZ including pathways related to immune function, oxidation-reduction processes and cell signalling. In addition, weighted gene co-expression network analysis (WGCNA) identified 12 modules of highly correlated genes that were significantly associated with aggression duration and/or experimental group."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "been used to demonstrate that proper area mapping of the neocortical primordium is a pre-requisite for <em>correct</em>",
+          "Notably, in Nex-cKO mice, axonal projections arising from locations normally <em>corresponding</em> to the primary",
+          "been used to demonstrate that proper area mapping of the neocortical primordium is a pre-requisite for <em>correct</em>"
+        ]
+      },
+      "id": "0247821a-c551-4e90-aef9-b05da45ee004",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Impact of area patterning genes on corticopontine projection topography: Anterograde tracing of corticopontine projections in Nr2f1 conditional knockout mice lacking postmitotic expression of Nr2f1 (v1)",
+      "badges": ["isLinkedToImageViewer"],
+      "fields": {
+        "keywords": [
+          { "value": "nuclear receptor and arealization gene (Nr2f1)" },
+          { "value": "topographic corticopontine projections" }
+        ],
+        "description": {
+          "value": "This data set comprises fluorescence microscopy images of serial sagittal mouse brain sections showing anterogradely labelled corticofugal axons in cortico-specific Nr2f1 (also known as COUP-TFI) conditional knockout mice and controls. Transgenic mice were generated by crossing Nr2f1-floxed with Nex-Cre-recombinase mice to abolish Nr2f1 expression from postmitotic neurons. Littermate Nr2f1-floxed mice without the presence of the Cre-recombinase gene (Cre-negatives) were used as controls. Juvenile mice received injections of the viral tracer AAV9-CAGtdTomato plasmid at discrete locations in the somatosensory or motor cortices. Microscopic images acquired using a 10x objective show anterograde axonal labelling across brains, including discrete clusters of axonal labelling in the pontine nuclei. The data have been used to demonstrate that proper area mapping of the neocortical primordium is a pre-requisite for correct establishment of topographic organization of corticopontine axonal projections. Notably, in Nex-cKO mice, axonal projections arising from locations normally corresponding to the primary cortex are abnormally shifted to more peripheral parts of the pontine nuclei, compared to controls. The data have been used to demonstrate that proper area mapping of the neocortical primordium is a pre-requisite for correct establishment of topographically organized corticopontine projections."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "been used to demonstrate that proper area mapping of the neocortical primordium is a pre-requisite for <em>correct</em>"
+        ]
+      },
+      "id": "a95fc9a0-151b-4949-b9ed-972b0abb3c88",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "All-atom Molecular Dynamics Simulation of Human M2 muscarinic acetylcholine receptor in complex with an agonist and antagonist",
+      "previewImage": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000047_Muscarinic_simulation_pub/M2_receptor.jpg",
+      "fields": {
+        "keywords": [
+          { "value": "nuclear receptor and arealization gene (Nr2f1)" },
+          { "value": "topographic corticopontine projections" }
+        ],
+        "description": {
+          "value": "This data set comprises a collection of fluorescence microscopy images of serial sagittal mouse brain sections showing yellow fluorescent protein expression in cortico-specific Nr2f1 (also known as COUP-TFI) conditional knockout mice. Transgenic mice were generated by crossing Nr2f1-floxed mice with 1) Emx1-Cre-recombinase mice to inactivate Nr2f1 exclusively in cortical progenitors and their progeny, or 2) Nex-Cre-recombinase mice to abolish Nr2f1 expression from postmitotic neurons. The animals were further crossed with the reporter Thy1-eYFP-H mouse line to specifically label layer V projection neurons. Littermate Nr2f1-floxed mice without the presence of the Cre-recombinase gene (Cre-negatives) were considered controls. Microscopic images acquired using a 10x objective show that 1) early loss of Nr2f1 leads to increased and abnormal corticopontine innervation at the expense of corticospinal projections, and 2) late postmitotic Nr2f1 inactivation alters topographic pontine mapping. The data have been used to demonstrate that proper area mapping of the neocortical primordium is a pre-requisite for correct establishment of topographically organized corticopontine projections."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "All sections are in the <em>correct</em> anterior-posterior order."
+        ]
+      },
+      "id": "1899b724-1100-43ba-940f-4aab44080e9f",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Distribution of muscarinic acetylcholine receptors (type 2) in adult male C57Bl/J6 mice (coronal sections) (v1)",
+      "badges": ["isNew", "isTrending"],
+      "previewImage": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000007_MuscarinicAcetylcholineReceptor-Mouse_Immunohistochemistry_pub/preview-ext_000007_G06_M2___s202.PNG",
+      "fields": {
+        "keywords": [
+          { "value": "avidin-biotin complex" },
+          { "value": "biotinylated dextran amine" },
+          { "value": "phaseolus vulgaris leucoagglutinin" }
+        ],
+        "description": {
+          "value": "The project was initiated to determine the projections of the orbital frontal cortex (OFC) to the parahippocampal region in the rat, using the anterograde tracers biotinylated dextran amine (BDA) and Phaseolus vulgaris-leucoagglutinin (PHA-L). The anterograde tracers were injected into four subdivisions of OFC; the medial (MO), ventral (VO), ventrolateral (VLO) and lateral (LO) orbitofrontal areas. All brains were cut in the coronal plane at 50 µm thickness, and every 6th section was sampled for analysis. Complete series throughout the  anterior-posterior extent  of each brain form the core of the dataset, with a total of 26 animals successfully injected. Out of those 26, 18 were injected with BDA, 4 injected with PHA-L, and 4 injected with both BDA and PHA-L. Locations of all individual injection sites are annotated in the datasets. All sections are in the correct anterior-posterior order. The data show a topographically organized connectivity from OFC to parahippocampal areas, in addition to all other labeled projections throughout the brain."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "id": "cc17c126-dec2-486c-a23d-deedf9102269",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Anterogradely labeled axonal projections from the orbitofrontal cortex in rat (v1)",
+      "badges": ["isUsingOthers", "isUsedByOthers", "isFollowingStandards", "isLinkedToTools", "isLearningResourceAvailable", "isLinkedToImageViewer", "isIntegratedWithAtlas", "isReplicable", "isUsedInLivePaper", "hasInDepthMetaData"],
+      "fields": {
+        "releasedAt": {
+          "value": "2022-01-26"
+        },
+        "description": {
+          "value": "The project was initiated to determine the projections of the orbital frontal cortex (OFC) to the parahippocampal region in the rat, using the anterograde tracers biotinylated dextran amine (BDA) and Phaseolus vulgaris-leucoagglutinin (PHA-L). The anterograde tracers were injected into four subdivisions of OFC; the medial (MO), ventral (VO), ventrolateral (VLO) and lateral (LO) orbitofrontal areas. All brains were cut in the coronal plane at 50 µm thickness, and every 6th section was sampled for analysis. Complete series throughout the  anterior-posterior extent  of each brain form the core of the dataset, with a total of 26 animals successfully injected. Out of those 26, 18 were injected with BDA, 4 injected with PHA-L, and 4 injected with both BDA and PHA-L. Locations of all individual injection sites are annotated in the datasets. All sections are in the correct anterior-posterior order. The data show a topographically organized connectivity from OFC to parahippocampal areas, in addition to all other labeled projections throughout the brain."
+        }
+      },
+      "previewImage": "https://object.cscs.ch/v1/AUTH_e3381a02998448a7ab0546582bfdb1fa/ext_d_cc17c126-dec2-486c-a23d-deedf9102269/OPIcome_preview-image_F35_BDA_s49.png",
+      "group": "public",
+      "tags": [
+        "Biotinylated dextran amine",
+        "Phaseolus vulgaris leucoagglutinin",
+        "avidin-biotin complex",
+        "histochemistry",
+        "immunohistochemistry",
+        "orbitofrontal cortex",
+        "perfusion fixation technique",
+        "secondary antibody staining",
+        "stereotactic surgery"
+      ]
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "slow wave, optical imaging and whisker stimulation, it was possible to perform large-scale spatial <em>correlation</em>"
+        ]
+      },
+      "id": "5fbaeea7-fac2-472e-aefc-556c2cde1218",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Wide-field imaging of cortical response to sensory stimulation in GCaMP6f mice at different brain states (v1)",
+      "badges": ["isTrending", "isUsingOthers", "isUsedByOthers", "isFollowingStandards"],
+      "fields": {
+        "keywords": [{ "value": "whisker stimulation" }],
+        "description": {
+          "value": "How the mouse cortex integrates sensory information during sleep is still unknown. To investigate the cortical responsiveness to external stimuli, we recorded activity over both cortical hemispheres in mice at different isoflurane-anesthetized brain states using wide field optical imaging with the fluorescent calcium indicator GCaMP6f. We compared the cortical activity dynamics following whisker stimulation in two conditions: deep and medium anesthesia in the same chronically implanted mice. Combining level-dependent modulation of slow wave, optical imaging and whisker stimulation, it was possible to perform large-scale spatial correlation between cortical regions during a response evoked by sensory stimulation. Moreover, as recordings are saved as tiff files, it is easy to work on them using Matlab or ImageJ programs. Our preliminary results show that changes in evoked complexity response may be related to changes in the anesthesia level."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects, as well as analyzed receptors accompanies"
+        ]
+      },
+      "id": "ae50e708-0552-43b7-8bcd-aa3a002c687d",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area Oc2M [rat] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters of Area Oc2M obtained by means of quantitative _in vitro_ autoradiography. The receptor densities are visualized as _fingerprints_ (**fp**), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. Information on the used tissue samples and corresponding subjects, as well as analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "generated 3D reconstructions of the Allen Developing Mouse Brain Atlas to fill in missing sections, <em>correct</em>"
+        ]
+      },
+      "id": "2423e103-35e9-40cf-ab0c-0e3d08d24d5a",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Tissue-Cleared Wild-Type P0 Whole Mouse Brains Imaged by Lightsheet Microscopy (v1)",
+      "fields": {
+        "keywords": [
+          { "value": "3D reconstruction" },
+          { "value": "CUBIC" },
+          { "value": "clearing method" }
+        ],
+        "description": {
+          "value": "3D imaging of intact, tissue-cleared mouse brains enables cellular quantification across the whole brain for applications ranging from tracing normal neurodevelopment to disease models. To facilitate comparison across mouse models, 3D atlases and wild-type controls are required for the appropriate strain, sex, and age. We have generated 3D reconstructions of the Allen Developing Mouse Brain Atlas to fill in missing sections, correct artifacts, and optimize alignment with the underlying histology. To validate these atlases, we generated 15 volumetric images of C57BL/6J wild-type mouse pup brains at postnatal day 0 (10 male, 5 female) using lightsheet microscopy. Mouse brains were cleared using the CUBIC clearing technique given its balance of transparency, morphological preservation, and ease of handling. SYTO 16 nuclear dye labeled cells throughout each brain, while 5x objective magnification provided cellular resolution. We registered our 3D reconstructed E18.5 atlas [(DOI: 10.25493/X4ZT-ARE)](https://doi.org/10.25493%2FX4ZT-ARE) to each of these brains for quantitative cellular analysis by region.  These whole-brain images can be reused for further evaluation of 3D atlases, characterization of wild-type neuroanatomy, or additional controls for mouse-based brain-wide neurological studies."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "(representing the anatomy of axonal tracts) and functional connectivity (representing the temporal <em>correlation</em>"
+        ]
+      },
+      "id": "f16e449d-86e1-408b-9487-aa9d72e39901",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Parcellation-based structural and resting-state functional brain connectomes of a healthy cohort",
+      "badges": [ "isNew" ],
+      "fields": {
+        "keywords": [
+          { "value": "brain parcellation" },
+          { "value": "functional connectomes" },
+          { "value": "structural connectomes" }
+        ],
+        "description": {
+          "value": "Nowadays, connectivity patterns of brain networks are of special interest, as they may reflect communication in the brain at the structural and functional levels. Their extraction, however, is a complex process that requires deep knowledge of magnetic resonance imaging (MRI) data processing methods. Furthermore, there is no consensus as to which parcellation of the brain is most suitable for a given analysis. Therefore, 19 different state-of-the-art cortical parcellations were used in this dataset to reconstruct the region-based empirical structural connectivity (representing the anatomy of axonal tracts) and functional connectivity (representing the temporal correlation between neuronal activity of brain regions) from diffusion-weighted (dwMRI) and resting-state functional magnetic resonance imaging (fMRI) data, respectively. The repository provides individual connectomes for 200 subjects from the Human Connectome Project. The data can be used by members of the neuroimaging community to investigate structural and functional human connectomes, and to extend the investigation to whole-brain models for further analyses of brain structure and function."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints, profiles"
+        ]
+      },
+      "id": "5327c762-f46a-4e58-a245-05059b975747",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area 45 (IFG) [human] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area 45 (IFG) obtained by means of quantitative _in vitro_ autoradiography. The receptor densities are visualized as _fingerprints_ (**fp**), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide laminar _profiles_ (**pr**)  and/or color-coded laminar _autoradiography_ images (**ar**). The density profiles provide, for a single tissue sample, an exemplary density distribution for a single receptor from the pial surface to the border between layer VI and the white matter. The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints, profiles and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints and autoradiographs"
+        ]
+      },
+      "id": "09ad6fdf-cc17-4e66-9dfb-38116b847fc4",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area ifs1 (IFS) [human] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area ifs1 (IFS) obtained by means of quantitative in vitro autoradiography. The receptor densities are visualized as fingerprints (fp), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide color-coded laminar autoradiography images (ar). The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints and autoradiographs"
+        ]
+      },
+      "id": "8f641822-806a-4b14-a350-9d819a3cd8d5",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area ifs2 (IFS) [human] (v1)",
+      "badges": ["isNew", "isTrending"],
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area ifs2 (IFS) obtained by means of quantitative in vitro autoradiography. The receptor densities are visualized as fingerprints (fp), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide color-coded laminar autoradiography images (ar). The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints and autoradiographs"
+        ]
+      },
+      "id": "6ad9c076-f5e3-4a40-8cc4-2272aea445c3",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area ifs3 (IFS) [human] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area ifs3 (IFS) obtained by means of quantitative in vitro autoradiography. The receptor densities are visualized as fingerprints (fp), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide color-coded laminar autoradiography images (ar). The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints and autoradiographs"
+        ]
+      },
+      "id": "e2124d07-23c8-451a-b504-eca97a8e32ab",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area ifs4 (IFS) [human] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area ifs4 (IFS) obtained by means of quantitative in vitro autoradiography. The receptor densities are visualized as fingerprints (fp), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide color-coded laminar autoradiography images (ar). The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints and autoradiographs"
+        ]
+      },
+      "id": "33af3a71-4bd9-4ac6-9570-95769c8e1e49",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area ifj1 (IFS,PreCS) [human] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area ifj1 (IFS,PreCS) obtained by means of quantitative in vitro autoradiography. The receptor densities are visualized as fingerprints (fp), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide color-coded laminar autoradiography images (ar). The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "Information on the used tissue samples and <em>corresponding</em> subjects for the receptor fingerprints and autoradiographs"
+        ]
+      },
+      "id": "bd4964de-7a23-4320-93bc-3d34a7cc4d8b",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Density measurements of different receptors for Area ifj2 (IFS,PreCS) [human] (v1)",
+      "fields": {
+        "keywords": [{ "value": "brain mapping" }],
+        "description": {
+          "value": "This dataset contains the densities (in fmol/mg protein) of receptors for classical neurotransmitters in Area ifj2 (IFS,PreCS) obtained by means of quantitative in vitro autoradiography. The receptor densities are visualized as fingerprints (fp), which provide the mean density and standard deviation for each of the analyzed receptor types, averaged across samples. For exemplary samples, we also provide color-coded laminar autoradiography images (ar). The autoradiography images show an exemplary density distribution of a single receptor for one laminar cross-section in a single tissue sample. Information on the used tissue samples and corresponding subjects for the receptor fingerprints and autoradiographs as well as a list of analyzed receptors accompanies the provided dataset."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "id": "2906d6b0-88b7-4092-bede-cdf5786f7cdb",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "A configurable and empirical model of the synaptic proteome (SQLite database)",
+      "fields": {
+        "keywords": [
+          { "value": "Autism Spectrum Disorders" },
+          { "value": "Database" },
+          { "value": "SQLITE" },
+          { "value": "gene mutations" },
+          { "value": "protein-protein interaction" }
+        ],
+        "description": {
+          "value": "Integration of 57 published synaptic proteomic datasets reveals a stunningly complex picture involving over 7000 proteins. At the post-synaptic side, multiple studies over the past 19 years appear to be reaching a consensus in terms of gross number and identity of the constituent proteins. Presynaptically the story remains more dynamic with fewer studies and each new study adding new components to the landscape. Molecular complexes were reconstructed using evidence-based protein-protein interaction data available from public databases. The constructed molecular interaction network model is embedded into an SQLite implementation allowing queries that generate custom network models based on meta-data including species, synaptic compartment, brain region, and method of extraction."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "The preprocessed individual GMV maps, their <em>corresponding</em> psychometric scores and the regions of the",
+          "github.com&#x2F;shahrzadkh&#x2F;pyJUSBB&#x2F;](https:&#x2F;&#x2F;github.com&#x2F;shahrzadkh&#x2F;pyJUSBB&#x2F;), where non-parametric partial <em>correlations</em>"
+        ]
+      },
+      "id": "dc037942-23e5-4f38-a941-a3e392cd9e0a",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Structure-phenotype associations for Julich-Brain Cytoarchitectonic Atlas regions (v1)",
+      "fields": {
+        "keywords": [{ "value": "structure-brain-behaviour associations" }],
+        "description": {
+          "value": "Our aim in this project was to characterize the behavioral profile of brain regions defined in the Julich-Brain Cytoarchitectonic Atlas by mapping interindividual variability in local structure as measured with grey matter volume (GMV) to interindividual variability in psychometric data. From a large cohort of healthy individuals [Nooner et al. 2012](https://doi.org/10.3389/fnins.2012.00152), we selected a subgroup of 466 participants with good quality preprocessed T1-weighted MR-scans, using CAT12 toolbox [http://www.neuro.uni-jena.de/cat/](http://www.neuro.uni-jena.de/cat/), and available scores in a broad range of psychometric measures covering multiple cognitive domains (such as attention, episodic memory), personality and emotion scores. The preprocessed individual GMV maps, their corresponding psychometric scores and the regions of the Julich-Brain Cytoarchitectonic Atlas are then entered into the pyJUSBB tool [https://github.com/shahrzadkh/pyJUSBB/](https://github.com/shahrzadkh/pyJUSBB/), where non-parametric partial correlations between variability in average GMV in each of the brain regions and each of the 48 behavioral scores are assessed and ranked to create the behavioral profile of each region. The stability of each association is demonstrated as 95% Bootstrap confidence interval (10000 times)."
+        }
+      },
+      "group": "public"
+    },
+    {
+      "highlight": {
+        "description.value": [
+          "We have developed an immunohistochemistry-<em>correlated</em> electron microscopy (EM) method - the &quot;mirror&quot; technique"
+        ]
+      },
+      "id": "b06569ef-3dc2-464a-b5d9-42d6abdd9123",
+      "type": "Dataset",
+      "category": "Dataset",
+      "title": "Atlas of muscarinic M2 receptor distributions in the rat brain (v1)",
+      "previewImage": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00007_Atlas-M2-receptor-rat_pub/b842b365-528d-5e6f-8df4-6820d521a486.png",
+      "fields": {
+        "keywords": [
+          { "value": "dendritic synaptome" },
+          { "value": "parvalbumin" }
+        ],
+        "description": {
+          "value": "We have developed an immunohistochemistry-correlated electron microscopy (EM) method - the \"mirror\" technique - by which long series of EM ultrathin sections can be obtained of neurochemically identified interneurons (INs) with the preservation of high-fidelity ultrastructure. This approach allows quantitative assessment of morphometric parameters of synaptic inputs along the whole length of dendrites originating from the parent soma. Adjoining sections always have cut cell bodies which appear on the facing surface of both sections. Using the mirror-technique, in one of the sections the histochemical marker of the GABAergic subtype, parvalbumin (PV) was revealed. After identifying immuno-positive neurons which were cut on the surface the remaining part of the very same cell bodies were identified on the surface of the adjoining section. Here we provide quantitative data on the synaptic coverage of one dendrite segments belonging to one PV immuno-positive IN. The spatial distribution of asymmetric and symmetric synapses, surface area and volume of the presynaptic boutons, area extent of the active zones and morphometric parameters of synaptic vesicles were determined."
+        }
+      },
+      "group": "public"
+    }
+  ],
+  "total": 228,
+  "types": {
+    "Project": { "count": 13 },
+    "Dataset": { "count": 228 },
+    "Model": { "count": 27 },
+    "Contributor": { "count": 10 },
+    "Software": { "count": 13 }
+  },
+  "suggestions": {
+    "carry": "carry",
+    "cone": "cone",
+    "cord": "cord",
+    "core": "core",
+    "cornu": "cornu"
+  },
+  "aggregations": {
+    "modality": {
+      "count": 22,
+      "others": 34,
+      "keywords": [
+        { "value": "neural connectivity", "count": 109 },
+        { "value": "neuroimaging", "count": 107 },
+        { "value": "anatomy", "count": 95 },
+        { "value": "microscopy", "count": 84 },
+        { "value": "histology", "count": 76 },
+        { "value": "multimodal research", "count": 57 },
+        { "value": "expression characterization", "count": 56 },
+        { "value": "electrophysiology", "count": 24 },
+        { "value": "informatics", "count": 12 },
+        { "value": "developmental biology", "count": 8 }
+      ]
+    },
+    "dataAccessibility": {
+      "count": 3,
+      "others": 0,
+      "keywords": [
+        { "value": "free access", "count": 211 },
+        { "value": "under embargo", "count": 16 },
+        { "value": "controlled access", "count": 1 }
+      ]
+    },
+    "keywords": {
+      "count": 95,
+      "others": 0,
+      "keywords": [
+        { "value": "brain mapping", "count": 162 },
+        { "value": "Reference atlas", "count": 12 },
+        { "value": "Atlas co-registration", "count": 10 },
+        { "value": "Rat", "count": 8 },
+        { "value": "edge-aware atlas refinement", "count": 8 },
+        { "value": "gephyrin", "count": 6 },
+        { "value": "long-term depression", "count": 6 },
+        { "value": "long-term potentiation", "count": 6 },
+        { "value": "GABAergic current", "count": 5 },
+        { "value": "intrabodies", "count": 5 },
+        { "value": "3D reconstruction", "count": 4 },
+        { "value": "Mouse", "count": 4 },
+        { "value": "dendritic synaptome", "count": 3 },
+        { "value": "3-D reconstruction", "count": 2 },
+        { "value": "Atlas comparison", "count": 2 },
+        { "value": "Biotinylated dextran amine", "count": 2 },
+        { "value": "Extracellular recording", "count": 2 },
+        { "value": "FluoroRuby", "count": 2 },
+        { "value": "Micro3D", "count": 2 },
+        { "value": "imaging", "count": 2 },
+        {
+          "value": "nuclear receptor and arealization gene (Nr2f1)",
+          "count": 2
+        },
+        { "value": "topographic corticopontine projections", "count": 2 },
+        { "value": "3D Polarized Light Imaging", "count": 1 },
+        { "value": "AMPA antagonist", "count": 1 },
+        { "value": "Air puff stimulation", "count": 1 },
+        {
+          "value": "Amyloid Precursor Protein KM670/671NL Swedish mutation",
+          "count": 1
+        },
+        { "value": "Autism Spectrum Disorders", "count": 1 },
+        { "value": "Blender", "count": 1 },
+        { "value": "CUBIC", "count": 1 },
+        { "value": "Cerebellar nuclei", "count": 1 },
+        { "value": "DIV 10-20 organotypic slices", "count": 1 },
+        { "value": "Database", "count": 1 },
+        { "value": "Dendritic spines", "count": 1 },
+        { "value": "Electrophysiology", "count": 1 },
+        { "value": "FMRIB's ICA-based Xnoiseifier (FIX)", "count": 1 },
+        { "value": "Fragile X Syndrome", "count": 1 },
+        { "value": "GABA", "count": 1 },
+        { "value": "GCaMP6", "count": 1 },
+        { "value": "Isoflurane", "count": 1 },
+        { "value": "Ketamine", "count": 1 },
+        { "value": "Medetomidine", "count": 1 },
+        { "value": "Morphological reconstruction", "count": 1 },
+        { "value": "Motor cortex", "count": 1 },
+        { "value": "NEURON simulation", "count": 1 },
+        { "value": "NMDA antagonist", "count": 1 },
+        { "value": "Neurolucida", "count": 1 },
+        { "value": "PV+ neuron", "count": 1 },
+        { "value": "Place cells", "count": 1 },
+        { "value": "Pyramidal neurons", "count": 1 },
+        { "value": "SQLITE", "count": 1 },
+        { "value": "Somatosensory cortex", "count": 1 },
+        { "value": "Somatotopy", "count": 1 },
+        { "value": "Whisker barrel", "count": 1 },
+        { "value": "Williams Beuren Syndrome", "count": 1 },
+        { "value": "amyloidopathy", "count": 1 },
+        { "value": "atlas integration", "count": 1 },
+        { "value": "avidin-biotin complex", "count": 1 },
+        { "value": "behavior prediction", "count": 1 },
+        { "value": "behavioral training", "count": 1 },
+        { "value": "behaviour assay", "count": 1 },
+        { "value": "behaviour data processing", "count": 1 },
+        { "value": "biotinylated dextran amine", "count": 1 },
+        { "value": "brain parcellation", "count": 1 },
+        { "value": "brain-behavior relationships", "count": 1 },
+        { "value": "calbindin", "count": 1 },
+        { "value": "calretinin", "count": 1 },
+        { "value": "cannabinoid receptor antagonist", "count": 1 },
+        { "value": "clearing method", "count": 1 },
+        { "value": "dendritic spines", "count": 1 },
+        { "value": "direct pathway SPN", "count": 1 },
+        { "value": "dopamine", "count": 1 },
+        { "value": "fibre orientation model", "count": 1 },
+        { "value": "functional connectomes", "count": 1 },
+        { "value": "functional localizers", "count": 1 },
+        { "value": "gene mutations", "count": 1 },
+        { "value": "image data processing", "count": 1 },
+        { "value": "indirect pathway SPN", "count": 1 },
+        { "value": "infrared eye tracker", "count": 1 },
+        { "value": "integration", "count": 1 },
+        { "value": "kinetic modeling", "count": 1 },
+        { "value": "multimodal", "count": 1 },
+        { "value": "multisensory", "count": 1 },
+        { "value": "neuroligin 2", "count": 1 },
+        { "value": "optrode implantation", "count": 1 },
+        { "value": "optrode stimulation", "count": 1 },
+        { "value": "pSYNACTIVE", "count": 1 },
+        { "value": "parvalbumin", "count": 1 },
+        { "value": "phaseolus vulgaris leucoagglutinin", "count": 1 },
+        { "value": "protein-protein interaction", "count": 1 },
+        { "value": "resting state", "count": 1 },
+        { "value": "spontaneous inhibitory synaptic currents", "count": 1 },
+        { "value": "structural connectomes", "count": 1 },
+        { "value": "structure-brain-behaviour associations", "count": 1 },
+        { "value": "whisker stimulation", "count": 1 },
+        { "value": "whole brain", "count": 1 }
+      ]
+    },
+    "species": {
+      "count": 6,
+      "others": 0,
+      "keywords": [
+        { "value": "Homo sapiens", "count": 151 },
+        { "value": "Mus musculus", "count": 44 },
+        { "value": "Rattus norvegicus", "count": 27 },
+        { "value": "Macaca fascicularis", "count": 5 },
+        { "value": "Danio rerio", "count": 1 },
+        { "value": "Macaca mulatta", "count": 1 }
+      ]
+    },
+    "methods": {
+      "count": 71,
+      "others": 0,
+      "keywords": [
+        { "value": "spatial registration", "count": 119 },
+        { "value": "magnetic resonance imaging", "count": 107 },
+        {
+          "value": "probabilistic anatomical parcellation technique",
+          "count": 104
+        },
+        { "value": "diffusion-weighted imaging", "count": 103 },
+        { "value": "hierarchical clustering", "count": 102 },
+        { "value": "cytoarchitectonic mapping", "count": 60 },
+        { "value": "silver staining", "count": 60 },
+        { "value": "cryosectioning", "count": 57 },
+        { "value": "autoradiography", "count": 56 },
+        { "value": "inter-subject analysis", "count": 56 },
+        { "value": "quantitative analysis", "count": 56 },
+        { "value": "semantic anchoring", "count": 40 },
+        { "value": "reconstruction technique", "count": 18 },
+        { "value": "whole cell patch clamp", "count": 17 },
+        { "value": "voltage clamp", "count": 16 },
+        { "value": "anatomical delineation technique", "count": 8 },
+        { "value": "current clamp", "count": 8 },
+        { "value": "image registration", "count": 8 },
+        { "value": "perfusion fixation technique", "count": 7 },
+        { "value": "stereotactic surgery", "count": 7 },
+        { "value": "secondary antibody staining", "count": 6 },
+        { "value": "anterograde tracing", "count": 5 },
+        { "value": "epifluorescent microscopy", "count": 5 },
+        { "value": "immunohistochemistry", "count": 5 },
+        { "value": "primary antibody staining", "count": 5 },
+        { "value": "vibratome sectioning", "count": 5 },
+        { "value": "DAB staining", "count": 3 },
+        { "value": "anaesthesia technique", "count": 3 },
+        { "value": "avidin-biotin complex staining", "count": 3 },
+        { "value": "brightfield microscopy", "count": 3 },
+        { "value": "calcium imaging", "count": 3 },
+        { "value": "electron microscopy", "count": 3 },
+        { "value": "implant surgery", "count": 3 },
+        { "value": "morphometry", "count": 3 },
+        { "value": "virus-mediated transfection", "count": 3 },
+        { "value": "whisker stimulation", "count": 3 },
+        { "value": "craniotomy", "count": 2 },
+        { "value": "electrocorticography", "count": 2 },
+        { "value": "fluorescence microscopy", "count": 2 },
+        { "value": "functional magnetic resonance imaging", "count": 2 },
+        { "value": "injection", "count": 2 },
+        { "value": "maximum probability projection", "count": 2 },
+        {
+          "value": "multi-electrode extracellular electrophysiology",
+          "count": 2
+        },
+        { "value": "optogenetic stimulation", "count": 2 },
+        { "value": "photon stimulation", "count": 2 },
+        { "value": "semiquantitative analysis", "count": 2 },
+        { "value": "3D computer graphic modeling", "count": 1 },
+        { "value": "ICA based denoising technique", "count": 1 },
+        { "value": "Nissl staining", "count": 1 },
+        { "value": "RNA sequencing", "count": 1 },
+        { "value": "anaesthesia monitoring", "count": 1 },
+        { "value": "electrical stimulation", "count": 1 },
+        { "value": "extracellular electrophysiology", "count": 1 },
+        { "value": "high-speed video recording", "count": 1 },
+        { "value": "histochemistry", "count": 1 },
+        { "value": "independent component analysis", "count": 1 },
+        { "value": "light sheet fluorescence microscopy", "count": 1 },
+        { "value": "meta-analysis", "count": 1 },
+        { "value": "nonlinear image registration", "count": 1 },
+        { "value": "patch clamp", "count": 1 },
+        { "value": "pressure injection", "count": 1 },
+        { "value": "receptive field mapping", "count": 1 },
+        {
+          "value": "reporter protein based expression measurement",
+          "count": 1
+        },
+        { "value": "rigid motion correction", "count": 1 },
+        { "value": "scanning electron microscopy", "count": 1 },
+        { "value": "stereoelectroencephalography", "count": 1 },
+        { "value": "support-vector regression algorithm", "count": 1 },
+        { "value": "tetrode extracellular electrophysiology", "count": 1 },
+        { "value": "tissue clearing", "count": 1 },
+        { "value": "transformation", "count": 1 },
+        { "value": "two-photon excitation fluorescence microscopy", "count": 1 }
+      ]
+    },
+    "contentTypes": {
+      "count": 14,
+      "others": 0,
+      "keywords": [
+        { "value": "application/vnd.nifti.1", "count": 106 },
+        { "value": "text/tab-separated-values", "count": 56 },
+        { "value": "application/pdf", "count": 52 },
+        { "value": "image/tiff", "count": 16 },
+        { "value": "application/vnd.itk", "count": 8 },
+        { "value": "image/png", "count": 5 },
+        { "value": "text/plain", "count": 5 },
+        {
+          "value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "count": 4
+        },
+        { "value": "text/semicolon-separated-values", "count": 4 },
+        {
+          "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "count": 2
+        },
+        { "value": "application/vnd.plot3d", "count": 2 },
+        { "value": "application/vnd.spike2.sonpy.son", "count": 2 },
+        { "value": "application/x-font-speedo", "count": 1 },
+        { "value": "text/markdown", "count": 1 }
+      ]
+    }
+  }
+}
