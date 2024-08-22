@@ -161,6 +161,7 @@ public class DatasetVersionV3 extends SourceInstance implements IsCiteable, HasM
     @Setter
     public static class StudiedState {
         private String id;
+        private String internalIdentifier;
         private List<String> descendedFrom;
         private List<String> type;
         private String additionalRemarks;
