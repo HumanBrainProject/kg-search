@@ -119,17 +119,17 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
 
     private String pricing(ServiceFromKG.PricingInformation pricingInformation) {
         String template = """
-                Pricing van vary.
+                Pricing can vary.
                           
                 **Non-binding example:**
                 %s""";
         String pricing = "";
         if (pricingInformation.getFullPriceInEuro() != null) {
-            pricing += String.format("%s€%s %s\n", pricingInformation.getReducedPriceInEuro() != null ? "*Full price:* " : "", pricingInformation.getFullPriceInEuro(), Objects.toString(pricingInformation.getBilling(), ""));
+            pricing += String.format("%s%s %s\n", pricingInformation.getReducedPriceInEuro() != null ? "*Full price:* " : "", pricingInformation.getFullPriceInEuro(), Objects.toString(pricingInformation.getBilling(), ""));
         }
 
         if (pricingInformation.getReducedPriceInEuro() != null) {
-            pricing += String.format("*Reduced price:* €%s %s", pricingInformation.getReducedPriceInEuro(), Objects.toString(pricingInformation.getBilling(), "")).trim();
+            pricing += String.format("*Reduced price:* %s %s", pricingInformation.getReducedPriceInEuro(), Objects.toString(pricingInformation.getBilling(), "")).trim();
         }
         return String.format(template, pricing);
 
