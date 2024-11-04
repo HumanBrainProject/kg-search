@@ -205,7 +205,10 @@
         },
         {
           "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
-          "reverse": true
+          "reverse": true,
+          "typeFilter": {
+            "@id": "https://openminds.ebrains.eu/core/ServiceLink"
+          }
         }
       ],
       "structure": [
@@ -252,7 +255,10 @@
         },
         {
           "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
-          "reverse": true
+          "reverse": true,
+          "typeFilter": {
+            "@id": "https://openminds.ebrains.eu/core/ServiceLink"
+          }
         }
       ],
       "structure": [
