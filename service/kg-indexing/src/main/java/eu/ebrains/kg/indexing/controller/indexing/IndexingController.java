@@ -24,15 +24,17 @@
 package eu.ebrains.kg.indexing.controller.indexing;
 
 import eu.ebrains.kg.common.controller.kg.KG;
+import eu.ebrains.kg.common.controller.translation.TranslationController;
+import eu.ebrains.kg.common.controller.translation.models.TargetInstancesResult;
+import eu.ebrains.kg.common.controller.translation.models.Translator;
 import eu.ebrains.kg.common.controller.translation.models.TranslatorModel;
 import eu.ebrains.kg.common.controller.translation.utils.ReferenceResolver;
-import eu.ebrains.kg.common.controller.translation.models.TargetInstancesResult;
-import eu.ebrains.kg.common.controller.translation.TranslationController;
-import eu.ebrains.kg.common.controller.translation.models.Translator;
-import eu.ebrains.kg.common.model.*;
+import eu.ebrains.kg.common.model.DataStage;
+import eu.ebrains.kg.common.model.ErrorReport;
+import eu.ebrains.kg.common.model.ErrorReportResult;
 import eu.ebrains.kg.common.model.source.SourceInstance;
-import eu.ebrains.kg.common.model.target.TargetInstance;
 import eu.ebrains.kg.common.model.target.HasBadges;
+import eu.ebrains.kg.common.model.target.TargetInstance;
 import eu.ebrains.kg.common.services.ESServiceClient;
 import eu.ebrains.kg.common.utils.ESHelper;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
@@ -40,7 +42,8 @@ import eu.ebrains.kg.indexing.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.indexing.controller.mapping.MappingController;
 import eu.ebrains.kg.indexing.controller.metrics.MetricsController;
 import eu.ebrains.kg.indexing.controller.settings.SettingsController;
-import org.apache.tomcat.util.buf.EncodedSolidusHandling;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -64,6 +67,7 @@ public class IndexingController {
 
     private final KG kgV3;
 
+    private final static Logger logger = LoggerFactory.getLogger(IndexingController.class);
 
     public IndexingController(MappingController mappingController, MetricsController metricsController, SettingsController settingsController, ElasticSearchController elasticSearchController, TranslationController translationController, KG kgV3, ESServiceClient esServiceClient, ESHelper esHelper, ReferenceResolver referenceResolver) {
         this.mappingController = mappingController;
@@ -134,6 +138,7 @@ public class IndexingController {
                     final List<Target> processableInstances = instances.stream().filter(instance -> !excludedIds.contains(instance.getId())).collect(Collectors.toList());
                     referenceResolver.clearNonResolvableReferences(processableInstances, existingIdentifiers);
                     processableInstances.forEach(instance -> {
+                        logger.info("Translating instance {}", instance.getId());
                         Target handledInstance = instanceHandler != null ? instanceHandler.apply(instance) : instance;
                         if (handledInstance.isSearchableInstance()) {
                             updateResult.searchableIds.add(handledInstance.getId());

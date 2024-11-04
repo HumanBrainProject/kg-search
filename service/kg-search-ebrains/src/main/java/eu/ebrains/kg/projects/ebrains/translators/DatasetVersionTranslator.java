@@ -414,17 +414,19 @@ public class DatasetVersionTranslator extends EBRAINSTranslator<DatasetVersionV3
 
             Map<String, List<TargetExternalReference>> viewData = new HashMap<>();
             Stream.concat(datasetVersion.getServiceLinks().stream(), datasetVersion.getServiceLinksFromFiles().stream()).forEach(s -> {
-                if (!viewData.containsKey(s.getService())) {
-                    viewData.put(s.getService(), new ArrayList<>());
+                if(s.getService()!=null) {
+                    if (!viewData.containsKey(s.getService())) {
+                        viewData.put(s.getService(), new ArrayList<>());
+                    }
+                    List<TargetExternalReference> targetExternalReferences = viewData.get(s.getService());
+                    String label = s.getLabel();
+                    if (StringUtils.isBlank(label)) {
+                        translatorUtils.getErrors().add(String.format("Service link %s is missing the label!", s.getUrl()));
+                        label = s.getUrl();
+                    }
+                    targetExternalReferences.add(new TargetExternalReference(s.getUrl(), label));
+                    targetExternalReferences.sort(Comparator.comparing(TargetExternalReference::getValue));
                 }
-                List<TargetExternalReference> targetExternalReferences = viewData.get(s.getService());
-                String label = s.getLabel();
-                if(StringUtils.isBlank(label)) {
-                    translatorUtils.getErrors().add(String.format("Service link %s is missing the label!", s.getUrl()));
-                    label = s.getUrl();
-                }
-                targetExternalReferences.add(new TargetExternalReference(s.getUrl(), label));
-                targetExternalReferences.sort(Comparator.comparing(TargetExternalReference::getValue));
             });
             d.setViewData(viewData);
         }
