@@ -76,6 +76,14 @@
     max-width: 100%;
 }
 
+.field-markdown table thead {
+    text-wrap: nowrap;
+}
+
+.field-markdown table thead tr th {
+    padding-right: 1rem;
+}
+
 .field-markdown code {
     white-space: break-spaces;
 }
