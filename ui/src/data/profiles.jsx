@@ -23,7 +23,7 @@ const profiles = {
         "home": "https://tefhealth.eu",
         "name": "TEF-Health",
         "copyright": "TEF-Health. All rights reserved.",
-        "copyrightAddition": "The content on this website, including text, graphics, and images, is protected by copyright and other intellectual property laws. You may not reproduce, distribute, or modify any content without explicit permission. Any unauthorized use may result in legal action.",
+        "copyrightAddition": "The TEF-Health Service Catalogue serves solely as an intermediary platform, where all service details and prices are indicative only and must be finalized directly between the Service Provider and the Customer.\n\nWhile every effort is made to ensure the accuracy of the information provided on this site/platform, the TEF-Health consortium partners cannot accept any responsibility or liability for any errors, omissions, or consequences arising from the use of this information. Users are encouraged to verify the information independently and seek professional advice as necessary.",
         "copyrightSince": "2024",
         "searchExample": "(e.g. imaging or operating room)",
         "logo": "tefhealth_logo.png",
