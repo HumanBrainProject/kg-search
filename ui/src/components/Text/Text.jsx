@@ -27,6 +27,7 @@ import DOMPurify from 'dompurify';
 import './Text.css';
 
 const converter = new showdown.Converter();
+converter.setOption('tables', 'true');
 
 export const Text = ({ content, isMarkdown }) => {
   if (!content) {
