@@ -1307,6 +1307,10 @@
               "path": "@id"
             },
             {
+              "propertyName": "query:internalIdentifier",
+              "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
+            },
+            {
               "propertyName": "query:descendedFrom",
               "path": [
                 "https://openminds.ebrains.eu/vocab/descendedFrom",
@@ -1945,6 +1949,10 @@
                 {
                   "propertyName": "query:id",
                   "path": "@id"
+                },
+                {
+                  "propertyName": "query:internalIdentifier",
+                  "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
                 },
                 {
                   "propertyName": "query:descendedFrom",
