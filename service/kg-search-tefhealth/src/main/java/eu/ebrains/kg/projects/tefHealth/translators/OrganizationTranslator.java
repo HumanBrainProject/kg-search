@@ -26,19 +26,17 @@ package eu.ebrains.kg.projects.tefHealth.translators;
 import eu.ebrains.kg.common.controller.translation.models.Translator;
 import eu.ebrains.kg.common.model.DataStage;
 import eu.ebrains.kg.common.model.source.ResultsOfKG;
-import eu.ebrains.kg.common.model.target.TargetInternalReference;
+import eu.ebrains.kg.common.model.target.TargetExternalReference;
 import eu.ebrains.kg.common.model.target.Value;
 import eu.ebrains.kg.common.utils.IdUtils;
 import eu.ebrains.kg.common.utils.TranslationException;
 import eu.ebrains.kg.common.utils.TranslatorUtils;
 import eu.ebrains.kg.projects.tefHealth.source.OrganizationFromKG;
-import eu.ebrains.kg.projects.tefHealth.source.models.ServiceRef;
 import eu.ebrains.kg.projects.tefHealth.target.Organization;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrganizationTranslator extends Translator<OrganizationFromKG, Organization, OrganizationTranslator.Result> {
@@ -78,6 +76,9 @@ public class OrganizationTranslator extends Translator<OrganizationFromKG, Organ
         t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthInstitutionV3.getId()));
         t.setAllIdentifiers(tefHealthInstitutionV3.getIdentifier());
+        if(tefHealthInstitutionV3.getBusinessCard()!=null) {
+            t.setBusinessCard(new TargetExternalReference(tefHealthInstitutionV3.getBusinessCard(), tefHealthInstitutionV3.getBusinessCard()));
+        }
         t.setIdentifier(IdUtils.getUUID(tefHealthInstitutionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         String title = StringUtils.isNotBlank(tefHealthInstitutionV3.getName()) ? StringUtils.isNotBlank(tefHealthInstitutionV3.getAbbreviation()) ? String.format("%s (%s)", tefHealthInstitutionV3.getName(), tefHealthInstitutionV3.getAbbreviation()) : tefHealthInstitutionV3.getName() : null;
         t.setTitle(value(title));

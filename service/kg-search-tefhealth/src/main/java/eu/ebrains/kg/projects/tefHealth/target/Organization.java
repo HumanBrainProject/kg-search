@@ -24,13 +24,7 @@
 package eu.ebrains.kg.projects.tefHealth.target;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import eu.ebrains.kg.common.model.target.ElasticSearchInfo;
-import eu.ebrains.kg.common.model.target.FieldInfo;
-import eu.ebrains.kg.common.model.target.MetaInfo;
-import eu.ebrains.kg.common.model.target.TargetInstance;
-import eu.ebrains.kg.common.model.target.TargetInternalReference;
-import eu.ebrains.kg.common.model.target.Value;
-import eu.ebrains.kg.common.model.target.SchemaOrgInstance;
+import eu.ebrains.kg.common.model.target.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -75,6 +69,8 @@ public class Organization implements TargetInstance {
     @FieldInfo(layout = "header", label = "Country", labelHidden = true, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private TargetInternalReference country;
 
+    @FieldInfo(fieldType = FieldInfo.FieldType.FILE_PREVIEW, layout = "Description", labelHidden = true)
+    private TargetExternalReference businessCard;
 
     @Override
     public boolean isSearchableInstance() {

@@ -73,6 +73,10 @@
           "path": "https://tefhealth.eu/serviceCatalogue/vocab/name"
         }
       ]
+    },
+    {
+      "propertyName": "query:businessCard",
+      "path": "https://tefhealth.eu/serviceCatalogue/vocab/businessCard"
     }
   ]
 }

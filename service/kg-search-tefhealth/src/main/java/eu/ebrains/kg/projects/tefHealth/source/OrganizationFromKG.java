@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.projects.tefHealth.source;
 
-import eu.ebrains.kg.common.model.source.FullNameRef;
 import eu.ebrains.kg.common.model.source.SourceInstance;
 import eu.ebrains.kg.projects.tefHealth.source.models.NameRef;
 import eu.ebrains.kg.projects.tefHealth.source.models.ServiceRef;
@@ -40,5 +39,6 @@ public class OrganizationFromKG extends SourceInstance {
     private String abbreviation;
     private List<ServiceRef> services;
     private NameRef country;
+    private String businessCard;
 
 }
