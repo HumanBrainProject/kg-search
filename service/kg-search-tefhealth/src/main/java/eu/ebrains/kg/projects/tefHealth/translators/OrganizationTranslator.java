@@ -76,9 +76,6 @@ public class OrganizationTranslator extends Translator<OrganizationFromKG, Organ
         t.setDisclaimer(new Value<>("Please alert us at [info@tefhealth.eu](mailto:info@tefhealth.eu) for errors or quality concerns."));
         t.setId(IdUtils.getUUID(tefHealthInstitutionV3.getId()));
         t.setAllIdentifiers(tefHealthInstitutionV3.getIdentifier());
-        if(tefHealthInstitutionV3.getBusinessCard()!=null) {
-            t.setBusinessCard(new TargetExternalReference(tefHealthInstitutionV3.getBusinessCard(), tefHealthInstitutionV3.getBusinessCard()));
-        }
         t.setIdentifier(IdUtils.getUUID(tefHealthInstitutionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         String title = StringUtils.isNotBlank(tefHealthInstitutionV3.getName()) ? StringUtils.isNotBlank(tefHealthInstitutionV3.getAbbreviation()) ? String.format("%s (%s)", tefHealthInstitutionV3.getName(), tefHealthInstitutionV3.getAbbreviation()) : tefHealthInstitutionV3.getName() : null;
         t.setTitle(value(title));

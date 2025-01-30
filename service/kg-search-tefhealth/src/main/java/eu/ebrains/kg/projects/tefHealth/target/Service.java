@@ -103,6 +103,9 @@ public class Service implements TargetInstance {
 //
 //    @FieldInfo(label = "Price example", facet = FieldInfo.Facet.EXISTS)
 //    private boolean hasPriceExample;
+//
+//    @FieldInfo(fieldType = FieldInfo.FieldType.FILE_PREVIEW, layout = "Description", labelHidden = true)
+//    private TargetExternalReference businessCard;
 
     @Override
     public boolean isSearchableInstance() {

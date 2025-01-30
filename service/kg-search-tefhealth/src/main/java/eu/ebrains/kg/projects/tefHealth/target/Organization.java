@@ -69,8 +69,7 @@ public class Organization implements TargetInstance {
     @FieldInfo(layout = "header", label = "Country", labelHidden = true, facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, isFilterableFacet = true, useForSuggestion = true)
     private TargetInternalReference country;
 
-    @FieldInfo(fieldType = FieldInfo.FieldType.FILE_PREVIEW, layout = "Description", labelHidden = true)
-    private TargetExternalReference businessCard;
+
 
     @Override
     public boolean isSearchableInstance() {
