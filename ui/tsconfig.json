@@ -8,7 +8,7 @@
     "types": ["node", "jest"],
     /* Modules */
     "module": "esnext",                                  /* Specify what module code is generated. */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     /* Emit */
     "noEmit": true,
