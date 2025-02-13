@@ -29,7 +29,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "http-proxy-middleware": "^2.0.6",
-    "keycloak-js": "^21.1.2",
+    "keycloak-js": "^26.1.2",
     "lodash": "^4.17.21",
     "lodash-uuid": "0.0.3",
     "mermaid": "^10.4.0",
