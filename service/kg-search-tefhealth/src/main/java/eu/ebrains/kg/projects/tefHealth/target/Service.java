@@ -77,6 +77,9 @@ public class Service implements TargetInstance {
     @FieldInfo(label = "Calls for discount application", isFilterableFacet = true,  labelHidden = true, facet = FieldInfo.Facet.LIST, separator = " & ")
     private List<Value<String>> calls;
 
+    @FieldInfo(fieldType = FieldInfo.FieldType.MARKDOWN, labelHidden = true)
+    private Value<String> businessCards;
+
     @FieldInfo(label = "Description", labelHidden = true, fieldType = FieldInfo.FieldType.MARKDOWN, boost = 2, useForSuggestion = true, overview = true)
     private Value<String> description;
 

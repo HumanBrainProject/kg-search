@@ -102,6 +102,11 @@ public class ServiceTranslator extends Translator<ServiceFromKG, Service, Servic
         if(!CollectionUtils.isEmpty(tefHealthServiceV3.getCalls())){
             t.setCalls(tefHealthServiceV3.getCalls().stream().map(c -> value(c.getName())).sorted().toList());
         }
+        if(!CollectionUtils.isEmpty(tefHealthServiceV3.getBusinessCards())){
+            String collect = tefHealthServiceV3.getBusinessCards().stream().map(c -> "<img src=\"%s\" width=\"100%\">").collect(Collectors.joining("<br/>\n"));
+            t.setBusinessCards(value(collect));
+        }
+
         t.setIdentifier(IdUtils.getUUID(tefHealthServiceV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         t.setTitle(title);
         t.setDescription(value(tefHealthServiceV3.getDescription()));
