@@ -141,9 +141,12 @@ public class SpecimenTranslator extends TranslatorBase {
         return fullNameRef;
     }
 
-    private static String getLabel(int index) {
+    private static String getLabel(int index, DatasetVersionV3.StudiedState studiedState) {
         int base = 'A';
         //TODO fix for index > 26
+        if (StringUtils.isNotBlank(studiedState.getInternalIdentifier())) {
+            return studiedState.getInternalIdentifier().trim();
+        }
         return String.valueOf((char) (base + index));
     }
 
@@ -185,9 +188,9 @@ public class SpecimenTranslator extends TranslatorBase {
             final String parentLabel = translator.calculateLabel(studiedState.getParent());
             String label;
             if (attachRootElementAsChild && StringUtils.isNotBlank(parentLabel)) {
-                label = getFullStateLabel(translator, getLabel(order), studiedState);
+                label = getFullStateLabel(translator, getLabel(order, studiedState), studiedState);
             } else {
-                label = String.format("State %s", getLabel(order));
+                label = String.format("State %s", getLabel(order, studiedState));
             }
             elState.setTitle(label);
             elState.setData(translator.translateState(studiedState, label));
